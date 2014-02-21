@@ -35,7 +35,7 @@ public class PIDvisualizer : MonoBehaviour
         }
         if (oldTime > m_currTime) oldTime = m_currTime;
         // Draw timeline
-        Debug.DrawLine(transform.position - m_scale * transform.right, transform.position + m_scale*transform.right, Color.black);
+        Debug.DrawLine(transform.position - m_scale * Vector3.right, transform.position + m_scale * Vector3.right, Color.black);
         // Get current error
         float err = m_pid.m_P;
         if (!m_inited) { m_oldErr = err; m_inited = true; }
@@ -43,9 +43,9 @@ public class PIDvisualizer : MonoBehaviour
         float nt = m_currTime / m_timelineLen; // normalized timeline pos
         float ont = oldTime / m_timelineLen; // normalized old timeline pos
         // Draw current 
-        Vector3 origo = transform.position - m_scale*transform.right;
-        Vector3 start = origo + m_scale*2.0f*transform.right*ont + m_scale*transform.up*m_oldErr/m_divider;
-        Vector3 end = origo + m_scale*2.0f * transform.right * nt + m_scale*transform.up * err / m_divider;
+        Vector3 origo = transform.position - m_scale*Vector3.right;
+        Vector3 start = origo + m_scale * 2.0f * Vector3.right * ont + m_scale * Vector3.up * m_oldErr / m_divider;
+        Vector3 end = origo + m_scale * 2.0f * Vector3.right * nt + m_scale * Vector3.up * err / m_divider;
         float t = (1.0f - (Mathf.Abs(err) / m_divider));
         Color c=Color.Lerp(Color.red,Color.green,t*t);
         Debug.DrawLine(start, end, c,m_timelineLen-m_currTime);

@@ -14,6 +14,7 @@ public class AngleSetter : MonoBehaviour
 	void Update () 
     {
         float horiz = Input.GetAxis("Horizontal");
+        horiz = Mathf.Sin(Time.time*3.0f);
         transform.Rotate(-Vector3.forward,horiz*speed*Time.deltaTime);
 	}
 }

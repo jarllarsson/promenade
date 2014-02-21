@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PIDdriver : MonoBehaviour 
+public class PIDdriverScalar : MonoBehaviour 
 {
     public PID m_pid;
     public float goal = 1000.0f;
