@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Buffers">
+      <UniqueIdentifier>{0f41ff32-7142-49d6-a6fc-d59c4940ed3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exceptions">
+      <UniqueIdentifier>{44532726-bb8d-4c45-8bbd-37879ab1ff21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factories">
+      <UniqueIdentifier>{72832155-f18c-4df9-a4f7-f9e0e62455ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factories\BufferFactory">
+      <UniqueIdentifier>{75f799d4-caae-49a0-9938-2bb8bc07be81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factories\ShaderFactory">
+      <UniqueIdentifier>{4c6c70ee-d64c-4589-92ad-c64690421d56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factories\TextureFactory">
+      <UniqueIdentifier>{b9e21c5e-2898-499d-9338-b2b65414a649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factories\ViewFactory">
+      <UniqueIdentifier>{57ec911f-780d-49bf-a391-4ebbe40d9af5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics Utilities">
+      <UniqueIdentifier>{a91fcc65-8f79-47bc-a195-b4b8a2b077b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{498e1f6c-9006-4be6-bcc5-9d2a23db6497}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{e9bb37c6-0582-4f2f-aba0-2e3508c3cd0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{0cd6b3e7-6863-41f9-9846-ddf2256aec4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vertices">
+      <UniqueIdentifier>{b9def0ad-4bc0-4dfa-8546-828851420522}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GraphicsException.h">
+      <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferBase.h">
+      <Filter>Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferConfig.h">
+      <Filter>Factories\BufferFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferFactory.h">
+      <Filter>Factories\BufferFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="ComposeShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DUtil.h">
+      <Filter>Graphics Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsDeviceFactory.h">
+      <Filter>Factories</Filter>
+    </ClInclude>
+    <ClInclude Include="PVertex.h">
+      <Filter>Vertices</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderBase.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStateEnums.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStateHelper.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderFactory.h">
+      <Filter>Factories\ShaderFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderStageData.h">
+      <Filter>Factories\ShaderFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderStageConfig.h">
+      <Filter>Factories\ShaderFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderVariableContainer.h">
+      <Filter>Factories\ShaderFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureFactory.h">
+      <Filter>Factories\TextureFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewFactory.h">
+      <Filter>Factories\ViewFactory</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsDevice.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BufferBase.cpp">
+      <Filter>Buffers</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferConfig.cpp">
+      <Filter>Factories\BufferFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferFactory.cpp">
+      <Filter>Factories\BufferFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="ComposeShader.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderBase.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderStateHelper.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderFactory.cpp">
+      <Filter>Factories\ShaderFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureFactory.cpp">
+      <Filter>Factories\TextureFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewFactory.cpp">
+      <Filter>Factories\ViewFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsDevice.cpp" />
+  </ItemGroup>
+</Project>

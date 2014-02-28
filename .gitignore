@@ -13,6 +13,14 @@
 
 
 # C++
+[Oo]bj
+[Ee]xt
+[Ll]ib
+bin/x86/*.txt
+bin/x64/*.txt
+*.PIXRun
+*.opensdf
+*.lib
 
 # Compiled Object files
 *.slo

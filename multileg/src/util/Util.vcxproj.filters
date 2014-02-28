@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{6d417b59-cff5-4c3c-acc6-72379e584977}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Exception">
+      <UniqueIdentifier>{b84128aa-380c-4e9e-a931-ff67ad1833ba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DebugPrint.h">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseException.h">
+      <Filter>Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelp.h" />
+    <ClInclude Include="ToString.h" />
+    <ClInclude Include="Util.h" />
+    <ClInclude Include="ValueClamp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Util.cpp" />
+  </ItemGroup>
+</Project>

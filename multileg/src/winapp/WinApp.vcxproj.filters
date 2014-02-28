@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="App">
+      <UniqueIdentifier>{9adf9407-68cb-41da-bfac-6e5302b48803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TempLogic">
+      <UniqueIdentifier>{d97fcd18-2338-466e-8f58-c4a86d0f7211}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TempLogic\Input">
+      <UniqueIdentifier>{084f3a0b-3ec8-403c-a1d3-0f4e66903365}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>TempLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="TempController.h">
+      <Filter>TempLogic</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.cpp">
+      <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>TempLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="TempController.cpp">
+      <Filter>TempLogic</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+</Project>
