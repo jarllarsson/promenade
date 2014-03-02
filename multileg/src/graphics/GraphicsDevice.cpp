@@ -166,7 +166,12 @@ void GraphicsDevice::executeRenderPass( RenderPass p_pass )
 	switch(p_pass)
 	{	
 	case RenderPass::P_BASEPASS:
-		 // none yet
+		m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		setBlendState(BlendState::NORMAL);
+		setRasterizerStateSettings(RasterizerState::DEFAULT);
+		setRenderTarget(RT_MRT);
+		setShader(SI_MESHSHADER);
+		drawMeshes();
 		break;
 	case RenderPass::P_COMPOSEPASS:
 		m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -278,6 +283,9 @@ void GraphicsDevice::setShader( ShaderId p_shaderId )
 	case ShaderId::SI_NONE:
 		m_deviceContext->PSSetShaderResources(0,0,0);
 		break;
+	case ShaderId::SI_MESHSHADER:
+		// map resources here
+		m_meshShader->apply();
 	case ShaderId::SI_COMPOSESHADER:	
 		mapGBuffer();
 		m_composeShader->apply();
@@ -356,6 +364,15 @@ void GraphicsDevice::drawFullscreen()
 	m_fullscreenQuad->apply();
 	m_deviceContext->Draw(6,0);
 }
+
+
+void GraphicsDevice::drawMeshes()
+{
+	m_boxMesh->getVertexBuffer()->apply();
+	m_boxMesh->getIndexBuffer()->apply();
+	m_deviceContext->DrawIndexedInstanced(numberofboxindices,numberofinstances,0,0,0);
+}
+
 
 
 void GraphicsDevice::initSwapChain( HWND p_hWnd )

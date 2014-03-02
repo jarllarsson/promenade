@@ -53,6 +53,7 @@ public:
 
 	enum ShaderId {
 		SI_NONE,
+		SI_MESHSHADER,
 		SI_COMPOSESHADER,
 		SI_COUNT,
 	};
@@ -121,6 +122,7 @@ private:
 
 	// Draw
 	void drawFullscreen();
+	void drawMeshes();
 
 	// Initialisations
 	void initSwapChain(HWND p_hWnd);
