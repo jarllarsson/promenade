@@ -1,4 +1,5 @@
 #include "Mesh.h"
+#include "PVertex.h"
 
 Mesh::Mesh( Buffer<PVertex>* p_vertexBuffer, 
 		    Buffer<unsigned int>* p_indexBuffer )

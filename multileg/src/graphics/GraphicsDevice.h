@@ -2,9 +2,10 @@
 #include <windows.h>
 #include <d3d11.h>
 #include "Buffer.h"
-#include "PVertex.h"
 #include "RenderStateHelper.h"
 
+
+struct PVertex;
 class ViewFactory;
 class BufferFactory;
 class ShaderFactory;
@@ -12,6 +13,7 @@ class TextureFactory;
 class ComposeShader;
 class MeshShader;
 class Texture;
+class Mesh;
 
 
 // =======================================================================================

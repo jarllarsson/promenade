@@ -6,6 +6,8 @@
 #include "TextureFactory.h"
 #include "Texture.h"
 #include "D3DUtil.h"
+#include "PVertex.h"
+#include "Mesh.h"
 
 
 #include "ComposeShader.h"
@@ -36,7 +38,7 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 
 	// 4. init shaders
 	m_composeShader = m_shaderFactory->createComposeShader(L"../shaders/ComposeShader.hlsl");
-	m_meshShader = m_shaderFactory->createComposeShader(L"../shaders/MeshShader.hlsl");
+	m_meshShader = m_shaderFactory->createMeshShader(L"../shaders/MeshShader.hlsl");
 
 	// 5. build states
 	buildBlendStates();
@@ -69,6 +71,7 @@ GraphicsDevice::~GraphicsDevice()
 	delete m_interopCanvasHandle;
 	//
 	delete m_composeShader;
+	delete m_meshShader;
 	//
 	delete m_fullscreenQuad;
 	delete m_boxMesh;
