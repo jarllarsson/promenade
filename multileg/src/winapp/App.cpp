@@ -15,8 +15,13 @@
 #include <ValueClamp.h>
 #include "TempController.h"
 
+#include <iostream> 
+#include <amp.h> 
+#include <ppl.h>
 
 //#include "OISHelper.h"
+
+using namespace std;
 
 
 const double App::DTCAP=0.5;
@@ -97,9 +102,6 @@ void App::run()
 	// lets non-context systems quit the program
 	bool run=true;
 
-	int shadowMode=0;
-	int debugDrawMode=0;
-
 	while (!m_context->closeRequested() && run)
 	{
 		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
@@ -109,62 +111,6 @@ void App::run()
 		}
 		else
 		{
-			/*
-			m_input->run();
-			// Thrust
-			if (m_input->g_kb->isKeyDown(KC_LEFT) || m_input->g_kb->isKeyDown(KC_A))
-				m_controller->moveThrust(glm::vec3(-1.0f,0.0f,0.0f));
-			if (m_input->g_kb->isKeyDown(KC_RIGHT) || m_input->g_kb->isKeyDown(KC_D))
-				m_controller->moveThrust(glm::vec3(1.0f,0.0f,0.0f));
-			if (m_input->g_kb->isKeyDown(KC_UP) || m_input->g_kb->isKeyDown(KC_W))
-				m_controller->moveThrust(glm::vec3(0.0f,1.0f,0.0f));
-			if (m_input->g_kb->isKeyDown(KC_DOWN) || m_input->g_kb->isKeyDown(KC_S))
-				m_controller->moveThrust(glm::vec3(0.0f,-1.0f,0.0f));
-			if (m_input->g_kb->isKeyDown(KC_SPACE))
-				m_controller->moveThrust(glm::vec3(0.0f,0.0f,1.0f));
-			if (m_input->g_kb->isKeyDown(KC_B))
-				m_controller->moveThrust(glm::vec3(0.0f,0.0f,-1.0f));
-			// Angular thrust
-			if (m_input->g_kb->isKeyDown(KC_Q))
-				m_controller->moveAngularThrust(glm::vec3(0.0f,0.0f,-1.0f));
-			if (m_input->g_kb->isKeyDown(KC_E))
-				m_controller->moveAngularThrust(glm::vec3(0.0f,0.0f,1.0f));
-			if (m_input->g_kb->isKeyDown(KC_T))
-				m_controller->moveAngularThrust(glm::vec3(0.0f,1.0f,0.0f));
-			if (m_input->g_kb->isKeyDown(KC_R))
-				m_controller->moveAngularThrust(glm::vec3(0.0f,-1.0f,0.0f));
-			if (m_input->g_kb->isKeyDown(KC_U))
-				m_controller->moveAngularThrust(glm::vec3(1.0f,0.0f,0.0f));
-			if (m_input->g_kb->isKeyDown(KC_J))
-				m_controller->moveAngularThrust(glm::vec3(-1.0f,0.0f,0.0f));
-			// Settings
-			if (m_input->g_kb->isKeyDown(KC_B)) // Debug blocks
-				debugDrawMode=1;
-			if (m_input->g_kb->isKeyDown(KC_N)) // Debug off
-				debugDrawMode=0;
-			if (m_input->g_kb->isKeyDown(KC_0)) // Shadow off
-				shadowMode=0;
-			if (m_input->g_kb->isKeyDown(KC_1)) // Shadow on (hard shadows)
-				shadowMode=1;
-			if (m_input->g_kb->isKeyDown(KC_2)) // Shadow on (soft shadows fidelity=2)
-				shadowMode=2;
-			if (m_input->g_kb->isKeyDown(KC_3)) // Shadow on (soft shadows fidelity=5)
-				shadowMode=5;
-			if (m_input->g_kb->isKeyDown(KC_4)) // Shadow on (soft shadows fidelity=10)
-				shadowMode=10;
-			if (m_input->g_kb->isKeyDown(KC_5)) // Shadow on (soft shadows fidelity=15)
-				shadowMode=15;
-			if (m_input->g_kb->isKeyDown(KC_6)) // Shadow on (soft shadows fidelity=20)
-				shadowMode=20;
-
-			float mousemovemultiplier=0.001f;
- 			float mouseX=(float)m_input->g_m->getMouseState().X.rel*mousemovemultiplier;
- 			float mouseY=(float)m_input->g_m->getMouseState().Y.rel*mousemovemultiplier;
- 			if (abs(mouseX)>0.0f || abs(mouseY)>0.0f)
- 			{
- 				m_controller->rotate(glm::vec3(clamp(-mouseY,-1.0f,1.0f),clamp(-mouseX,-1.0f,1.0f),0.0f));
- 			}
-			*/
 			// apply resizing on graphics device if it has been triggered by the context
 			if (m_context->isSizeDirty())
 			{
@@ -192,16 +138,39 @@ void App::run()
 			m_graphicsDevice->clearRenderTargets();									// Clear render targets
 
 			// temp controller update code
-			//m_controller->setFovFromAngle(52.0f,m_graphicsDevice->getAspectRatio());
-			//m_controller->update((float)dt);
+			m_controller->setFovFromAngle(52.0f,m_graphicsDevice->getAspectRatio());
+			m_controller->update((float)dt);
 
 			// Run the devices
 			// ---------------------------------------------------------------------------------------------
-			//m_kernelDevice->update((float)dt,m_controller,debugDrawMode,shadowMode);	// Update kernel data
+			
+			int v[11] = {'G', 'd', 'k', 'k', 'n', 31, 'v', 'n', 'q', 'k', 'c'};
+
+			// Serial (CPU)
 
 
+			// PPL (CPU)
+			int pplRes[11];
+			concurrency::parallel_for(0, 11, [&](int n) {
+				pplRes[n]=v[n]+1;
+			});
+			for(unsigned int i = 0; i < 11; i++) 
+				std::cout << static_cast<char>(pplRes[i]); 
 
-			//m_kernelDevice->executeKernelJob((float)dt,KernelDevice::J_RAYTRACEWORLD);		// Run kernels
+			// C++AMP (GPU)
+			concurrency::array_view<int> av(11, v); 
+			concurrency::parallel_for_each(av.extent, [=](concurrency::index<1> idx) restrict(amp) 
+			{ 
+				av[idx] += 1; 
+			});
+
+
+			// Print C++AMP
+			for(unsigned int i = 0; i < 11; i++) 
+				std::cout << static_cast<char>(av[i]); 
+
+
+			// ====================================================
 
 			m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);		// Run passes
 			m_graphicsDevice->flipBackBuffer();										// Flip!

@@ -3,6 +3,7 @@
 #include "Buffer.h"
 
 struct PVertex;
+class Mesh;
 
 // =======================================================================================
 //                                      BufferFactory
@@ -24,6 +25,7 @@ public:
 	virtual ~BufferFactory();
 
 	Buffer<PVertex>* createFullScreenQuadBuffer();
+	Mesh* createBoxMesh();
 
 
 	///-----------------------------------------------------------------------------------

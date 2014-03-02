@@ -37,6 +37,9 @@
     <Filter Include="Vertices">
       <UniqueIdentifier>{b9def0ad-4bc0-4dfa-8546-828851420522}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Meshes">
+      <UniqueIdentifier>{33eebbd9-973f-43f3-acb4-fbcd7cf957a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphicsException.h">
@@ -97,6 +100,9 @@
       <Filter>Factories\ViewFactory</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsDevice.h" />
+    <ClInclude Include="Mesh.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferBase.cpp">
@@ -127,5 +133,8 @@
       <Filter>Factories\ViewFactory</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsDevice.cpp" />
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
