@@ -160,6 +160,7 @@
     <ClInclude Include="GraphicsDeviceFactory.h" />
     <ClInclude Include="GraphicsException.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshShader.h" />
     <ClInclude Include="PVertex.h" />
     <ClInclude Include="RenderStateEnums.h" />
     <ClInclude Include="RenderStateHelper.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="ComposeShader.cpp" />
     <ClCompile Include="GraphicsDevice.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshShader.cpp" />
     <ClCompile Include="RenderStateHelper.cpp" />
     <ClCompile Include="ShaderBase.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />

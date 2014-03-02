@@ -9,6 +9,7 @@
 
 
 #include "ComposeShader.h"
+#include "MeshShader.h"
 
 
 GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_windowMode )
@@ -35,6 +36,7 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 
 	// 4. init shaders
 	m_composeShader = m_shaderFactory->createComposeShader(L"../shaders/ComposeShader.hlsl");
+	m_meshShader = m_shaderFactory->createComposeShader(L"../shaders/MeshShader.hlsl");
 
 	// 5. build states
 	buildBlendStates();
@@ -47,6 +49,7 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 
 	// 6. Create draw-quad
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
+	m_boxMesh = m_bufferFactory->createBoxMesh();
 
 
 	fitViewport();
@@ -68,6 +71,7 @@ GraphicsDevice::~GraphicsDevice()
 	delete m_composeShader;
 	//
 	delete m_fullscreenQuad;
+	delete m_boxMesh;
 	//
 	for (unsigned int i = 0; i < m_blendStates.size(); i++){
 		SAFE_RELEASE(m_blendStates[i]);

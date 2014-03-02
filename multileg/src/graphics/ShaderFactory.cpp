@@ -2,6 +2,7 @@
 #include "BufferFactory.h"
 #include "GraphicsException.h"
 #include "ComposeShader.h"
+#include "MeshShader.h"
 #include <D3DCompiler.h>
 #include <comdef.h>
 #include <d3d11.h>
@@ -69,6 +70,27 @@ ComposeShader* ShaderFactory::createComposeShader( const LPCWSTR& p_filePath )
 	createShaderInitData(&shaderVariables,inputLayout,vertexData,pixelData,samplerState,NULL);
 
 	return new ComposeShader(shaderVariables);
+}
+
+
+MeshShader* ShaderFactory::createMeshShader( const LPCWSTR& p_filePath )
+{
+	ID3D11SamplerState*		samplerState = NULL;
+	ID3D11InputLayout*		inputLayout = NULL;
+	ShaderVariableContainer shaderVariables;
+
+	VSData* vertexData	= new VSData();
+	PSData* pixelData	= new PSData();
+
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS", m_shaderModelVersion);
+
+	createAllShaderStages(vertexData, pixelData);
+	createSamplerState(&samplerState);
+	createVertexInputLayout(vertexData,&inputLayout);
+	createShaderInitData(&shaderVariables,inputLayout,vertexData,pixelData,samplerState,NULL);
+
+	return new MeshShader(shaderVariables);
 }
 
 

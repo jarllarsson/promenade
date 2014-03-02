@@ -103,6 +103,9 @@
     <ClInclude Include="Mesh.h">
       <Filter>Meshes</Filter>
     </ClInclude>
+    <ClInclude Include="MeshShader.h">
+      <Filter>Shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferBase.cpp">
@@ -135,6 +138,9 @@
     <ClCompile Include="GraphicsDevice.cpp" />
     <ClCompile Include="Mesh.cpp">
       <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshShader.cpp">
+      <Filter>Shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

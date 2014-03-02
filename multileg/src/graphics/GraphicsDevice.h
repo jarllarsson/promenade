@@ -10,6 +10,7 @@ class BufferFactory;
 class ShaderFactory;
 class TextureFactory;
 class ComposeShader;
+class MeshShader;
 class Texture;
 
 
@@ -33,10 +34,10 @@ public:
 	const static int DEPTH_IDX = 10;
 	enum GBufferChannel {
 		GBUF_INVALID	= -1,
-		GBUF_DIFFUSE	= RT0,				// R, G, B, LinDepth(Raytracer)
+		GBUF_DIFFUSE	= RT0,				// R, G, B, LinDepth
 		GBUF_NORMAL		= RT1,				// X, Y, Z, (Something)		
 		GBUF_COUNT,
-		GBUF_DEPTH		= DEPTH_IDX,		// Depth(Rasterizer)
+		GBUF_DEPTH		= DEPTH_IDX,		// Depth
 	};
 
 	enum RenderTargetSpec {
@@ -145,10 +146,12 @@ private:
 	TextureFactory* m_textureFactory;
 
 	// Shaders
-	ComposeShader* m_composeShader;
+	ComposeShader*	m_composeShader;
+	MeshShader*		m_meshShader;
 
 	// Fullscreen quad for drawing
-	Buffer<PVertex>* m_fullscreenQuad;
+	Buffer<PVertex>*	m_fullscreenQuad;
+	Mesh*				m_boxMesh;
 
 	// Blend states
 	vector<ID3D11BlendState*> m_blendStates;
