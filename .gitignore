@@ -1,5 +1,4 @@
 # Common
-*.sln
 *.pidb
 *.userprefs
 *.suo
@@ -53,3 +52,11 @@ bin/x64/*.txt
 *.csproj
 *.unityproj
 
+
+/proto/pd-controller/pd-controller-csharp.sln
+
+/proto/pd-controller/pd-controller.sln
+
+/proto/physics-test/physics-test-csharp.sln
+
+/proto/physics-test/physics-test.sln
