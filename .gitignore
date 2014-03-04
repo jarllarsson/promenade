@@ -60,3 +60,5 @@ bin/x64/*.txt
 /proto/physics-test/physics-test-csharp.sln
 
 /proto/physics-test/physics-test.sln
+/proto/leg-frame/leg-frame-csharp.sln
+/proto/leg-frame/leg-frame.sln
