@@ -6,7 +6,7 @@ using System.Collections;
  *  ===================================================================
  *   Feet move from P1 to (P2 = PLF +(v−vd)sfp)
  *   - P1 and P2 are feet start- and end positions
- *   - PLF is the default stepping location relative to the leg frame
+ *   - PLF is the default stepping location relative to the leg frame (saggital and coronal)
  *   - sfp is a scale factor
  *   - v is velocity
  *   - vd is desired velocity

@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*  ===================================================================
+ *                          Gait player
+ *  ===================================================================
+ *   Contains data on total time and current time, ie. the timeline.
+ *   */
 public class GaitPlayer : MonoBehaviour 
 {
     // Total gait time (ie. stride duration)
