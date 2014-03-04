@@ -1,5 +1,4 @@
 # Common
-*.sln
 *.pidb
 *.userprefs
 *.suo
@@ -53,3 +52,5 @@ bin/x64/*.txt
 *.csproj
 *.unityproj
 
+/proto/leg-frame/leg-frame-csharp.sln
+/proto/leg-frame/leg-frame.sln
