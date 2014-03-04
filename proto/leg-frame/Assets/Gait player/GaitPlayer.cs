@@ -22,10 +22,10 @@ public class GaitPlayer : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        updatePhase(Time.deltaTime);
+
 	}
 
-    void updatePhase(float p_t)
+    public void updatePhase(float p_t)
     {
         m_gaitPhase += p_t / m_tuneGaitPeriod;
         while (m_gaitPhase > 1.0f)

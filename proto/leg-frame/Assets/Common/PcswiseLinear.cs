@@ -90,12 +90,12 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         }
 	}
 
-    float getValAt(float p_t)
+    float getValAt(float p_phi)
     {
-        float realTime = (float)s_size * p_t;
+        float realTime = (float)s_size * p_phi;
         int low = Mathf.Min(s_size-1,Mathf.Max(0,(int)realTime));
-        int hi = Mathf.Min(s_size-1,(int)(s_size*p_t + 1.0f));
-        float lin = p_t * (float)s_size - (float)low;             
+        int hi = Mathf.Min(s_size-1,(int)(s_size*p_phi + 1.0f));
+        float lin = p_phi * (float)s_size - (float)low;             
         //Debug.Log(p_t+": "+low + "->"+ hi+" [t"+lin+"]");
         //Debug.Log(hi);
         float val = 0.0f;
@@ -106,7 +106,7 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         catch(Exception e)
         {
             Debug.Log(e.Message.ToString());
-            Debug.Log(p_t + ": " + low + "->" + hi + " [t" + lin + "]");
+            Debug.Log(p_phi + ": " + low + "->" + hi + " [t" + lin + "]");
         }
         return val;
     }

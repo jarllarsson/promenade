@@ -7,6 +7,8 @@ using System.Collections;
  *   The reference frame for a row of legs.
  *   It contains movement properties for this row, as well as feedback
  *   functionalities for torque handling.
+ *   Each joint in the leg has a PD controller providing torque.
+ *   The hip-joints do not however.
  *   */
 
 public class LegFrame : MonoBehaviour 
@@ -45,6 +47,10 @@ public class LegFrame : MonoBehaviour
     {
 	
 	}
+
+    //public 
+
+
 
 
 }

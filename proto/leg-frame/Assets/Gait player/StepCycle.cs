@@ -31,29 +31,29 @@ public class StepCycle : MonoBehaviour
 
 
 
-    public bool isInStance(float p_t)
+    public bool isInStance(float p_phi)
     {
         // p_t is always < 1
         float maxt = m_tuneStepTrigger + m_tuneDutyFactor;
-        return (maxt <= 1.0f && p_t >= m_tuneStepTrigger && p_t < maxt) || // if within bounds, if more than offset and less than offset+len
-               (maxt > 1.0f && ((p_t >= m_tuneStepTrigger) || p_t < maxt - 1.0f)); // if phase shifted out of bounds(>1), more than offset or less than len-1
+        return (maxt <= 1.0f && p_phi >= m_tuneStepTrigger && p_phi < maxt) || // if within bounds, if more than offset and less than offset+len
+               (maxt > 1.0f && ((p_phi >= m_tuneStepTrigger) || p_phi < maxt - 1.0f)); // if phase shifted out of bounds(>1), more than offset or less than len-1
     }
 
     //
     // Get phase of swing, is zero in stance (0-1-0)
     // can be used as period in transition function
     //
-    public float getSwingPhase(float p_t)
+    public float getSwingPhase(float p_phi)
     {
         // p_t is always < 1
-        if (isInStance(p_t)) return 0.0f;
+        if (isInStance(p_phi)) return 0.0f;
         float maxt = m_tuneStepTrigger + m_tuneDutyFactor;
-        float pos = p_t;
+        float pos = p_phi;
         float swinglen = 1.0f - m_tuneDutyFactor; // get total swing time
         if (maxt <= 1.0f) // max is inside bounds
         {
             float rest = 1.0f - maxt; // rightmost rest swing			
-            if (p_t > maxt)
+            if (p_phi > maxt)
                 pos -= maxt; // get start as after end of stance		
             else
                 pos += rest; // add rest when at beginning again
