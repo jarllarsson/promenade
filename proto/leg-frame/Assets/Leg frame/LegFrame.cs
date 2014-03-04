@@ -19,6 +19,12 @@ public class LegFrame : MonoBehaviour
     // The gait for each leg
     StepCycle[] m_tuneStepCycles = new StepCycle[2];
 
+    // The joints which are connected directly to the leg frame
+    // Ie. the "hip joints". They're not driven by PD-controllers
+    // and will affect the leg frame torque as well as get corrected
+    // torques while in stance.
+    public int[] m_hipJointIds = new int[2];
+
     // NOTE!
     // I've lessened the amount of parameters
     // by letting each leg in a leg frame share
