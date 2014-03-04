@@ -111,7 +111,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  m_initAsFunc: 3
+  m_initAsFunc: 0
   m_curve:
     serializedVersion: 2
     m_Curve:

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using System;
 
 /*  ===================================================================
  *                     Piece wise linear function
@@ -77,17 +78,39 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            float t = i * 0.01f;
+            float t1 = (i+1) * 0.01f;
+            Debug.DrawLine(transform.position + Vector3.right*t + Vector3.up * getValAt(t),
+                transform.position + Vector3.right*t1 + Vector3.up * getValAt(t1),
+                new Color((float)i/(float)99,0.5f,(float)i/(float)99));
+        }
 	}
 
     float getValAt(float p_t)
     {
-        float low = (float)((int)p_t);
-        float hi = (float)((int)(p_t + 0.5f));
-        float lin = p_t - low;
-        return Mathf.Lerp(low, hi, lin);
+        float realTime = (float)s_size * p_t;
+        int low = Mathf.Min(s_size-1,Mathf.Max(0,(int)realTime));
+        int hi = Mathf.Min(s_size-1,(int)(s_size*p_t + 1.0f));
+        float lin = p_t * (float)s_size - (float)low;             
+        //Debug.Log(p_t+": "+low + "->"+ hi+" [t"+lin+"]");
+        //Debug.Log(hi);
+        float val = 0.0f;
+        try
+        {
+            val = Mathf.Lerp(m_tuneDataPoints[low], m_tuneDataPoints[hi], lin);
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e.Message.ToString());
+            Debug.Log(p_t + ": " + low + "->" + hi + " [t" + lin + "]");
+        }
+        return val;
     }
+
 
     void OnGUI()
     {
