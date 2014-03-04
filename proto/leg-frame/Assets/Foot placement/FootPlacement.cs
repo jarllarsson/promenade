@@ -16,7 +16,7 @@ public class FootPlacement : MonoBehaviour
 {
     // Tuneable scaling of velocity offset for
     // feet placement
-    public float m_tuneScaleFootPos = 1.0f;
+    public float m_tuneVelocityScale = 1.0f;
 
 
 	// Use this for initialization
@@ -35,6 +35,6 @@ public class FootPlacement : MonoBehaviour
                                        Vector3 p_velocity,
                                        Vector3 p_desiredVelocity)
     {
-        return p_footPosLF + (p_velocity - p_desiredVelocity) * m_tuneScaleFootPos;
+        return p_footPosLF + (p_velocity - p_desiredVelocity) * m_tuneVelocityScale;
     }
 }

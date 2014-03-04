@@ -12,11 +12,11 @@ public class StepCycle : MonoBehaviour
 {
     // Fraction of overall normalized time for which the 
     // foot is touching the ground.
-    float m_tuneDutyFactor;
+    public float m_tuneDutyFactor;
 
     // Offset time point in normalized time when the
     // foot begins its cycle.
-    float m_tuneStepTrigger;
+    public float m_tuneStepTrigger;
 
 
 	// Use this for initialization
