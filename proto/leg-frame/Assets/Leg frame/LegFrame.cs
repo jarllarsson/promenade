@@ -13,11 +13,11 @@ using System.Collections;
 
 public class LegFrame : MonoBehaviour 
 {
-    enum LEG{LEFT=0,RIGHT=1}
-    enum PLANE{CORONAL = 0,SAGGITAL = 1}
+    public enum LEG { LEFT = 0, RIGHT = 1 }
+    public enum PLANE { CORONAL = 0, SAGGITAL = 1 }
 
     // The gait for each leg
-    StepCycle[] m_tuneStepCycles = new StepCycle[2];
+    public StepCycle[] m_tuneStepCycles = new StepCycle[2];
 
     // The joints which are connected directly to the leg frame
     // Ie. the "hip joints". They're not driven by PD-controllers
@@ -34,21 +34,21 @@ public class LegFrame : MonoBehaviour
     // allow for phase shifting.
 
     // PLF, the coronal(x) and saggital(y) step distance
-    Vector2 m_tuneStepLength = new Vector2(0.0f,1.0f);
+    public Vector2 m_tuneStepLength = new Vector2(0.0f, 1.0f);
 
     // tsw, step interpolation trajectory (horizontal easing between P1 and P2)
-    PcswiseLinear m_tuneHorizontalTraj;
+    public PcswiseLinear m_tuneHorizontalTraj;
 
     // hsw, step height trajectory
-    PcswiseLinear m_tuneHeightTraj;
+    public PcswiseLinear m_tuneHeightTraj;
 
     // omegaLF, the desired heading orientation trajectory
     // yaw, pitch, roll
-    PcswiseLinear[] m_orientationTraj=new PcswiseLinear[3];
+    public PcswiseLinear[] m_orientationTraj = new PcswiseLinear[3];
 
     // PD-controller and driver for calculating desired torque based
     // on the desired orientation
-    PIDdriverTorque3 m_desiredTorquePD;
+    public PIDdriverTorque3 m_desiredTorquePD;
 
     void Awake()
     {

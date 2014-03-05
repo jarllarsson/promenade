@@ -32,13 +32,16 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
 
     // Editor specific to show curve
     public AnimationCurve m_curve = AnimationCurve.Linear(0.0f,0.0f,1.0f,1.0f);
+    // Debugging stuff
+    public int m_resetScale = 1;
+    public bool m_reset = false;
 
     void Awake()
     {
-        reset();
+        reset(1.0f);
     }
 
-    public void reset()
+    public void reset(float p_scale=1.0f)
     {
         for (int i = 0; i < s_size; i++)
         {
@@ -46,22 +49,22 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
             switch (m_initAsFunc)
             {
                 case INITTYPE.SIN:
-                    m_tuneDataPoints[i] = Mathf.Sin(t * 2.0f * Mathf.PI);
+                    m_tuneDataPoints[i] = p_scale*Mathf.Sin(t * 2.0f * Mathf.PI);
                     break;
                 case INITTYPE.COS:
-                    m_tuneDataPoints[i] = Mathf.Cos(t * 2.0f * Mathf.PI);
+                    m_tuneDataPoints[i] = p_scale * Mathf.Cos(t * 2.0f * Mathf.PI);
                     break;
                 case INITTYPE.COS_INV_NORM:
-                    m_tuneDataPoints[i] = (Mathf.Cos(t * 2.0f * Mathf.PI) - 1.0f) * -0.5f;
+                    m_tuneDataPoints[i] = p_scale * ((Mathf.Cos(t * 2.0f * Mathf.PI) - 1.0f) * -0.5f);
                     break;
                 case INITTYPE.HALF_SIN:
-                    m_tuneDataPoints[i] = Mathf.Sin(t * Mathf.PI);
+                    m_tuneDataPoints[i] = p_scale * Mathf.Sin(t * Mathf.PI);
                     break;
                 case INITTYPE.FLAT:
                     m_tuneDataPoints[i] = 0.0f;
                     break;
                 default:
-                    m_tuneDataPoints[i] = 0.5f;
+                    m_tuneDataPoints[i] = p_scale * 0.5f;
                     break;
             }
         }
@@ -89,33 +92,43 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
 	// Update is called once per frame
 	void Update () 
     {
-        for (int i = 0; i < 100; i++)
+        if (m_reset)
         {
-            float t = i * 0.01f;
-            float t1 = (i+1) * 0.01f;
-            Debug.DrawLine(transform.position + Vector3.right*t + Vector3.up * getValAt(t),
-                transform.position + Vector3.right*t1 + Vector3.up * getValAt(t1),
-                new Color((float)i/(float)99,0.5f,(float)i/(float)99));
+            reset((float)m_resetScale);
+            m_reset = false;
+        
+//
+            for (int i = 0; i < 100; i++)
+            {
+                float t = i * 0.01f;
+                float t1 = (i + 1) * 0.01f;
+                Debug.DrawLine(transform.position + Vector3.right * t + Vector3.up * getValAt(t),
+                    transform.position + Vector3.right * t1 + Vector3.up * getValAt(t1),
+                    new Color((float)i / (float)99, 0.5f, (float)i / (float)99),10.0f);
+            }
         }
 	}
 
     public float getValAt(float p_phi)
     {
-        float realTime = (float)s_size * p_phi;
-        int low = Mathf.Min(s_size-1,Mathf.Max(0,(int)realTime));
-        int hi = Mathf.Min(s_size-1,(int)(s_size*p_phi + 1.0f));
-        float lin = p_phi * (float)s_size - (float)low;             
-        //Debug.Log(p_t+": "+low + "->"+ hi+" [t"+lin+"]");
+        float realTime = (float)(s_size) * p_phi;
+        // lower bound idx (never greater than last idx)
+        int lowIdx = (int)(realTime);
+        // higher bound idx (loops back to 1 if over)
+        int hiIdx = (lowIdx+1) % (s_size);
+        // get amount of interpolation by subtracting the base from current
+        float lin = p_phi * (float)s_size - (float)lowIdx;
+        //Debug.Log(realTime + ": " + lowIdx + "->" + hiIdx + " [t" + lin + "]");
         //Debug.Log(hi);
         float val = 0.0f;
         try
         {
-            val = Mathf.Lerp(m_tuneDataPoints[low], m_tuneDataPoints[hi], lin);
+            val = Mathf.Lerp(m_tuneDataPoints[lowIdx], m_tuneDataPoints[hiIdx], lin);
         }
         catch(Exception e)
         {
             Debug.Log(e.Message.ToString());
-            Debug.Log(p_phi + ": " + low + "->" + hi + " [t" + lin + "]");
+            Debug.Log(p_phi + ": " + lowIdx + "->" + hiIdx + " [t" + lin + "]");
         }
         return val;
     }
@@ -123,6 +136,6 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
 
     void OnGUI()
     {
-        m_curve = EditorGUILayout.CurveField("curve", m_curve);
+        //m_curve = EditorGUILayout.CurveField("curve", m_curve);
     }
 }
