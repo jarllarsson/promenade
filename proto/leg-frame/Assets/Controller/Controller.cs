@@ -40,11 +40,13 @@ public class Controller : MonoBehaviour
 
     void updateTorques()
     {
+        // Get the two variants of torque
         Vector3[] tPD = computePDTorques(m_player.m_gaitPhase);
         Vector3[] tVF = computeVFTorques(m_player.m_gaitPhase);
-
+        // Sum them
         for (int i = 0; i < m_jointTorques.Length; i++)
             m_jointTorques[i] = tPD[i] + tVF[i];
+
     }
 
     // Compute the torque of all PD-controllers in the joints
