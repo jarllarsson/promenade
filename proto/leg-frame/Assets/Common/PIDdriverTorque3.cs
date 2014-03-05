@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*  ===================================================================
+ *                             PIDdriverTorque3
+ *  ===================================================================
+ *   Uses 3 PIDs to minimize a quaternion error by 
+ *   returning a torque vector.
+ *   */
+
 public class PIDdriverTorque3 : MonoBehaviour 
 {
     public PIDn m_pid;

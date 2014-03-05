@@ -1,6 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*  ===================================================================
+ *                          PIDdriverScalar 
+ *  ===================================================================
+ *   Uses a PID to minimize a scalar error on the set parameter.
+ *   */
+
 public class PIDdriverScalar : MonoBehaviour 
 {
     public PID m_pid;

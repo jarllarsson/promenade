@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/* ====================================
- *       A generic PID-controller
- * ==================================== */
+/*  ===================================================================
+ *                     A generic PID-controller
+ *  ===================================================================
+ *   Controller logic for error minimization.
+ *   */
 public class PID : MonoBehaviour 
 {
     public float m_Kp=1.0f; // Proportional coefficient

@@ -551,15 +551,16 @@ MonoBehaviour:
   m_tuneStepCycles:
   - {fileID: 0}
   - {fileID: 0}
-  m_hipJointIds: 0000000000000000
+  m_id: 0
+  m_neighbourJointIds: 
   m_tuneStepLength: {x: 0, y: 1}
-  m_tuneHorizontalTraj: {fileID: 1783959271}
-  m_tuneHeightTraj: {fileID: 1783959270}
-  m_orientationTraj:
-  - {fileID: 1783959269}
-  - {fileID: 1783959268}
-  - {fileID: 1783959267}
-  m_desiredTorquePD: {fileID: 1783959273}
+  m_tuneStepHorizontalTraj: {fileID: 0}
+  m_tuneStepHeightTraj: {fileID: 0}
+  m_tuneOrientationLFTraj:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  m_desiredLFTorquePD: {fileID: 0}
 --- !u!114 &1783959275
 MonoBehaviour:
   m_ObjectHideFlags: 0

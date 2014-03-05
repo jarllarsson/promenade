@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /*  ===================================================================
  *                             Leg Frame
@@ -13,17 +14,24 @@ using System.Collections;
 
 public class LegFrame : MonoBehaviour 
 {
+    private const int c_legCount = 2; // always two legs per frame
     public enum LEG { LEFT = 0, RIGHT = 1 }
+    public enum NEIGHBOUR_JOINTS { HIP_LEFT=0, HIP_RIGHT=1, SPINE=2, COUNT }
     public enum PLANE { CORONAL = 0, SAGGITAL = 1 }
+    public enum ORIENTATION { YAW = 0, PITCH = 1, ROLL=3 }
 
     // The gait for each leg
-    public StepCycle[] m_tuneStepCycles = new StepCycle[2];
+    public StepCycle[] m_tuneStepCycles = new StepCycle[c_legCount];
+
+    // The id of the leg frame in the global torque list
+    public int m_id;
 
     // The joints which are connected directly to the leg frame
-    // Ie. the "hip joints". They're not driven by PD-controllers
+    // Ie. the "hip joints" and closest spine segment. 
+    // The hip joints are not driven by PD-controllers
     // and will affect the leg frame torque as well as get corrected
     // torques while in stance.
-    public int[] m_hipJointIds = new int[2];
+    public int[] m_neighbourJointIds = new int[(int)NEIGHBOUR_JOINTS.COUNT];
 
     // NOTE!
     // I've lessened the amount of parameters
@@ -37,24 +45,24 @@ public class LegFrame : MonoBehaviour
     public Vector2 m_tuneStepLength = new Vector2(0.0f, 1.0f);
 
     // tsw, step interpolation trajectory (horizontal easing between P1 and P2)
-    public PcswiseLinear m_tuneHorizontalTraj;
+    public PcswiseLinear m_tuneStepHorizontalTraj;
 
     // hsw, step height trajectory
-    public PcswiseLinear m_tuneHeightTraj;
+    public PcswiseLinear m_tuneStepHeightTraj;
 
     // omegaLF, the desired heading orientation trajectory
     // yaw, pitch, roll
-    public PcswiseLinear[] m_orientationTraj = new PcswiseLinear[3];
+    public PcswiseLinear[] m_tuneOrientationLFTraj = new PcswiseLinear[3];
 
     // PD-controller and driver for calculating desired torque based
     // on the desired orientation
-    public PIDdriverTorque3 m_desiredTorquePD;
+    public PIDdriverTorque3 m_desiredLFTorquePD;
 
     void Awake()
     {
         // The orientation heading trajectory starts out
         // without any compensations (flat).
-        foreach (PcswiseLinear traj in m_orientationTraj)
+        foreach (PcswiseLinear traj in m_tuneOrientationLFTraj)
         {
             traj.m_initAsFunc = PcswiseLinear.INITTYPE.FLAT;
             traj.reset();
@@ -74,18 +82,39 @@ public class LegFrame : MonoBehaviour
 	
 	}
 
+    // Retrieves the current orientation quaternion from the
+    // trajectory function at time phi.
     private Quaternion getCurrentDesiredOrientation(float p_phi)
     {
-        float yaw=m_orientationTraj[0].getValAt(p_phi);
-        float pitch=m_orientationTraj[1].getValAt(p_phi);
-        float roll=m_orientationTraj[2].getValAt(p_phi);
+        float yaw = m_tuneOrientationLFTraj[(int)ORIENTATION.YAW].getValAt(p_phi);
+        float pitch = m_tuneOrientationLFTraj[(int)ORIENTATION.PITCH].getValAt(p_phi);
+        float roll = m_tuneOrientationLFTraj[(int)ORIENTATION.ROLL].getValAt(p_phi);
         return Quaternion.Euler(new Vector3(pitch, yaw, roll));
     }
 
+    // Drives the PD-controller and retrieves the 3-axis torque
+    // vector that will be used as the desired torque for which the
+    // stance legs tries to accomplish.
     private Vector3 getPDTorque(Quaternion p_desiredOrientation)
     {
-        Vector3 torque = m_desiredTorquePD.drive(transform.rotation,p_desiredOrientation);
+        Vector3 torque = m_desiredLFTorquePD.drive(transform.rotation,p_desiredOrientation);
         return torque;
+    }
+
+    private void separateLegsPerPhase(float p_phi, ref List<int> p_stanceLegs, ref List<int> p_swingLegs)
+    {
+        for (int i = 0; i < c_legCount; i++)
+        {
+            // Only need to add the indices
+            if (m_tuneStepCycles[i].isInStance(p_phi))
+            {
+                p_stanceLegs.Add(i);
+            }
+            else
+            {
+                p_swingLegs.Add(i);
+            }
+        }
     }
 
     // This function applies the current torques to the leg frame
@@ -93,8 +122,32 @@ public class LegFrame : MonoBehaviour
     // the leg frame itself.
     public Vector3[] applyNetLegFrameTorque(Vector3[] p_currentTorques, float p_phi)
     {
+        // Preparations, get ahold of all legs in stance,
+        // all legs in swing. And get ahold of their and the 
+        // closest spine's torques.
+        List<int> stanceLegs=new List<int>();
+        List<int> swingLegs=new List<int>();
+        Vector3 tstance=Vector3.zero, tswing=Vector3.zero, tspine=Vector3.zero;
+        // Find the swing-, and stance legs
+        separateLegsPerPhase(p_phi,ref stanceLegs,ref swingLegs);
+        // Sum the torques, go through all ids, retrieve their joint id in
+        // the global torque vector, and retrieve the current torque:
+        for (int i=0;i<stanceLegs.Count;i++)
+            tstance+=p_currentTorques[m_neighbourJointIds[stanceLegs[i]]];
+        //
+        for (int i=0;i<swingLegs.Count;i++)
+            tswing+=p_currentTorques[m_neighbourJointIds[swingLegs[i]]];
+        //
+        tspine=p_currentTorques[m_neighbourJointIds[(int)NEIGHBOUR_JOINTS.SPINE]];
+
         // 1. Calculate current torque for leg frame:
         // tLF = tstance + tswing + tspine.
+        // Here the desired torque is feedbacked through the
+        // stance legs (see 3) as their current torque
+        // is the product of previous desired torque combined
+        // with current real-world scenarios.
+        Vector3 tLF=tstance+tswing+tspine;
+        p_currentTorques[m_id]=tLF;
 
         // 2. Calculate a desired torque, tdLF, using the previous current
         // torque, tLF, and a PD-controller driving towards the 
@@ -107,8 +160,18 @@ public class LegFrame : MonoBehaviour
         // 3. Now loop through all legs in stance (N) and
         // modify their torques in the vector according
         // to tstancei = (tdLF −tswing −tspine)/N
+        // This is to try to make the stance legs compensate
+        // for current errors in order to make the leg frame
+        // reach its desired torque.
+        int N = stanceLegs.Count;
+        for (int i = 0; i < N; i++)
+        {
+            int idx=m_neighbourJointIds[swingLegs[i]];
+            p_currentTorques[idx] = (tdLF - tswing - tspine)/(float)N;
+        }
 
-        // Return the modified vector
+        // Return the vector, now containing the new LF torque
+        // as well as any corrected stance-leg torques.
         return p_currentTorques;
     }
 

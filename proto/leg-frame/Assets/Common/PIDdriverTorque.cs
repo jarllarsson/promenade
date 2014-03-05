@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*  ===================================================================
+ *                             PIDdriverTorque
+ *  ===================================================================
+ *   Uses a PID to minimize an angle error by 
+ *   returning a torque scalar.
+ *   */
+
 public class PIDdriverTorque : MonoBehaviour 
 {
     public PID m_pid;

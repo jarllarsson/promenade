@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*  ===================================================================
+ *                     A visualizer for PID controllers
+ *  ===================================================================
+ *   Draws a graph of the proportional error.
+ *   */
 public class PIDvisualizer : MonoBehaviour 
 {
     public PID m_pid;

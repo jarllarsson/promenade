@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/* ====================================
- *       A generic PID-controller
- *         for n-scalar errors
- * ==================================== */
+/*  ===================================================================
+ *                     A generic PID-controller
+ *                      for n-scalar errors
+ *  ===================================================================
+ *   Wraps several PIDs into one for minimizing several scalars using
+ *   the same coefficients. Useful for vectors for example.
+ *   */
 public class PIDn : MonoBehaviour 
 {
     public float m_Kp=1.0f; // Proportional coefficient
