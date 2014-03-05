@@ -42,9 +42,25 @@ public class LegFrame : MonoBehaviour
     // hsw, step height trajectory
     PcswiseLinear m_tuneHeightTraj;
 
-    // PD-controller for calculating desired torque based
+    // omegaLF, the desired heading orientation trajectory
+    // yaw, pitch, roll
+    PcswiseLinear[] m_orientationTraj=new PcswiseLinear[3];
+
+    // PD-controller and driver for calculating desired torque based
     // on the desired orientation
-    PID m_desiredTorquePD;
+    PIDdriverTorque3 m_desiredTorquePD;
+
+    void Awake()
+    {
+        // The orientation heading trajectory starts out
+        // without any compensations (flat).
+        foreach (PcswiseLinear traj in m_orientationTraj)
+        {
+            traj.m_initAsFunc = PcswiseLinear.INITTYPE.FLAT;
+            traj.reset();
+        }
+        
+    }
 
 	// Use this for initialization
 	void Start () 
@@ -58,14 +74,24 @@ public class LegFrame : MonoBehaviour
 	
 	}
 
-    private Vector3 getPDTorque(Quaternion p_desiredOrientation)
+    private Quaternion getCurrentDesiredOrientation(float p_phi)
     {
-        float error=Quaternion.Angle(transform.rotation,p_desiredOrientation);
-        m_desiredTorquePD.drive(error,Time.deltaTime);
-        //return Quaternion.
+        float yaw=m_orientationTraj[0].getValAt(p_phi);
+        float pitch=m_orientationTraj[1].getValAt(p_phi);
+        float roll=m_orientationTraj[2].getValAt(p_phi);
+        return Quaternion.Euler(new Vector3(pitch, yaw, roll));
     }
 
-    public Vector3[] applyNetLegFrameTorque(Vector3[] p_currentTorques)
+    private Vector3 getPDTorque(Quaternion p_desiredOrientation)
+    {
+        Vector3 torque = m_desiredTorquePD.drive(transform.rotation,p_desiredOrientation);
+        return torque;
+    }
+
+    // This function applies the current torques to the leg frame
+    // and corrects the stance leg torques based on a desirec torque for
+    // the leg frame itself.
+    public Vector3[] applyNetLegFrameTorque(Vector3[] p_currentTorques, float p_phi)
     {
         // 1. Calculate current torque for leg frame:
         // tLF = tstance + tswing + tspine.
@@ -73,12 +99,17 @@ public class LegFrame : MonoBehaviour
         // 2. Calculate a desired torque, tdLF, using the previous current
         // torque, tLF, and a PD-controller driving towards the 
         // desired orientation, omegaLF.
+        Quaternion omegaLF=getCurrentDesiredOrientation(p_phi);
+        Vector3 tdLF = getPDTorque(omegaLF);
+        // test code
+        rigidbody.AddTorque(tdLF);
 
         // 3. Now loop through all legs in stance (N) and
         // modify their torques in the vector according
         // to tstancei = (tdLF −tswing −tspine)/N
 
         // Return the modified vector
+        return p_currentTorques;
     }
 
 

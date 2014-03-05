@@ -17,7 +17,8 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         SIN,
         COS,
         COS_INV_NORM, // inverted and normalized cos
-        HALF_SIN      // half sine
+        HALF_SIN,      // half sine
+        FLAT
     }
 
     // Number of data points
@@ -34,10 +35,15 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
 
     void Awake()
     {
-        for (int i=0;i<s_size;i++)
+        reset();
+    }
+
+    public void reset()
+    {
+        for (int i = 0; i < s_size; i++)
         {
-            float t=getTimeFromIdx(i);
-            switch(m_initAsFunc)
+            float t = getTimeFromIdx(i);
+            switch (m_initAsFunc)
             {
                 case INITTYPE.SIN:
                     m_tuneDataPoints[i] = Mathf.Sin(t * 2.0f * Mathf.PI);
@@ -51,6 +57,9 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
                 case INITTYPE.HALF_SIN:
                     m_tuneDataPoints[i] = Mathf.Sin(t * Mathf.PI);
                     break;
+                case INITTYPE.FLAT:
+                    m_tuneDataPoints[i] = 0.0f;
+                    break;
                 default:
                     m_tuneDataPoints[i] = 0.5f;
                     break;
@@ -62,7 +71,7 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         for (int i = 0; i < s_size; i++)
         {
             float t = getTimeFromIdx(i);
-            m_curve.AddKey(t,m_tuneDataPoints[i]);
+            m_curve.AddKey(t, m_tuneDataPoints[i]);
         }
     }
 
@@ -90,7 +99,7 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         }
 	}
 
-    float getValAt(float p_phi)
+    public float getValAt(float p_phi)
     {
         float realTime = (float)s_size * p_phi;
         int low = Mathf.Min(s_size-1,Mathf.Max(0,(int)realTime));

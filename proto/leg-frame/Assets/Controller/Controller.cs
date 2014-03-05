@@ -40,13 +40,22 @@ public class Controller : MonoBehaviour
 
     void updateTorques()
     {
+        float phi = m_player.m_gaitPhase;
         // Get the two variants of torque
-        Vector3[] tPD = computePDTorques(m_player.m_gaitPhase);
-        Vector3[] tVF = computeVFTorques(m_player.m_gaitPhase);
+        Vector3[] tPD = computePDTorques(phi);
+        Vector3[] tVF = computeVFTorques(phi);
         // Sum them
         for (int i = 0; i < m_jointTorques.Length; i++)
+        {
             m_jointTorques[i] = tPD[i] + tVF[i];
+        }
 
+        // Apply them to the leg frames, also
+        // feed back corrections for hip joints
+        for (int i = 0; i < m_legFrames.Length; i++)
+        {
+            m_jointTorques = m_legFrames[i].applyNetLegFrameTorque(m_jointTorques, phi);
+        }
     }
 
     // Compute the torque of all PD-controllers in the joints
