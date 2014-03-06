@@ -6,6 +6,7 @@ using System.Collections;
  *  ===================================================================
  *   Uses 3 PIDs to minimize a quaternion error by 
  *   returning a torque vector.
+ *   [Deprecated]
  *   */
 
 public class PIDdriverTorque3 : MonoBehaviour 
@@ -35,6 +36,7 @@ public class PIDdriverTorque3 : MonoBehaviour
         Vector3 dir;
         error.ToAngleAxis(out a, out dir);
         // Get torque
-        return m_pid.drive(a * dir, Time.deltaTime); // Note, these are 3 PIDs
+        Vector3 vec=m_pid.drive(a * dir, Time.deltaTime);
+        return vec; // Note, these are 3 PIDs
     }
 }

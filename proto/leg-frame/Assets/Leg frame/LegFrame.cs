@@ -16,9 +16,9 @@ public class LegFrame : MonoBehaviour
 {
     public const int c_legCount = 2; // always two legs per frame
     public enum LEG { LEFT = 0, RIGHT = 1 }
-    public enum NEIGHBOUR_JOINTS { HIP_LEFT=0, HIP_RIGHT=1, SPINE=2, COUNT }
+    public enum NEIGHBOUR_JOINTS { HIP_LEFT=0, HIP_RIGHT=1, SPINE=2, COUNT=3 }
     public enum PLANE { CORONAL = 0, SAGGITAL = 1 }
-    public enum ORIENTATION { YAW = 0, PITCH = 1, ROLL=3 }
+    public enum ORIENTATION { YAW = 0, PITCH = 1, ROLL=2 }
 
     // The gait for each leg
     public StepCycle[] m_tuneStepCycles = new StepCycle[c_legCount];
@@ -42,7 +42,7 @@ public class LegFrame : MonoBehaviour
     // allow for phase shifting.
 
     // PLF, the coronal(x) and saggital(y) step distance
-    public Vector2 m_tuneStepLength = new Vector2(0.0f, 1.0f);
+    public Vector2 m_tuneStepLength = new Vector2(3.0f, 5.0f);
 
     // tsw, step interpolation trajectory (horizontal easing between P1 and P2)
     public PcswiseLinear m_tuneStepHorizontalTraj;
@@ -56,15 +56,24 @@ public class LegFrame : MonoBehaviour
 
     // PD-controller and driver for calculating desired torque based
     // on the desired orientation
-    public PIDdriverTorque3 m_desiredLFTorquePD;
+    public PIDn m_desiredLFTorquePD;
+
+    // Foot controllers
+    public Vector3[] m_footPlacement = new Vector3[c_legCount];
+    public float m_tuneFootPlacementVelocityScale = 1.0f;
+
 
     void Awake()
     {
+        for (int i = 0; i < (int)NEIGHBOUR_JOINTS.COUNT; i++ )
+        {
+            m_neighbourJointIds[i] = -1;
+        }
         // The orientation heading trajectory starts out
         // without any compensations (flat).
         foreach (PcswiseLinear traj in m_tuneOrientationLFTraj)
         {
-            traj.m_initAsFunc = PcswiseLinear.INITTYPE.FLAT;
+            //traj.m_initAsFunc = PcswiseLinear.INITTYPE.FLAT;
             traj.reset();
         }
         
@@ -82,6 +91,36 @@ public class LegFrame : MonoBehaviour
 	
 	}
 
+    // Calculate the next position where the foot should be placed for legs in swing
+    public void updateFootPosForSwingLegs(float p_phi, Vector3 p_velocity, Vector3 p_desiredVelocity)
+    {
+        for (int i = 0; i < c_legCount; i++)
+        {
+            // The position is updated as long as the leg
+            // is in stance. This means that the last calculated
+            // position when the foot leaves the ground is used.
+            if (m_tuneStepCycles[i].isInStance(p_phi))
+            {
+                float mirror=(float)(i*2-1); // flips the coronal axis for the left leg
+                Vector3 regularFootPos = transform.TransformPoint(new Vector3(mirror*m_tuneStepLength.x,0.0f,m_tuneStepLength.y));
+                Vector3 finalPos=calculateVelocityScaledFootPos(regularFootPos, p_velocity, p_desiredVelocity);
+                m_footPlacement[i] = projectFootPosToGround(finalPos);
+            }
+        }
+    }
+
+    private Vector3 projectFootPosToGround(Vector3 p_footPosLF)
+    {
+        return new Vector3(p_footPosLF.x,0.0f,p_footPosLF.z); // for now, super simple lock to 0
+    }
+
+    private Vector3 calculateVelocityScaledFootPos(Vector3 p_footPosLF,
+                                                   Vector3 p_velocity,
+                                                   Vector3 p_desiredVelocity)
+    {
+        return p_footPosLF + (p_velocity - p_desiredVelocity) * m_tuneFootPlacementVelocityScale;
+    }
+
     // Retrieves the current orientation quaternion from the
     // trajectory function at time phi.
     private Quaternion getCurrentDesiredOrientation(float p_phi)
@@ -97,7 +136,7 @@ public class LegFrame : MonoBehaviour
     // stance legs tries to accomplish.
     private Vector3 getPDTorque(Quaternion p_desiredOrientation)
     {
-        Vector3 torque = m_desiredLFTorquePD.drive(transform.rotation,p_desiredOrientation);
+        Vector3 torque = m_desiredLFTorquePD.drive(transform.rotation,p_desiredOrientation,Time.deltaTime);
         return torque;
     }
 
@@ -142,7 +181,9 @@ public class LegFrame : MonoBehaviour
         for (int i=0;i<swingLegs.Count;i++)
             tswing+=p_currentTorques[m_neighbourJointIds[swingLegs[i]]];
         //
-        tspine=p_currentTorques[m_neighbourJointIds[(int)NEIGHBOUR_JOINTS.SPINE]];
+        int spineIdx=m_neighbourJointIds[(int)NEIGHBOUR_JOINTS.SPINE];
+        if (spineIdx!=-1)
+            tspine=p_currentTorques[spineIdx];
 
         // 1. Calculate current torque for leg frame:
         // tLF = tstance + tswing + tspine.
@@ -159,7 +200,7 @@ public class LegFrame : MonoBehaviour
         Quaternion omegaLF=getCurrentDesiredOrientation(p_phi);
         Vector3 tdLF = getPDTorque(omegaLF);
         // test code
-        rigidbody.AddTorque(tdLF);
+        //rigidbody.AddTorque(tdLF);
 
         // 3. Now loop through all legs in stance (N) and
         // modify their torques in the vector according
@@ -172,6 +213,35 @@ public class LegFrame : MonoBehaviour
         {
             int idx=m_neighbourJointIds[swingLegs[i]];
             p_currentTorques[idx] = (tdLF - tswing - tspine)/(float)N;
+            //if (p_currentTorques[idx].magnitude > 100.0f)
+            //{
+            //    p_currentTorques[idx].Normalize();
+            //    Debug.Log("Normalized!");
+            //}
+            if (float.IsNaN(p_currentTorques[idx].x))
+            {
+                Debug.Log("NAN");
+                Debug.Log("omegaLF "+omegaLF.ToString());
+                Debug.Log("current " + transform.rotation.ToString());
+                Quaternion error = omegaLF * Quaternion.Inverse(omegaLF);
+                // Separate angle and axis, so we can feed the axis-wise
+                // errors to the PIDs.
+                float a;
+                Vector3 dir;
+                error.ToAngleAxis(out a, out dir);
+                Debug.Log("omegaLF^-1 " + Quaternion.Inverse(omegaLF).ToString());
+                Debug.Log("deltaT " + Time.deltaTime);
+                Debug.Log("error " + error.ToString());
+                Debug.Log("a " + error.ToString());
+                Debug.Log("dir " + dir.ToString());
+                Debug.Log("tdLF " + tdLF.ToString());
+                Debug.Log("tSwing " + tswing.ToString());
+                Debug.Log("tSpine " + tspine.ToString());
+                Debug.Log(idx + " N: " + N);
+                Debug.Log(p_currentTorques[idx]);
+                Time.timeScale = 0.0f;
+            }
+            
         }
 
         // Return the vector, now containing the new LF torque
@@ -179,7 +249,14 @@ public class LegFrame : MonoBehaviour
         return p_currentTorques;
     }
 
-
+    public void OnDrawGizmos()
+    {
+        for (int i = 0; i < m_footPlacement.Length; i++)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(m_footPlacement[i],0.5f);
+        }
+    }
 
 
 }

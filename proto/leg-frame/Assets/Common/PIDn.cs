@@ -29,11 +29,29 @@ public class PIDn : MonoBehaviour
             float oldError = m_P[i];
             m_P[i] = p_error[i]; // store current error
             m_I[i] += m_P[i] * p_dt;  // accumulate error velocity to integral term
-            m_D[i] = (m_P[i] - oldError) / p_dt; // calculate speed of error change
+            m_D[i] = (m_P[i] - oldError) / Mathf.Max(0.001f,p_dt); // calculate speed of error change
+//             if (float.IsNaN(m_D[i]))
+//                 Debug.Log("inpid " + p_dt + " " + (m_P[i] - oldError) + " / " + p_dt            
             // return weighted sum
             res[i] = m_Kp * m_P[i] + m_Ki * m_I[i] + m_Kd * m_D[i];
         }
         return res;
+    }
+
+    public Vector3 drive(Quaternion p_current, Quaternion p_goal, float p_dt)
+    {
+        // To get quaternion "delta", rotate by the inverse of current
+        // to get to the origin, then multiply by goal rotation to get "what's left"
+        // The resulting quaternion is the "delta".
+        Quaternion error = p_goal * Quaternion.Inverse(p_current);
+        // Separate angle and axis, so we can feed the axis-wise
+        // errors to the PIDs.
+        float a;
+        Vector3 dir;
+        error.ToAngleAxis(out a, out dir);
+        // Get torque
+        Vector3 vec = drive(a * dir, Time.deltaTime);
+        return vec; // Note, these are 3 PIDs
     }
 
     public Vector2 drive(Vector2 p_error, float p_dt)

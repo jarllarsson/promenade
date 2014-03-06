@@ -17,19 +17,8 @@ public class FootPlacement : MonoBehaviour
     // Tuneable scaling of velocity offset for
     // feet placement
     public float m_tuneVelocityScale = 1.0f;
+    public Vector3 m_currentFootPos;
 
-
-	// Use this for initialization
-	void Start () 
-    {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () 
-    {
-	
-	}
 
     Vector3 calculateVelocityScaledPos(Vector3 p_footPosLF,
                                        Vector3 p_velocity,

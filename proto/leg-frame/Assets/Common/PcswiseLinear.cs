@@ -106,6 +106,7 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
                     transform.position + Vector3.right * t1 + Vector3.up * getValAt(t1),
                     new Color((float)i / (float)99, 0.5f, (float)i / (float)99),10.0f);
             }
+            
         }
 	}
 
@@ -113,7 +114,7 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
     {
         float realTime = (float)(s_size) * p_phi;
         // lower bound idx (never greater than last idx)
-        int lowIdx = (int)(realTime);
+        int lowIdx = (int)(realTime) % (s_size);
         // higher bound idx (loops back to 1 if over)
         int hiIdx = (lowIdx+1) % (s_size);
         // get amount of interpolation by subtracting the base from current
