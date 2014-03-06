@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 public class LegFrame : MonoBehaviour 
 {
-    private const int c_legCount = 2; // always two legs per frame
+    public const int c_legCount = 2; // always two legs per frame
     public enum LEG { LEFT = 0, RIGHT = 1 }
     public enum NEIGHBOUR_JOINTS { HIP_LEFT=0, HIP_RIGHT=1, SPINE=2, COUNT }
     public enum PLANE { CORONAL = 0, SAGGITAL = 1 }
@@ -101,7 +101,11 @@ public class LegFrame : MonoBehaviour
         return torque;
     }
 
-    private void separateLegsPerPhase(float p_phi, ref List<int> p_stanceLegs, ref List<int> p_swingLegs)
+    // Function to get the stance and swing legs 
+    // sorted into two separate lists
+    private void separateLegsPerPhase(float p_phi, 
+                                      ref List<int> p_stanceLegs, 
+                                      ref List<int> p_swingLegs)
     {
         for (int i = 0; i < c_legCount; i++)
         {

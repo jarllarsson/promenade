@@ -68,4 +68,22 @@ public class StepCycle : MonoBehaviour
         }
         return pos;
     }
+
+    public float getStancePhase(float p_phi)
+    {
+        // p_t is always < 1
+        float maxt = m_tuneStepTrigger + m_tuneDutyFactor;
+        if (maxt <= 1.0f && p_phi >= m_tuneStepTrigger && p_phi < maxt)// if within bounds, if more than offset and less than offset+len
+        { 
+            return (p_phi-m_tuneStepTrigger)/m_tuneDutyFactor;
+        }
+        else if(maxt > 1.0f) // if phase shifted out of bounds(>1), more than offset or less than len-1
+        {
+            if (p_phi >= m_tuneStepTrigger)
+                return (p_phi - m_tuneStepTrigger) / m_tuneDutyFactor;
+            else if (p_phi < maxt - 1.0f)
+                return (p_phi + 1.0f - m_tuneStepTrigger) / m_tuneDutyFactor;
+        }
+        return 0.0f;
+    }
 }

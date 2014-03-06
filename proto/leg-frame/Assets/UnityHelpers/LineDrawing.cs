@@ -49,12 +49,13 @@ public class Drawing
         // If pointB is above pointA, then angle needs to be negative.
         if (pointA.y > pointB.y) { angle = -angle; }
 
+
         // Use ScaleAroundPivot to adjust the size of the line.
         // We could do this when we draw the texture, but by scaling it here we can use
         //  non-integer values for the width and length (such as sub 1 pixel widths).
         // Note that the pivot point is at +.5 from pointA.y, this is so that the width of the line
         //  is centered on the origin at pointA.
-        GUIUtility.ScaleAroundPivot(new Vector2((pointB - pointA).magnitude, width), new Vector2(pointA.x, pointA.y + 0.5f));
+        // BUGGY! GUIUtility.ScaleAroundPivot(new Vector2((pointB - pointA).magnitude, width), new Vector2(pointA.x, pointA.y + 0.5f));
 
         // Set the rotation for the line.
         //  The angle was calculated with pointA as the origin.
@@ -64,7 +65,9 @@ public class Drawing
         // We're really only drawing a 1x1 texture from pointA.
         // The matrix operations done with ScaleAroundPivot and RotateAroundPivot will make this
         //  render with the proper width, length, and angle.
-        GUI.DrawTexture(new Rect(pointA.x, pointA.y, 1, 1), lineTex);
+        // Moved scaling here instead, the previous method didn't work very well. This won't allow sub-pixel scaling
+        // but whatever
+        GUI.DrawTexture(new Rect(pointA.x, pointA.y-(int)width/2, (int)((pointB - pointA).magnitude), (int)width), lineTex);
 
         // We're done.  Restore the GUI matrix and GUI color to whatever they were before.
         GUI.matrix = matrix;
