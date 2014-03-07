@@ -25,6 +25,8 @@ public class PID : MonoBehaviour
         m_P = p_error; // store current error
         m_I += m_P * p_dt;  // accumulate error velocity to integral term
         m_D = (m_P - oldError) / Mathf.Max(0.001f, p_dt); // calculate speed of error change
+        if (float.IsNaN(m_D))
+            Debug.Log(m_P + " " + oldError + " " + p_dt);
         // return weighted sum
         return m_Kp * m_P + m_Ki * m_I + m_Kd * m_D;
     }

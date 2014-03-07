@@ -40,7 +40,7 @@ public class Controller : MonoBehaviour
         updateDesiredVelocity(Time.deltaTime);
 
         // update feet positions
-        updateFootStrikePositions();
+        updateFeet();
 
         // Recalculate all torques for this frame
         updateTorques();
@@ -68,11 +68,11 @@ public class Controller : MonoBehaviour
         }
     }
 
-    void updateFootStrikePositions()
+    void updateFeet()
     {
         for (int i = 0; i < m_legFrames.Length; i++)
         {
-            m_legFrames[i].updateFootPosForSwingLegs(m_player.m_gaitPhase, m_currentVelocity, m_desiredVelocity);
+            m_legFrames[i].updateFeet(m_player.m_gaitPhase, m_currentVelocity, m_desiredVelocity);
         }
     }
 

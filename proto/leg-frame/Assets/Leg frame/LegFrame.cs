@@ -44,11 +44,6 @@ public class LegFrame : MonoBehaviour
     // PLF, the coronal(x) and saggital(y) step distance
     public Vector2 m_tuneStepLength = new Vector2(3.0f, 5.0f);
 
-    // tsw, step interpolation trajectory (horizontal easing between P1 and P2)
-    public PcswiseLinear m_tuneStepHorizontalTraj;
-
-    // hsw, step height trajectory
-    public PcswiseLinear m_tuneStepHeightTraj;
 
     // omegaLF, the desired heading orientation trajectory
     // yaw, pitch, roll
@@ -59,12 +54,23 @@ public class LegFrame : MonoBehaviour
     public PIDn m_desiredLFTorquePD;
 
     // Foot controllers
-    public Vector3[] m_footPlacement = new Vector3[c_legCount];
+    public Vector3[] m_footLiftPlacement = new Vector3[c_legCount]; // From where the foot was lifted
+    public bool[] m_footLiftPlacementPerformed = new bool[c_legCount]; // If foot just took off (and the "old" pos should be updated)
+    public Vector3[] m_footStrikePlacement = new Vector3[c_legCount]; // The place on the ground where the foot should strike next
+    public Vector3[] m_footTarget = new Vector3[c_legCount]; // The current position in the foot's swing trajectory
     public float m_tuneFootPlacementVelocityScale = 1.0f;
+    // hsw, step height trajectory
+    public PcswiseLinear m_tuneStepHeightTraj;
+    // tsw, step interpolation trajectory (horizontal easing between P1 and P2)
+    public PcswiseLinear m_tuneFootTransitionEase;
 
 
     void Awake()
     {
+        for (int i = 0; i < c_legCount; i++ )
+        {
+            m_footLiftPlacementPerformed[i]=false;
+        }
         for (int i = 0; i < (int)NEIGHBOUR_JOINTS.COUNT; i++ )
         {
             m_neighbourJointIds[i] = -1;
@@ -92,7 +98,7 @@ public class LegFrame : MonoBehaviour
 	}
 
     // Calculate the next position where the foot should be placed for legs in swing
-    public void updateFootPosForSwingLegs(float p_phi, Vector3 p_velocity, Vector3 p_desiredVelocity)
+    public void updateFeet(float p_phi, Vector3 p_velocity, Vector3 p_desiredVelocity)
     {
         for (int i = 0; i < c_legCount; i++)
         {
@@ -101,24 +107,76 @@ public class LegFrame : MonoBehaviour
             // position when the foot leaves the ground is used.
             if (m_tuneStepCycles[i].isInStance(p_phi))
             {
-                float mirror=(float)(i*2-1); // flips the coronal axis for the left leg
-                Vector3 regularFootPos = transform.TransformPoint(new Vector3(mirror*m_tuneStepLength.x,0.0f,m_tuneStepLength.y));
-                Vector3 finalPos=calculateVelocityScaledFootPos(regularFootPos, p_velocity, p_desiredVelocity);
-                m_footPlacement[i] = projectFootPosToGround(finalPos);
+                updateFootStrikePosition(i, p_phi, p_velocity, p_desiredVelocity);
+            }
+            else // If the foot is in swing instead, start updating the current foot swing target
+            {    // along the appropriate trajectory.
+                updateFootSwingPosition(i, p_phi);
             }
         }
     }
 
+    // Calculate a new position where to place a foot.
+    // This is where the foot will try to swing to in its
+    // trajectory.
+    private void updateFootStrikePosition(int p_idx, float p_phi, Vector3 p_velocity, Vector3 p_desiredVelocity)
+    {
+        // Set the lift position to the old strike position (used for trajectory planning)
+        // the first time each cycle that we enter this function
+        if (!m_footLiftPlacementPerformed[p_idx])
+        {
+            m_footLiftPlacement[p_idx]=m_footStrikePlacement[p_idx];
+            m_footLiftPlacementPerformed[p_idx]=true;
+        }
+        // Calculate the new position
+        float mirror=(float)(p_idx*2-1); // flips the coronal axis for the left leg
+        Vector3 regularFootPos = transform.TransformPoint(new Vector3(mirror * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y));
+        Vector3 finalPos = calculateVelocityScaledFootPos(regularFootPos, p_velocity, p_desiredVelocity);
+        m_footStrikePlacement[p_idx] = projectFootPosToGround(finalPos);
+    }
+
+    private void updateFootSwingPosition(int p_idx, float p_phi)
+    {
+        Vector3 oldPos = m_footTarget[p_idx]; // only for debug...
+        //
+        m_footLiftPlacementPerformed[p_idx]=false; // reset
+        // Get the fractional swing phase
+        float m_swingPhi = m_tuneStepCycles[p_idx].getSwingPhase(p_phi);
+        // The height offset, ie. the "lift" that the foot makes between stepping points.
+        Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(m_swingPhi), 0.0f);
+        // scale the phi based on the easing function, for ground plane movement
+        m_swingPhi = getFootTransitionPhase(m_swingPhi);
+        // Calculate the position
+        // Foot movement along the ground
+        Vector3 groundPlacement=Vector3.Lerp(m_footLiftPlacement[p_idx],m_footStrikePlacement[p_idx],m_swingPhi);
+        m_footTarget[p_idx] = groundPlacement+heightOffset;
+        //
+        Color dbg=Color.green;
+        if (p_idx==0) 
+            dbg = Color.red;
+        Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg,2.0f);
+    }
+
+    // Project a foot position to the ground beneath it
     private Vector3 projectFootPosToGround(Vector3 p_footPosLF)
     {
         return new Vector3(p_footPosLF.x,0.0f,p_footPosLF.z); // for now, super simple lock to 0
     }
 
+    // Scale a foot strike position prediction to the velocity difference
     private Vector3 calculateVelocityScaledFootPos(Vector3 p_footPosLF,
                                                    Vector3 p_velocity,
                                                    Vector3 p_desiredVelocity)
     {
         return p_footPosLF + (p_velocity - p_desiredVelocity) * m_tuneFootPlacementVelocityScale;
+    }
+
+    // Get the phase value in the foot transition based on
+    // swing phase. Note the phi variable here is the fraction
+    // of the swing phase!
+    private float getFootTransitionPhase(float p_swingPhi)
+    {
+        return m_tuneFootTransitionEase.getValAt(p_swingPhi);
     }
 
     // Retrieves the current orientation quaternion from the
@@ -211,7 +269,8 @@ public class LegFrame : MonoBehaviour
         int N = stanceLegs.Count;
         for (int i = 0; i < N; i++)
         {
-            int idx=m_neighbourJointIds[swingLegs[i]];
+            int sidx=stanceLegs[i];;
+            int idx=m_neighbourJointIds[sidx];
             p_currentTorques[idx] = (tdLF - tswing - tspine)/(float)N;
             //if (p_currentTorques[idx].magnitude > 100.0f)
             //{
@@ -251,10 +310,16 @@ public class LegFrame : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        for (int i = 0; i < m_footPlacement.Length; i++)
+        for (int i = 0; i < m_footStrikePlacement.Length; i++)
         {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(m_footPlacement[i],0.5f);
+            if (i==0) 
+                Gizmos.color = Color.red;
+            else
+                Gizmos.color = Color.green;
+            Gizmos.DrawSphere(m_footStrikePlacement[i],0.5f);
+            Gizmos.DrawCube(m_footLiftPlacement[i], Vector3.one*0.5f);
+            Gizmos.color *= 1.2f;
+            Gizmos.DrawSphere(m_footTarget[i], 0.25f);
         }
     }
 

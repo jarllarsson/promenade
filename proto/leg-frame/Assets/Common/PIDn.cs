@@ -30,8 +30,8 @@ public class PIDn : MonoBehaviour
             m_P[i] = p_error[i]; // store current error
             m_I[i] += m_P[i] * p_dt;  // accumulate error velocity to integral term
             m_D[i] = (m_P[i] - oldError) / Mathf.Max(0.001f,p_dt); // calculate speed of error change
-//             if (float.IsNaN(m_D[i]))
-//                 Debug.Log("inpid " + p_dt + " " + (m_P[i] - oldError) + " / " + p_dt            
+            if (float.IsNaN(m_D[i]))
+                    Debug.Log(m_P + " " + oldError + " " + p_dt);       
             // return weighted sum
             res[i] = m_Kp * m_P[i] + m_Ki * m_I[i] + m_Kd * m_D[i];
         }

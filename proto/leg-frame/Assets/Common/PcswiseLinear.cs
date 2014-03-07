@@ -18,7 +18,9 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         COS,
         COS_INV_NORM, // inverted and normalized cos
         HALF_SIN,      // half sine
-        FLAT
+        FLAT,        // flat zero
+        LIN_INC,    // Linear increase
+        LIN_DEC
     }
 
     // Number of data points
@@ -62,6 +64,12 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
                     break;
                 case INITTYPE.FLAT:
                     m_tuneDataPoints[i] = 0.0f;
+                    break;
+                case INITTYPE.LIN_INC:
+                    m_tuneDataPoints[i] = p_scale * t;
+                    break;
+                case INITTYPE.LIN_DEC:
+                    m_tuneDataPoints[i] = p_scale * (1.0f - t);
                     break;
                 default:
                     m_tuneDataPoints[i] = p_scale * 0.5f;
@@ -112,13 +120,13 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
 
     public float getValAt(float p_phi)
     {
-        float realTime = (float)(s_size) * p_phi;
+        float realTime = (float)(s_size-1) * p_phi;
         // lower bound idx (never greater than last idx)
         int lowIdx = (int)(realTime) % (s_size);
         // higher bound idx (loops back to 1 if over)
-        int hiIdx = (lowIdx+1) % (s_size);
+        int hiIdx = ((int)(realTime)+1) % (s_size);
         // get amount of interpolation by subtracting the base from current
-        float lin = p_phi * (float)s_size - (float)lowIdx;
+        float lin = p_phi * (float)(s_size-1) - (float)lowIdx;
         //Debug.Log(realTime + ": " + lowIdx + "->" + hiIdx + " [t" + lin + "]");
         //Debug.Log(hi);
         float val = 0.0f;

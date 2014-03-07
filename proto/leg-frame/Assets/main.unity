@@ -198,142 +198,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
---- !u!1 &612585586
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 612585591}
-  - 33: {fileID: 612585590}
-  - 65: {fileID: 612585589}
-  - 23: {fileID: 612585588}
-  - 114: {fileID: 612585587}
-  - 114: {fileID: 612585592}
-  - 54: {fileID: 612585593}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &612585587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 612585586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  m_initAsFunc: 0
-  m_curve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  m_resetScale: 1
-  m_reset: 0
---- !u!23 &612585588
-Renderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 612585586}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_LightmapIndex: 255
-  m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
-  m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_LightProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortingLayerID: 0
---- !u!65 &612585589
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 612585586}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &612585590
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 612585586}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &612585591
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 612585586}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.2489481, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
---- !u!114 &612585592
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 612585586}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65faeb53fd71608458e571680fbc1b12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDutyFactor: 0
-  m_tuneStepTrigger: 0
---- !u!54 &612585593
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 612585586}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: .0500000007
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &779100698
 GameObject:
   m_ObjectHideFlags: 0
@@ -362,7 +226,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0
+  m_AngularDrag: .100000001
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -447,7 +311,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0
+  m_AngularDrag: .100000001
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -562,7 +426,7 @@ Camera:
     height: 1
   near clip plane: .300000012
   far clip plane: 1000
-  field of view: 60
+  field of view: 31.7000008
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -579,8 +443,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1173357478}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: .099044621, y: .892398775, z: -.23911722, w: .369645208}
+  m_LocalPosition: {x: -8.45009232, y: 8.04385185, z: 9.53379059}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -731,13 +595,13 @@ GameObject:
   - 114: {fileID: 1783959275}
   - 114: {fileID: 1783959274}
   - 114: {fileID: 1783959272}
-  - 114: {fileID: 1783959271}
   - 114: {fileID: 1783959270}
-  - 114: {fileID: 1783959269}
   - 114: {fileID: 1783959268}
-  - 114: {fileID: 1783959267}
+  - 114: {fileID: 1783959269}
   - 114: {fileID: 1783959283}
   - 114: {fileID: 1783959282}
+  - 114: {fileID: 1783959271}
+  - 114: {fileID: 1783959273}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: Untagged
@@ -745,42 +609,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1783959267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1783959266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  m_initAsFunc: 4
-  m_curve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  m_resetScale: 1
-  m_reset: 0
 --- !u!114 &1783959268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -799,7 +627,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  m_initAsFunc: 2
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -907,7 +735,7 @@ MonoBehaviour:
   - 0
   - 0
   - 0
-  m_initAsFunc: 4
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -951,6 +779,42 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+--- !u!114 &1783959273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1783959266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tuneDataPoints:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  m_initAsFunc: 5
+  m_curve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  m_resetScale: 1
+  m_reset: 0
 --- !u!114 &1783959274
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -968,17 +832,24 @@ MonoBehaviour:
   m_id: 0
   m_neighbourJointIds: 000000000000000000000000
   m_tuneStepLength: {x: 1, y: 2}
-  m_tuneStepHorizontalTraj: {fileID: 1783959271}
-  m_tuneStepHeightTraj: {fileID: 1783959270}
   m_tuneOrientationLFTraj:
-  - {fileID: 1783959269}
+  - {fileID: 1783959270}
   - {fileID: 1783959268}
-  - {fileID: 1783959267}
+  - {fileID: 1783959269}
   m_desiredLFTorquePD: {fileID: 1783959272}
-  m_footPlacement:
+  m_footLiftPlacement:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  m_footLiftPlacementPerformed: 0000
+  m_footStrikePlacement:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  m_footTarget:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneFootPlacementVelocityScale: 1
+  m_tuneStepHeightTraj: {fileID: 1783959271}
+  m_tuneFootTransitionEase: {fileID: 1783959273}
 --- !u!114 &1783959275
 MonoBehaviour:
   m_ObjectHideFlags: 0
