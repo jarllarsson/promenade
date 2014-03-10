@@ -200,7 +200,6 @@ public class Controller : MonoBehaviour
                 bool stance = cycle.isInStance(p_phi);
                 // Draw back
                 Color ucol = Color.white*0.5f+new Color((float)(legFrameId%2), (float)(i%2), 1-(float)(i%2),1.0f);
-                Debug.Log(ucol.ToString());
                 int h = (int)w / 2;
                 Drawing.DrawLine(new Vector2(lineStart-1, y-h-1), new Vector2(lineEnd+1, y-h-1), Color.black, 1);
                 Drawing.DrawLine(new Vector2(lineStart-1, y+h), new Vector2(lineEnd+1, y+h), Color.black, 1);
