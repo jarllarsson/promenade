@@ -20,6 +20,7 @@ public class Controller : MonoBehaviour
     private Vector3 m_currentVelocity;
     public Vector3 m_goalVelocity;
     private Vector3 m_desiredVelocity;
+    public float m_debugYOffset = 0.0f;
 
     void Start()
     {
@@ -69,7 +70,7 @@ public class Controller : MonoBehaviour
         // Draw step cycles
         for (int i = 0; i < m_legFrames.Length; i++)
         {
-            drawStepCycles(m_player.m_gaitPhase, 10.0f+(float)i*10.0f, m_legFrames[i],i);
+            drawStepCycles(m_player.m_gaitPhase, m_debugYOffset+10.0f+(float)i*10.0f, m_legFrames[i],i);
         }
     }
 

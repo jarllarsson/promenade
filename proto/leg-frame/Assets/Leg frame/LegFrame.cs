@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 
 /*  ===================================================================
  *                             Leg Frame
@@ -310,18 +311,21 @@ public class LegFrame : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-        for (int i = 0; i < m_footStrikePlacement.Length; i++)
+        if (UnityEditor.EditorApplication.isPlaying)
         {
-            if (i==0) 
-                Gizmos.color = Color.red;
-            else
-                Gizmos.color = Color.green;
-            Gizmos.DrawSphere(m_footStrikePlacement[i],0.5f);
-            Gizmos.DrawCube(m_footLiftPlacement[i], Vector3.one*0.5f);
-            Gizmos.color *= 1.2f;
-            Gizmos.DrawSphere(m_footTarget[i], 0.25f);
+            for (int i = 0; i < m_footStrikePlacement.Length; i++)
+            {
+                if (i == 0)
+                    Gizmos.color = Color.red;
+                else
+                    Gizmos.color = Color.green;
+                Gizmos.DrawSphere(m_footStrikePlacement[i], 0.5f);
+                Gizmos.DrawCube(m_footLiftPlacement[i], Vector3.one * 0.5f);
+                Gizmos.color *= 1.2f;
+                Gizmos.DrawSphere(m_footTarget[i], 0.25f);
+            }
+            drawLegEstimation();
         }
-        drawLegEstimation();
     }
 
     private void drawLegEstimation()
