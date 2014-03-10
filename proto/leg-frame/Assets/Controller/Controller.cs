@@ -15,12 +15,15 @@ public class Controller : MonoBehaviour
     public GaitPlayer m_player;
     private Vector3[] m_jointTorques;
     public Rigidbody[] m_joints;
-    public PIDdriverTorque3[] m_jointPD;
+    // Desired torques for joints, currently only upper joints(and of course, only during swing for them)
+    public PIDn[] m_desiredJointTorquesPD;
+
     private Vector3 m_oldPos;
     private Vector3 m_currentVelocity;
     public Vector3 m_goalVelocity;
     private Vector3 m_desiredVelocity;
     public float m_debugYOffset = 0.0f;
+
 
     void Start()
     {
@@ -120,9 +123,13 @@ public class Controller : MonoBehaviour
              {
                  StepCycle cycle = lf.m_tuneStepCycles[n];
                  int jointID = lf.m_neighbourJointIds[n];
-                 //if (cycle.isInStance(m_player.m_gaitPhase))
+                 if (cycle.isInStance(m_player.m_gaitPhase))
                  {
                      newTorques[jointID] = m_jointTorques[jointID];
+                 }
+                 else if (m_desiredJointTorquesPD.Length>0)
+                 {
+                     newTorques[jointID] = m_desiredJointTorquesPD[jointID].m_vec;
                  }
              }
          }
