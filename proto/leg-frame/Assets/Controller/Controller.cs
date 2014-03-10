@@ -16,9 +16,10 @@ public class Controller : MonoBehaviour
     private Vector3[] m_jointTorques;
     public Rigidbody[] m_joints;
     public PIDdriverTorque3[] m_jointPD;
-    public Vector3 m_currentVelocity;
+    private Vector3 m_oldPos;
+    private Vector3 m_currentVelocity;
     public Vector3 m_goalVelocity;
-    public Vector3 m_desiredVelocity;
+    private Vector3 m_desiredVelocity;
 
     void Start()
     {
@@ -33,6 +34,8 @@ public class Controller : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
+        m_currentVelocity = transform.position-m_oldPos;
+
         // Advance the player
         m_player.updatePhase(Time.deltaTime);
 
@@ -47,6 +50,8 @@ public class Controller : MonoBehaviour
 
         // Debug color of legs when in stance
         debugColorLegs();
+
+        m_oldPos = transform.position;
 	}
 
     void FixedUpdate()
@@ -145,17 +150,17 @@ public class Controller : MonoBehaviour
         {
             // Take steps no bigger than 0.5m/s
             if (goalSqrMag < currentSqrMag + stepSz)
-                m_currentVelocity=m_goalVelocity;
+                m_desiredVelocity=m_goalVelocity;
             else
-                m_currentVelocity += m_currentVelocity.normalized * stepSz;
+                m_desiredVelocity += m_currentVelocity.normalized * stepSz;
         }
         else // if the goal is slower
         {
             // Take steps no smaller than 0.5
             if (goalSqrMag > currentSqrMag - stepSz)
-                m_currentVelocity=m_goalVelocity;
+                m_desiredVelocity=m_goalVelocity;
             else
-                m_currentVelocity -= m_currentVelocity.normalized * stepSz;
+                m_desiredVelocity -= m_currentVelocity.normalized * stepSz;
         }
     }
 

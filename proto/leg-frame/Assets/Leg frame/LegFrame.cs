@@ -321,6 +321,23 @@ public class LegFrame : MonoBehaviour
             Gizmos.color *= 1.2f;
             Gizmos.DrawSphere(m_footTarget[i], 0.25f);
         }
+        drawLegEstimation();
+    }
+
+    private void drawLegEstimation()
+    {
+        for (int i = 0; i < c_legCount; i++)
+        {
+            float d = 1.0f;
+            if (i == 0)
+            {
+                Gizmos.color = Color.red;
+                d = -1.0f;
+            }
+            else
+                Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position+transform.right*d, m_footTarget[i]);
+        }
     }
 
 
