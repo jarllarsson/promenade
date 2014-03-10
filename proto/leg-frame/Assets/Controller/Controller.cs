@@ -176,11 +176,11 @@ public class Controller : MonoBehaviour
                 Rigidbody current = m_joints[lf.m_neighbourJointIds[n]];
                 if (cycle.isInStance(m_player.m_gaitPhase))
                 {
-                    current.gameObject.renderer.material.color = Color.yellow;
+                    current.gameObject.GetComponentInChildren<Renderer>().material.color = Color.yellow;
                 }
                 else
                 {
-                    current.gameObject.renderer.material.color = Color.white;
+                    current.gameObject.GetComponentInChildren<Renderer>().material.color = Color.white;
                 }
             }
         }
