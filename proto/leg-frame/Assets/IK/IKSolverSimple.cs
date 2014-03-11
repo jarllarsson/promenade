@@ -102,8 +102,8 @@ public class IKSolverSimple : MonoBehaviour
             // PID test
             Quaternion localUpper = Quaternion.Inverse(m_legFrame.transform.rotation) * m_upperLeg.rotation;
             Quaternion localLower = Quaternion.Inverse(m_upperLeg.rotation) * m_lowerLeg.rotation;
-            Quaternion localGoalUpper = Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle + Mathf.PI*0.5f), Vector3.left);
-            Quaternion localGoalLower = Quaternion.AngleAxis(Mathf.Rad2Deg * (lowerLegAngle + Mathf.PI*0.5f), Vector3.left);
+            Quaternion localGoalUpper = Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle /*+ Mathf.PI*0.5f*/), Vector3.left);
+            Quaternion localGoalLower = Quaternion.AngleAxis(Mathf.Rad2Deg * (lowerLegAngle/* + Mathf.PI*0.5f*/), Vector3.left);
             m_testPIDUpper.drive(localUpper, localGoalUpper, Time.deltaTime);
             m_testPIDLower.drive(localLower, localGoalLower, Time.deltaTime);
         }
