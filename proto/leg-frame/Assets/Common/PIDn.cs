@@ -34,8 +34,8 @@ public class PIDn : MonoBehaviour
             m_P[i] = p_error[i]; // store current error
             m_I[i] += m_P[i] * p_dt;  // accumulate error velocity to integral term
             m_D[i] = (m_P[i] - oldError) / Mathf.Max(0.001f,p_dt); // calculate speed of error change
-            if (float.IsNaN(m_D[i]))
-                    Debug.Log(m_P + " " + oldError + " " + p_dt);       
+            if (float.IsNaN(m_D[i]) || float.IsNaN(m_P[i])) 
+                    Debug.Log("error: "+m_P[i] + " olderror: " + oldError + " dt: " + p_dt);       
             // return weighted sum
             res[i] = m_Kp * m_P[i] + m_Ki * m_I[i] + m_Kd * m_D[i];
         }
@@ -50,11 +50,40 @@ public class PIDn : MonoBehaviour
         Quaternion error = p_goal * Quaternion.Inverse(p_current);
         // Separate angle and axis, so we can feed the axis-wise
         // errors to the PIDs.
-        float a;
-        Vector3 dir;
-        error.ToAngleAxis(out a, out dir);
-        // Get torque
-        m_vec = drive(a * dir, Time.deltaTime);
+        Quaternion ri=Quaternion.identity; ri.w*=-1.0f;
+        // If quaternion is not a rotation
+        if (error == Quaternion.identity || error == ri)
+        {
+            m_vec = drive(Vector3.zero, Time.deltaTime);
+        }
+        else
+        {
+            float a;
+            Vector3 dir;
+            error.ToAngleAxis(out a, out dir);
+            for (int i = 0; i < m_P.Length; i++)
+            {
+                bool isnan = false;
+                if (float.IsNaN(dir[i]))
+                {
+                    Debug.Log(" dir is NaN. x" + dir.x + " y" + dir.y + " z" + dir.z);
+                    isnan = true;
+                }
+                if (float.IsNaN(a))
+                {
+                    Debug.Log(" a is NaN. a" + a);isnan = true;
+                }
+                float ad = dir[i]*a;
+                if (float.IsNaN(dir[i] * a))
+                {
+                    Debug.Log(" mul is NaN. " + ad);isnan = true;
+                }
+                if (isnan)
+                    Debug.Log("Orig quat="+p_current.ToString()+" inverted="+Quaternion.Inverse(p_current).ToString()+" err="+error.ToString());
+            }
+            // Get torque
+            m_vec = drive(a * dir, Time.deltaTime);
+        }
         return m_vec; // Note, these are 3 PIDs
     }
 

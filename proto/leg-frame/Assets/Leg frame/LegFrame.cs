@@ -16,6 +16,7 @@ using UnityEditor;
 public class LegFrame : MonoBehaviour 
 {
     public const int c_legCount = 2; // always two legs per frame
+    public const int c_nonHipLegSegments = 1;
     public enum LEG { LEFT = 0, RIGHT = 1 }
     public enum NEIGHBOUR_JOINTS { HIP_LEFT=0, HIP_RIGHT=1, SPINE=2, COUNT=3 }
     public enum PLANE { CORONAL = 0, SAGGITAL = 1 }
@@ -33,6 +34,10 @@ public class LegFrame : MonoBehaviour
     // and will affect the leg frame torque as well as get corrected
     // torques while in stance.
     public int[] m_neighbourJointIds = new int[(int)NEIGHBOUR_JOINTS.COUNT];
+
+    // The remaining joints for legs
+    public int[] m_legJointIds = new int[c_legCount * c_nonHipLegSegments];
+
 
     // NOTE!
     // I've lessened the amount of parameters

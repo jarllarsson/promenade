@@ -13,7 +13,7 @@ public class Controller : MonoBehaviour
 {
     public LegFrame[] m_legFrames=new LegFrame[1];
     public GaitPlayer m_player;
-    private Vector3[] m_jointTorques;
+    private Vector3[] m_jointTorques; // Maybe separate into joints and leg frames
     public Rigidbody[] m_joints;
     // Desired torques for joints, currently only upper joints(and of course, only during swing for them)
     public PIDn[] m_desiredJointTorquesPD;
@@ -29,9 +29,17 @@ public class Controller : MonoBehaviour
     {
         m_jointTorques = new Vector3[m_joints.Length];
         // hard code for now
+        // neighbour joints
         m_legFrames[0].m_neighbourJointIds[(int)LegFrame.LEG.LEFT] = 0;
         m_legFrames[0].m_neighbourJointIds[(int)LegFrame.LEG.RIGHT] = 1;
         m_legFrames[0].m_id = 2;
+        // remaining legs
+        if (m_legFrames[0].m_legJointIds.Length>0)
+        {
+            m_legFrames[0].m_legJointIds[0] = 3;
+            m_legFrames[0].m_legJointIds[1] = 4;
+        }
+
     }
 
 	
@@ -108,17 +116,13 @@ public class Controller : MonoBehaviour
     // Compute the torque of all PD-controllers in the joints
     Vector3[] computePDTorques(float p_phi)
     {
-        // TEMPORARY TEST CODE!!!!!!!!!!!!
-         // right now, just fetch the old torque
-        // but only for stance legs, we see this as
-        // their simulation of not being controlled
-        //by setting every other joint to zero, we simulate
-        // their control, ie. the PD.
+         // This loop might have to be rewritten into something a little less cumbersome
          Vector3[] newTorques = new Vector3[m_jointTorques.Length];
          for (int i = 0; i < m_legFrames.Length; i++)
          {
              LegFrame lf = m_legFrames[i];
              newTorques[lf.m_id] = m_jointTorques[lf.m_id];
+             // All hip joints
              for (int n = 0; n < lf.m_tuneStepCycles.Length; n++)
              {
                  StepCycle cycle = lf.m_tuneStepCycles[n];
@@ -131,6 +135,12 @@ public class Controller : MonoBehaviour
                  {
                      newTorques[jointID] = m_desiredJointTorquesPD[jointID].m_vec;
                  }
+             }
+             // All other joints
+             for (int n = 0; n < lf.m_legJointIds.Length; n++)
+             {
+                 int jointID = lf.m_legJointIds[n];
+                 newTorques[jointID] = m_desiredJointTorquesPD[jointID].m_vec;
              }
          }
         return newTorques;

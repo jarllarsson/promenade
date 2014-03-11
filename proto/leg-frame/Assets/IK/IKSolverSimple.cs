@@ -12,6 +12,7 @@ public class IKSolverSimple : MonoBehaviour
     public float m_hipAngle;
     public float m_kneeAngle;
     public PIDn m_testPIDUpper;
+    public PIDn m_testPIDLower;
 
 	// Use this for initialization
 	void Start () 
@@ -99,8 +100,12 @@ public class IKSolverSimple : MonoBehaviour
             kneePos = m_upperLeg.position + m_legFrame.transform.TransformDirection(kneePos);
             endPos = kneePos + m_legFrame.transform.TransformDirection(endPos);
             // PID test
-            Quaternion goal = m_legFrame.transform.rotation * Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle + Mathf.PI*0.5f), -m_legFrame.transform.right);
-            m_testPIDUpper.drive(m_upperLeg.rotation, goal, Time.deltaTime);
+            Quaternion localUpper = Quaternion.Inverse(m_legFrame.transform.rotation) * m_upperLeg.rotation;
+            Quaternion localLower = Quaternion.Inverse(m_upperLeg.rotation) * m_lowerLeg.rotation;
+            Quaternion localGoalUpper = Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle + Mathf.PI*0.5f), Vector3.left);
+            Quaternion localGoalLower = Quaternion.AngleAxis(Mathf.Rad2Deg * (lowerLegAngle + Mathf.PI*0.5f), Vector3.left);
+            m_testPIDUpper.drive(localUpper, localGoalUpper, Time.deltaTime);
+            m_testPIDLower.drive(localLower, localGoalLower, Time.deltaTime);
         }
         else
         {
