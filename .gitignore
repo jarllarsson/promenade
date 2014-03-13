@@ -54,11 +54,10 @@ bin/x64/*.txt
 
 
 /proto/pd-controller/pd-controller-csharp.sln
-
 /proto/pd-controller/pd-controller.sln
-
 /proto/physics-test/physics-test-csharp.sln
-
 /proto/physics-test/physics-test.sln
 /proto/leg-frame/leg-frame-csharp.sln
 /proto/leg-frame/leg-frame.sln
+/proto/Jacobian-test/Jacobian-test-csharp.sln
+/proto/Jacobian-test/Jacobian-test.sln
