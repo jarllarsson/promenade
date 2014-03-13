@@ -6,8 +6,19 @@ public class ChainHandler : MonoBehaviour
 {
     public List<Joint> m_chain=new List<Joint>();
 	// Use this for initialization
-	void Start () {
-	
+	void Start () 
+    {
+        CMatrix a = new CMatrix(2, 2);
+        CMatrix b = new CMatrix(2, 1);
+        a[0, 0] = 1.0f; a[0, 1] = 0.0f;
+        a[1, 0] = 2.0f; a[1, 1] = 3.0f;
+         
+        b[0, 0] = 2.0f; 
+        b[1, 0] = 4.0f;
+
+        CMatrix g = CMatrix.Mul(a, b);
+        Debug.Log(g.m_rows + "x" + g.m_cols);
+        Debug.Log(g[1,0]+"=="+(a[1,0]*b[0,0]+a[1,1]*b[1,0]));
 	}
 	
 	// Update is called once per frame
