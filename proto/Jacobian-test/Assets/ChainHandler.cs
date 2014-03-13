@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class ChainHandler : MonoBehaviour 
 {
     public List<Joint> m_chain=new List<Joint>();
+    public Transform m_target;
 	// Use this for initialization
 	void Start () 
     {
@@ -24,7 +25,16 @@ public class ChainHandler : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
     {
-        updateChain();
+        //for (int i = 0; i < 100; i++)
+        {
+            //for (int x = 0; x < 10; x++)
+                Jacobian.updateJacobianTranspose(m_chain, m_target.position, Vector3.right);
+            //for (int x = 0; x < 10; x++)
+                Jacobian.updateJacobianTranspose(m_chain, m_target.position, Vector3.up);
+            //for (int x = 0; x < 10; x++)
+                Jacobian.updateJacobianTranspose(m_chain, m_target.position, Vector3.forward);
+            updateChain();
+        }
 	}
 
     void updateChain()

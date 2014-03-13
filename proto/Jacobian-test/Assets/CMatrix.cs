@@ -53,11 +53,11 @@ public class CMatrix
 
     public static CMatrix Transpose(CMatrix p_m)
     {
-        CMatrix res = new CMatrix(p_m.m_rows, p_m.m_cols);
+        CMatrix res = new CMatrix(p_m.m_cols, p_m.m_rows);
         for (int i=0;i<p_m.m_rows;i++)
         for (int j=0;j<p_m.m_cols;j++)
         {
-            res[i, j] = p_m[j, i];
+            res[j, i] = p_m[i, j];
         }
         return res;
     }
@@ -73,7 +73,7 @@ public class CMatrix
         for (int i=0;i<p_m.m_rows;i++)
         for (int j=0;j<p_m.m_cols;j++)
         {
-            res[i, j] = p_s*p_m[j, i];
+            res[i, j] = p_s*p_m[i, j];
         }
         return res;
     }

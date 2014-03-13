@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Jacobian
 {
-    public static CMatrix calculateJacobian(List<Joint> p_joints, Vector3 p_targetPos)
+    public static CMatrix calculateJacobian(List<Joint> p_joints, Vector3 p_targetPos, Vector3 p_axis)
     {
         int linkCount = p_joints.Count;
         if (linkCount == 0) return null;
@@ -15,7 +15,7 @@ public class Jacobian
         {
             Vector3 linkPos = p_joints[i].m_position;
             // Currently only solve for z axis(ie. 2d)
-            Vector3 rotAxis = new Vector3(0.0f, 0.0f, 1.0f);
+            Vector3 rotAxis = -p_axis;
             Vector3 dirTarget = Vector3.Cross(rotAxis, p_targetPos - linkPos);
             J[0, i] = dirTarget.x;
             J[1, i] = dirTarget.y;
@@ -24,13 +24,13 @@ public class Jacobian
         return J;
     }
 
-    public static void updateJacobianTranspose(List<Joint> p_joints, Vector3 p_targetPos)
+    public static void updateJacobianTranspose(List<Joint> p_joints, Vector3 p_targetPos, Vector3 p_axis)
     {
         int linkCount = p_joints.Count;
         if (linkCount == 0) return;
 
         // Calculate Jacobian matrix
-        CMatrix J = calculateJacobian(p_joints, p_targetPos);
+        CMatrix J = calculateJacobian(p_joints, p_targetPos, p_axis);
 
         // Calculate Jacobian transpose
         CMatrix Jt = CMatrix.Transpose(J);
@@ -64,7 +64,7 @@ public class Jacobian
 
         for (int i = 0; i < linkCount; i++)
         {
-            p_joints[i].m_angle += new Vector3(0.0f, 0.0f, deltaAngle[i, 0]);
+            p_joints[i].m_angle += p_axis * deltaAngle[i, 0];
         }
     }
 }
