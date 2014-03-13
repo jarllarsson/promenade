@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Jacobian
 {
-    public static CMatrix calcJ(List<Joint> p_joints, Vector3 p_targetPos)
+    public static CMatrix calculateJacobian(List<Joint> p_joints, Vector3 p_targetPos)
     {
         int linkCount = p_joints.Count;
         if (linkCount == 0) return null;
@@ -21,6 +21,50 @@ public class Jacobian
             J[1, i] = dirTarget.y;
             J[2, i] = dirTarget.z;
         }
+        return J;
+    }
 
+    public static void updateJacobianTranspose(List<Joint> p_joints, Vector3 p_targetPos)
+    {
+        int linkCount = p_joints.Count;
+        if (linkCount == 0) return;
+
+        // Calculate Jacobian matrix
+        CMatrix J = calculateJacobian(p_joints, p_targetPos);
+
+        // Calculate Jacobian transpose
+        CMatrix Jt = CMatrix.Transpose(J);
+
+        // Calculate error matrix
+        CMatrix e = new CMatrix(3, 1);
+        e[0, 0] = p_joints[linkCount - 1].m_endPoint.x - p_targetPos.x;
+        e[1, 0] = p_joints[linkCount - 1].m_endPoint.y - p_targetPos.y;
+        e[2, 0] = p_joints[linkCount - 1].m_endPoint.z - p_targetPos.z;
+
+        float error = CMatrix.Dot(e, e);
+        if (error < 0.0001f)
+            return;
+
+        // Calculate mu for inverse estimation
+        // ie. a small scalar constant used as step size
+        float mudiv = CMatrix.Dot(J * Jt * e, J * Jt * e);
+        if (mudiv == 0.0f)
+            return;
+
+        float mu = CMatrix.Dot(e, J * Jt * e) / mudiv;
+
+        // Step matrix
+        CMatrix deltaAngle = Jt * (mu * e);
+
+        // Make sure the matrix is correct
+        if (deltaAngle.m_rows != linkCount)
+            Debug.Log("Not correct amount of rows! (" + deltaAngle.m_rows + ") correct is " + linkCount);
+        if (deltaAngle.m_cols != 1)
+            Debug.Log("Not correct amount of cols! (" + deltaAngle.m_cols + ") correct is 1");
+
+        for (int i = 0; i < linkCount; i++)
+        {
+            p_joints[i].m_angle += new Vector3(0.0f, 0.0f, deltaAngle[i, 0]);
+        }
     }
 }

@@ -67,4 +67,27 @@ public class CMatrix
         return CMatrix.Mul(p_ma,p_mb);
     }
 
+    public static CMatrix operator *(float p_s, CMatrix p_m)
+    {
+        CMatrix res = new CMatrix(p_m.m_rows, p_m.m_cols);
+        for (int i=0;i<p_m.m_rows;i++)
+        for (int j=0;j<p_m.m_cols;j++)
+        {
+            res[i, j] = p_s*p_m[j, i];
+        }
+        return res;
+    }
+
+    public static float Dot(CMatrix p_ma, CMatrix p_mb)
+    {
+        if (p_ma.m_rows != p_mb.m_rows) return -1.0f;
+        if (p_ma.m_cols != p_mb.m_cols) return -1.0f;
+        float sum = 0.0f;
+        for (int i=0;i<p_ma.m_rows;i++)
+        for (int j=0;j<p_mb.m_cols;j++)
+        {
+            sum += p_ma[i, j] * p_mb[i, j];
+        }
+        return sum;
+    }
 }
