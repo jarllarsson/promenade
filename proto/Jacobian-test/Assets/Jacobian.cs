@@ -15,7 +15,7 @@ public class Jacobian
         {
             Vector3 linkPos = p_joints[i].m_position;
             // Currently only solve for z axis(ie. 2d)
-            Vector3 rotAxis = -p_axis;
+            Vector3 rotAxis = p_axis;
             Vector3 dirTarget = Vector3.Cross(rotAxis, p_targetPos - linkPos);
             J[0, i] = dirTarget.x;
             J[1, i] = dirTarget.y;
@@ -30,7 +30,7 @@ public class Jacobian
         if (linkCount == 0) return;
 
         // Calculate Jacobian matrix
-        CMatrix J = calculateJacobian(p_joints, linkCount, p_targetPos, p_axis);
+        CMatrix J = calculateJacobian(p_joints, linkCount, p_targetPos, -p_axis);
 
         // Calculate Jacobian transpose
         CMatrix Jt = CMatrix.Transpose(J);

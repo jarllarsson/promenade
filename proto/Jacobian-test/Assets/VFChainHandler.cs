@@ -55,10 +55,8 @@ public class VFChainHandler : MonoBehaviour
         for (int i = 0; i < m_chain.Count; i++)
         {
             // store torque
-            m_torques[i] = new Vector3(Jt[i,0]*m_virtualForce.x,
-                                       Jt[i,1]*m_virtualForce.y,
-                                       Jt[i,2]*m_virtualForce.z);
-            Debug.Log(m_torques[i].ToString());
+            m_torques[i] = Vector3.forward*Vector3.Dot(new Vector3(Jt[i,0],Jt[i,1],Jt[i,2]),m_virtualForce);
+            //Debug.Log(m_torques[i].ToString());
         }
     }
 
@@ -72,6 +70,7 @@ public class VFChainHandler : MonoBehaviour
             Gizmos.DrawLine(joint.m_position, joint.m_endPoint);
             Gizmos.color = Color.red;
             Gizmos.DrawSphere(joint.m_position, 0.1f);
+            Gizmos.DrawLine(joint.m_position, joint.m_position + m_torques[i]);
         }
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(m_chain[m_chain.Count - 1].m_endPoint, m_chain[m_chain.Count - 1].m_endPoint + m_virtualForce);

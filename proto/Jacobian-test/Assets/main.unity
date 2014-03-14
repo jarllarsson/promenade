@@ -665,7 +665,7 @@ MonoBehaviour:
   m_torques:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_virtualForce: {x: 0, y: 0, z: 0}
+  m_virtualForce: {x: 50, y: 50, z: 0}
   m_target: {fileID: 823422281}
 --- !u!23 &892630516
 Renderer:
@@ -719,7 +719,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 14
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!1 &1633291889
 GameObject:
