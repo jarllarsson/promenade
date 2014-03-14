@@ -22,9 +22,18 @@ public class VFChainHandler : MonoBehaviour
         updateChain();
 	}
 
+    void FixedUpdate()
+    {
+        for (int i = 0; i < m_chainObjs.Count; i++)
+        {
+            m_chainObjs[i].rigidbody.AddTorque(m_torques[i]);
+        }
+    }
+
     void updateChain()
     {
         // Just copy from objects
+        Vector3 end = transform.position;
         for (int i = 0; i < m_chain.Count; i++)
         {
             Joint current = m_chain[i];
@@ -32,18 +41,24 @@ public class VFChainHandler : MonoBehaviour
             current.length = currentObj.transform.localScale.x;
             current.m_position = currentObj.transform.position - currentObj.transform.right * current.length * 0.5f;
             current.m_endPoint = currentObj.transform.position + currentObj.transform.right * current.length * 0.5f;
+            end = current.m_endPoint;
         }
-        CMatrix J = Jacobian.calculateJacobian(m_chain, m_chain.Count, m_target.position, Vector3.forward);
+        CMatrix J = Jacobian.calculateJacobian(m_chain, m_chain.Count, end, Vector3.forward);
         CMatrix Jt = CMatrix.Transpose(J);
-        CMatrix force = new CMatrix(1, 3);
+        CMatrix force = new CMatrix(3, 1);
         force[0, 0] = m_virtualForce.x;
         force[1, 0] = m_virtualForce.y;
         force[2, 0] = m_virtualForce.z;
-        CMatrix torqueSet = Jt * force;
+        //CMatrix torqueSet = Jt*force;
+        Debug.Log(Jt.m_rows + "x" + Jt.m_cols);
+        //Debug.Log(torqueSet.m_rows+"x"+torqueSet.m_cols);
         for (int i = 0; i < m_chain.Count; i++)
         {
-            // Apply torque
-            m_torques[i] = new Vector3(torqueSet[i,0],torqueSet[i,1],torqueSet[i,2]);
+            // store torque
+            m_torques[i] = new Vector3(Jt[i,0]*m_virtualForce.x,
+                                       Jt[i,1]*m_virtualForce.y,
+                                       Jt[i,2]*m_virtualForce.z);
+            Debug.Log(m_torques[i].ToString());
         }
     }
 
@@ -59,6 +74,6 @@ public class VFChainHandler : MonoBehaviour
             Gizmos.DrawSphere(joint.m_position, 0.1f);
         }
         Gizmos.color = Color.blue;
-        Gizmos.DrawLine(transform.position, transform.position+m_virtualForce);
+        Gizmos.DrawLine(m_chain[m_chain.Count - 1].m_endPoint, m_chain[m_chain.Count - 1].m_endPoint + m_virtualForce);
     }
 }
