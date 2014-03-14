@@ -665,6 +665,7 @@ MonoBehaviour:
   m_torques:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
+  m_virtualForce: {x: 0, y: 0, z: 0}
   m_target: {fileID: 823422281}
 --- !u!23 &892630516
 Renderer:

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class Jacobian
 {
-    public static CMatrix calculateJacobian(List<Joint> p_joints, Vector3 p_targetPos, Vector3 p_axis)
+    public static CMatrix calculateJacobian(List<Joint> p_joints, int p_numberOfLinks, Vector3 p_targetPos, Vector3 p_axis)
     {
-        int linkCount = p_joints.Count;
+        int linkCount = p_numberOfLinks;
         if (linkCount == 0) return null;
 
         // Construct Jacobian matrix
@@ -30,7 +30,7 @@ public class Jacobian
         if (linkCount == 0) return;
 
         // Calculate Jacobian matrix
-        CMatrix J = calculateJacobian(p_joints, p_targetPos, p_axis);
+        CMatrix J = calculateJacobian(p_joints, linkCount, p_targetPos, p_axis);
 
         // Calculate Jacobian transpose
         CMatrix Jt = CMatrix.Transpose(J);
