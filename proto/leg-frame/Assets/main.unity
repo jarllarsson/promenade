@@ -789,6 +789,8 @@ GameObject:
   - 114: {fileID: 479014439}
   - 114: {fileID: 479014438}
   - 114: {fileID: 479014437}
+  - 114: {fileID: 479014447}
+  - 114: {fileID: 479014446}
   m_Layer: 0
   m_Name: LegFrame
   m_TagString: Untagged
@@ -803,7 +805,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 479014435}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0993433, y: -1.36391497, z: .966064453}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 853343069}
@@ -1083,6 +1085,66 @@ MonoBehaviour:
   m_tuneFootPlacementVelocityScale: 1
   m_tuneStepHeightTraj: {fileID: 479014438}
   m_tuneFootTransitionEase: {fileID: 479014437}
+  m_heightForceCalc: {fileID: 479014447}
+  m_tuneLFHeightTraj: {fileID: 479014446}
+  m_tuneHeightForcePIDKp: 1
+  m_tuneHeightForcePIDKd: .100000001
+  m_tuneVelocityRegulatorKv: 1
+--- !u!114 &479014446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NAME: DesiredLFHeightTraj
+  m_tuneDataPoints:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  m_initAsFunc: 4
+  m_curve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  m_resetScale: 2
+  m_reset: 0
+--- !u!114 &479014447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 275553676fb3de44fbb345f441353738, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NAME: HeightRegulatingForce_Estimator
+  m_Kp: 1
+  m_Ki: 0
+  m_Kd: .100000001
+  m_P: 0
+  m_I: 0
+  m_D: 0
 --- !u!1 &669808301
 GameObject:
   m_ObjectHideFlags: 0

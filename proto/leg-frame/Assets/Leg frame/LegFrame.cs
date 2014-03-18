@@ -71,7 +71,21 @@ public class LegFrame : MonoBehaviour
     public PcswiseLinear m_tuneStepHeightTraj;
     // tsw, step interpolation trajectory (horizontal easing between P1 and P2)
     public PcswiseLinear m_tuneFootTransitionEase;
+    
+    // Calculators for sagittal height regulator force
+    // Fh calculator
+    public PID m_heightForceCalc;
+    // hLF
+    public PcswiseLinear m_tuneLFHeightTraj;
+    public float m_tuneHeightForcePIDKp=1.0f, m_tuneHeightForcePIDKd=1.0f; // these are gains set to m_heightForceCalc
 
+    // Calculators for sagittal velocity regulator force
+    public float m_tuneVelocityRegulatorKv=1.0f; // Gain for regulating velocity
+
+    // Calculated Leg frame virtual forces to apply to stance legs
+    Vector3 m_Fh; // Height regulate
+    Vector3 m_Fv; // Velocity regulate
+    Vector3[] m_FD = new Vector3[c_legCount]; // Individualized leg force
 
     void Awake()
     {
@@ -90,7 +104,9 @@ public class LegFrame : MonoBehaviour
             //traj.m_initAsFunc = PcswiseLinear.INITTYPE.FLAT;
             traj.reset();
         }
-        
+        // Change values for the height-force-PID, from optimized values:
+        m_heightForceCalc.m_Kp=m_tuneHeightForcePIDKp;
+        m_heightForceCalc.m_Kd=m_tuneHeightForcePIDKd;
     }
 
 	// Use this for initialization
@@ -224,6 +240,17 @@ public class LegFrame : MonoBehaviour
                 p_swingLegs.Add(i);
             }
         }
+    }
+
+    public void calculateFv(Vector3 p_currentVelocity, Vector3 p_desiredVelocity)
+    {
+        m_Fv=m_tuneVelocityRegulatorKv*(p_desiredVelocity-p_currentVelocity);
+    }
+
+    public void calculateFh(float p_phi, float p_currentH, float p_dt, Vector3 p_up)
+    {
+        float hLF=m_tuneLFHeightTraj.getValAt(p_phi);
+        m_Fh = p_up * m_heightForceCalc.drive(hLF - p_currentH, p_dt);
     }
 
     // This function applies the current torques to the leg frame
