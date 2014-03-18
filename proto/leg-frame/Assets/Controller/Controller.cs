@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /*  ===================================================================
  *                             Controller
@@ -15,6 +16,10 @@ public class Controller : MonoBehaviour
     public GaitPlayer m_player;
     private Vector3[] m_jointTorques; // Maybe separate into joints and leg frames
     public Rigidbody[] m_joints;
+    public List<Vector3> m_dofs; // Dofs in link space
+    public List<int> m_dofJointId; // Dof's id to joint
+    public List<Joint> m_chain;
+
     // Desired torques for joints, currently only upper joints(and of course, only during swing for them)
     public PIDn[] m_desiredJointTorquesPD;
 
@@ -30,16 +35,25 @@ public class Controller : MonoBehaviour
         m_jointTorques = new Vector3[m_joints.Length];
         // hard code for now
         // neighbour joints
-        m_legFrames[0].m_neighbourJointIds[(int)LegFrame.LEG.LEFT] = 0;
-        m_legFrames[0].m_neighbourJointIds[(int)LegFrame.LEG.RIGHT] = 1;
-        m_legFrames[0].m_id = 2;
+        m_legFrames[0].m_neighbourJointIds[(int)LegFrame.LEG.LEFT] = 1;
+        m_legFrames[0].m_neighbourJointIds[(int)LegFrame.LEG.RIGHT] = 3;
+        m_legFrames[0].m_id = 0;
         // remaining legs
         if (m_legFrames[0].m_legJointIds.Length>0)
         {
-            m_legFrames[0].m_legJointIds[0] = 3;
+            m_legFrames[0].m_legJointIds[0] = 2;
             m_legFrames[0].m_legJointIds[1] = 4;
         }
-
+        // calculate DOF
+        for (int i = 0; i < m_chain.Count; i++)
+        {
+            m_chain[i].m_dofListIdx = m_dofs.Count;
+            for (int x = 0; x < m_chain[i].m_dof.Length; x++)
+            {
+                m_dofs.Add(m_chain[i].m_dof[x]);
+                m_dofJointId.Add(i);
+            }
+        }
     }
 
 	
@@ -74,6 +88,23 @@ public class Controller : MonoBehaviour
             m_joints[i].AddTorque(torque);
             Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+torque,new Color(i%2,(i%3)*0.5f,(i+2)%4/3.0f) );
         }
+    }
+
+    void LateUpdate()
+    {
+        // testfix for angular limit
+        // UCAM-CL-TR-683.pdf
+        //Quaternion parent = m_joints[0].transform.rotation;
+        //Quaternion localRot = m_joints[3].transform.rotation * Quaternion.Inverse(parent);
+        //float angle=0.0f; Vector3 axis;
+        //localRot.ToAngleAxis(out angle, out axis);
+        //Vector3 prohibited = Vector3.up;
+        //float c = Vector3.Dot(prohibited, -axis);
+        //
+        //angle = Mathf.Clamp(angle, 320.0f, 350.0f);
+        //localRot = Quaternion.AngleAxis(angle, axis);
+        //localRot *= parent;
+        //m_joints[3].transform.rotation = localRot;
     }
 
     void OnGUI()
@@ -140,7 +171,8 @@ public class Controller : MonoBehaviour
              for (int n = 0; n < lf.m_legJointIds.Length; n++)
              {
                  int jointID = lf.m_legJointIds[n];
-                 newTorques[jointID] = m_desiredJointTorquesPD[jointID].m_vec;
+                 if (jointID>-1)
+                    newTorques[jointID] = m_desiredJointTorquesPD[jointID].m_vec;
              }
          }
         return newTorques;
