@@ -9,5 +9,6 @@ public class Joint
 
     public Vector3 m_position;
     public Vector3 m_endPoint;
-
+    public int m_dofListIdx = 0; // offset in list
+    public Vector3[] m_dof; // degrees of freedom, used for init
 }
