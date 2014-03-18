@@ -11,6 +11,7 @@ using System;
 
 public class PcswiseLinear : MonoBehaviour // extends editor only to visualize graph
 {
+    public string NAME = "PL";
     // Type to be inited as
     public enum INITTYPE
     {

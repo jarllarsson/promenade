@@ -38,6 +38,8 @@ public class LegFrame : MonoBehaviour
     // The remaining joints for legs
     public int[] m_legJointIds = new int[c_legCount * c_nonHipLegSegments];
 
+    // Virtual forces
+    public Vector3[] m_netLegVirtualForces = new Vector3[c_legCount];
 
     // NOTE!
     // I've lessened the amount of parameters

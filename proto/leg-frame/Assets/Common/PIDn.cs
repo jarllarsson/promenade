@@ -10,6 +10,7 @@ using System.Collections;
  *   */
 public class PIDn : MonoBehaviour 
 {
+    public string NAME = "PID";
     public float m_Kp=1.0f; // Proportional coefficient
     public float m_Ki=0.0f; // Integral coefficient
     public float m_Kd=0.1f; // Derivative coefficient

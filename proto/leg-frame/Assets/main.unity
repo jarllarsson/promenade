@@ -772,6 +772,317 @@ Transform:
   m_LocalScale: {x: .778615594, y: .175592557, z: .146183714}
   m_Children: []
   m_Father: {fileID: 62893388}
+--- !u!1 &479014435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 479014436}
+  - 114: {fileID: 479014445}
+  - 114: {fileID: 479014444}
+  - 114: {fileID: 479014443}
+  - 114: {fileID: 479014442}
+  - 114: {fileID: 479014441}
+  - 114: {fileID: 479014440}
+  - 114: {fileID: 479014439}
+  - 114: {fileID: 479014438}
+  - 114: {fileID: 479014437}
+  m_Layer: 0
+  m_Name: LegFrame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &479014436
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.0993433, y: -1.36391497, z: .966064453}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 853343069}
+--- !u!114 &479014437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NAME: FootEase
+  m_tuneDataPoints:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  m_initAsFunc: 5
+  m_curve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  m_resetScale: 1
+  m_reset: 0
+--- !u!114 &479014438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NAME: StepHeightTraj
+  m_tuneDataPoints:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  m_initAsFunc: 2
+  m_curve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  m_resetScale: 1
+  m_reset: 0
+--- !u!114 &479014439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NAME: Orientation LFTrajRoll
+  m_tuneDataPoints:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  m_initAsFunc: 4
+  m_curve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  m_resetScale: 1
+  m_reset: 0
+--- !u!114 &479014440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NAME: Orientation LFTrajPitch
+  m_tuneDataPoints:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  m_initAsFunc: 4
+  m_curve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  m_resetScale: 1
+  m_reset: 0
+--- !u!114 &479014441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NAME: Orientation LFTrajYaw
+  m_tuneDataPoints:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  m_initAsFunc: 4
+  m_curve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+    - time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  m_resetScale: 1
+  m_reset: 0
+--- !u!114 &479014442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NAME: Desired Torque LF
+  m_Kp: 1
+  m_Ki: 0
+  m_Kd: .100000001
+  m_P:
+  - 0
+  - 0
+  - 0
+  m_I:
+  - 0
+  - 0
+  - 0
+  m_D:
+  - 0
+  - 0
+  - 0
+  m_vec: {x: 0, y: 0, z: 0}
+--- !u!114 &479014443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65faeb53fd71608458e571680fbc1b12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tuneDutyFactor: .5
+  m_tuneStepTrigger: 0
+--- !u!114 &479014444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65faeb53fd71608458e571680fbc1b12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tuneDutyFactor: .5
+  m_tuneStepTrigger: .5
+--- !u!114 &479014445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 479014435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ded940669afbece4d95b01512844a04b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tuneStepCycles:
+  - {fileID: 479014444}
+  - {fileID: 479014443}
+  m_id: 0
+  m_neighbourJointIds: 000000000000000000000000
+  m_legJointIds: 0000000000000000
+  m_netLegVirtualForces: []
+  m_tuneStepLength: {x: 1, y: .5}
+  m_tuneOrientationLFTraj:
+  - {fileID: 479014441}
+  - {fileID: 479014440}
+  - {fileID: 479014439}
+  m_desiredLFTorquePD: {fileID: 479014442}
+  m_footLiftPlacement:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  m_footLiftPlacementPerformed: 0000
+  m_footStrikePlacement:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  m_footTarget:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  m_tuneFootPlacementVelocityScale: 1
+  m_tuneStepHeightTraj: {fileID: 479014438}
+  m_tuneFootTransitionEase: {fileID: 479014437}
 --- !u!1 &669808301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,15 +1334,6 @@ GameObject:
   - 54: {fileID: 853343068}
   - 114: {fileID: 853343080}
   - 114: {fileID: 853343079}
-  - 114: {fileID: 853343078}
-  - 114: {fileID: 853343077}
-  - 114: {fileID: 853343076}
-  - 114: {fileID: 853343075}
-  - 114: {fileID: 853343074}
-  - 114: {fileID: 853343073}
-  - 114: {fileID: 853343072}
-  - 114: {fileID: 853343071}
-  - 114: {fileID: 853343070}
   - 114: {fileID: 853343084}
   - 114: {fileID: 853343085}
   - 114: {fileID: 853343087}
@@ -1070,277 +1372,9 @@ Transform:
   m_LocalPosition: {x: -.378806114, y: 2.84145403, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 479014436}
   - {fileID: 795056934}
   m_Father: {fileID: 0}
---- !u!114 &853343070
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  m_initAsFunc: 5
-  m_curve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  m_resetScale: 1
-  m_reset: 0
---- !u!114 &853343071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  m_initAsFunc: 2
-  m_curve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  m_resetScale: 1
-  m_reset: 0
---- !u!114 &853343072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65faeb53fd71608458e571680fbc1b12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDutyFactor: .5
-  m_tuneStepTrigger: 0
---- !u!114 &853343073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65faeb53fd71608458e571680fbc1b12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDutyFactor: .5
-  m_tuneStepTrigger: .5
---- !u!114 &853343074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  m_initAsFunc: 4
-  m_curve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  m_resetScale: 1
-  m_reset: 0
---- !u!114 &853343075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  m_initAsFunc: 4
-  m_curve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  m_resetScale: 1
-  m_reset: 0
---- !u!114 &853343076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82626e53d79b0a24496047e6abdac57e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  m_initAsFunc: 4
-  m_curve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-    - time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  m_resetScale: 1
-  m_reset: 0
---- !u!114 &853343077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Kp: 1
-  m_Ki: 0
-  m_Kd: .100000001
-  m_P:
-  - 0
-  - 0
-  - 0
-  m_I:
-  - 0
-  - 0
-  - 0
-  m_D:
-  - 0
-  - 0
-  - 0
-  m_vec: {x: 0, y: 0, z: 0}
---- !u!114 &853343078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ded940669afbece4d95b01512844a04b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_tuneStepCycles:
-  - {fileID: 853343073}
-  - {fileID: 853343072}
-  m_id: 0
-  m_neighbourJointIds: 000000000000000000000000
-  m_legJointIds: 0000000000000000
-  m_tuneStepLength: {x: 1, y: .5}
-  m_tuneOrientationLFTraj:
-  - {fileID: 853343076}
-  - {fileID: 853343075}
-  - {fileID: 853343074}
-  m_desiredLFTorquePD: {fileID: 853343077}
-  m_footLiftPlacement:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  m_footLiftPlacementPerformed: 0000
-  m_footStrikePlacement:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  m_footTarget:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  m_tuneFootPlacementVelocityScale: 1
-  m_tuneStepHeightTraj: {fileID: 853343071}
-  m_tuneFootTransitionEase: {fileID: 853343070}
 --- !u!114 &853343079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1353,7 +1387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_legFrames:
-  - {fileID: 853343078}
+  - {fileID: 479014445}
   m_player: {fileID: 853343080}
   m_joints:
   - {fileID: 853343068}
@@ -1482,7 +1516,7 @@ MonoBehaviour:
   m_lowerLeg: {fileID: 1015602179}
   m_foot: {fileID: 0}
   m_dbgMesh: {fileID: 0}
-  m_legFrame: {fileID: 853343078}
+  m_legFrame: {fileID: 479014445}
   m_hipAngle: 0
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 853343087}
@@ -1503,7 +1537,7 @@ MonoBehaviour:
   m_lowerLeg: {fileID: 882517219}
   m_foot: {fileID: 0}
   m_dbgMesh: {fileID: 0}
-  m_legFrame: {fileID: 853343078}
+  m_legFrame: {fileID: 479014445}
   m_hipAngle: 0
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 853343086}
@@ -1519,6 +1553,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NAME: Desired Joint Torques 2
   m_Kp: .5
   m_Ki: 0
   m_Kd: .100000001
@@ -1546,6 +1581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NAME: Desired Joint Torques 1
   m_Kp: .5
   m_Ki: 0
   m_Kd: .100000001
@@ -1573,6 +1609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NAME: Desired Joint Torques 4
   m_Kp: .5
   m_Ki: 0
   m_Kd: .100000001
@@ -1600,6 +1637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NAME: Desired Joint Torques 3
   m_Kp: .5
   m_Ki: 0
   m_Kd: .100000001
