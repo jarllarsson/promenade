@@ -85,7 +85,8 @@ public class LegFrame : MonoBehaviour
     // Calculated Leg frame virtual forces to apply to stance legs
     Vector3 m_Fh; // Height regulate
     Vector3 m_Fv; // Velocity regulate
-    Vector3[] m_FD = new Vector3[c_legCount]; // Individualized leg force
+    Vector3[] m_FD = new Vector3[c_legCount]; // Individualized leg "distance"-force
+    Vector3[] m_legFgravityComp = new Vector3[c_legCount]; // Individualized leg force
 
     void Awake()
     {
@@ -251,6 +252,19 @@ public class LegFrame : MonoBehaviour
     {
         float hLF=m_tuneLFHeightTraj.getValAt(p_phi);
         m_Fh = p_up * m_heightForceCalc.drive(hLF - p_currentH, p_dt);
+    }
+
+    public void calculateFgravcomp(float p_phi, Vector3 p_up)
+    {
+        float mass=1.0f; // ?????
+        for (int i = 0; i < m_legFgravityComp.Length; i++)
+        {
+            m_legFgravityComp[i] = Vector3.zero;
+            if (!m_tuneStepCycles[i].isInStance(p_phi))
+            {
+                m_legFgravityComp[i] = -mass * Physics.gravity;
+            }
+        }
     }
 
     // This function applies the current torques to the leg frame
