@@ -36,7 +36,7 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
     // Editor specific to show curve
     public AnimationCurve m_curve = AnimationCurve.Linear(0.0f,0.0f,1.0f,1.0f);
     // Debugging stuff
-    public int m_resetScale = 1;
+    public float m_resetScale = 1;
     public bool m_reset = false;
 
     void Awake()
@@ -103,7 +103,7 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
     {
         if (m_reset)
         {
-            reset((float)m_resetScale);
+            reset(m_resetScale);
             m_reset = false;
         
 //

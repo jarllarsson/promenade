@@ -38,7 +38,8 @@ public class IKSolverSimple : MonoBehaviour
 
         // Vector between foot and hip
         Vector3 topToFoot = footPos - m_upperLeg.position;
-        Debug.DrawLine(m_upperLeg.position, m_upperLeg.position+topToFoot,Color.black);
+        //Debug.DrawLine(m_upperLeg.position, m_upperLeg.position+topToFoot,Color.black);
+
         // This ik calc is in 2d, so eliminate rotation
         // Use the coordinate system of the leg frame as
         // in the paper

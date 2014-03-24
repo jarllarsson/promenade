@@ -21,6 +21,7 @@ public class LegFrame : MonoBehaviour
     public enum NEIGHBOUR_JOINTS { HIP_LEFT=0, HIP_RIGHT=1, SPINE=2, COUNT=3 }
     public enum PLANE { CORONAL = 0, SAGGITAL = 1 }
     public enum ORIENTATION { YAW = 0, PITCH = 1, ROLL=2 }
+    private float startH;
 
     // The gait for each leg
     public StepCycle[] m_tuneStepCycles = new StepCycle[c_legCount];
@@ -90,6 +91,7 @@ public class LegFrame : MonoBehaviour
 
     void Awake()
     {
+        startH = transform.position.y;
         for (int i = 0; i < c_legCount; i++ )
         {
             m_footLiftPlacementPerformed[i]=false;
@@ -254,18 +256,57 @@ public class LegFrame : MonoBehaviour
         m_Fh = p_up * m_heightForceCalc.drive(hLF - p_currentH, p_dt);
     }
 
-    public void calculateFgravcomp(float p_phi, Vector3 p_up)
+    public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=1.0f; // ?????
-        for (int i = 0; i < m_legFgravityComp.Length; i++)
+        float mass=0.01f; // ?????
+        int i = p_legId;
+        m_legFgravityComp[i] = -mass * Physics.gravity;
+    }
+
+    Vector3 calculateSwingLegVF(int p_legId)
+    {
+        Vector3 force;
+        force = -m_FD[p_legId] /*+ m_Fsw*/ + m_legFgravityComp[p_legId];// note fd should be swing fd
+        return force;
+    }
+
+    Vector3 calculateStanceLegVF(int p_legId, int p_stanceLegCount)
+    {
+        float n=(float)p_stanceLegCount;
+        Vector3 force;
+        force=-m_FD[p_legId]-(m_Fh/n)-(m_Fv/n); // note fd should be stance fd
+        return force;
+    }
+
+    public void calculateNetLegVF(float p_phi, float p_dt, Vector3 p_currentVelocity, Vector3 p_desiredVelocity)
+    {
+        int stanceLegs = 0;
+        for (int i = 0; i < c_legCount; i++)
         {
-            m_legFgravityComp[i] = Vector3.zero;
+            // Only need to add the indices
+            if (m_tuneStepCycles[i].isInStance(p_phi))
+            {
+                stanceLegs++;
+            }
+        }
+        for (int i = 0; i < c_legCount; i++)
+        {
+            // Swing force
             if (!m_tuneStepCycles[i].isInStance(p_phi))
             {
-                m_legFgravityComp[i] = -mass * Physics.gravity;
+                calculateFgravcomp(i, p_phi, Vector3.up);
+                m_netLegVirtualForces[i] = calculateSwingLegVF(i);
+            }
+            else
+            // Stance force
+            {
+                calculateFv(p_currentVelocity, p_desiredVelocity);
+                calculateFh(p_phi, transform.position.y - startH, p_dt, Vector3.up);
+                m_netLegVirtualForces[i] = calculateStanceLegVF(i, stanceLegs);
             }
         }
     }
+
 
     // This function applies the current torques to the leg frame
     // and corrects the stance leg torques based on a desirec torque for

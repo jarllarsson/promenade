@@ -19,6 +19,7 @@ public class Controller : MonoBehaviour
     public List<Vector3> m_dofs; // Dofs in link space
     public List<int> m_dofJointId; // Dof's id to joint
     public List<Joint> m_chain;
+    public List<GameObject> m_chainObjs;
 
     // Desired torques for joints, currently only upper joints(and of course, only during swing for them)
     public PIDn[] m_desiredJointTorquesPD;
@@ -54,11 +55,16 @@ public class Controller : MonoBehaviour
                 m_dofJointId.Add(i);
             }
         }
+        //
+        for (int i=0; i<m_joints.Length; i++)
+        {
+            m_chainObjs.Add(m_joints[i].gameObject);
+        }
     }
 
-	
-	// Update is called once per frame
-	void Update () 
+
+    // Update is called once per frame
+    void Update() 
     {
         m_currentVelocity = transform.position-m_oldPos;
 
@@ -72,7 +78,7 @@ public class Controller : MonoBehaviour
         updateFeet();
 
         // Recalculate all torques for this frame
-        updateTorques();
+        updateTorques(Time.deltaTime);
 
         // Debug color of legs when in stance
         debugColorLegs();
@@ -86,7 +92,7 @@ public class Controller : MonoBehaviour
         {
             Vector3 torque = m_jointTorques[i];
             m_joints[i].AddTorque(torque);
-            Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+torque,new Color(i%2,(i%3)*0.5f,(i+2)%4/3.0f) );
+            //Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+torque,new Color(i%2,(i%3)*0.5f,(i+2)%4/3.0f) );
         }
     }
 
@@ -124,12 +130,12 @@ public class Controller : MonoBehaviour
         }
     }
 
-    void updateTorques()
+    void updateTorques(float p_dt)
     {
         float phi = m_player.m_gaitPhase;
         // Get the two variants of torque
         Vector3[] tPD = computePDTorques(phi);
-        Vector3[] tVF = computeVFTorques(phi);
+        Vector3[] tVF = computeVFTorques(phi,p_dt);
         // Sum them
         for (int i = 0; i < m_jointTorques.Length; i++)
         {
@@ -180,9 +186,58 @@ public class Controller : MonoBehaviour
 
 
     // Compute the torque of all applied virtual forces
-    Vector3[] computeVFTorques(float p_phi)
+    Vector3[] computeVFTorques(float p_phi, float p_dt)
     {
-        return new Vector3[m_jointTorques.Length];
+        Vector3[] newTorques = new Vector3[m_jointTorques.Length];
+        for (int i = 0; i < m_legFrames.Length; i++)
+        {
+            LegFrame lf = m_legFrames[i];
+            lf.calculateNetLegVF(p_phi, p_dt, m_currentVelocity, m_desiredVelocity);
+            // Calculate torques using each leg chain
+            for (int n = 0; n < LegFrame.c_legCount; n++)
+            {
+                //  get the joints
+                int legRoot=lf.m_neighbourJointIds[n];
+                int legSegmentCount=2; // hardcoded now
+                // Use joint ids to get dof ids
+                int legRootDofId = m_chain[legRoot].m_dofListIdx;
+                int legDofEnd = m_chain[legRoot+legSegmentCount-1].m_dofListIdx+m_chain[legRoot+legSegmentCount-1].m_dof.Length;
+                // get force
+                Vector3 VF = lf.m_netLegVirtualForces[n];
+                // Calculate torques for each joint
+                // Just copy from objects
+                Vector3 end = transform.position;
+                for (int x = legRoot; x < legRoot+legSegmentCount; x++)
+                {
+                    Joint current = m_chain[i];
+                    GameObject currentObj = m_chainObjs[x];
+                    current.length = currentObj.transform.localScale.y;
+                    current.m_position = currentObj.transform.position /*- (-currentObj.transform.up) * current.length * 0.5f*/;
+                    current.m_endPoint = currentObj.transform.position + (-currentObj.transform.up) * current.length/* * 0.5f*/;
+                    end = current.m_endPoint;
+                }
+                //CMatrix J = Jacobian.calculateJacobian(m_chain, m_chain.Count, end, Vector3.forward);
+                CMatrix J = Jacobian.calculateJacobian(m_chain, m_chainObjs, m_dofs, m_dofJointId, end + VF,
+                                                       legRootDofId, legDofEnd);
+                CMatrix Jt = CMatrix.Transpose(J);
+
+                Debug.DrawLine(end, end + VF, Color.magenta,0.3f);
+
+
+                for (int g = legRootDofId; g < legDofEnd; g++)
+                {
+                    // store torque
+                    int x = m_dofJointId[g];
+                    Vector3 addT=m_dofs[g] * Vector3.Dot(new Vector3(Jt[g, 0], Jt[g, 1], Jt[g, 2]), VF);
+                    newTorques[x] += addT;
+                    Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + addT, Color.blue);
+
+                }
+                // Come to think of it, the jacobian and torque could be calculated in the same
+                // kernel as it lessens write to global memory and the need to fetch joint matrices several time (transform above)
+            }
+        }
+        return newTorques;
     }
 
     // Function for deciding the current desired velocity in order

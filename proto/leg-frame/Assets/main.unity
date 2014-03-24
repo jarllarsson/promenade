@@ -97,7 +97,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 22809547}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 4.65764032e-07, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -.876822948, y: 2.34324098, z: .0036059767}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -137,21 +137,21 @@ ConfigurableJoint:
   m_XMotion: 0
   m_YMotion: 0
   m_ZMotion: 0
-  m_AngularXMotion: 2
-  m_AngularYMotion: 2
-  m_AngularZMotion: 2
+  m_AngularXMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
     spring: 0
     damper: 0
   m_LowAngularXLimit:
-    limit: 0
+    limit: -10
     bounciness: 0
     spring: 0
     damper: 0
   m_HighAngularXLimit:
-    limit: 0
+    limit: 10
     bounciness: 0
     spring: 0
     damper: 0
@@ -279,7 +279,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 62893384}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.89151382, y: -.843354225, z: 3.8730979}
+  m_LocalPosition: {x: 2.89151382, y: -.768388748, z: 3.8730979}
   m_LocalScale: {x: 181.511124, y: 1.81258035, z: 75.860939}
   m_Children:
   - {fileID: 402633807}
@@ -444,10 +444,10 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
-    m_Resolution: -1
-    m_Strength: 1
-    m_Bias: .0500000007
+    m_Type: 1
+    m_Resolution: 3
+    m_Strength: .211999997
+    m_Bias: .226999998
     m_Softness: 4
     m_SoftnessFade: 1
   m_Cookie: {fileID: 0}
@@ -557,8 +557,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 369881574}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.876822948, y: .20468998, z: .0889160037}
+  m_LocalRotation: {x: 4.65764032e-07, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.876822948, y: .20468998, z: .0889140442}
   m_LocalScale: {x: .5, y: .184720993, z: .699999988}
   m_Children:
   - {fileID: 234145249}
@@ -574,7 +574,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: .5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1.0461905, z: .341239989}
+  m_ConnectedAnchor: {x: 0, y: -1.04619038, z: .341239989}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -881,8 +881,8 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: 1
-  m_reset: 0
+  m_resetScale: .100000001
+  m_reset: 1
 --- !u!114 &479014439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1033,8 +1033,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65faeb53fd71608458e571680fbc1b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_tuneDutyFactor: .5
-  m_tuneStepTrigger: 0
+  m_tuneDutyFactor: .699999988
+  m_tuneStepTrigger: .5
 --- !u!114 &479014444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1046,8 +1046,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65faeb53fd71608458e571680fbc1b12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_tuneDutyFactor: .5
-  m_tuneStepTrigger: .5
+  m_tuneDutyFactor: .699999988
+  m_tuneStepTrigger: 0
 --- !u!114 &479014445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1065,7 +1065,9 @@ MonoBehaviour:
   m_id: 0
   m_neighbourJointIds: 000000000000000000000000
   m_legJointIds: 0000000000000000
-  m_netLegVirtualForces: []
+  m_netLegVirtualForces:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .5}
   m_tuneOrientationLFTraj:
   - {fileID: 479014441}
@@ -1089,7 +1091,7 @@ MonoBehaviour:
   m_tuneLFHeightTraj: {fileID: 479014446}
   m_tuneHeightForcePIDKp: 1
   m_tuneHeightForcePIDKd: .100000001
-  m_tuneVelocityRegulatorKv: 1
+  m_tuneVelocityRegulatorKv: 3
 --- !u!114 &479014446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1139,9 +1141,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 1
+  m_Kp: 4
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: 1
   m_P: 0
   m_I: 0
   m_D: 0
@@ -1501,13 +1503,14 @@ MonoBehaviour:
     m_dofListIdx: 0
     m_dof:
     - {x: 1, y: 0, z: 0}
+  m_chainObjs: []
   m_desiredJointTorquesPD:
   - {fileID: 0}
   - {fileID: 853343087}
   - {fileID: 853343086}
   - {fileID: 853343089}
   - {fileID: 853343088}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
 --- !u!114 &853343080
 MonoBehaviour:
@@ -1520,7 +1523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40ff993772c32b84aa96693f9b9b38ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_tuneGaitPeriod: 1
+  m_tuneGaitPeriod: .300000012
   m_gaitPhase: 0
 --- !u!23 &853343081
 Renderer:
@@ -1615,10 +1618,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NAME: Desired Joint Torques 2
-  m_Kp: .5
+  NAME: Desired Joint Torques 4
+  m_Kp: 2
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .5
   m_P:
   - 0
   - 0
@@ -1643,10 +1646,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NAME: Desired Joint Torques 1
-  m_Kp: .5
+  NAME: Desired Joint Torques 4
+  m_Kp: 2
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .5
   m_P:
   - 0
   - 0
@@ -1672,9 +1675,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .5
+  m_Kp: 2
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .5
   m_P:
   - 0
   - 0
@@ -1699,10 +1702,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a4e3d5d2b3f314ab6425df605c0b84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NAME: Desired Joint Torques 3
-  m_Kp: .5
+  NAME: Desired Joint Torques 4
+  m_Kp: 2
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .5
   m_P:
   - 0
   - 0
@@ -1771,7 +1774,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LowAngularXLimit:
-    limit: -150
+    limit: -70
     bounciness: 0
     spring: 0
     damper: 0
@@ -1999,7 +2002,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1, z: 2.98023224e-08}
+  m_ConnectedAnchor: {x: 0, y: -1, z: 6.56308998e-08}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2013,7 +2016,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LowAngularXLimit:
-    limit: -150
+    limit: -70
     bounciness: 0
     spring: 0
     damper: 0
@@ -2101,8 +2104,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1015602174}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.876822948, y: 1.34324098, z: .0036060065}
+  m_LocalRotation: {x: 4.65764032e-07, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.876822948, y: 1.34324098, z: .0036051108}
   m_LocalScale: {x: .25, y: 1, z: .25}
   m_Children:
   - {fileID: 669808304}
@@ -2919,21 +2922,21 @@ ConfigurableJoint:
   m_XMotion: 0
   m_YMotion: 0
   m_ZMotion: 0
-  m_AngularXMotion: 2
-  m_AngularYMotion: 2
-  m_AngularZMotion: 2
+  m_AngularXMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
     spring: 0
     damper: 0
   m_LowAngularXLimit:
-    limit: -90
+    limit: -10
     bounciness: 0
     spring: 0
     damper: 0
   m_HighAngularXLimit:
-    limit: 0
+    limit: 10
     bounciness: 0
     spring: 0
     damper: 0

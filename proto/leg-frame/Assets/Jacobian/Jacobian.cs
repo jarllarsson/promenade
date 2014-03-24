@@ -24,7 +24,10 @@ public class Jacobian
         return J;
     }
 
-    public static CMatrix calculateJacobian(List<Joint> p_joints, List<GameObject> p_jointObjs, List<Vector3> p_dofs, List<int> p_dofJointIds, Vector3 p_targetPos)
+    public static CMatrix calculateJacobian(List<Joint> p_joints, List<GameObject> p_jointObjs, 
+                                            List<Vector3> p_dofs, List<int> p_dofJointIds, 
+                                            Vector3 p_targetPos,
+                                            int p_dofListOffset=0, int p_dofListEnd=-1, int p_listStep=1)
     {
         // If GPGPU here
         // First, read dofjoint id, then position from joint array to registry
@@ -37,8 +40,9 @@ public class Jacobian
         // One Jt per dof
 
         // Construct Jacobian matrix
+        if (p_dofListEnd <= 0) p_dofListEnd = p_dofs.Count;
         CMatrix J = new CMatrix(3, p_dofs.Count); // 3 is position in xyz
-        for (int i = 0; i < p_dofs.Count; i++) // this is then the "thread pool"
+        for (int i = p_dofListOffset; i < p_dofListEnd; i += p_listStep) // this is then the "thread pool"
         {
             int id=p_dofJointIds[i];
             Joint joint = p_joints[id];
