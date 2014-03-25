@@ -151,7 +151,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_HighAngularXLimit:
-    limit: 10
+    limit: 90
     bounciness: 0
     spring: 0
     damper: 0
@@ -279,7 +279,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 62893384}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.89151382, y: -.768388748, z: 3.8730979}
+  m_LocalPosition: {x: 2.89151382, y: -.927862167, z: 3.8730979}
   m_LocalScale: {x: 181.511124, y: 1.81258035, z: 75.860939}
   m_Children:
   - {fileID: 402633807}
@@ -1091,7 +1091,7 @@ MonoBehaviour:
   m_tuneLFHeightTraj: {fileID: 479014446}
   m_tuneHeightForcePIDKp: 1
   m_tuneHeightForcePIDKd: .100000001
-  m_tuneVelocityRegulatorKv: 3
+  m_tuneVelocityRegulatorKv: 1
 --- !u!114 &479014446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1424,7 +1424,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 4
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!4 &853343069
 Transform:
@@ -1510,8 +1510,10 @@ MonoBehaviour:
   - {fileID: 853343086}
   - {fileID: 853343089}
   - {fileID: 853343088}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 30
+  m_usePDTorque: 0
+  m_useVFTorque: 1
 --- !u!114 &853343080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2936,7 +2938,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_HighAngularXLimit:
-    limit: 10
+    limit: 90
     bounciness: 0
     spring: 0
     damper: 0
