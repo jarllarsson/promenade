@@ -258,7 +258,7 @@ public class LegFrame : MonoBehaviour
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=0.01f; // ?????
+        float mass=0.1f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
