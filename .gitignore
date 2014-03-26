@@ -61,3 +61,6 @@ bin/x64/*.txt
 /proto/leg-frame/leg-frame.sln
 /proto/Jacobian-test/Jacobian-test-csharp.sln
 /proto/Jacobian-test/Jacobian-test.sln
+/proto/greedy-optimization/greedy-optimization-csharp.sln
+/proto/greedy-optimization/greedy-optimization.sln
+
