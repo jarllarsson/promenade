@@ -22,28 +22,58 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
         HALF_SIN,      // half sine
         FLAT,        // flat zero
         LIN_INC,    // Linear increase
+        RND,
         LIN_DEC
     }
 
     // Number of data points
-    public static int s_size = 100;
+    public static int s_size = 30;
+
+    public Color m_dbgDrawCol = Color.green;
 
     // The data points of the function
-    public float[] m_tuneDataPoints = new float[s_size];
+    private float[] m_tuneDataPoints = new float[s_size];
 
     // IOptimizable
-    public List<float> getParams()
+    public List<float> GetParams()
     {
         return new List<float>(m_tuneDataPoints);
         // Here one could also implement setters for children IOptimizables
     }
 
-    public void setParams(List<float> p_params)
+    public void SetParams(List<float> p_params)
     {
         m_tuneDataPoints = p_params.ToArray();
         // Here one could also implement getters for children IOptimizables
     }
 
+    // Test eval, data point distance to sin function
+    public double EvaluateFitness()
+    {
+        double sumdist = 0.0f;
+        double scale = m_resetScale;
+        double[] distances = new double[s_size];
+        for (int i = 0; i < s_size; i++)
+        {
+            float t = getTimeFromIdx(i);
+            double gy = scale * (double)Mathf.Sin(t * 2.0f * Mathf.PI);
+                //((Mathf.Cos(t * 2.0f * Mathf.PI) - 1.0f) * -0.5f);
+                //
+            double y = m_tuneDataPoints[i];
+            double distdiff = Math.Abs(gy - y);
+            distances[i] = distdiff;
+            sumdist += distdiff;
+        }
+        double avg = sumdist / (double)s_size;
+        double totmeandiffsqr = 0.0f;
+        for (int i = 0; i < s_size; i++)
+        {
+            double mdiff=distances[i]-avg;
+            totmeandiffsqr += mdiff * mdiff;
+        }
+        double sdeviation = Math.Sqrt(totmeandiffsqr / (double)s_size);
+        return sumdist*sumdist+10.0f*sdeviation*sdeviation;
+    }
 
 
     /// /////////////////////////////////////////////////////////////
@@ -60,7 +90,12 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
 
     void Awake()
     {
-      
+        if (m_reset)
+        {
+            reset(m_resetScale);
+            m_reset = false;
+        }
+
     }
 
     public void reset(float p_scale=1.0f)
@@ -90,6 +125,9 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
                     break;
                 case INITTYPE.LIN_DEC:
                     m_tuneDataPoints[i] = p_scale * (1.0f - t);
+                    break;
+                case INITTYPE.RND:
+                    m_tuneDataPoints[i] = UnityEngine.Random.Range(-1.0f, 1.0f);
                     break;
                 default:
                     m_tuneDataPoints[i] = p_scale * 0.5f;
@@ -138,7 +176,7 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
             float t1 = (i + 1) * 0.01f;
             Debug.DrawLine(transform.position + Vector3.right * s * t + Vector3.up * getValAt(t),
                 transform.position + Vector3.right * s * t1 + Vector3.up * getValAt(t1),
-                Color.yellow,t);
+                m_dbgDrawCol,p_t);
         }
     }
 
@@ -166,4 +204,9 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
         return val;
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, 0.2f);
+    }
 }

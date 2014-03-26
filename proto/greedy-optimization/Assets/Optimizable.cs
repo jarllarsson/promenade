@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
 public interface IOptimizable
 {
-    List<float> getParams();
-    void setParams(List<float> p_params);
+    List<float> GetParams();
+    void SetParams(List<float> p_params);
+    double EvaluateFitness();
 }
