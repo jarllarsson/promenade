@@ -34,11 +34,14 @@
     <Filter Include="Texture">
       <UniqueIdentifier>{0cd6b3e7-6863-41f9-9846-ddf2256aec4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Vertices">
-      <UniqueIdentifier>{b9def0ad-4bc0-4dfa-8546-828851420522}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Meshes">
       <UniqueIdentifier>{33eebbd9-973f-43f3-acb4-fbcd7cf957a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffers\Explicit Structures">
+      <UniqueIdentifier>{1127b388-a3e9-4ce5-b757-fdcdf533da81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffers\Explicit Structures\Vertices">
+      <UniqueIdentifier>{b9def0ad-4bc0-4dfa-8546-828851420522}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -67,7 +70,7 @@
       <Filter>Factories</Filter>
     </ClInclude>
     <ClInclude Include="PVertex.h">
-      <Filter>Vertices</Filter>
+      <Filter>Buffers\Explicit Structures\Vertices</Filter>
     </ClInclude>
     <ClInclude Include="ShaderBase.h">
       <Filter>Shaders</Filter>
@@ -105,6 +108,12 @@
     </ClInclude>
     <ClInclude Include="MeshShader.h">
       <Filter>Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="CBuffers.h">
+      <Filter>Buffers\Explicit Structures</Filter>
+    </ClInclude>
+    <ClInclude Include="InstanceData.h">
+      <Filter>Buffers\Explicit Structures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -154,11 +154,13 @@
     <ClInclude Include="BufferBase.h" />
     <ClInclude Include="BufferConfig.h" />
     <ClInclude Include="BufferFactory.h" />
+    <ClInclude Include="CBuffers.h" />
     <ClInclude Include="ComposeShader.h" />
     <ClInclude Include="D3DUtil.h" />
     <ClInclude Include="GraphicsDevice.h" />
     <ClInclude Include="GraphicsDeviceFactory.h" />
     <ClInclude Include="GraphicsException.h" />
+    <ClInclude Include="InstanceData.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshShader.h" />
     <ClInclude Include="PVertex.h" />

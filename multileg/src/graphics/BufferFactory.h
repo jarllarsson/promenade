@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Buffer.h"
+#include "InstanceData.h"
+#include "CBuffers.h"
 
 struct PVertex;
 class Mesh;
@@ -47,6 +49,9 @@ public:
 	Buffer<unsigned int>* createIndexBuffer(unsigned int* p_indices,
 											unsigned int p_numberOfElements);
 
+
+	Buffer<Mat4CBuffer>* createMat4CBuffer();
+	Buffer<InstanceData>* createMat4InstanceBuffer( void* p_instanceList, unsigned int p_numberOfElements);
 
 protected:
 private:
