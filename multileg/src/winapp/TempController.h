@@ -12,7 +12,6 @@
 /// 
 /// 28-9-2013 Jarl Larsson
 ///---------------------------------------------------------------------------------------
-
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp> 
@@ -28,6 +27,7 @@ public:
 	virtual ~TempController();
 
 	glm::mat4& getRotationMatrix();
+	glm::mat4& getViewProjMatrix();
 	glm::vec4& getPos();
 
 	void update(float p_dt);
@@ -39,13 +39,18 @@ public:
 	void moveAngularThrust(const glm::vec3& p_dir);
 	void rotate(glm::vec3 p_angularVelocity);
 
+	float getVelocityAmount();
+
 	bool isNewFovAvailable();
 	glm::vec2& getFovXY();
 protected:
 private:
 	void calcRotationMatrix();
+	void calcViewProjMatrix(float p_fovYAngleDeg, float p_aspectRatio);
 
 	glm::mat4 m_rotationMat;
+	glm::mat4 m_viewProjMat;
+	glm::mat4 m_projMat;
 
 	glm::vec3 m_moveThrustDir;
 	glm::vec3 m_moveAngularThrustDir;
@@ -62,6 +67,7 @@ private:
 	glm::quat m_rotation;
 
 	// camera stuff
+	float m_fovYAngle, m_aspect;
 	glm::vec2 m_fovTan;
 	bool	m_fovDirtyBit;
 };

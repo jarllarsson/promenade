@@ -89,7 +89,7 @@ public:
 
 	// Getters
 	void* getDevicePointer();
-
+	BufferFactory* getBufferFactoryRef();
 protected:
 private:	
 	// Mapping/Unmapping

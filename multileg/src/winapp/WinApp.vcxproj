@@ -152,12 +152,15 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="OISEventHandler.h" />
+    <ClInclude Include="OISHelper.h" />
     <ClInclude Include="TempController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OISHelper.cpp" />
     <ClCompile Include="TempController.cpp" />
   </ItemGroup>
   <ItemGroup>

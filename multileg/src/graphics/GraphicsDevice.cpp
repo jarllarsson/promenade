@@ -20,7 +20,6 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 	m_height=p_height;
 	m_windowMode = p_windowMode;
 	m_wireframeMode=false;
-	m_interopCanvasHandle=new Texture*;
 
 	// 1. init hardware
 	initSwapChain(p_hWnd);
@@ -39,6 +38,7 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 	// 4. init shaders
 	m_composeShader = m_shaderFactory->createComposeShader(L"../shaders/ComposeShader.hlsl");
 	m_meshShader = m_shaderFactory->createMeshShader(L"../shaders/MeshShader.hlsl");
+	m_wireframeShader = m_shaderFactory->createMeshShader(L"../shaders/WireframeShader.hlsl");
 
 	// 5. build states
 	buildBlendStates();
@@ -68,10 +68,10 @@ GraphicsDevice::~GraphicsDevice()
 	delete m_shaderFactory;
 	delete m_bufferFactory;
 	delete m_textureFactory;
-	delete m_interopCanvasHandle;
 	//
 	delete m_composeShader;
 	delete m_meshShader;
+	delete m_wireframeShader;
 	//
 	delete m_fullscreenQuad;
 	delete m_boxMesh;
@@ -91,8 +91,10 @@ GraphicsDevice::~GraphicsDevice()
 
 void GraphicsDevice::clearRenderTargets()
 {
-	float clearColorRTV[4] = { 1.0f, m_width/5000.0f,  m_height/1200.0f, 1.0f };
-	float clearColorBackBuffer[4] = { m_width/5000.0f, 1.0f,  m_height/1200.0f, 1.0f };
+	float clearColorRTV[4] = {0.0f,0.0f,0.0f,1.0f};
+	//{ 1.0f, m_width/5000.0f,  m_height/1200.0f, 1.0f };
+	float clearColorBackBuffer[4] = {0.0f,0.0f,0.0f,1.0f};
+	//{ m_width/5000.0f, 1.0f,  m_height/1200.0f, 1.0f };
 
 	// clear gbuffer
 	unmapAllBuffers();
@@ -192,7 +194,7 @@ void GraphicsDevice::executeRenderPass( RenderPass p_pass,
 		{
 			m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			setBlendState(BlendState::NORMAL);
-			setRasterizerStateSettings(RasterizerState::FILLED_NOCULL,false);
+			setRasterizerStateSettings(RasterizerState::WIREFRAME_NOCULL,false);
 			setRenderTarget(RT_BACKBUFFER_NODEPTHSTENCIL);		
 			p_cbuf->apply();
 			setShader(SI_WIREFRAMESHADER);
@@ -208,7 +210,10 @@ void* GraphicsDevice::getDevicePointer()
 	return (void*)m_device;
 }
 
-
+BufferFactory* GraphicsDevice::getBufferFactoryRef()
+{
+	return m_bufferFactory;
+}
 
 
 
@@ -511,7 +516,7 @@ void GraphicsDevice::initGBuffer()
 													  &m_gSrv[i], 
 													  m_width, m_height);
 	}
-	*m_interopCanvasHandle = (Texture*)m_gTexture[GBufferChannel::GBUF_DIFFUSE];
+	//*m_interopCanvasHandle = (Texture*)m_gTexture[GBufferChannel::GBUF_DIFFUSE];
 }
 
 

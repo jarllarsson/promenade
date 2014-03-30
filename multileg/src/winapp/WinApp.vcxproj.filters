@@ -21,6 +21,12 @@
     <ClInclude Include="TempController.h">
       <Filter>TempLogic</Filter>
     </ClInclude>
+    <ClInclude Include="OISEventHandler.h">
+      <Filter>TempLogic\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="OISHelper.h">
+      <Filter>TempLogic\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -33,5 +39,8 @@
       <Filter>TempLogic</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OISHelper.cpp">
+      <Filter>TempLogic\Input</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

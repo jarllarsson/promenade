@@ -13,8 +13,8 @@
 /// 29-9-2013 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-
-//////////////////////////////// OS Nuetral Headers ////////////////
+/*
+//////////////////////////////// OS Neutral Headers ////////////////
 #include <OISInputManager.h>
 #include <OISException.h>
 #include <OISKeyboard.h>
@@ -72,3 +72,5 @@ public:
 protected:
 private:
 };
+
+*/

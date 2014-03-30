@@ -5,14 +5,16 @@
 
 TempController::TempController()
 {
-	m_position = glm::vec4(0.0f,0.0f,-10.0f,1.0f);
-	m_rotation = glm::quat(glm::vec3(0.0f,0.2f,0.0f));
+	m_position = glm::vec4(0.2f,0.2f,-10.0f,1.0f);
+	m_rotation = glm::quat(glm::vec3(0.0f,0.0f,0.0f));
 	m_fovDirtyBit = false;
 
 	m_damping=2.0f;
 	m_angularDamping=1.5f;
 	m_thrustPower=20.0f;
 	m_angularThrustPower=2.0f;
+	m_fovYAngle=45.0f;
+	m_aspect=1.0f;
 }
 
 TempController::~TempController()
@@ -22,7 +24,9 @@ TempController::~TempController()
 
 void TempController::setFovFromAngle( float angle, float aspectRatio )
 {
-	setFovFromRad( angle*(float)TORAD, aspectRatio );
+	m_fovYAngle=angle;
+	m_aspect=aspectRatio;
+	setFovFromRad( angle*(float)TORAD, aspectRatio );	
 }
 
 void TempController::setFovFromRad( float rad, float aspectRatio )
@@ -31,6 +35,13 @@ void TempController::setFovFromRad( float rad, float aspectRatio )
 	float fovyRad = fovxRad;
 	m_fovTan.x=aspectRatio*tan(fovxRad); 
 	m_fovTan.y=tan(fovyRad);
+	float yscale=1.0f/m_fovTan.y;
+	float xscale=yscale/aspectRatio;
+	float zf=1000.0f,zn=0.1f;
+	m_projMat = glm::mat4(xscale,0,0,0,
+		0,yscale,0,0,
+		0,0,zf/(zf-zn),1,
+		0,0,-zn*zf/(zf-zn),0);
 	m_fovDirtyBit=true;
 }
 
@@ -42,8 +53,8 @@ bool TempController::isNewFovAvailable()
 
 glm::vec2& TempController::getFovXY()
 {
-	 m_fovDirtyBit=false; 
-	 return m_fovTan;
+	m_fovDirtyBit=false; 
+	return m_fovTan;
 }
 
 glm::mat4& TempController::getRotationMatrix()
@@ -69,13 +80,13 @@ void TempController::update( float p_dt )
 
 	// apply "force" vector on rotation
 	m_angularVelocity += m_moveAngularThrustDir*m_angularThrustPower*p_dt;
-	
 
 	// update rotation
 	rotate(m_angularVelocity*p_dt);
 
 	// calc new rotation
 	calcRotationMatrix();
+	calcViewProjMatrix(m_fovYAngle, m_aspect);
 
 	// apply "force" vector on velocity
 	m_velocity += glm::vec4(m_moveThrustDir*m_thrustPower*p_dt,0.0f)*m_rotationMat;
@@ -110,4 +121,24 @@ void TempController::rotate( glm::vec3 p_angularVelocity )
 		glm::quat turn = glm::quat(p_angularVelocity);
 		m_rotation = turn*m_rotation;
 	}
+}
+
+float TempController::getVelocityAmount()
+{
+	return (float)(m_velocity.length());
+}
+
+void TempController::calcViewProjMatrix( float p_fovYAngleDeg, float p_aspectRatio )
+{
+	glm::mat4 proj = glm::perspective(p_fovYAngleDeg,p_aspectRatio,0.1f,1000.0f);
+	glm::mat4 transMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,m_position.z));
+	glm::mat4 viewMat = glm::inverse(transMat*m_rotationMat);
+	m_viewProjMat = m_projMat/**viewMat*/;
+	m_viewProjMat = glm::transpose(m_viewProjMat);
+		//glm::transpose(m_viewProjMat);
+}
+
+glm::mat4& TempController::getViewProjMatrix()
+{
+	return m_viewProjMat;
 }
