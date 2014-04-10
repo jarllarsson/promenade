@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEditor;
 using System;
+using System.Collections.Generic;
 
 /*  ===================================================================
  *                     Piece wise linear function
@@ -9,7 +10,7 @@ using System;
  *   Function defined by data points and linear interpolation.
  */
 
-public class PcswiseLinear : MonoBehaviour // extends editor only to visualize graph
+public class PcswiseLinear : MonoBehaviour, IOptimizable
 {
     public string NAME = "PL";
     // Type to be inited as
@@ -21,14 +22,34 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         HALF_SIN,      // half sine
         FLAT,        // flat zero
         LIN_INC,    // Linear increase
+        RND,
         LIN_DEC
     }
 
     // Number of data points
-    public static int s_size = 6;
+    public static int s_size = 30;
+
+    public Color m_dbgDrawCol = Color.green;
 
     // The data points of the function
-    public float[] m_tuneDataPoints = new float[s_size];
+    private float[] m_tuneDataPoints = new float[s_size];
+
+    // IOptimizable
+    public List<float> GetParams()
+    {
+        return new List<float>(m_tuneDataPoints);
+        // Here one could also implement setters for children IOptimizables
+    }
+
+    public void ConsumeParams(List<float> p_params)
+    {
+        m_tuneDataPoints = p_params.ToArray();
+        // Here one could also implement getters for children IOptimizables
+    }
+
+
+    /// /////////////////////////////////////////////////////////////
+    /// /////////////////////////////////////////////////////////////
 
     public INITTYPE m_initAsFunc = INITTYPE.COS_INV_NORM;
 
@@ -41,7 +62,12 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
 
     void Awake()
     {
-        reset(1.0f);
+        if (m_reset)
+        {
+            reset(m_resetScale);
+            m_reset = false;
+        }
+
     }
 
     public void reset(float p_scale=1.0f)
@@ -71,6 +97,9 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
                     break;
                 case INITTYPE.LIN_DEC:
                     m_tuneDataPoints[i] = p_scale * (1.0f - t);
+                    break;
+                case INITTYPE.RND:
+                    m_tuneDataPoints[i] = UnityEngine.Random.Range(-1.0f, 1.0f);
                     break;
                 default:
                     m_tuneDataPoints[i] = p_scale * 0.5f;
@@ -104,20 +133,24 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         if (m_reset)
         {
             reset(m_resetScale);
-            m_reset = false;
-        
-//
-            for (int i = 0; i < 100; i++)
-            {
-                float t = i * 0.01f;
-                float t1 = (i + 1) * 0.01f;
-                Debug.DrawLine(transform.position + Vector3.right * t + Vector3.up * getValAt(t),
-                    transform.position + Vector3.right * t1 + Vector3.up * getValAt(t1),
-                    new Color((float)i / (float)99, 0.5f, (float)i / (float)99),10.0f);
-            }
-            
+            m_reset = false;  
         }
+
+        draw(0.0f);
 	}
+
+    public void draw(float p_t)
+    {
+        float s = transform.localScale.x;
+        for (int i = 0; i < 100; i++)
+        {
+            float t = i * 0.01f;
+            float t1 = (i + 1) * 0.01f;
+            Debug.DrawLine(transform.position + Vector3.right * s * t + Vector3.up * getValAt(t),
+                transform.position + Vector3.right * s * t1 + Vector3.up * getValAt(t1),
+                m_dbgDrawCol,p_t);
+        }
+    }
 
     public float getValAt(float p_phi)
     {
@@ -143,9 +176,9 @@ public class PcswiseLinear : MonoBehaviour // extends editor only to visualize g
         return val;
     }
 
-
-    void OnGUI()
+    void OnDrawGizmos()
     {
-        //m_curve = EditorGUILayout.CurveField("curve", m_curve);
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(transform.position, 0.2f);
     }
 }

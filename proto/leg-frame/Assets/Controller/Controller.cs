@@ -10,7 +10,7 @@ using System.Collections.Generic;
  *   the torques and feeds them to the physics engine.
  *   */
 
-public class Controller : MonoBehaviour 
+public class Controller : MonoBehaviour, IOptimizable
 {
     public LegFrame[] m_legFrames=new LegFrame[1];
     public GaitPlayer m_player;
@@ -32,6 +32,22 @@ public class Controller : MonoBehaviour
 
     public bool m_usePDTorque = true;
     public bool m_useVFTorque = true;
+
+    // IOptimizable
+    public List<float> GetParams()
+    {
+        List<float> vals = new List<float>();
+        for (int i = 0; i < m_legFrames.Length; i++)
+            vals.AddRange(m_legFrames[i].GetParams()); // append
+        return vals;
+    }
+
+    public void ConsumeParams(List<float> p_params)
+    {
+        for (int i = 0; i < m_legFrames.Length; i++)
+            m_legFrames[i].ConsumeParams(p_params); // consume
+    }
+
 
 
     void Start()

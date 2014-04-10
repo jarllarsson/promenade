@@ -13,7 +13,7 @@ using UnityEditor;
  *   The hip-joints do not however.
  *   */
 
-public class LegFrame : MonoBehaviour 
+public class LegFrame : MonoBehaviour, IOptimizable
 {
     public const int c_legCount = 2; // always two legs per frame
     public const int c_nonHipLegSegments = 1;
@@ -86,8 +86,31 @@ public class LegFrame : MonoBehaviour
     // Calculated Leg frame virtual forces to apply to stance legs
     Vector3 m_Fh; // Height regulate
     Vector3 m_Fv; // Velocity regulate
-    Vector3[] m_FD = new Vector3[c_legCount]; // Individualized leg "distance"-force
+    Vector3[] m_tuneFD = new Vector3[c_legCount]; // Individualized leg "distance"-force
     Vector3[] m_legFgravityComp = new Vector3[c_legCount]; // Individualized leg force
+
+    // IOptimizable
+    public List<float> GetParams()
+    {
+        List<float> vals = new List<float>();
+        /*m_tuneStepCycles
+m_tuneStepLength
+m_tuneOrientationLFTraj
+m_tuneFootPlacementVelocityScale
+m_tuneStepHeightTraj
+m_tuneFootTransitionEase
+m_tuneLFHeightTraj
+ m_tuneHeightForcePIDKp=1.0f, m_tuneHeightForcePIDKd
+m_tuneVelocityRegulatorKv
+m_tuneFD
+m_legFgravityComp */
+        return vals;
+    }
+
+    public void ConsumeParams(List<float> p_params)
+    {
+
+    }
 
     void Awake()
     {
@@ -266,7 +289,7 @@ public class LegFrame : MonoBehaviour
     Vector3 calculateSwingLegVF(int p_legId)
     {
         Vector3 force;
-        force = -m_FD[p_legId] /*+ m_Fsw*/ + m_legFgravityComp[p_legId];// note fd should be swing fd
+        force = -m_tuneFD[p_legId] /*+ m_Fsw*/ + m_legFgravityComp[p_legId];// note fd should be swing fd
         return force;
     }
 
@@ -274,7 +297,7 @@ public class LegFrame : MonoBehaviour
     {
         float n=(float)p_stanceLegCount;
         Vector3 force;
-        force=-m_FD[p_legId]-(m_Fh/n)-(m_Fv/n); // note fd should be stance fd
+        force=-m_tuneFD[p_legId]-(m_Fh/n)-(m_Fv/n); // note fd should be stance fd
         return force;
     }
 
