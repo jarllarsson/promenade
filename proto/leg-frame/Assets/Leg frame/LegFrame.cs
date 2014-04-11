@@ -114,7 +114,22 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void ConsumeParams(List<float> p_params)
     {
-
+        for (int i = 0; i < m_tuneStepCycles.Length; i++)
+            m_tuneStepCycles[i].ConsumeParams(p_params);
+        OptimizableHelper.ConsumeParamsTo(p_params,ref m_tuneStepLength);
+        for (int i = 0; i < m_tuneOrientationLFTraj.Length; i++)
+            m_tuneOrientationLFTraj[i].ConsumeParams(p_params);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFootPlacementVelocityScale);
+        m_tuneStepHeightTraj.ConsumeParams(p_params);
+        m_tuneFootTransitionEase.ConsumeParams(p_params);
+        m_tuneLFHeightTraj.ConsumeParams(p_params);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKp);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKd);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneVelocityRegulatorKv);
+        for (int i = 0; i < m_tuneFD.Length; i++)
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFD[i]);
+        for (int i = 0; i < m_legFgravityComp.Length; i++)
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_legFgravityComp[i]);
     }
 
     void Awake()

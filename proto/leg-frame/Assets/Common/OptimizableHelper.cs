@@ -31,6 +31,12 @@ public static class OptimizableHelper
         return vals;
     }
 
+    public static void ConsumeParamsTo(List<float> p_params, ref float p_inoutFloat)
+    {
+        p_inoutFloat = p_params[0];
+        p_params.RemoveAt(0);
+    }
+
     public static void ConsumeParamsTo(List<float> p_params, ref Vector2 p_inoutVec2)
     {
         for (int i = 0; i < 2; i++)
