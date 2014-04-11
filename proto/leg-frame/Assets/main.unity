@@ -833,13 +833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: FootEase
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
   m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
@@ -870,13 +864,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
   m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
@@ -907,13 +895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
   m_initAsFunc: 4
   m_curve:
     serializedVersion: 2
@@ -944,13 +926,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
   m_initAsFunc: 0
   m_curve:
     serializedVersion: 2
@@ -981,13 +957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
   m_initAsFunc: 0
   m_curve:
     serializedVersion: 2
@@ -1116,13 +1086,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
-  m_tuneDataPoints:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
+  m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
   m_initAsFunc: 4
   m_curve:
     serializedVersion: 2
@@ -1436,7 +1400,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 4
   m_CollisionDetection: 0
 --- !u!4 &853343069
 Transform:

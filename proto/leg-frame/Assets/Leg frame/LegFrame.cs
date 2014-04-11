@@ -93,17 +93,22 @@ public class LegFrame : MonoBehaviour, IOptimizable
     public List<float> GetParams()
     {
         List<float> vals = new List<float>();
-        /*m_tuneStepCycles
-m_tuneStepLength
-m_tuneOrientationLFTraj
-m_tuneFootPlacementVelocityScale
-m_tuneStepHeightTraj
-m_tuneFootTransitionEase
-m_tuneLFHeightTraj
- m_tuneHeightForcePIDKp=1.0f, m_tuneHeightForcePIDKd
-m_tuneVelocityRegulatorKv
-m_tuneFD
-m_legFgravityComp */
+        for (int i = 0; i < m_tuneStepCycles.Length; i++)
+            vals.AddRange(m_tuneStepCycles[i].GetParams());
+        vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneStepLength));
+        for (int i=0;i<m_tuneOrientationLFTraj.Length;i++)
+            vals.AddRange(m_tuneOrientationLFTraj[i].GetParams());
+        vals.Add(m_tuneFootPlacementVelocityScale);
+        vals.AddRange(m_tuneStepHeightTraj.GetParams());
+        vals.AddRange(m_tuneFootTransitionEase.GetParams());
+        vals.AddRange(m_tuneLFHeightTraj.GetParams());
+        vals.Add(m_tuneHeightForcePIDKp);
+        vals.Add(m_tuneHeightForcePIDKd);
+        vals.Add(m_tuneVelocityRegulatorKv);
+        for (int i=0;i<m_tuneFD.Length;i++)
+            vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneFD[i]));
+        for (int i = 0; i < m_legFgravityComp.Length; i++)
+            vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_legFgravityComp[i]));
         return vals;
     }
 

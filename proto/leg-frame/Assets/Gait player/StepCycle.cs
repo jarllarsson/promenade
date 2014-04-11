@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /*  ===================================================================
  *                          Step cycle
@@ -8,7 +9,7 @@ using System.Collections;
  *   relation to the overall gait of all limbs.
  *   */
 
-public class StepCycle : MonoBehaviour 
+public class StepCycle : MonoBehaviour, IOptimizable
 {
     // Fraction of overall normalized time for which the 
     // foot is touching the ground.
@@ -18,6 +19,23 @@ public class StepCycle : MonoBehaviour
     // foot begins its cycle.
     public float m_tuneStepTrigger;
 
+
+    // IOptimizable
+    public List<float> GetParams()
+    {
+        List<float> vals = new List<float>();
+        vals.Add(m_tuneDutyFactor);
+        vals.Add(m_tuneStepTrigger);
+        return vals;
+    }
+
+    public void ConsumeParams(List<float> p_params)
+    {
+        m_tuneDutyFactor = p_params[0];
+        m_tuneStepTrigger = p_params[1];
+        for (int i = 0; i < 2;i++ )
+            p_params.RemoveAt(0);
+    }
 
 	// Use this for initialization
 	void Start () {

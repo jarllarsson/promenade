@@ -43,7 +43,11 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
 
     public void ConsumeParams(List<float> p_params)
     {
-        m_tuneDataPoints = p_params.ToArray();
+        for (int i = 0; i < s_size; i++)
+        {
+            m_tuneDataPoints[i] = p_params[0];
+            p_params.RemoveAt(0);
+        }
         // Here one could also implement getters for children IOptimizables
     }
 
