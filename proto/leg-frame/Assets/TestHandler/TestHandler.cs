@@ -18,14 +18,29 @@ public class TestHandler : MonoBehaviour
     List<List<float>> m_currentParams;
 
     private double[] m_totalScores;
+    bool m_inited = false;
     // Use this for initialization
-    void Start()
+    void Awake()
     {
-        m_changer = new ParamChanger();
-        m_currentParams = new List<List<float>>();
-        m_totalScores = new double[m_optimizableControllers.Length];
-        StoreParams();
-        ResetScores();
+        Object.DontDestroyOnLoad(gameObject);
+        if (!m_inited)
+        {
+            m_changer = new ParamChanger();
+            m_currentParams = new List<List<float>>();
+            m_totalScores = new double[m_optimizableControllers.Length];
+            StoreParams();
+            ResetScores();
+            m_inited = true;
+        }
+        else
+        {
+            for (int i = 0; i < m_optimizableControllers.Length; i++)
+            {
+                IOptimizable opt = m_optimizableControllers[i];
+                opt.ConsumeParams(m_currentParams[i]); // consume it to controller
+            }
+        }
+
     }
 
     // Update is called once per frame
@@ -48,9 +63,10 @@ public class TestHandler : MonoBehaviour
     private void RestartSim()
     {
         m_currentSimTime = 0.0f;
-        StoreParams();
+        //StoreParams();
         VoidBestCandidate();
         ResetScores();
+        Application.LoadLevel(0);
     }
 
     private void FindCurrentBestCandidate()
@@ -106,10 +122,7 @@ public class TestHandler : MonoBehaviour
         // Perturb and assign to candidates
         for (int i = 0; i < m_optimizableControllers.Length; i++)
         {
-            IOptimizable opt = m_optimizableControllers[i];
-            List<float> newObjParams = m_changer.change(m_lastBestParams); // different perturbation to each
-            // Debug.Log("new params for "+i+" sample at i=10:  _" + newObjParams[10]+"_");
-            opt.ConsumeParams(newObjParams); // consume it to controller
+            m_currentParams[i] = m_changer.change(m_lastBestParams); // different perturbation to each
         }
     }
 
@@ -138,7 +151,7 @@ public class TestHandler : MonoBehaviour
                 if (m_currentParams[i]!=null)
                 {
                     Vector3 pos = m_optimizableControllers[i].transform.position + Vector3.up * 6;
-                    drawLineGraph(m_currentParams[i], s, m_optimizableControllers[i].transform.position);
+                    drawLineGraph(m_currentParams[i], s, m_optimizableControllers[i].transform.position+Vector3.left*s.x*0.5f);
                 }
             }
         }
@@ -154,7 +167,7 @@ public class TestHandler : MonoBehaviour
             float t1 = (float)(n+1) / (float)p_graph.Count;
             float val = p_graph[n];
             float val1 = p_graph[n+1];
-            Gizmos.color=Color.Lerp(Color.cyan,Color.magenta,val*0.1f);
+            Gizmos.color=Color.Lerp(Color.cyan,Color.magenta,val*0.01f);
             Gizmos.DrawLine(p_wpos + Vector3.right * p_scale.x * t + Vector3.up * val * p_scale.y,
                 p_wpos + Vector3.right * p_scale.x * t1 + Vector3.up * val1 * p_scale.y);
         }

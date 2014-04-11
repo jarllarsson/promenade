@@ -1401,7 +1401,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 4
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!4 &853343069
 Transform:
@@ -3229,7 +3229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_optimizableControllers:
   - {fileID: 853343079}
-  m_simTime: 100
+  m_simTime: .219999999
   m_instantEval: 0
 --- !u!23 &1877541815
 Renderer:
@@ -3279,7 +3279,7 @@ Transform:
   m_GameObject: {fileID: 1877541813}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.42130947, y: 1.52876091, z: -3.05050659}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 5.3527956, y: .526880026, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
 --- !u!1 &1957924756

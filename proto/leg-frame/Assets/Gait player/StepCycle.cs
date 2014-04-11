@@ -35,6 +35,7 @@ public class StepCycle : MonoBehaviour, IOptimizable
         m_tuneStepTrigger = p_params[1];
         for (int i = 0; i < 2;i++ )
             p_params.RemoveAt(0);
+        sanitize();
     }
 
 	// Use this for initialization
@@ -47,7 +48,18 @@ public class StepCycle : MonoBehaviour, IOptimizable
 	
 	}
 
+    void sanitize()
+    {
+        if (m_tuneDutyFactor > 0.9999f)
+            m_tuneDutyFactor = 0.9999f;
+        if (m_tuneStepTrigger > 0.9999f)
+            m_tuneStepTrigger = 0.9999f;
 
+        if (m_tuneDutyFactor < 0.00001f)
+            m_tuneDutyFactor = 0.00001f;
+        if (m_tuneStepTrigger < 0.0f)
+            m_tuneStepTrigger = 0.0f;
+    }
 
     public bool isInStance(float p_phi)
     {

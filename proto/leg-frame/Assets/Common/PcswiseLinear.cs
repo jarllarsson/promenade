@@ -140,7 +140,7 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
             m_reset = false;  
         }
 
-        draw(0.0f);
+        //draw(0.0f);
 	}
 
     public void draw(float p_t)
