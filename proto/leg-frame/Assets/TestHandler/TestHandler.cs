@@ -19,10 +19,27 @@ public class TestHandler : MonoBehaviour
 
     private double[] m_totalScores;
     bool m_inited = false;
+    private static bool m_testHandlerCreated = false;
     // Use this for initialization
     void Awake()
     {
+        if (!m_testHandlerCreated)
+        {        
+             m_testHandlerCreated = true;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         Object.DontDestroyOnLoad(gameObject);
+        Debug.Log("RES");
+        GameObject[] controllerObjects = GameObject.FindGameObjectsWithTag("optimizable");
+        m_optimizableControllers = new Controller[controllerObjects.Length];
+        for (int i = 0; i < controllerObjects.Length; i++)
+        {
+            m_optimizableControllers[i]=controllerObjects[i].GetComponent<Controller>();
+        }
         if (!m_inited)
         {
             m_changer = new ParamChanger();
@@ -31,6 +48,7 @@ public class TestHandler : MonoBehaviour
             StoreParams();
             ResetScores();
             m_inited = true;
+
         }
         else
         {
@@ -148,7 +166,8 @@ public class TestHandler : MonoBehaviour
         {
             for (int i = 0; i < m_currentParams.Count; i++)
             {
-                if (m_currentParams[i]!=null)
+                if (m_currentParams[i]!=null &&
+                    m_optimizableControllers[i]!=null)
                 {
                     Vector3 pos = m_optimizableControllers[i].transform.position + Vector3.up * 6;
                     drawLineGraph(m_currentParams[i], s, m_optimizableControllers[i].transform.position+Vector3.left*s.x*0.5f);
@@ -175,7 +194,8 @@ public class TestHandler : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (m_drawBestCandidate > -1)
+        if (m_drawBestCandidate > -1 && 
+            m_optimizableControllers[m_drawBestCandidate]!=null)
         {
             if (m_currentBestCandidate > -1)
             {

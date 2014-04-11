@@ -1383,7 +1383,7 @@ GameObject:
   - 114: {fileID: 853343070}
   m_Layer: 0
   m_Name: ControllerTester2
-  m_TagString: Untagged
+  m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3227,9 +3227,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff1af29098b8a242a8d1d3cb6eabf82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_optimizableControllers:
-  - {fileID: 853343079}
-  m_simTime: .219999999
+  m_optimizableControllers: []
+  m_simTime: 1
   m_instantEval: 0
 --- !u!23 &1877541815
 Renderer:
