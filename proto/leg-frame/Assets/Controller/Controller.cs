@@ -20,6 +20,7 @@ public class Controller : MonoBehaviour, IOptimizable
     public List<int> m_dofJointId; // Dof's id to joint
     public List<Joint> m_chain;
     public List<GameObject> m_chainObjs;
+    public ControllerMovementRecorder m_recordedData; // for evaluating controller fitness
 
     // Desired torques for joints, currently only upper joints(and of course, only during swing for them)
     public PIDn[] m_desiredJointTorquesPD;

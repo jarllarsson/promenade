@@ -23,7 +23,6 @@ public class TestHandler : MonoBehaviour
     {
         m_changer = new ParamChanger();
         m_currentParams = new List<List<float>>();
-        m_currentBestShowcase = new List<float>();
         m_totalScores = new double[m_optimizableControllers.Length];
         StoreParams();
         ResetScores();
@@ -32,20 +31,17 @@ public class TestHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < 200; i++)
-        {
+        m_currentSimTime += Time.deltaTime;
+        if (m_instantEval || m_currentSimTime >= m_simTime)
+        {            
             EvaluateAll();
-            m_currentSimTime += Time.deltaTime;
-            if (m_instantEval || m_currentSimTime >= m_simTime)
-            {
-                FindCurrentBestCandidate();
-                if (m_currentBestCandidate >= 0)
-                    Debug.Log("New best candidate was: " + m_currentBestCandidate);
-                if (m_lastBestScore > 0.01f)
-                    PerturbParams();
-                RestartSim();
-                // Possible scene restart here <-
-            }
+            FindCurrentBestCandidate();
+            if (m_currentBestCandidate >= 0)
+                Debug.Log("New best candidate was: " + m_currentBestCandidate);
+            if (m_lastBestScore > 0.01f)
+                PerturbParams();
+            RestartSim();
+            // Possible scene restart here <-
         }
     }
 
@@ -121,22 +117,33 @@ public class TestHandler : MonoBehaviour
     {
         for (int i = 0; i < m_optimizableControllers.Length; i++)
         {
-            m_totalScores[i] += GetCandidateFitness(i);
+            m_totalScores[i] += EvaluateCandidateFitness(i);
         }
     }
 
-    private double GetCandidateFitness(int p_idx)
+    private double EvaluateCandidateFitness(int p_idx)
     {
-        return m_optimizableControllers[p_idx].EvaluateFitness();
+        ControllerMovementRecorder record = m_optimizableControllers[p_idx].m_recordedData;
+            // Test eval, data point distance to sin function
+        return 1.0;
     }
 
-    public void drawParamGraphs(int p_idx)
+    public void drawParamGraphs()
     {
         Vector2 s = new Vector2(transform.localScale.x,transform.localScale.y);
-        Vector3 pos = m_optimizableControllers[p_idx].transform.position+Vector3.up*6;
-        for (int i=0;i<m_currentParams.Count;i++)
-            drawLineGraph(m_currentParams[i], s, m_optimizableControllers[i].transform.position);
-        drawLineGraph(m_lastBestParams, s, transform.position);
+        if (m_currentParams!=null)
+        {
+            for (int i = 0; i < m_currentParams.Count; i++)
+            {
+                if (m_currentParams[i]!=null)
+                {
+                    Vector3 pos = m_optimizableControllers[i].transform.position + Vector3.up * 6;
+                    drawLineGraph(m_currentParams[i], s, m_optimizableControllers[i].transform.position);
+                }
+            }
+        }
+        if (m_lastBestParams!=null)
+            drawLineGraph(m_lastBestParams, s, transform.position);
     }
 
     public void drawLineGraph(List<float> p_graph, Vector2 p_scale, Vector3 p_wpos)
@@ -149,7 +156,7 @@ public class TestHandler : MonoBehaviour
             float val1 = p_graph[n+1];
             Gizmos.color=Color.Lerp(Color.cyan,Color.magenta,val*0.1f);
             Gizmos.DrawLine(p_wpos + Vector3.right * p_scale.x * t + Vector3.up * val * p_scale.y,
-                transform.position + Vector3.right * p_scale.x * t1 + Vector3.up * val1 * p_scale.y);
+                p_wpos + Vector3.right * p_scale.x * t1 + Vector3.up * val1 * p_scale.y);
         }
     }
 
@@ -168,5 +175,6 @@ public class TestHandler : MonoBehaviour
                 Gizmos.DrawSphere(m_optimizableControllers[m_drawBestCandidate].transform.position - Vector3.up, 0.3f);
             }
         }
+        drawParamGraphs();
     }
 }
