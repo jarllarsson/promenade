@@ -54,10 +54,12 @@ public class ParamChanger
         int size=p_P.Count;
         // Get R value
         double Pmax = 0.0f, Pmin = 0.0f;
-        //getMaxMinOfList(p_P, out Pmin, out Pmax);
-        double r = 40.0f;
-        r = Random.Range(0.0f, 40.0f);
-        Pmax = r; Pmin = -r;
+
+
+        getMaxMinOfList(p_P, out Pmin, out Pmax);
+        //double r = 40.0f;
+        //r = Random.Range(0.0f, 40.0f);
+        //Pmax = r; Pmin = -r;
         double R = Pmax - Pmin;
         //Debug.Log("R: " + R + " Pmax: " + Pmax + " Pmin: " + Pmin);
 
@@ -75,10 +77,10 @@ public class ParamChanger
         return new List<double>(deltaP);
     }
 
-    void getMaxMinOfList(List<float> p_list, out float p_min, out float p_max)
+    void getMaxMinOfList(List<float> p_list, out double p_min, out double p_max)
     {
-        p_min = 999999999.0f;
-        p_max = 0.0f;
+        p_min = 999999999.0;
+        p_max = 0.0;
         for (int i=0;i<p_list.Count;i++)
         {
             if (p_list[i] > p_max) p_max = p_list[i];

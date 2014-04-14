@@ -224,7 +224,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         Color dbg=Color.green;
         if (p_idx==0) 
             dbg = Color.red;
-        Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg,2.0f);
+        Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg);
     }
 
     // Project a foot position to the ground beneath it
@@ -456,7 +456,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
                 Gizmos.color *= 1.2f;
                 Gizmos.DrawSphere(m_footTarget[i], 0.25f);
             }
-            drawLegEstimation();
+            //drawLegEstimation();
         }
     }
 

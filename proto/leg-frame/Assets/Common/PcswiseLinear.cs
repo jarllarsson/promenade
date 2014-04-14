@@ -180,9 +180,9 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
         return val;
     }
 
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position, 0.2f);
-    }
+    //void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.white;
+    //    Gizmos.DrawWireSphere(transform.position, 0.2f);
+    //}
 }

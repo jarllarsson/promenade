@@ -45,7 +45,7 @@ public class TestHandler : MonoBehaviour
         for (int i = 0; i < controllerObjects.Length; i++)
         {
             m_optimizableControllers[i] = controllerObjects[i].GetComponent<Controller>();
-            Debug.Log("cobjsC" + m_optimizableControllers[i]);
+            //Debug.Log("cobjsC" + m_optimizableControllers[i]);
         }
         if (!m_inited)
         {
@@ -62,7 +62,8 @@ public class TestHandler : MonoBehaviour
             for (int i = 0; i < m_optimizableControllers.Length; i++)
             {
                 IOptimizable opt = m_optimizableControllers[i];
-                opt.ConsumeParams(m_currentParams[i]); // consume it to controller
+                List<float> paramslist = new List<float>(m_currentParams[i]);
+                opt.ConsumeParams(paramslist); // consume it to controller
             }
         }
     }
@@ -180,11 +181,14 @@ public class TestHandler : MonoBehaviour
         Vector2 s = new Vector2(transform.localScale.x,transform.localScale.y);
         if (m_currentParams!=null)
         {
+            
             for (int i = 0; i < m_currentParams.Count; i++)
             {
+                
                 if (m_currentParams[i]!=null && i<m_optimizableControllers.Length &&
                     m_optimizableControllers[i]!=null)
                 {
+                    //Debug.Log("p: " + m_currentParams[i].Count);
                     Vector3 pos = m_optimizableControllers[i].transform.position + Vector3.up * 6;
                     drawLineGraph(m_currentParams[i], s, m_optimizableControllers[i].transform.position+Vector3.left*s.x*0.5f);
                 }

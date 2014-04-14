@@ -80,6 +80,9 @@ public class Controller : MonoBehaviour, IOptimizable
         {
             m_chainObjs.Add(m_joints[i].gameObject);
         }
+
+        //
+
     }
 
 
@@ -112,7 +115,7 @@ public class Controller : MonoBehaviour, IOptimizable
         {
             Vector3 torque = m_jointTorques[i];
             m_joints[i].AddTorque(torque);
-            Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+torque,Color.cyan );
+            //Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+torque,Color.cyan );
         }
     }
 
@@ -239,7 +242,7 @@ public class Controller : MonoBehaviour, IOptimizable
                         current.length = currentObj.transform.localScale.y;
                         current.m_position = currentObj.transform.position /*- (-currentObj.transform.up) * current.length * 0.5f*/;
                         current.m_endPoint = currentObj.transform.position + (-currentObj.transform.up) * current.length/* * 0.5f*/;
-                        Debug.DrawLine(current.m_position, current.m_endPoint, Color.red);
+                        //Debug.DrawLine(current.m_position, current.m_endPoint, Color.red);
                         
                         end = current.m_endPoint;
                     }
@@ -248,7 +251,7 @@ public class Controller : MonoBehaviour, IOptimizable
                                                            legRootDofId, legDofEnd);
                     CMatrix Jt = CMatrix.Transpose(J);
 
-                    Debug.DrawLine(end, end + VF, Color.magenta, 0.3f);
+                    //Debug.DrawLine(end, end + VF, Color.magenta, 0.3f);
 
 
                     for (int g = legRootDofId; g < legDofEnd; g++)
