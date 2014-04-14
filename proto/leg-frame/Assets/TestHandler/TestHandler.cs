@@ -21,25 +21,30 @@ public class TestHandler : MonoBehaviour
     bool m_inited = false;
     bool m_oneRun = false;
     private static bool m_testHandlerCreated = false;
+    private static int m_testCount = 0;
     // Use this for initialization
     void Awake()
     {
         if (!m_testHandlerCreated)
         {        
-             m_testHandlerCreated = true;
+            m_testHandlerCreated = true;        
+            Object.DontDestroyOnLoad(transform.gameObject);
         }
-        else
+        else if (!m_inited)
         {
-            Destroy(gameObject);
+            DestroyImmediate(gameObject);
         }
+    }
 
-        Object.DontDestroyOnLoad(gameObject);
-        Debug.Log("RES");
+    void Init()
+    {
+        m_testCount++;
+        Debug.Log("Starting new iteration (no." + m_testCount + ")");
         GameObject[] controllerObjects = GameObject.FindGameObjectsWithTag("optimizable");
         m_optimizableControllers = new Controller[controllerObjects.Length];
         for (int i = 0; i < controllerObjects.Length; i++)
         {
-            m_optimizableControllers[i]=controllerObjects[i].GetComponent<Controller>();
+            m_optimizableControllers[i] = controllerObjects[i].GetComponent<Controller>();
             Debug.Log("cobjsC" + m_optimizableControllers[i]);
         }
         if (!m_inited)
@@ -60,12 +65,13 @@ public class TestHandler : MonoBehaviour
                 opt.ConsumeParams(m_currentParams[i]); // consume it to controller
             }
         }
-
     }
+
 
     // Update is called once per frame
     void Update()
     {
+        if (!m_oneRun) Init();
         m_currentSimTime += Time.deltaTime;
         if (m_oneRun && (m_instantEval || m_currentSimTime >= m_simTime))
         {            
@@ -80,11 +86,13 @@ public class TestHandler : MonoBehaviour
             RestartSim();
             // Possible scene restart here <-
         }
-        m_oneRun = true;
+        else
+            m_oneRun = true;
     }
 
     private void RestartSim()
     {
+        m_oneRun = false;
         m_optimizableControllers = null;
         m_currentSimTime = 0.0f;
         //StoreParams();
