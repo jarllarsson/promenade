@@ -19,6 +19,7 @@ public class TestHandler : MonoBehaviour
 
     private double[] m_totalScores;
     bool m_inited = false;
+    bool m_oneRun = false;
     private static bool m_testHandlerCreated = false;
     // Use this for initialization
     void Awake()
@@ -39,6 +40,7 @@ public class TestHandler : MonoBehaviour
         for (int i = 0; i < controllerObjects.Length; i++)
         {
             m_optimizableControllers[i]=controllerObjects[i].GetComponent<Controller>();
+            Debug.Log("cobjsC" + m_optimizableControllers[i]);
         }
         if (!m_inited)
         {
@@ -65,21 +67,25 @@ public class TestHandler : MonoBehaviour
     void Update()
     {
         m_currentSimTime += Time.deltaTime;
-        if (m_instantEval || m_currentSimTime >= m_simTime)
+        if (m_oneRun && (m_instantEval || m_currentSimTime >= m_simTime))
         {            
             EvaluateAll();
             FindCurrentBestCandidate();
             if (m_currentBestCandidate >= 0)
                 Debug.Log("New best candidate was: " + m_currentBestCandidate);
+            else
+                Debug.Log("No new candidate ("+m_currentBestCandidate+")");
             if (m_lastBestScore > 0.01f)
                 PerturbParams();
             RestartSim();
             // Possible scene restart here <-
         }
+        m_oneRun = true;
     }
 
     private void RestartSim()
     {
+        m_optimizableControllers = null;
         m_currentSimTime = 0.0f;
         //StoreParams();
         VoidBestCandidate();
@@ -146,8 +152,10 @@ public class TestHandler : MonoBehaviour
 
     private void EvaluateAll()
     {
+        
         for (int i = 0; i < m_optimizableControllers.Length; i++)
         {
+            Debug.Log("Eval "+i+" "+m_optimizableControllers[i]);
             m_totalScores[i] += EvaluateCandidateFitness(i);
         }
     }
@@ -166,7 +174,7 @@ public class TestHandler : MonoBehaviour
         {
             for (int i = 0; i < m_currentParams.Count; i++)
             {
-                if (m_currentParams[i]!=null &&
+                if (m_currentParams[i]!=null && i<m_optimizableControllers.Length &&
                     m_optimizableControllers[i]!=null)
                 {
                     Vector3 pos = m_optimizableControllers[i].transform.position + Vector3.up * 6;
@@ -194,20 +202,23 @@ public class TestHandler : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (m_drawBestCandidate > -1 && 
-            m_optimizableControllers[m_drawBestCandidate]!=null)
+        if (m_optimizableControllers!=null)
         {
-            if (m_currentBestCandidate > -1)
+            if (m_drawBestCandidate > -1 && m_drawBestCandidate<m_optimizableControllers.Length &&
+                m_optimizableControllers[m_drawBestCandidate] != null)
             {
-                Gizmos.color = Color.green;
-                Gizmos.DrawSphere(m_optimizableControllers[m_drawBestCandidate].transform.position - Vector3.up, 0.3f);
+                if (m_currentBestCandidate > -1)
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawSphere(m_optimizableControllers[m_drawBestCandidate].transform.position - Vector3.up, 0.3f);
+                }
+                else
+                {
+                    Gizmos.color = Color.blue;
+                    Gizmos.DrawSphere(m_optimizableControllers[m_drawBestCandidate].transform.position - Vector3.up, 0.3f);
+                }
             }
-            else
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawSphere(m_optimizableControllers[m_drawBestCandidate].transform.position - Vector3.up, 0.3f);
-            }
+            drawParamGraphs();
         }
-        drawParamGraphs();
     }
 }
