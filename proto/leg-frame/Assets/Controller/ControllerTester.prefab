@@ -1911,6 +1911,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df77cf5fad3efeb4587b1079db2413f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_myController: {fileID: 11400024}
+  m_fvWeight: 5
+  m_fhWeight: .5
+  m_frWeight: 5
 --- !u!114 &11400024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1976,6 +1980,7 @@ MonoBehaviour:
     m_dof:
     - {x: 1, y: 0, z: 0}
   m_chainObjs: []
+  m_head: {fileID: 100016}
   m_recordedData: {fileID: 11400022}
   m_desiredJointTorquesPD:
   - {fileID: 0}
@@ -1983,7 +1988,9 @@ MonoBehaviour:
   - {fileID: 11400032}
   - {fileID: 11400038}
   - {fileID: 11400036}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
   m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
   m_usePDTorque: 1
   m_useVFTorque: 1

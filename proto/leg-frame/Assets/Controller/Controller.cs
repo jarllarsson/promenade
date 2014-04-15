@@ -20,16 +20,21 @@ public class Controller : MonoBehaviour, IOptimizable
     public List<int> m_dofJointId; // Dof's id to joint
     public List<Joint> m_chain;
     public List<GameObject> m_chainObjs;
+    public GameObject m_head;
     public ControllerMovementRecorder m_recordedData; // for evaluating controller fitness
 
     // Desired torques for joints, currently only upper joints(and of course, only during swing for them)
     public PIDn[] m_desiredJointTorquesPD;
 
     private Vector3 m_oldPos;
-    private Vector3 m_currentVelocity;
+    public Vector3 m_currentVelocity;
     public Vector3 m_goalVelocity;
-    private Vector3 m_desiredVelocity;
+    public Vector3 m_desiredVelocity;
     public float m_debugYOffset = 0.0f;
+
+    private Vector3 m_oldHeadPos;
+    private Vector3 m_oldHeadVelocity;
+    private Vector3 m_headAcceleration;
 
     public bool m_usePDTorque = true;
     public bool m_useVFTorque = true;
@@ -40,6 +45,7 @@ public class Controller : MonoBehaviour, IOptimizable
         List<float> vals = new List<float>();
         for (int i = 0; i < m_legFrames.Length; i++)
             vals.AddRange(m_legFrames[i].GetParams()); // append
+        vals.AddRange(m_player.GetParams());
         return vals;
     }
 
@@ -47,6 +53,7 @@ public class Controller : MonoBehaviour, IOptimizable
     {
         for (int i = 0; i < m_legFrames.Length; i++)
             m_legFrames[i].ConsumeParams(p_params); // consume
+        m_player.ConsumeParams(p_params);
     }
 
 
@@ -82,7 +89,9 @@ public class Controller : MonoBehaviour, IOptimizable
         }
 
         //
-
+        m_oldHeadPos = m_head.transform.position;
+        m_oldHeadVelocity = Vector3.zero;
+        m_headAcceleration = Vector3.zero;
     }
 
 
@@ -90,6 +99,8 @@ public class Controller : MonoBehaviour, IOptimizable
     void Update() 
     {
         m_currentVelocity = transform.position-m_oldPos;
+        calcHeadAcceleration();
+
 
         // Advance the player
         m_player.updatePhase(Time.deltaTime);
@@ -117,6 +128,15 @@ public class Controller : MonoBehaviour, IOptimizable
             m_joints[i].AddTorque(torque);
             //Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+torque,Color.cyan );
         }
+    }
+
+    void calcHeadAcceleration()
+    {
+        Vector3 headVelocity = m_head.transform.position - m_oldHeadPos;
+        m_headAcceleration = headVelocity - m_oldHeadVelocity;
+        m_oldHeadPos = m_head.transform.position;
+        m_oldHeadVelocity = headVelocity;
+        Debug.DrawLine(m_head.transform.position, m_head.transform.position + m_headAcceleration,Color.blue,0.5f);
     }
 
     void LateUpdate()

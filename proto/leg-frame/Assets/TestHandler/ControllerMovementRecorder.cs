@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class ControllerMovementRecorder : MonoBehaviour {
+public class ControllerMovementRecorder : MonoBehaviour 
+{
     /*
      * 
         The objective function to be minimized is defined as: fobj(P) = wdfd +wvfv +whfh +wrfr
@@ -25,12 +26,17 @@ public class ControllerMovementRecorder : MonoBehaviour {
      * 
      * */
 
-    List<float> m_fvVelocityDeviations; // (current, mean)-desired
-    List<float> m_fhHeadAcceleration;
-    List<float> m_frBodyRotationDeviations; //arcos(current,desired)
+    public Controller m_myController;
+    List<float> m_fvVelocityDeviations = new List<float>(); // (current, mean)-desired
+    List<float> m_fhHeadAcceleration = new List<float>();
+    List<float> m_frBodyRotationDeviations = new List<float>(); //arcos(current,desired)
     public float m_fvWeight = 5.0f;
     public float m_fhWeight = 0.5f;
     public float m_frWeight = 5.0f;
+
+    List<Vector3> m_temp_currentStrideVelocities = new List<Vector3>(); // used to calculate mean stride velocity
+    List<Vector3> m_temp_currentStrideDesiredVelocities = new List<Vector3>();
+
 
 	// Use this for initialization
 	void Start () {
@@ -38,9 +44,35 @@ public class ControllerMovementRecorder : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+    {
+        fv_calcStrideMeanVelocity();
 	}
+
+    void fv_calcStrideMeanVelocity()
+    {
+        GaitPlayer player = m_myController.m_player;
+        bool restarted = player.checkHasRestartedStride_AndResetFlag();
+        if (!restarted)
+        {
+            m_temp_currentStrideVelocities.Add(m_myController.m_currentVelocity);
+            m_temp_currentStrideDesiredVelocities.Add(m_myController.m_desiredVelocity);
+        }
+        else
+        {
+            Vector3 totalVelocities=Vector3.zero, totalDesiredVelocities=Vector3.zero;
+            for (int i = 0; i < m_temp_currentStrideVelocities.Count; i++)
+            {
+                totalVelocities += m_temp_currentStrideVelocities[i]; 
+                // force straight movement behavior from tests, set desired coronal velocity to constant zero:
+                totalDesiredVelocities += new Vector3(0.0f,0.0f,m_temp_currentStrideDesiredVelocities[i].z);
+            }
+            totalVelocities /= (float)m_temp_currentStrideVelocities.Count;
+            totalDesiredVelocities /= (float)m_temp_currentStrideDesiredVelocities.Count;
+            // add to lists
+            m_fvVelocityDeviations.Add(Vector3.Magnitude(totalDesiredVelocities - totalDesiredVelocities));
+        }
+    }
 
     public double Evaluate()
     {

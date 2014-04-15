@@ -4481,6 +4481,30 @@ Prefab:
       propertyPath: m_debugYOffset
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 15300002, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_ConnectedAnchor.x
+      value: 1.90734863e-06
+      objectReference: {fileID: 0}
+    - target: {fileID: 15300000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_ConnectedAnchor.x
+      value: -.498016357
+      objectReference: {fileID: 0}
+    - target: {fileID: 15300004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_ConnectedAnchor.x
+      value: .00450849533
+      objectReference: {fileID: 0}
+    - target: {fileID: 15300006, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_ConnectedAnchor.x
+      value: 4.76837158e-07
+      objectReference: {fileID: 0}
+    - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_ConnectedAnchor.x
+      value: .48884201
+      objectReference: {fileID: 0}
+    - target: {fileID: 15300008, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_ConnectedAnchor.x
+      value: 1.90734863e-06
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 1139609871}
@@ -5085,6 +5109,18 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: cbf4b1022059c80419046aa25d60dda1, type: 2}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Name
+      value: ControllerTester_BestScore
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_TagString
+      value: bestscore
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_debugYOffset
+      value: 200
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 1694673916}
@@ -5837,6 +5873,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df77cf5fad3efeb4587b1079db2413f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_myController: {fileID: 853343079}
   m_fvWeight: 5
   m_fhWeight: .5
   m_frWeight: 5
@@ -5906,6 +5943,7 @@ MonoBehaviour:
     m_dof:
     - {x: 1, y: 0, z: 0}
   m_chainObjs: []
+  m_head: {fileID: 795056933}
   m_recordedData: {fileID: 853343070}
   m_desiredJointTorquesPD:
   - {fileID: 0}
@@ -5913,7 +5951,9 @@ MonoBehaviour:
   - {fileID: 853343086}
   - {fileID: 853343089}
   - {fileID: 853343088}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
   m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
   m_usePDTorque: 1
   m_useVFTorque: 1
@@ -7354,6 +7394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df77cf5fad3efeb4587b1079db2413f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_myController: {fileID: 1038023374}
   m_fvWeight: 5
   m_fhWeight: .5
   m_frWeight: 5
@@ -7583,6 +7624,7 @@ MonoBehaviour:
     m_dof:
     - {x: 1, y: 0, z: 0}
   m_chainObjs: []
+  m_head: {fileID: 1121333716}
   m_recordedData: {fileID: 1038023367}
   m_desiredJointTorquesPD:
   - {fileID: 0}
@@ -7590,7 +7632,9 @@ MonoBehaviour:
   - {fileID: 1038023370}
   - {fileID: 1038023369}
   - {fileID: 1038023368}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
   m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_usePDTorque: 1
   m_useVFTorque: 1
@@ -8409,6 +8453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df77cf5fad3efeb4587b1079db2413f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_myController: {fileID: 1139609881}
   m_fvWeight: 5
   m_fhWeight: .5
   m_frWeight: 5
@@ -8638,6 +8683,7 @@ MonoBehaviour:
     m_dof:
     - {x: 1, y: 0, z: 0}
   m_chainObjs: []
+  m_head: {fileID: 161566061}
   m_recordedData: {fileID: 1139609874}
   m_desiredJointTorquesPD:
   - {fileID: 0}
@@ -8645,7 +8691,9 @@ MonoBehaviour:
   - {fileID: 1139609877}
   - {fileID: 1139609876}
   - {fileID: 1139609875}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
   m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 90
   m_usePDTorque: 1
   m_useVFTorque: 1
@@ -11422,6 +11470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df77cf5fad3efeb4587b1079db2413f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_myController: {fileID: 1660461594}
   m_fvWeight: 5
   m_fhWeight: .5
   m_frWeight: 5
@@ -11651,6 +11700,7 @@ MonoBehaviour:
     m_dof:
     - {x: 1, y: 0, z: 0}
   m_chainObjs: []
+  m_head: {fileID: 520558772}
   m_recordedData: {fileID: 1660461587}
   m_desiredJointTorquesPD:
   - {fileID: 0}
@@ -11658,7 +11708,9 @@ MonoBehaviour:
   - {fileID: 1660461590}
   - {fileID: 1660461589}
   - {fileID: 1660461588}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
   m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_usePDTorque: 1
   m_useVFTorque: 1
@@ -12165,8 +12217,8 @@ GameObject:
   - 114: {fileID: 1694673920}
   - 114: {fileID: 1694673919}
   m_Layer: 0
-  m_Name: ControllerTester
-  m_TagString: optimizable
+  m_Name: ControllerTester_BestScore
+  m_TagString: bestscore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12218,6 +12270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df77cf5fad3efeb4587b1079db2413f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_myController: {fileID: 1694673926}
   m_fvWeight: 5
   m_fhWeight: .5
   m_frWeight: 5
@@ -12447,6 +12500,7 @@ MonoBehaviour:
     m_dof:
     - {x: 1, y: 0, z: 0}
   m_chainObjs: []
+  m_head: {fileID: 674221748}
   m_recordedData: {fileID: 1694673919}
   m_desiredJointTorquesPD:
   - {fileID: 0}
@@ -12454,8 +12508,10 @@ MonoBehaviour:
   - {fileID: 1694673922}
   - {fileID: 1694673921}
   - {fileID: 1694673920}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
   m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_debugYOffset: 30
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_debugYOffset: 200
   m_usePDTorque: 1
   m_useVFTorque: 1
 --- !u!114 &1694673927
@@ -13801,7 +13857,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff1af29098b8a242a8d1d3cb6eabf82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_optimizableControllers: []
   m_simTime: 5
   m_instantEval: 0
 --- !u!23 &1877541815
