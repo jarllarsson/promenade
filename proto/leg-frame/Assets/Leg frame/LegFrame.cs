@@ -251,7 +251,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     // Retrieves the current orientation quaternion from the
     // trajectory function at time phi.
-    private Quaternion getCurrentDesiredOrientation(float p_phi)
+    public Quaternion getCurrentDesiredOrientation(float p_phi)
     {
         float yaw = m_tuneOrientationLFTraj[(int)ORIENTATION.YAW].getValAt(p_phi);
         float pitch = m_tuneOrientationLFTraj[(int)ORIENTATION.PITCH].getValAt(p_phi);

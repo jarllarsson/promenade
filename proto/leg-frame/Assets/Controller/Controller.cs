@@ -34,7 +34,7 @@ public class Controller : MonoBehaviour, IOptimizable
 
     private Vector3 m_oldHeadPos;
     private Vector3 m_oldHeadVelocity;
-    private Vector3 m_headAcceleration;
+    public Vector3 m_headAcceleration;
 
     public bool m_usePDTorque = true;
     public bool m_useVFTorque = true;
