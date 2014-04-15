@@ -202,8 +202,8 @@ public class LegFrame : MonoBehaviour, IOptimizable
         }
         // Calculate the new position
         float mirror=(float)(p_idx*2-1); // flips the coronal axis for the left leg
-        Vector3 regularFootPos = transform.TransformPoint(new Vector3(mirror * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y));
-        Vector3 finalPos = calculateVelocityScaledFootPos(regularFootPos, p_velocity, p_desiredVelocity);
+        Vector3 regularFootPos = transform.TransformDirection(new Vector3(mirror * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y));
+        Vector3 finalPos = transform.position+calculateVelocityScaledFootPos(regularFootPos, p_velocity, p_desiredVelocity);
         m_footStrikePlacement[p_idx] = projectFootPosToGround(finalPos);
     }
 

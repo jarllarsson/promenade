@@ -254,14 +254,14 @@ public class Controller : MonoBehaviour, IOptimizable
                     Vector3 VF = lf.m_netLegVirtualForces[n];
                     // Calculate torques for each joint
                     // Just copy from objects
-                    Vector3 end = transform.position;
+                    Vector3 end = transform.localPosition;
                     for (int x = legRoot; x < legRoot + legSegmentCount; x++)
                     {
                         Joint current = m_chain[i];
                         GameObject currentObj = m_chainObjs[x];
                         current.length = currentObj.transform.localScale.y;
-                        current.m_position = currentObj.transform.position /*- (-currentObj.transform.up) * current.length * 0.5f*/;
-                        current.m_endPoint = currentObj.transform.position + (-currentObj.transform.up) * current.length/* * 0.5f*/;
+                        current.m_position = currentObj.transform.localPosition /*- (-currentObj.transform.up) * current.length * 0.5f*/;
+                        current.m_endPoint = currentObj.transform.localPosition + (-currentObj.transform.up) * current.length/* * 0.5f*/;
                         //Debug.DrawLine(current.m_position, current.m_endPoint, Color.red);
                         
                         end = current.m_endPoint;

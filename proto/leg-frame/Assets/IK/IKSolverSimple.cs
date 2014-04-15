@@ -32,12 +32,15 @@ public class IKSolverSimple : MonoBehaviour
         // Retrieve the current wanted foot position
         Vector3 footPos;
         if (m_foot!=null)
-            footPos = m_foot.position;
+            footPos = m_foot.position - m_legFrame.transform.position;
         else
-            footPos = m_legFrame.m_footTarget[(int)m_legType];
+            footPos = m_legFrame.m_footTarget[(int)m_legType] - m_legFrame.transform.position;
+
+        Vector3 upperLegLocalPos = (m_upperLeg.position - m_legFrame.transform.position);
 
         // Vector between foot and hip
-        Vector3 topToFoot = footPos - m_upperLeg.position;
+        Vector3 topToFoot = footPos - upperLegLocalPos;
+        
         //Debug.DrawLine(m_upperLeg.position, m_upperLeg.position+topToFoot,Color.black);
 
         // This ik calc is in 2d, so eliminate rotation
@@ -69,7 +72,7 @@ public class IKSolverSimple : MonoBehaviour
             // second angle
             Vector2 newLeg = new Vector2(uB * Mathf.Cos(upperLegAngle), uB * Mathf.Sin(upperLegAngle));
 
-            Vector3 kneePosT = m_upperLeg.position + new Vector3(0.0f, newLeg.y, newLeg.x);
+            Vector3 kneePosT = upperLegLocalPos + new Vector3(0.0f, newLeg.y, newLeg.x);
             //Debug.DrawLine(m_upperLeg.position, kneePosT,Color.magenta);
 
             lowerLegAngle = Mathf.Atan2(topToFoot.y - newLeg.y, topToFoot.z - newLeg.x) - upperLegAngle;
@@ -81,7 +84,7 @@ public class IKSolverSimple : MonoBehaviour
 
             Vector2 newLeg = new Vector2(uB * Mathf.Cos(upperLegAngle), uB * Mathf.Sin(upperLegAngle));
 
-            Vector3 kneePosT = m_upperLeg.position + new Vector3(0.0f, newLeg.y, newLeg.x);
+            Vector3 kneePosT = upperLegLocalPos + new Vector3(0.0f, newLeg.y, newLeg.x);
             //Debug.DrawLine(m_upperLeg.position, kneePosT, Color.magenta);
 
             lowerLegAngle = 0.0f;
@@ -98,7 +101,7 @@ public class IKSolverSimple : MonoBehaviour
         Vector3 endPos = new Vector3(0.0f, lB * Mathf.Sin(lowerAngleW), lB * Mathf.Cos(lowerAngleW));
         if (m_legFrame != null)
         {
-            kneePos = m_upperLeg.position + m_legFrame.transform.TransformDirection(kneePos);
+            kneePos = upperLegLocalPos + m_legFrame.transform.TransformDirection(kneePos);
             endPos = kneePos + m_legFrame.transform.TransformDirection(endPos);
             // PID test
             Quaternion localUpper = Quaternion.Inverse(m_legFrame.transform.rotation) * m_upperLeg.rotation;
@@ -110,17 +113,18 @@ public class IKSolverSimple : MonoBehaviour
         }
         else
         {
-            kneePos += m_upperLeg.position;
+            kneePos += upperLegLocalPos;
             endPos += kneePos;
         }
 
-        Debug.DrawLine(m_upperLeg.position, kneePos);
-        Debug.DrawLine(kneePos, endPos);
+        Vector3 offset = m_legFrame.transform.position;
+        Debug.DrawLine(offset + upperLegLocalPos,   offset+kneePos);
+        Debug.DrawLine(offset+kneePos,              offset + endPos);
 
         if (m_dbgMesh)
         {
             m_dbgMesh.rotation = m_legFrame.transform.rotation * Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle + Mathf.PI*0.5f), -m_legFrame.transform.right);
-            m_dbgMesh.position = m_upperLeg.position;
+            m_dbgMesh.position = upperLegLocalPos;
         }
     }
 }
