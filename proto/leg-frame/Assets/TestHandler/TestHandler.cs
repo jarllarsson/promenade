@@ -4,7 +4,8 @@ using System.Collections.Generic;
 
 public class TestHandler : MonoBehaviour 
 {
-    public Controller[] m_optimizableControllers;
+    private Controller[] m_optimizableControllers;
+    private Controller m_bestScoreController;
     private ParamChanger m_changer;
     public float m_simTime = 1.0f;
     private float m_currentSimTime = 0.0f;
@@ -41,12 +42,14 @@ public class TestHandler : MonoBehaviour
         m_testCount++;
         Debug.Log("Starting new iteration (no." + m_testCount + ")");
         GameObject[] controllerObjects = GameObject.FindGameObjectsWithTag("optimizable");
+        GameObject bestScoreVisualizerObject = GameObject.FindGameObjectWithTag("bestscore");
         m_optimizableControllers = new Controller[controllerObjects.Length];
         for (int i = 0; i < controllerObjects.Length; i++)
         {
             m_optimizableControllers[i] = controllerObjects[i].GetComponent<Controller>();
             //Debug.Log("cobjsC" + m_optimizableControllers[i]);
         }
+        m_bestScoreController = bestScoreVisualizerObject.GetComponent<Controller>();
         if (!m_inited)
         {
             m_changer = new ParamChanger();
@@ -64,6 +67,13 @@ public class TestHandler : MonoBehaviour
                 IOptimizable opt = m_optimizableControllers[i];
                 List<float> paramslist = new List<float>(m_currentParams[i]);
                 opt.ConsumeParams(paramslist); // consume it to controller
+            }
+            if (m_bestScoreController && m_lastBestParams != null && m_lastBestParams.Count>0)
+            {
+                // and the best score visualizer
+                IOptimizable opt = m_bestScoreController;
+                List<float> paramslist = new List<float>(m_lastBestParams);
+                opt.ConsumeParams(paramslist);
             }
         }
     }
