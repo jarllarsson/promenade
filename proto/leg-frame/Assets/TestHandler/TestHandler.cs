@@ -182,8 +182,8 @@ public class TestHandler : MonoBehaviour
     private double EvaluateCandidateFitness(int p_idx)
     {
         ControllerMovementRecorder record = m_optimizableControllers[p_idx].m_recordedData;
-            // Test eval, data point distance to sin function
-        return 1.0;
+        double score = record.Evaluate();
+        return score;
     }
 
     public void drawParamGraphs()

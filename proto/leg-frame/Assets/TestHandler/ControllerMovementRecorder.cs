@@ -134,7 +134,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             totmeandiffsqr += mdiff * mdiff;
         }
         double sdeviation = Math.Sqrt(totmeandiffsqr / (double)m_fvVelocityDeviations.Count);
-        return sdeviation;
+        return avg;
     }
 
     // mean of FR

@@ -138,6 +138,8 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int i = 0; i < c_legCount; i++ )
         {
             m_footLiftPlacementPerformed[i]=false;
+            float mirror = (float)(i* 2 - 1); // flips the coronal axis for the left leg
+            m_footLiftPlacement[i] = m_footStrikePlacement[i] = m_footTarget[i] = new Vector3(mirror * m_tuneStepLength.x + transform.position.x, 0.0f, m_tuneStepLength.y + transform.position.z);
         }
         for (int i = 0; i < (int)NEIGHBOUR_JOINTS.COUNT; i++ )
         {
@@ -456,7 +458,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
                 Gizmos.color *= 1.2f;
                 Gizmos.DrawSphere(m_footTarget[i], 0.25f);
             }
-            //drawLegEstimation();
+            drawLegEstimation();
         }
     }
 

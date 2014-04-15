@@ -1989,9 +1989,10 @@ MonoBehaviour:
   - {fileID: 11400038}
   - {fileID: 11400036}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 2}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
+  m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
 --- !u!114 &11400026
