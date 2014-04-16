@@ -140,6 +140,8 @@ public class LegFrame : MonoBehaviour, IOptimizable
             m_footLiftPlacementPerformed[i]=false;
             float mirror = (float)(i* 2 - 1); // flips the coronal axis for the left leg
             m_footLiftPlacement[i] = m_footStrikePlacement[i] = m_footTarget[i] = new Vector3(mirror * m_tuneStepLength.x + transform.position.x, 0.0f, m_tuneStepLength.y + transform.position.z);
+            m_footTarget[i] += new Vector3(0.0f, 0.0f, m_tuneStepLength.y);
+            m_footLiftPlacement[i] -= new Vector3(0.0f, 0.0f, m_tuneStepLength.y);
         }
         for (int i = 0; i < (int)NEIGHBOUR_JOINTS.COUNT; i++ )
         {
@@ -150,7 +152,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         foreach (PcswiseLinear traj in m_tuneOrientationLFTraj)
         {
             //traj.m_initAsFunc = PcswiseLinear.INITTYPE.FLAT;
-            traj.reset();
+            //traj.reset();
         }
         // Change values for the height-force-PID, from optimized values:
         m_heightForceCalc.m_Kp=m_tuneHeightForcePIDKp;

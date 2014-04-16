@@ -26,7 +26,7 @@ public class Controller : MonoBehaviour, IOptimizable
     // Desired torques for joints, currently only upper joints(and of course, only during swing for them)
     public PIDn[] m_desiredJointTorquesPD;
 
-    private Vector3 m_oldPos;
+    public Vector3 m_oldPos;
     public Vector3 m_currentVelocity;
     public Vector3 m_goalVelocity;
     public Vector3 m_desiredVelocity;

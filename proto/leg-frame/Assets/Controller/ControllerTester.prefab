@@ -495,7 +495,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 4.65764032e-07, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: .258819133, y: 0, z: 0, w: .965925813}
   m_LocalPosition: {x: -.498016834, y: -.498213053, z: .0036059767}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -544,8 +544,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
-  m_LocalRotation: {x: 4.65764032e-07, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.498016834, y: -2.63676405, z: .0889140591}
+  m_LocalRotation: {x: .258819133, y: 0, z: 0, w: .965925813}
+  m_LocalPosition: {x: -.498016834, y: -2.39290714, z: -.991789162}
   m_LocalScale: {x: .5, y: .184720993, z: .5}
   m_Children:
   - {fileID: 400006}
@@ -602,7 +602,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.378806114, y: 2.84145403, z: 0}
+  m_LocalPosition: {x: -.100917101, y: 2.84145403, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400008}
@@ -620,8 +620,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100020}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .493350506, y: -1.49821305, z: .00351506844}
+  m_LocalRotation: {x: -.258818686, y: 0, z: 0, w: .965925932}
+  m_LocalPosition: {x: .493350506, y: -1.3633858, z: .506697893}
   m_LocalScale: {x: .25, y: 1, z: .25}
   m_Children:
   - {fileID: 400050}
@@ -655,8 +655,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100026}
-  m_LocalRotation: {x: 4.65764032e-07, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.498016834, y: -1.49821305, z: .00360510708}
+  m_LocalRotation: {x: .258819133, y: 0, z: 0, w: .965925813}
+  m_LocalPosition: {x: -.498016834, y: -1.36423838, z: -.496394157}
   m_LocalScale: {x: .25, y: 1, z: .25}
   m_Children:
   - {fileID: 400012}
@@ -723,8 +723,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100038}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: .493350506, y: -2.63039923, z: .0888255239}
+  m_LocalRotation: {x: -.258818686, y: 0, z: 0, w: .965925932}
+  m_LocalPosition: {x: .493350506, y: -2.30123281, z: 1.1466713}
   m_LocalScale: {x: .5, y: .18472071, z: .5}
   m_Children:
   - {fileID: 400034}
@@ -747,7 +747,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100042}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -.258818686, y: 0, z: 0, w: .965925932}
   m_LocalPosition: {x: .488842487, y: -.491846085, z: .00351503491}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1628,7 +1628,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
   m_resetScale: 1
-  m_reset: 0
+  m_reset: 1
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1690,7 +1690,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
   m_resetScale: 1
-  m_reset: 0
+  m_reset: 1
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1752,7 +1752,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
   m_resetScale: 1
-  m_reset: 0
+  m_reset: 1
 --- !u!114 &11400010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1912,9 +1912,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 11400024}
-  m_fvWeight: 5
-  m_fhWeight: .5
-  m_frWeight: 5
+  m_fvWeight: 100
+  m_fhWeight: .00999999978
+  m_frWeight: .00100000005
+  m_fpWeight: 0
 --- !u!114 &11400024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1988,8 +1989,9 @@ MonoBehaviour:
   - {fileID: 11400032}
   - {fileID: 11400038}
   - {fileID: 11400036}
-  m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 2}
+  m_oldPos: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: -4}
+  m_goalVelocity: {x: 0, y: 0, z: 4}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -2275,7 +2277,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: .5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1.04619038, z: .341240078}
+  m_ConnectedAnchor: {x: 0, y: -1.04619026, z: .341239661}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2366,7 +2368,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: .00450801849, y: -1.00636697, z: 3.35276127e-08}
+  m_ConnectedAnchor: {x: .00450801849, y: -1.00636697, z: 4.03873806e-08}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2457,7 +2459,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1, z: 6.19056095e-08}
+  m_ConnectedAnchor: {x: 0, y: -1, z: 5.90697127e-08}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2548,7 +2550,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: .5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1.0398258, z: .341241837}
+  m_ConnectedAnchor: {x: 0, y: -1.03982568, z: .341241896}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0

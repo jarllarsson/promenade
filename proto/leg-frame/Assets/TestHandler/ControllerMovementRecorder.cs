@@ -28,12 +28,14 @@ public class ControllerMovementRecorder : MonoBehaviour
      * */
 
     public Controller m_myController;
-    List<float> m_fvVelocityDeviations = new List<float>(); // (current, mean)-desired
-    List<float> m_fhHeadAcceleration = new List<float>();
+    List<double> m_fvVelocityDeviations = new List<double>(); // (current, mean)-desired
+    List<Vector3> m_fpMovementDist = new List<Vector3>(); // travel distance
+    List<double> m_fhHeadAcceleration = new List<double>();
     List<List<float>> m_frBodyRotationDeviations = new List<List<float>>(); //per-leg frame, arcos(current,desired)
     public float m_fvWeight = 5.0f;
     public float m_fhWeight = 0.5f;
     public float m_frWeight = 5.0f;
+    public float m_fpWeight = 0.5f;
 
     List<Vector3> m_temp_currentStrideVelocities = new List<Vector3>(); // used to calculate mean stride velocity
     List<Vector3> m_temp_currentStrideDesiredVelocities = new List<Vector3>();
@@ -57,11 +59,11 @@ public class ControllerMovementRecorder : MonoBehaviour
         fh_calcHeadAccelerations();
 	}
 
-    void fv_calcStrideMeanVelocity()
+    void fv_calcStrideMeanVelocity(bool p_forceStore=false)
     {
         GaitPlayer player = m_myController.m_player;
         bool restarted = player.checkHasRestartedStride_AndResetFlag();
-        if (!restarted)
+        if (!restarted && !p_forceStore)
         {
             m_temp_currentStrideVelocities.Add(m_myController.m_currentVelocity);
             m_temp_currentStrideDesiredVelocities.Add(m_myController.m_desiredVelocity);
@@ -75,10 +77,12 @@ public class ControllerMovementRecorder : MonoBehaviour
                 // force straight movement behavior from tests, set desired coronal velocity to constant zero:
                 totalDesiredVelocities += new Vector3(0.0f,0.0f,m_temp_currentStrideDesiredVelocities[i].z);
             }
+            //Debug.Log("TV: " + totalVelocities + " c " + m_temp_currentStrideVelocities.Count);
             totalVelocities /= (float)m_temp_currentStrideVelocities.Count;
             totalDesiredVelocities /= (float)m_temp_currentStrideDesiredVelocities.Count;
             // add to lists
-            m_fvVelocityDeviations.Add(Vector3.Magnitude(totalDesiredVelocities - totalDesiredVelocities));
+            //Debug.Log("TV: " + totalVelocities.x + " " + totalVelocities.y + " " + totalVelocities.z);
+            m_fvVelocityDeviations.Add((double)Vector3.Magnitude(totalVelocities - totalDesiredVelocities));
             //
             m_temp_currentStrideVelocities.Clear();
             m_temp_currentStrideDesiredVelocities.Clear();
@@ -102,16 +106,23 @@ public class ControllerMovementRecorder : MonoBehaviour
 
     void fh_calcHeadAccelerations()
     {
-        m_fhHeadAcceleration.Add(m_myController.m_headAcceleration.magnitude);
+        m_fhHeadAcceleration.Add((double)m_myController.m_headAcceleration.magnitude);
+    }
+
+    void fp_calcMovementDistance()
+    {
+        m_fpMovementDist.Add(m_myController.transform.position - m_myController.m_oldPos);
     }
 
     public double Evaluate()
     {
+        fv_calcStrideMeanVelocity(true);
         double fv = EvaluateFV();
         double fr = EvaluateFR();
         double fh = EvaluateFH();
-        double fobj = m_fvWeight*fv +  + m_fhWeight*fh;
-        Debug.Log(fobj+" = "+m_fvWeight*fv+" + "+m_frWeight*fr+" + "+m_fhWeight*fh);
+        double fp = EvaluateFP();
+        double fobj = (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh + (double)m_fpWeight*fp;
+        Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" + "+(double)m_fpWeight*fp);
         return fobj;
     }                 
                       
@@ -121,16 +132,16 @@ public class ControllerMovementRecorder : MonoBehaviour
     {
         double total = 0.0f;
         // mean
-        foreach (float f in m_fvVelocityDeviations)
+        foreach (double d in m_fvVelocityDeviations)
         {
-            total += (double)f;
+            total += d;
         }
         double avg = total /= (double)(m_fvVelocityDeviations.Count);
         double totmeandiffsqr = 0.0f;
         // std
-        foreach (float f in m_fvVelocityDeviations)
+        foreach (double d in m_fvVelocityDeviations)
         {
-            double mdiff = (double)f - avg;
+            double mdiff = d - avg;
             totmeandiffsqr += mdiff * mdiff;
         }
         double sdeviation = Math.Sqrt(totmeandiffsqr / (double)m_fvVelocityDeviations.Count);
@@ -161,12 +172,27 @@ public class ControllerMovementRecorder : MonoBehaviour
         double total = 0.0f;
         int sz = 0;
         // mean
-        foreach (float f in m_fhHeadAcceleration)
+        foreach (double d in m_fhHeadAcceleration)
         {
-            total += (double)f;
+            total += d;
             sz++;
         }
         double avg = total /= (double)(sz);
         return avg;
     }
+    
+    public double EvaluateFP()
+    {
+        Vector3 total = Vector3.zero;
+        // mean
+        foreach (Vector3 dist in m_fpMovementDist)
+        {
+            total += dist;
+        }
+        float movementSign = m_myController.m_goalVelocity.z / Mathf.Abs(m_myController.m_goalVelocity.z);
+        double scoreInRightDir = Math.Max(0.0,100.0f + total.z * -movementSign); 
+        return scoreInRightDir;
+    }
+
 }
+

@@ -56,10 +56,12 @@ public class ParamChanger
         double Pmax = 0.0f, Pmin = 0.0f;
 
 
-        getMaxMinOfList(p_P, out Pmin, out Pmax);
-        //double r = 40.0f;
-        //r = Random.Range(0.0f, 40.0f);
-        //Pmax = r; Pmin = -r;
+       //getMaxMinOfList(p_P, out Pmin, out Pmax);
+        double r = 0.01f;
+        //r = Random.Range(0.0f, 10.0f);
+        Pmax = r; Pmin = -r;
+
+
         double R = Pmax - Pmin;
         //Debug.Log("R: " + R + " Pmax: " + Pmax + " Pmin: " + Pmin);
 
