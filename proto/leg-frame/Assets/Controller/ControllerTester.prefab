@@ -81,7 +81,6 @@ GameObject:
   - 54: {fileID: 5400002}
   - 65: {fileID: 6500000}
   - 153: {fileID: 15300002}
-  - 75: {fileID: 7500000}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -362,7 +361,6 @@ GameObject:
   - 54: {fileID: 5400010}
   - 65: {fileID: 6500004}
   - 153: {fileID: 15300008}
-  - 75: {fileID: 7500002}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -1576,28 +1574,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: -4.76837158e-07, z: 0}
---- !u!75 &7500000
-ConstantForce:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100008}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
---- !u!75 &7500002
-ConstantForce:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100038}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1765,9 +1741,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -1897,9 +1873,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -2067,9 +2043,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2095,9 +2071,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2123,9 +2099,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2151,9 +2127,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0

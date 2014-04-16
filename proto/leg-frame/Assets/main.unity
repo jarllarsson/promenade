@@ -295,7 +295,6 @@ GameObject:
   - 54: {fileID: 15872874}
   - 65: {fileID: 15872873}
   - 153: {fileID: 15872872}
-  - 75: {fileID: 15872871}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -316,18 +315,6 @@ Transform:
   - {fileID: 1915297385}
   - {fileID: 1934219966}
   m_Father: {fileID: 172532131}
---- !u!75 &15872871
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 998455937}
-  m_GameObject: {fileID: 15872869}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &15872872
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -691,7 +678,6 @@ GameObject:
   - 54: {fileID: 45930335}
   - 65: {fileID: 45930334}
   - 153: {fileID: 45930333}
-  - 75: {fileID: 45930332}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -712,18 +698,6 @@ Transform:
   - {fileID: 297779288}
   - {fileID: 1096539563}
   m_Father: {fileID: 1139609872}
---- !u!75 &45930332
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 538743111}
-  m_GameObject: {fileID: 45930330}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &45930333
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -968,9 +942,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -997,9 +971,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -1026,9 +1000,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -1055,9 +1029,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2384,9 +2358,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2413,9 +2387,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2442,9 +2416,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2471,9 +2445,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -3482,7 +3456,6 @@ GameObject:
   - 54: {fileID: 139195845}
   - 65: {fileID: 139195844}
   - 153: {fileID: 139195843}
-  - 75: {fileID: 139195842}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -3503,18 +3476,6 @@ Transform:
   - {fileID: 627275374}
   - {fileID: 244660172}
   m_Father: {fileID: 408855606}
---- !u!75 &139195842
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 294315001}
-  m_GameObject: {fileID: 139195840}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &139195843
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -3878,9 +3839,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -4057,9 +4018,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -4571,9 +4532,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -4600,9 +4561,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -4629,9 +4590,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -4658,9 +4619,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -4870,7 +4831,6 @@ GameObject:
   - 54: {fileID: 173091147}
   - 65: {fileID: 173091146}
   - 153: {fileID: 173091145}
-  - 75: {fileID: 173091144}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -4891,18 +4851,6 @@ Transform:
   - {fileID: 1454506332}
   - {fileID: 1327134311}
   m_Father: {fileID: 1655278257}
---- !u!75 &173091144
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1418853040}
-  m_GameObject: {fileID: 173091142}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &173091145
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -5687,9 +5635,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -5770,9 +5718,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -5923,7 +5871,6 @@ GameObject:
   - 54: {fileID: 206896441}
   - 65: {fileID: 206896440}
   - 153: {fileID: 206896439}
-  - 75: {fileID: 206896438}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -5944,18 +5891,6 @@ Transform:
   - {fileID: 207280670}
   - {fileID: 341385692}
   m_Father: {fileID: 593680951}
---- !u!75 &206896438
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 14926236}
-  m_GameObject: {fileID: 206896436}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &206896439
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -6441,7 +6376,6 @@ GameObject:
   - 54: {fileID: 216019614}
   - 65: {fileID: 216019613}
   - 153: {fileID: 216019612}
-  - 75: {fileID: 216019611}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -6462,18 +6396,6 @@ Transform:
   - {fileID: 1653448293}
   - {fileID: 1125423647}
   m_Father: {fileID: 98454171}
---- !u!75 &216019611
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 571913267}
-  m_GameObject: {fileID: 216019609}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &216019612
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -6718,9 +6640,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -6747,9 +6669,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -6776,9 +6698,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -6805,9 +6727,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -7075,7 +6997,6 @@ GameObject:
   - 54: {fileID: 225434713}
   - 65: {fileID: 225434712}
   - 153: {fileID: 225434711}
-  - 75: {fileID: 225434710}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -7096,18 +7017,6 @@ Transform:
   - {fileID: 990058562}
   - {fileID: 1813269758}
   m_Father: {fileID: 1636496568}
---- !u!75 &225434710
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 234914412}
-  m_GameObject: {fileID: 225434708}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &225434711
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -8399,9 +8308,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -8482,9 +8391,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -9310,7 +9219,6 @@ GameObject:
   - 54: {fileID: 316279013}
   - 65: {fileID: 316279012}
   - 153: {fileID: 316279011}
-  - 75: {fileID: 316279010}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -9331,18 +9239,6 @@ Transform:
   - {fileID: 895710492}
   - {fileID: 623439476}
   m_Father: {fileID: 217361971}
---- !u!75 &316279010
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 306337322}
-  m_GameObject: {fileID: 316279008}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &316279011
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -10569,7 +10465,6 @@ GameObject:
   - 54: {fileID: 369881577}
   - 65: {fileID: 369881580}
   - 153: {fileID: 369881576}
-  - 75: {fileID: 369881581}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -10741,18 +10636,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: -9.53674316e-07, z: 0}
---- !u!75 &369881581
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 803722900}
-  m_GameObject: {fileID: 369881574}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &376159366
 GameObject:
   m_ObjectHideFlags: 0
@@ -10940,7 +10823,6 @@ GameObject:
   - 54: {fileID: 382413174}
   - 65: {fileID: 382413173}
   - 153: {fileID: 382413172}
-  - 75: {fileID: 382413171}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -10961,18 +10843,6 @@ Transform:
   - {fileID: 1860055213}
   - {fileID: 655126191}
   m_Father: {fileID: 2145673690}
---- !u!75 &382413171
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1363958900}
-  m_GameObject: {fileID: 382413169}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &382413172
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -11611,9 +11481,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -11640,9 +11510,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -11669,9 +11539,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -11698,9 +11568,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -12067,7 +11937,6 @@ GameObject:
   - 54: {fileID: 414714298}
   - 65: {fileID: 414714297}
   - 153: {fileID: 414714296}
-  - 75: {fileID: 414714295}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -12088,18 +11957,6 @@ Transform:
   - {fileID: 1072517225}
   - {fileID: 1080040713}
   m_Father: {fileID: 217361971}
---- !u!75 &414714295
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 306337322}
-  m_GameObject: {fileID: 414714293}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &414714296
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -12529,9 +12386,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -12708,9 +12565,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -13622,9 +13479,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -13759,9 +13616,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -14579,9 +14436,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -14758,9 +14615,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -15200,9 +15057,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -15229,9 +15086,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -15258,9 +15115,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -15287,9 +15144,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -16285,9 +16142,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -16314,9 +16171,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -16343,9 +16200,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -16372,9 +16229,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -16906,9 +16763,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -16989,9 +16846,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -18225,7 +18082,6 @@ GameObject:
   - 54: {fileID: 684513046}
   - 65: {fileID: 684513045}
   - 153: {fileID: 684513044}
-  - 75: {fileID: 684513043}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -18246,18 +18102,6 @@ Transform:
   - {fileID: 1979732010}
   - {fileID: 1234176554}
   m_Father: {fileID: 98454171}
---- !u!75 &684513043
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 571913267}
-  m_GameObject: {fileID: 684513041}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &684513044
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -18621,7 +18465,6 @@ GameObject:
   - 54: {fileID: 692120901}
   - 65: {fileID: 692120900}
   - 153: {fileID: 692120899}
-  - 75: {fileID: 692120898}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -18642,18 +18485,6 @@ Transform:
   - {fileID: 663607107}
   - {fileID: 134202012}
   m_Father: {fileID: 1655278257}
---- !u!75 &692120898
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1418853040}
-  m_GameObject: {fileID: 692120896}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &692120899
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -19721,7 +19552,6 @@ GameObject:
   - 54: {fileID: 735951346}
   - 65: {fileID: 735951345}
   - 153: {fileID: 735951344}
-  - 75: {fileID: 735951343}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -19742,18 +19572,6 @@ Transform:
   - {fileID: 334758369}
   - {fileID: 1554613171}
   m_Father: {fileID: 48864859}
---- !u!75 &735951343
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 90361241}
-  m_GameObject: {fileID: 735951341}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &735951344
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -20590,9 +20408,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -20769,9 +20587,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -22091,9 +21909,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -22120,9 +21938,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -22149,9 +21967,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -22178,9 +21996,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -23686,9 +23504,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -23865,9 +23683,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -24376,7 +24194,6 @@ GameObject:
   - 54: {fileID: 964992902}
   - 65: {fileID: 964992901}
   - 153: {fileID: 964992900}
-  - 75: {fileID: 964992899}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -24397,18 +24214,6 @@ Transform:
   - {fileID: 1294005908}
   - {fileID: 948609472}
   m_Father: {fileID: 1692768344}
---- !u!75 &964992899
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1142833208}
-  m_GameObject: {fileID: 964992897}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &964992900
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -25051,7 +24856,6 @@ GameObject:
   - 54: {fileID: 997351516}
   - 65: {fileID: 997351515}
   - 153: {fileID: 997351514}
-  - 75: {fileID: 997351513}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -25072,18 +24876,6 @@ Transform:
   - {fileID: 463923121}
   - {fileID: 1385351379}
   m_Father: {fileID: 1038023365}
---- !u!75 &997351513
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 136005661}
-  m_GameObject: {fileID: 997351511}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &997351514
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -25817,9 +25609,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -25846,9 +25638,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -25875,9 +25667,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -25904,9 +25696,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -26496,9 +26288,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -26579,9 +26371,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -27684,9 +27476,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -27767,9 +27559,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -28826,9 +28618,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -28855,9 +28647,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -28884,9 +28676,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -28913,9 +28705,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -31194,7 +30986,6 @@ GameObject:
   - 54: {fileID: 1245786540}
   - 65: {fileID: 1245786539}
   - 153: {fileID: 1245786538}
-  - 75: {fileID: 1245786537}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -31215,18 +31006,6 @@ Transform:
   - {fileID: 1833571852}
   - {fileID: 623783226}
   m_Father: {fileID: 1694673917}
---- !u!75 &1245786537
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 696744218}
-  m_GameObject: {fileID: 1245786535}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1245786538
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -31579,7 +31358,6 @@ GameObject:
   - 54: {fileID: 1262079950}
   - 65: {fileID: 1262079949}
   - 153: {fileID: 1262079948}
-  - 75: {fileID: 1262079947}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -31600,18 +31378,6 @@ Transform:
   - {fileID: 1156614200}
   - {fileID: 397567204}
   m_Father: {fileID: 593680951}
---- !u!75 &1262079947
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 14926236}
-  m_GameObject: {fileID: 1262079945}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1262079948
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -32030,7 +31796,6 @@ GameObject:
   - 54: {fileID: 1284294536}
   - 65: {fileID: 1284294535}
   - 153: {fileID: 1284294534}
-  - 75: {fileID: 1284294533}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -32051,18 +31816,6 @@ Transform:
   - {fileID: 288168250}
   - {fileID: 2115184651}
   m_Father: {fileID: 1636496568}
---- !u!75 &1284294533
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 234914412}
-  m_GameObject: {fileID: 1284294531}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1284294534
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -33576,7 +33329,6 @@ GameObject:
   - 54: {fileID: 1373318566}
   - 65: {fileID: 1373318565}
   - 153: {fileID: 1373318564}
-  - 75: {fileID: 1373318563}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -33597,18 +33349,6 @@ Transform:
   - {fileID: 1884668818}
   - {fileID: 1798681831}
   m_Father: {fileID: 1038023365}
---- !u!75 &1373318563
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 136005661}
-  m_GameObject: {fileID: 1373318561}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1373318564
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -34327,9 +34067,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -34410,9 +34150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -34679,7 +34419,6 @@ GameObject:
   - 54: {fileID: 1416491074}
   - 65: {fileID: 1416491073}
   - 153: {fileID: 1416491072}
-  - 75: {fileID: 1416491071}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -34700,18 +34439,6 @@ Transform:
   - {fileID: 777003756}
   - {fileID: 1089222862}
   m_Father: {fileID: 1660461586}
---- !u!75 &1416491071
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 256455647}
-  m_GameObject: {fileID: 1416491069}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1416491072
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -35164,9 +34891,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -35193,9 +34920,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -35222,9 +34949,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -35251,9 +34978,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -36380,7 +36107,6 @@ GameObject:
   - 54: {fileID: 1501536398}
   - 65: {fileID: 1501536397}
   - 153: {fileID: 1501536396}
-  - 75: {fileID: 1501536395}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -36401,18 +36127,6 @@ Transform:
   - {fileID: 1559595678}
   - {fileID: 227583358}
   m_Father: {fileID: 1660461586}
---- !u!75 &1501536395
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 256455647}
-  m_GameObject: {fileID: 1501536393}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1501536396
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -36939,7 +36653,6 @@ GameObject:
   - 54: {fileID: 1517136526}
   - 65: {fileID: 1517136525}
   - 153: {fileID: 1517136524}
-  - 75: {fileID: 1517136523}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -36960,18 +36673,6 @@ Transform:
   - {fileID: 555452628}
   - {fileID: 1406081249}
   m_Father: {fileID: 532043468}
---- !u!75 &1517136523
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 454234182}
-  m_GameObject: {fileID: 1517136521}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1517136524
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -37846,7 +37547,6 @@ GameObject:
   - 54: {fileID: 1570067614}
   - 65: {fileID: 1570067613}
   - 153: {fileID: 1570067612}
-  - 75: {fileID: 1570067611}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -37867,18 +37567,6 @@ Transform:
   - {fileID: 349849237}
   - {fileID: 137174565}
   m_Father: {fileID: 1444713219}
---- !u!75 &1570067611
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1459835204}
-  m_GameObject: {fileID: 1570067609}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1570067612
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -38579,9 +38267,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -38608,9 +38296,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -38637,9 +38325,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -38666,9 +38354,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -38878,7 +38566,6 @@ GameObject:
   - 54: {fileID: 1640539426}
   - 65: {fileID: 1640539425}
   - 153: {fileID: 1640539424}
-  - 75: {fileID: 1640539423}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -38899,18 +38586,6 @@ Transform:
   - {fileID: 352289722}
   - {fileID: 466018415}
   m_Father: {fileID: 408855606}
---- !u!75 &1640539423
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 294315001}
-  m_GameObject: {fileID: 1640539421}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1640539424
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -39338,9 +39013,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -39367,9 +39042,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -39396,9 +39071,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -39425,9 +39100,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -39711,7 +39386,6 @@ GameObject:
   - 54: {fileID: 1657964684}
   - 65: {fileID: 1657964687}
   - 153: {fileID: 1657964683}
-  - 75: {fileID: 1657964688}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -39883,18 +39557,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: -4.76837158e-07, z: 0}
---- !u!75 &1657964688
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 803722900}
-  m_GameObject: {fileID: 1657964681}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1660461585
 GameObject:
   m_ObjectHideFlags: 0
@@ -39972,9 +39634,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40001,9 +39663,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40030,9 +39692,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40059,9 +39721,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40462,9 +40124,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -40545,9 +40207,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -40894,9 +40556,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40923,9 +40585,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40952,9 +40614,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40981,9 +40643,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -41273,9 +40935,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -41302,9 +40964,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -41331,9 +40993,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -41360,9 +41022,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -41689,9 +41351,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -41772,9 +41434,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -41925,7 +41587,6 @@ GameObject:
   - 54: {fileID: 1711306543}
   - 65: {fileID: 1711306542}
   - 153: {fileID: 1711306541}
-  - 75: {fileID: 1711306540}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -41946,18 +41607,6 @@ Transform:
   - {fileID: 965581112}
   - {fileID: 1143328414}
   m_Father: {fileID: 1694673917}
---- !u!75 &1711306540
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 696744218}
-  m_GameObject: {fileID: 1711306538}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1711306541
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -42459,7 +42108,6 @@ GameObject:
   - 54: {fileID: 1778902643}
   - 65: {fileID: 1778902642}
   - 153: {fileID: 1778902641}
-  - 75: {fileID: 1778902640}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -42480,18 +42128,6 @@ Transform:
   - {fileID: 648589919}
   - {fileID: 1549814019}
   m_Father: {fileID: 172532131}
---- !u!75 &1778902640
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 998455937}
-  m_GameObject: {fileID: 1778902638}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1778902641
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -43806,7 +43442,6 @@ GameObject:
   - 54: {fileID: 1815409848}
   - 65: {fileID: 1815409847}
   - 153: {fileID: 1815409846}
-  - 75: {fileID: 1815409845}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -43827,18 +43462,6 @@ Transform:
   - {fileID: 1307496301}
   - {fileID: 520799633}
   m_Father: {fileID: 2145673690}
---- !u!75 &1815409845
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1363958900}
-  m_GameObject: {fileID: 1815409843}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1815409846
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -44561,9 +44184,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -44740,9 +44363,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -46593,7 +46216,6 @@ GameObject:
   - 54: {fileID: 1987674640}
   - 65: {fileID: 1987674639}
   - 153: {fileID: 1987674638}
-  - 75: {fileID: 1987674637}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -46614,18 +46236,6 @@ Transform:
   - {fileID: 2032155957}
   - {fileID: 1487957347}
   m_Father: {fileID: 48864859}
---- !u!75 &1987674637
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 90361241}
-  m_GameObject: {fileID: 1987674635}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &1987674638
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -46989,7 +46599,6 @@ GameObject:
   - 54: {fileID: 2026021448}
   - 65: {fileID: 2026021447}
   - 153: {fileID: 2026021446}
-  - 75: {fileID: 2026021445}
   m_Layer: 0
   m_Name: FootR
   m_TagString: Untagged
@@ -47010,18 +46619,6 @@ Transform:
   - {fileID: 1983846980}
   - {fileID: 2046925110}
   m_Father: {fileID: 1139609872}
---- !u!75 &2026021445
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500002, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 538743111}
-  m_GameObject: {fileID: 2026021443}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &2026021446
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -47545,9 +47142,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -47724,9 +47321,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -48376,7 +47973,6 @@ GameObject:
   - 54: {fileID: 2095141214}
   - 65: {fileID: 2095141213}
   - 153: {fileID: 2095141212}
-  - 75: {fileID: 2095141211}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -48397,18 +47993,6 @@ Transform:
   - {fileID: 197114001}
   - {fileID: 1107435025}
   m_Father: {fileID: 1444713219}
---- !u!75 &2095141211
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1459835204}
-  m_GameObject: {fileID: 2095141209}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &2095141212
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -48631,7 +48215,6 @@ GameObject:
   - 54: {fileID: 2108867159}
   - 65: {fileID: 2108867158}
   - 153: {fileID: 2108867157}
-  - 75: {fileID: 2108867156}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -48652,18 +48235,6 @@ Transform:
   - {fileID: 2053277071}
   - {fileID: 803100097}
   m_Father: {fileID: 1692768344}
---- !u!75 &2108867156
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1142833208}
-  m_GameObject: {fileID: 2108867154}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &2108867157
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -48828,7 +48399,6 @@ GameObject:
   - 54: {fileID: 2108978388}
   - 65: {fileID: 2108978387}
   - 153: {fileID: 2108978386}
-  - 75: {fileID: 2108978385}
   m_Layer: 0
   m_Name: FootL
   m_TagString: Untagged
@@ -48849,18 +48419,6 @@ Transform:
   - {fileID: 2054738156}
   - {fileID: 660697117}
   m_Father: {fileID: 532043468}
---- !u!75 &2108978385
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 454234182}
-  m_GameObject: {fileID: 2108978383}
-  m_Enabled: 0
-  m_Force: {x: 0, y: 0, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: -1, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!153 &2108978386
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -49268,9 +48826,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: HeightRegulatingForce_Estimator
-  m_Kp: 4
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: 1
+  m_Kd: .00999999978
   m_P: 0
   m_I: 0
   m_D: 0
@@ -49447,9 +49005,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: .5
   m_Ki: 0
-  m_Kd: .100000001
+  m_Kd: .00999999978
   m_P:
   - 0
   - 0
@@ -49674,9 +49232,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -49703,9 +49261,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -49732,9 +49290,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .200000003
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -49761,9 +49319,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: .200000003
   m_Ki: 0
-  m_Kd: .0500000007
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
