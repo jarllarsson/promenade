@@ -932,7 +932,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 48864868}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &48864862
@@ -1170,8 +1170,8 @@ MonoBehaviour:
   - {fileID: 48864863}
   - {fileID: 48864862}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -2328,7 +2328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 98454179}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &98454173
@@ -2566,8 +2566,8 @@ MonoBehaviour:
   - {fileID: 98454174}
   - {fileID: 98454173}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -4492,7 +4492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 172532140}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &172532134
@@ -4730,8 +4730,8 @@ MonoBehaviour:
   - {fileID: 172532135}
   - {fileID: 172532134}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -6636,7 +6636,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 217361980}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &217361974
@@ -6874,8 +6874,8 @@ MonoBehaviour:
   - {fileID: 217361975}
   - {fileID: 217361974}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -11446,7 +11446,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 408855614}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &408855608
@@ -11684,8 +11684,8 @@ MonoBehaviour:
   - {fileID: 408855609}
   - {fileID: 408855608}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -15006,7 +15006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 532043477}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &532043471
@@ -15244,8 +15244,8 @@ MonoBehaviour:
   - {fileID: 532043472}
   - {fileID: 532043471}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -16051,7 +16051,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 593680960}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &593680954
@@ -16289,8 +16289,8 @@ MonoBehaviour:
   - {fileID: 593680955}
   - {fileID: 593680954}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -21632,7 +21632,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 853343079}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &853343079
@@ -21710,8 +21710,8 @@ MonoBehaviour:
   - {fileID: 853343089}
   - {fileID: 853343088}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -25518,7 +25518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1038023374}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &1038023368
@@ -25756,8 +25756,8 @@ MonoBehaviour:
   - {fileID: 1038023369}
   - {fileID: 1038023368}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -28521,7 +28521,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1139609881}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &1139609875
@@ -28759,8 +28759,8 @@ MonoBehaviour:
   - {fileID: 1139609876}
   - {fileID: 1139609875}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -34796,7 +34796,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1444713228}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &1444713222
@@ -35034,8 +35034,8 @@ MonoBehaviour:
   - {fileID: 1444713223}
   - {fileID: 1444713222}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -38191,7 +38191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1636496577}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &1636496571
@@ -38429,8 +38429,8 @@ MonoBehaviour:
   - {fileID: 1636496572}
   - {fileID: 1636496571}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -38950,7 +38950,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1655278265}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &1655278259
@@ -39188,8 +39188,8 @@ MonoBehaviour:
   - {fileID: 1655278260}
   - {fileID: 1655278259}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -39584,7 +39584,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1660461594}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &1660461588
@@ -39822,8 +39822,8 @@ MonoBehaviour:
   - {fileID: 1660461589}
   - {fileID: 1660461588}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -40503,7 +40503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1692768353}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &1692768347
@@ -40741,8 +40741,8 @@ MonoBehaviour:
   - {fileID: 1692768348}
   - {fileID: 1692768347}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -40882,7 +40882,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1694673926}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &1694673920
@@ -41120,8 +41120,8 @@ MonoBehaviour:
   - {fileID: 1694673921}
   - {fileID: 1694673920}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 200
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -49271,7 +49271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 2145673698}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &2145673692
@@ -49509,8 +49509,8 @@ MonoBehaviour:
   - {fileID: 2145673693}
   - {fileID: 2145673692}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}

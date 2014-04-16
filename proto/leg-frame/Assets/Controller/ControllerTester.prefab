@@ -1913,7 +1913,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 11400024}
   m_fvWeight: 100
-  m_fhWeight: .00999999978
+  m_fhWeight: .00100000005
   m_frWeight: .00100000005
   m_fpWeight: 0
 --- !u!114 &11400024
@@ -1990,8 +1990,8 @@ MonoBehaviour:
   - {fileID: 11400038}
   - {fileID: 11400036}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -4}
-  m_goalVelocity: {x: 0, y: 0, z: 4}
+  m_currentVelocity: {x: 0, y: 0, z: -5}
+  m_goalVelocity: {x: 0, y: 0, z: 5}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 30
   m_headAcceleration: {x: 0, y: 0, z: 0}

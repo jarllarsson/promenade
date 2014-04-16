@@ -57,7 +57,7 @@ public class ParamChanger
 
 
        //getMaxMinOfList(p_P, out Pmin, out Pmax);
-        double r = 0.01f;
+        double r = 0.001f;
         //r = Random.Range(0.0f, 10.0f);
         Pmax = r; Pmin = -r;
 
