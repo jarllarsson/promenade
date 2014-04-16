@@ -39,6 +39,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
     // The remaining joints for legs
     public int[] m_legJointIds = new int[c_legCount * c_nonHipLegSegments];
 
+    // Feet
+    public Transform[] m_feet = new Transform[c_legCount];
+
     // Virtual forces
     public Vector3[] m_netLegVirtualForces = new Vector3[c_legCount];
 
@@ -86,7 +89,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
     // Calculated Leg frame virtual forces to apply to stance legs
     Vector3 m_Fh; // Height regulate
     Vector3 m_Fv; // Velocity regulate
-    Vector3[] m_tuneFD = new Vector3[c_legCount]; // Individualized leg "distance"-force
+    Vector3[,] m_tuneFD = new Vector3[c_legCount,2]; // Individualized leg "distance"-force (2 phases, guessing in front of- and behind LF)
     Vector3[] m_legFgravityComp = new Vector3[c_legCount]; // Individualized leg force
 
     // IOptimizable
@@ -105,8 +108,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
         vals.Add(m_tuneHeightForcePIDKp);
         vals.Add(m_tuneHeightForcePIDKd);
         vals.Add(m_tuneVelocityRegulatorKv);
-        for (int i=0;i<m_tuneFD.Length;i++)
-            vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneFD[i]));
+        for (int i = 0; i < c_legCount; i++)
+        for (int p = 0; p < 2; p++)
+            vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneFD[i,p]));
         for (int i = 0; i < m_legFgravityComp.Length; i++)
             vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_legFgravityComp[i]));
         return vals;
@@ -126,8 +130,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKp);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKd);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneVelocityRegulatorKv);
-        for (int i = 0; i < m_tuneFD.Length; i++)
-            OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFD[i]);
+        for (int i = 0; i < c_legCount; i++)
+        for (int p = 0; p < 2; p++)
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFD[i,p]);
         for (int i = 0; i < m_legFgravityComp.Length; i++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_legFgravityComp[i]);
     }
@@ -305,7 +310,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=0.1f; // ?????
+        float mass=10.0f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
@@ -313,15 +318,35 @@ public class LegFrame : MonoBehaviour, IOptimizable
     Vector3 calculateSwingLegVF(int p_legId)
     {
         Vector3 force;
-        force = -m_tuneFD[p_legId] /*+ m_Fsw*/ + m_legFgravityComp[p_legId];// note fd should be swing fd
+        force = /*-m_tuneFD[p_legId] +*/ /*m_Fsw +*/ m_legFgravityComp[p_legId];// note fd is only for stance
         return force;
+    }
+
+    Vector3 calculateFD(int p_legId)
+    {
+        Vector3 FD = Vector3.zero;
+        Vector3 footPos = transform.position - m_feet[p_legId].position/*-transform.position)*/;
+        footPos = transform.InverseTransformDirection(footPos);
+        Color dbgCol = Color.magenta * 0.5f;
+        int Dx = 1;
+        if (footPos.x <= 0) { Dx = 0; dbgCol = Color.red*0.5f; } else { dbgCol = Color.red; }
+        int Dz = 1;
+        if (footPos.z <= 0) { Dz = 0; dbgCol = Color.blue*0.5f; } else { dbgCol = Color.blue; }
+
+        //Debug.DrawLine(transform.position, transform.position + new Vector3(footPos.x,1.0f,footPos.z),dbgCol);
+
+        float FDx = m_tuneFD[p_legId, Dx].x;
+        float FDz = m_tuneFD[p_legId, Dz].z;
+        Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz)*100.0f, Color.magenta,1.0f);
+        FD = new Vector3(FDx, 0.0f, FDz);
+        return FD;
     }
 
     Vector3 calculateStanceLegVF(int p_legId, int p_stanceLegCount)
     {
         float n=(float)p_stanceLegCount;
         Vector3 force;
-        force=-m_tuneFD[p_legId]-(m_Fh/n)-(m_Fv/n); // note fd should be stance fd
+        force=-calculateFD(p_legId)-(m_Fh/n)-(m_Fv/n); // note fd should be stance fd
         return force;
     }
 
