@@ -40,7 +40,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
     public int[] m_legJointIds = new int[c_legCount * c_nonHipLegSegments];
 
     // Feet
-    public Transform[] m_feet = new Transform[c_legCount];
+    public FootStrikeChecker[] m_feet = new FootStrikeChecker[c_legCount];
 
     // Virtual forces
     public Vector3[] m_netLegVirtualForces = new Vector3[c_legCount];
@@ -55,6 +55,8 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     // PLF, the coronal(x) and saggital(y) step distance
     public Vector2 m_tuneStepLength = new Vector2(3.0f, 5.0f);
+
+    public float m_lateStrikeOffsetDeltaH = 10.0f;
 
 
     // omegaLF, the desired heading orientation trajectory
@@ -86,9 +88,14 @@ public class LegFrame : MonoBehaviour, IOptimizable
     // Calculators for sagittal velocity regulator force
     public float m_tuneVelocityRegulatorKv=1.0f; // Gain for regulating velocity
 
+    // proportional gain (kft) for foot tracking controller, used to calculate Fsw
+    public PcswiseLinear m_tunePropGainFootTrackingKft;
+    public PID m_FootTrackingSpringDamper;
+
     // Calculated Leg frame virtual forces to apply to stance legs
     Vector3 m_Fh; // Height regulate
     Vector3 m_Fv; // Velocity regulate
+    Vector3[] m_Fsw = new Vector3[c_legCount]; // Swing regulate, "pull to target pos"
     Vector3[,] m_tuneFD = new Vector3[c_legCount,2]; // Individualized leg "distance"-force (2 phases, guessing in front of- and behind LF)
     Vector3[] m_legFgravityComp = new Vector3[c_legCount]; // Individualized leg force
 
@@ -105,6 +112,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         vals.AddRange(m_tuneStepHeightTraj.GetParams());
         vals.AddRange(m_tuneFootTransitionEase.GetParams());
         vals.AddRange(m_tuneLFHeightTraj.GetParams());
+        vals.AddRange(m_tunePropGainFootTrackingKft.GetParams());
         vals.Add(m_tuneHeightForcePIDKp);
         vals.Add(m_tuneHeightForcePIDKd);
         vals.Add(m_tuneVelocityRegulatorKv);
@@ -127,6 +135,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         m_tuneStepHeightTraj.ConsumeParams(p_params);
         m_tuneFootTransitionEase.ConsumeParams(p_params);
         m_tuneLFHeightTraj.ConsumeParams(p_params);
+        m_tunePropGainFootTrackingKft.ConsumeParams(p_params);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKp);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKd);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneVelocityRegulatorKv);
@@ -184,15 +193,49 @@ public class LegFrame : MonoBehaviour, IOptimizable
             // The position is updated as long as the leg
             // is in stance. This means that the last calculated
             // position when the foot leaves the ground is used.
-            if (m_tuneStepCycles[i].isInStance(p_phi))
+            if (isInControlledStance(i,p_phi))
             {
                 updateFootStrikePosition(i, p_phi, p_velocity, p_desiredVelocity);
+                offsetFootTargetDownOnLateStrike(i);
             }
             else // If the foot is in swing instead, start updating the current foot swing target
             {    // along the appropriate trajectory.
                 updateFootSwingPosition(i, p_phi);
             }
         }
+    }
+
+    private void offsetFootTargetDownOnLateStrike(int p_idx)
+    {
+        bool isTouchingGround = m_feet[p_idx].isFootStrike();
+        if (!isTouchingGround)
+        {
+            Vector3 old = m_footStrikePlacement[p_idx];
+            m_footStrikePlacement[p_idx] -= Vector3.down * m_lateStrikeOffsetDeltaH;
+            Debug.DrawLine(old, m_footStrikePlacement[p_idx], Color.black, 0.3f);
+        }
+    }
+
+    // Check if in stance and also read as stance if the 
+    // foot is really touching the ground while in end of swing
+    public bool isInControlledStance(int p_idx, float p_phi)
+    {
+        bool stance = m_tuneStepCycles[p_idx].isInStance(p_phi);
+        if (!stance)
+        {
+            bool isTouchingGround = m_feet[p_idx].isFootStrike();
+            if (isTouchingGround)
+            {
+                float swing = m_tuneStepCycles[p_idx].getSwingPhase(p_phi);
+                if (swing>0.8f) // late swing as mentioned by coros et al
+                {
+                    stance = true;
+                    Debug.DrawLine(m_feet[p_idx].transform.position, m_feet[p_idx].transform.position+Vector3.up, Color.white, 0.3f);
+                }
+            }
+        }
+
+        return stance;
     }
 
     // Calculate a new position where to place a foot.
@@ -286,7 +329,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int i = 0; i < c_legCount; i++)
         {
             // Only need to add the indices
-            if (m_tuneStepCycles[i].isInStance(p_phi))
+            if (isInControlledStance(i,p_phi))
             {
                 p_stanceLegs.Add(i);
             }
@@ -310,22 +353,33 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=10.0f; // ?????
+        float mass=6.0f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
+    }
+
+    public void calculateFsw(int p_legId, float p_phi)
+    {
+        float swing = m_tuneStepCycles[p_legId].getSwingPhase(p_phi);
+        float Kft = m_tunePropGainFootTrackingKft.getValAt(swing);
+        m_FootTrackingSpringDamper.m_Kp = Kft;    
+        Vector3 diff = m_feet[p_legId].transform.position-m_footStrikePlacement[p_legId];
+        float error = Vector3.Magnitude(diff);
+        m_Fsw[p_legId] = diff.normalized*m_FootTrackingSpringDamper.drive(error,Time.deltaTime);
+        Debug.DrawLine(m_feet[p_legId].transform.position, m_feet[p_legId].transform.position + m_Fsw[p_legId], Color.yellow);
     }
 
     Vector3 calculateSwingLegVF(int p_legId)
     {
         Vector3 force;
-        force = /*-m_tuneFD[p_legId] +*/ /*m_Fsw +*/ m_legFgravityComp[p_legId];// note fd is only for stance
+        force = /*-m_tuneFD[p_legId] +*/ m_Fsw[p_legId] + m_legFgravityComp[p_legId];// note fd is only for stance
         return force;
     }
 
     Vector3 calculateFD(int p_legId)
     {
         Vector3 FD = Vector3.zero;
-        Vector3 footPos = transform.position - m_feet[p_legId].position/*-transform.position)*/;
+        Vector3 footPos = transform.position - m_feet[p_legId].transform.position/*-transform.position)*/;
         footPos = transform.InverseTransformDirection(footPos);
         Color dbgCol = Color.magenta * 0.5f;
         int Dx = 1;
@@ -337,7 +391,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
         float FDx = m_tuneFD[p_legId, Dx].x;
         float FDz = m_tuneFD[p_legId, Dz].z;
-        Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz)*100.0f, Color.magenta,1.0f);
+        Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
         FD = new Vector3(FDx, 0.0f, FDz);
         return FD;
     }
@@ -356,7 +410,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int i = 0; i < c_legCount; i++)
         {
             // Only need to add the indices
-            if (m_tuneStepCycles[i].isInStance(p_phi))
+            if (isInControlledStance(i,p_phi))
             {
                 stanceLegs++;
             }
@@ -364,9 +418,10 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int i = 0; i < c_legCount; i++)
         {
             // Swing force
-            if (!m_tuneStepCycles[i].isInStance(p_phi))
+            if (!isInControlledStance(i,p_phi))
             {
                 calculateFgravcomp(i, p_phi, Vector3.up);
+                calculateFsw(i,p_phi);
                 m_netLegVirtualForces[i] = calculateSwingLegVF(i);
             }
             else

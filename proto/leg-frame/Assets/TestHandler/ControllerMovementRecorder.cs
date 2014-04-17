@@ -57,6 +57,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         fv_calcStrideMeanVelocity();
         fr_calcRotationDeviations();
         fh_calcHeadAccelerations();
+        fp_calcMovementDistance();
 	}
 
     void fv_calcStrideMeanVelocity(bool p_forceStore=false)
@@ -121,8 +122,8 @@ public class ControllerMovementRecorder : MonoBehaviour
         double fr = EvaluateFR();
         double fh = EvaluateFH();
         double fp = EvaluateFP();
-        double fobj = (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh + (double)m_fpWeight*fp;
-        Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" + "+(double)m_fpWeight*fp);
+        double fobj = (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
+        Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
         return fobj;
     }                 
                       
@@ -190,7 +191,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             total += dist;
         }
         float movementSign = m_myController.m_goalVelocity.z / Mathf.Abs(m_myController.m_goalVelocity.z);
-        double scoreInRightDir = Math.Max(0.0,100.0f + total.z * -movementSign); 
+        double scoreInRightDir = Math.Max(0.0f,total.z * movementSign);
         return scoreInRightDir;
     }
 
