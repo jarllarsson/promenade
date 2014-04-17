@@ -132,11 +132,11 @@ public class Controller : MonoBehaviour, IOptimizable
 
     void calcHeadAcceleration()
     {
-        Vector3 headVelocity = m_head.transform.position - m_oldHeadPos;
-        m_headAcceleration = headVelocity - m_oldHeadVelocity;
+        Vector3 headVelocity = (m_head.transform.position - m_oldHeadPos)/Time.deltaTime;
+        m_headAcceleration = (headVelocity - m_oldHeadVelocity)/Time.deltaTime;
         m_oldHeadPos = m_head.transform.position;
         m_oldHeadVelocity = headVelocity;
-        Debug.DrawLine(m_head.transform.position, m_head.transform.position + m_headAcceleration,Color.blue,0.5f);
+        Debug.DrawLine(m_head.transform.position, m_head.transform.position + m_headAcceleration*0.01f,Color.blue,0.5f);
     }
 
     void LateUpdate()

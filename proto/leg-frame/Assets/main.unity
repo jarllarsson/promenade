@@ -1032,10 +1032,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 48864868}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &48864862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2452,10 +2452,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 98454179}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &98454173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4912,10 +4912,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 172532140}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &172532134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7180,10 +7180,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 217361980}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &217361974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12408,10 +12408,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 408855614}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &408855608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16449,10 +16449,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 532043477}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &532043471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17834,10 +17834,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 593680960}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &593680954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24197,10 +24197,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 853343079}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &853343079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28521,10 +28521,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1038023374}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &1038023368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31862,10 +31862,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1139609881}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &1139609875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39338,10 +39338,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1444713228}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &1444713222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43100,10 +43100,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1636496577}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &1636496571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43934,10 +43934,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1655278265}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &1655278259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44570,10 +44570,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1660461594}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &1660461588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45913,10 +45913,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1692768353}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &1692768347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46292,10 +46292,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1694673926}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &1694673920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55475,10 +55475,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 2145673698}
-  m_fvWeight: 5
+  m_fvWeight: 6
   m_fhWeight: .5
-  m_frWeight: .0500000007
-  m_fpWeight: .100000001
+  m_frWeight: .0799999982
+  m_fpWeight: .5
 --- !u!114 &2145673692
 MonoBehaviour:
   m_ObjectHideFlags: 0
