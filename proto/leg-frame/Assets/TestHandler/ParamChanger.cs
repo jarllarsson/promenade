@@ -49,7 +49,7 @@ public class ParamChanger
     /// </summary>
     /// <param name="p_P"></param>
     /// <returns></returns>
-    private List<double> getDeltaP(List<float> p_P)
+    private List<double> getDeltaP(List<float> p_P, int p_iteration)
     {
         int size=p_P.Count;
         // Get R value
@@ -58,6 +58,7 @@ public class ParamChanger
 
        //getMaxMinOfList(p_P, out Pmin, out Pmax);
         double r = 10.0f;
+        if (p_iteration % 10 == 9) r = 20.0f;
         //r = Random.Range(0.0f, 1.0f);
         Pmax = r; Pmin = -r;
 
