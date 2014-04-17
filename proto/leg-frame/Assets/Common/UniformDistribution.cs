@@ -3,10 +3,11 @@ using System.Collections;
 
 public class UniformDistribution
 {
-    System.Random p_fixedrand;
+    static System.Random p_fixedrand;
     public UniformDistribution()
     {
-        p_fixedrand = new System.Random(4350809);
+        if (p_fixedrand==null)
+            p_fixedrand = new System.Random(4350809);
     }
 
     public double U(double p_lower, double p_upper)

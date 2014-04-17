@@ -56,6 +56,15 @@ public class TestHandler : MonoBehaviour
             m_currentParams = new List<List<float>>();
             m_totalScores = new double[m_optimizableControllers.Length];
             StoreParams();
+            m_lastBestParams = new List<float>(m_currentParams[0]);
+            PerturbParams(2);
+            for (int i = 2; i < m_optimizableControllers.Length; i++)
+            {
+                IOptimizable opt = m_optimizableControllers[i];
+                List<float> paramslist = new List<float>(m_currentParams[i]);
+                opt.ConsumeParams(paramslist); // consume it to controller
+            }
+
             ResetScores();
             m_inited = true;
 
@@ -153,7 +162,7 @@ public class TestHandler : MonoBehaviour
         }
     }
 
-    private void PerturbParams()
+    private void PerturbParams(int p_offset=0)
     {
         // Get params from winner and use as basis for perturbing
         // Only update params if they were better than before, else reuse old
@@ -163,7 +172,7 @@ public class TestHandler : MonoBehaviour
             m_lastBestParams = m_currentParams[m_currentBestCandidate];
         }
         // Perturb and assign to candidates
-        for (int i = 0; i < m_optimizableControllers.Length; i++)
+        for (int i = p_offset; i < m_optimizableControllers.Length; i++)
         {
             m_currentParams[i] = m_changer.change(m_lastBestParams); // different perturbation to each
         }
