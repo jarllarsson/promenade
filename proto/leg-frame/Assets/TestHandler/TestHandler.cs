@@ -18,6 +18,9 @@ public class TestHandler : MonoBehaviour
     List<float> m_lastBestParams;
     List<List<float>> m_currentParams;
 
+    List<float> m_paramsMax;
+    List<float> m_paramsMin;
+
     private double[] m_totalScores;
     bool m_inited = false;
     bool m_oneRun = false;
@@ -55,6 +58,10 @@ public class TestHandler : MonoBehaviour
             m_changer = new ParamChanger();
             m_currentParams = new List<List<float>>();
             m_totalScores = new double[m_optimizableControllers.Length];
+            // get bounds for perturbation
+            m_paramsMax = m_optimizableControllers[0].GetParamsMax();
+            m_paramsMin = m_optimizableControllers[0].GetParamsMin();
+            //
             StoreParams();
             m_lastBestParams = new List<float>(m_currentParams[0]);
             PerturbParams(2);
@@ -174,8 +181,8 @@ public class TestHandler : MonoBehaviour
         // Perturb and assign to candidates
         for (int i = p_offset; i < m_optimizableControllers.Length; i++)
         {
-            m_currentParams[i] = m_changer.change(m_lastBestParams, m_testCount); // different perturbation to each
-        }
+            m_currentParams[i] = m_changer.change(m_lastBestParams,m_paramsMin, m_paramsMax, m_testCount); // different perturbation to each
+        }                                                           
     }
 
     private void EvaluateAll()
@@ -183,7 +190,7 @@ public class TestHandler : MonoBehaviour
         
         for (int i = 0; i < m_optimizableControllers.Length; i++)
         {
-            Debug.Log("Eval "+i+" "+m_optimizableControllers[i]);
+            //Debug.Log("Eval "+i+" "+m_optimizableControllers[i]);
             m_totalScores[i] += EvaluateCandidateFitness(i);
         }
     }

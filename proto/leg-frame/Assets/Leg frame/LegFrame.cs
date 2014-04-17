@@ -341,7 +341,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         if (!isTouchingGround)
         {
             Vector3 old = m_footStrikePlacement[p_idx];
-            m_footStrikePlacement[p_idx] -= Vector3.down * m_lateStrikeOffsetDeltaH;
+            m_footStrikePlacement[p_idx] += Vector3.down * m_lateStrikeOffsetDeltaH;
             Debug.DrawLine(old, m_footStrikePlacement[p_idx], Color.black, 0.3f);
         }
     }
@@ -483,7 +483,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=10.0f; // ?????
+        float mass=20.0f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
@@ -495,7 +495,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         m_FootTrackingSpringDamper.m_Kp = Kft;    
         Vector3 diff = m_feet[p_legId].transform.position-m_footStrikePlacement[p_legId];
         float error = Vector3.Magnitude(diff);
-        m_Fsw[p_legId] = diff.normalized*m_FootTrackingSpringDamper.drive(error,Time.deltaTime);
+        m_Fsw[p_legId] = -diff.normalized*m_FootTrackingSpringDamper.drive(error,Time.deltaTime);
         Debug.DrawLine(m_feet[p_legId].transform.position, m_feet[p_legId].transform.position + m_Fsw[p_legId], Color.yellow);
     }
 

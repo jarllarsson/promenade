@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FootStrikeChecker : MonoBehaviour 
 {
-    private bool isOnGround=true;
+    private bool isOnGround=false;
 	// Use this for initialization
 	void Start () {
 	

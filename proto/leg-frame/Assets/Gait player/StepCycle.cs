@@ -68,12 +68,12 @@ public class StepCycle : MonoBehaviour, IOptimizable
     {
         if (m_tuneDutyFactor > 0.9999f)
         {
-            Debug.Log("df: " + m_tuneDutyFactor);
+            //Debug.Log("df: " + m_tuneDutyFactor);
             m_tuneDutyFactor = 0.9999f;
         }
         if (m_tuneStepTrigger > 0.9999f)
         {
-            Debug.Log("st: " + m_tuneStepTrigger);
+            //Debug.Log("st: " + m_tuneStepTrigger);
             m_tuneStepTrigger = 0.9999f;
         }
 

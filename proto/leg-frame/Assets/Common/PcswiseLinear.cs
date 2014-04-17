@@ -51,6 +51,9 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
         // Here one could also implement getters for children IOptimizables
     }
 
+    public List<float> GetParamsMax() { return new List<float>(s_size); }
+    public List<float> GetParamsMin() { return new List<float>(s_size); }
+
 
     /// /////////////////////////////////////////////////////////////
     /// /////////////////////////////////////////////////////////////

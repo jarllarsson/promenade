@@ -12,14 +12,15 @@ public class ParamChanger
         UnityEngine.Random.seed = (int)Time.time;
     }
 
-    public List<float> change(List<float> p_params, int p_iteration)
+    public List<float> change(List<float> p_params, List<float> p_Pmin, List<float> p_Pmax, int p_iteration)
     {
         int size = p_params.Count;
         float[] result = new float[size];
-        List<double> deltaP = getDeltaP(p_params,p_iteration);
+        List<double> deltaP = getDeltaP(p_params,p_Pmin,p_Pmax,p_iteration);
         for (int i = 0; i < size; i++)
         {
             result[i] = (float)((double)p_params[i] + deltaP[i]);
+            result[i] = Mathf.Clamp(result[i], p_Pmin[i], p_Pmax[i]);
         }
         return new List<float>(result);
     }
@@ -49,21 +50,21 @@ public class ParamChanger
     /// </summary>
     /// <param name="p_P"></param>
     /// <returns></returns>
-    private List<double> getDeltaP(List<float> p_P, int p_iteration)
+    private List<double> getDeltaP(List<float> p_P, List<float> p_Pmin, List<float> p_Pmax, int p_iteration)
     {
         int size=p_P.Count;
         // Get R value
-        double Pmax = 1.0f, Pmin = -1.0f;
+        //double Pmax = 1.0f, Pmin = -1.0f;
 
 
-        getMaxMinOfList(p_P, out Pmin, out Pmax);
+        //getMaxMinOfList(p_P, out Pmin, out Pmax);
         //double r = 0.001f;
         //if (p_iteration % 10 == 9) r = 0.1f;
         //r = Random.Range(0.0f, 1.0f);
        // Pmax = r; Pmin = -r;
 
 
-        double R = Pmax - Pmin;
+        //double R = Pmax - Pmin;
         //Debug.Log("R: " + R + " Pmax: " + Pmax + " Pmin: " + Pmin);
 
         // Get S vector
@@ -74,7 +75,8 @@ public class ParamChanger
         for (int i = 0; i < size; i++)
         {
             double P=(double)p_P[i];
-            double c=m_uniformDistribution.U(P - 0.1 * R, P + 0.1 * R);
+            double R = p_Pmax[i] - p_Pmin[i];
+            double c=m_uniformDistribution.U(/*P*/ - 0.1 * R, /*P +*/ 0.1 * R);
 
             deltaP[i] = (double)S[i] * c;
         }

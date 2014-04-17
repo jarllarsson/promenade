@@ -226,7 +226,7 @@ public class Controller : MonoBehaviour, IOptimizable
                  {
                      StepCycle cycle = lf.m_tuneStepCycles[n];
                      int jointID = lf.m_neighbourJointIds[n];
-                     if (cycle.isInStance(m_player.m_gaitPhase))
+                     if (lf.isInControlledStance(i, m_player.m_gaitPhase))
                      {
                          newTorques[jointID] = m_jointTorques[jointID];
                      }
@@ -346,7 +346,7 @@ public class Controller : MonoBehaviour, IOptimizable
             {
                 StepCycle cycle = lf.m_tuneStepCycles[n];
                 Rigidbody current = m_joints[lf.m_neighbourJointIds[n]];
-                if (cycle.isInStance(m_player.m_gaitPhase))
+                if (lf.isInControlledStance(n, m_player.m_gaitPhase))
                 {
                     current.gameObject.GetComponentInChildren<Renderer>().material.color = Color.yellow;
                 }
