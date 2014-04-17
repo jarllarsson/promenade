@@ -53,14 +53,14 @@ public class ParamChanger
     {
         int size=p_P.Count;
         // Get R value
-        double Pmax = 0.0f, Pmin = 0.0f;
+        double Pmax = 1.0f, Pmin = -1.0f;
 
 
-       //getMaxMinOfList(p_P, out Pmin, out Pmax);
-        double r = 1.0f;
-        if (p_iteration % 10 == 9) r = 10.0f;
+        getMaxMinOfList(p_P, out Pmin, out Pmax);
+        //double r = 0.001f;
+        //if (p_iteration % 10 == 9) r = 0.1f;
         //r = Random.Range(0.0f, 1.0f);
-        Pmax = r; Pmin = -r;
+       // Pmax = r; Pmin = -r;
 
 
         double R = Pmax - Pmin;
@@ -75,6 +75,7 @@ public class ParamChanger
         {
             double P=(double)p_P[i];
             double c=m_uniformDistribution.U(P - 0.1 * R, P + 0.1 * R);
+
             deltaP[i] = (double)S[i] * c;
         }
         return new List<double>(deltaP);

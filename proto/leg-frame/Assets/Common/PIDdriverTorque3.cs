@@ -36,7 +36,7 @@ public class PIDdriverTorque3 : MonoBehaviour
         Vector3 dir;
         error.ToAngleAxis(out a, out dir);
         // Get torque
-        Vector3 vec=m_pid.drive(a * dir, Time.deltaTime);
+        Vector3 vec=m_pid.drive(a * dir, Mathf.Max(0.0001f,Time.deltaTime));
         return vec; // Note, these are 3 PIDs
     }
 }

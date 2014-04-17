@@ -56,6 +56,23 @@ public class Controller : MonoBehaviour, IOptimizable
         m_player.ConsumeParams(p_params);
     }
 
+    public List<float> GetParamsMax()
+    {
+        List<float> maxList= new List<float>();
+        for (int i = 0; i < m_legFrames.Length; i++)
+            maxList.AddRange(m_legFrames[i].GetParamsMax()); // append
+        maxList.AddRange(m_player.GetParamsMax());
+        return maxList;
+    }
+
+    public List<float> GetParamsMin()
+    {
+        List<float> minList = new List<float>();
+        for (int i = 0; i < m_legFrames.Length; i++)
+            minList.AddRange(m_legFrames[i].GetParamsMin()); // append
+        minList.AddRange(m_player.GetParamsMin());
+        return minList;
+    }
 
 
     void Start()

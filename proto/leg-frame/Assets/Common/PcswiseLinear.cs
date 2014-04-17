@@ -27,7 +27,7 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
     }
 
     // Number of data points
-    public static int s_size = 30;
+    public static int s_size = 4;
 
     public Color m_dbgDrawCol = Color.green;
 

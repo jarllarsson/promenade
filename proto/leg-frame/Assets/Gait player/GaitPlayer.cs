@@ -41,6 +41,20 @@ public class GaitPlayer : MonoBehaviour, IOptimizable
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneGaitPeriod);
     }
 
+    public List<float> GetParamsMax()
+    {
+        List<float> maxList = new List<float>();
+        maxList.Add(3.0f);
+        return maxList;
+    }
+
+    public List<float> GetParamsMin()
+    {
+        List<float> minList = new List<float>();
+        minList.Add(0.01f);
+        return minList;
+    }
+
     public void updatePhase(float p_t)
     {
         m_gaitPhase += p_t / m_tuneGaitPeriod;

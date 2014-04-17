@@ -2281,9 +2281,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .25
+  m_Kp: .800000012
   m_Ki: 0
-  m_Kd: .0250000004
+  m_Kd: .0399999991
   m_P:
   - 0
   - 0
@@ -2309,9 +2309,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .300000012
+  m_Kp: 1
   m_Ki: 0
-  m_Kd: .0250000004
+  m_Kd: .0500000007
   m_P:
   - 0
   - 0
@@ -2337,9 +2337,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .25
+  m_Kp: .800000012
   m_Ki: 0
-  m_Kd: .0250000004
+  m_Kd: .0399999991
   m_P:
   - 0
   - 0
@@ -2365,9 +2365,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .300000012
+  m_Kp: 1
   m_Ki: 0
-  m_Kd: .0250000004
+  m_Kd: .0500000007
   m_P:
   - 0
   - 0

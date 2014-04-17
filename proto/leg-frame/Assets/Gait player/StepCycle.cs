@@ -38,6 +38,22 @@ public class StepCycle : MonoBehaviour, IOptimizable
         sanitize();
     }
 
+    public List<float> GetParamsMax()
+    {
+        List<float> maxList = new List<float>();
+        maxList.Add(0.99f);
+        maxList.Add(0.99f);
+        return maxList;
+    }
+
+    public List<float> GetParamsMin()
+    {
+        List<float> minList = new List<float>();
+        minList.Add(0.001f);
+        minList.Add(0.001f);
+        return minList;
+    }
+
 	// Use this for initialization
 	void Start () {
 	
@@ -51,9 +67,15 @@ public class StepCycle : MonoBehaviour, IOptimizable
     void sanitize()
     {
         if (m_tuneDutyFactor > 0.9999f)
+        {
+            Debug.Log("df: " + m_tuneDutyFactor);
             m_tuneDutyFactor = 0.9999f;
+        }
         if (m_tuneStepTrigger > 0.9999f)
+        {
+            Debug.Log("st: " + m_tuneStepTrigger);
             m_tuneStepTrigger = 0.9999f;
+        }
 
         if (m_tuneDutyFactor < 0.00001f)
             m_tuneDutyFactor = 0.00001f;
