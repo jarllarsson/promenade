@@ -92,6 +92,12 @@ public class LegFrame : MonoBehaviour, IOptimizable
     public PcswiseLinear m_tunePropGainFootTrackingKft;
     public PID m_FootTrackingSpringDamper;
 
+    // Toe-off and foot strike params
+    float m_tuneToeOffAngle;
+    float[] m_tuneToeOffTime = new float[c_legCount]; // "delta-t"
+    float m_tuneFootStrikeAngle;
+    float[] m_tuneFootStrikeTime = new float[c_legCount]; // "delta-t"
+
     // Calculated Leg frame virtual forces to apply to stance legs
     Vector3 m_Fh; // Height regulate
     Vector3 m_Fv; // Velocity regulate
@@ -117,6 +123,12 @@ public class LegFrame : MonoBehaviour, IOptimizable
         vals.Add(m_tuneHeightForcePIDKd);
         vals.Add(m_tuneVelocityRegulatorKv);
         for (int i = 0; i < c_legCount; i++)
+            vals.Add(m_tuneToeOffTime[i]);
+        for (int i = 0; i < c_legCount; i++)
+            vals.Add(m_tuneFootStrikeTime[i]);
+        vals.Add(m_tuneToeOffAngle);
+        vals.Add(m_tuneFootStrikeAngle);
+        for (int i = 0; i < c_legCount; i++)
         for (int p = 0; p < 2; p++)
             vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneFD[i,p]));
         for (int i = 0; i < m_legFgravityComp.Length; i++)
@@ -139,6 +151,12 @@ public class LegFrame : MonoBehaviour, IOptimizable
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKp);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKd);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneVelocityRegulatorKv);
+        for (int i = 0; i < c_legCount; i++)
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneToeOffTime[i]);
+        for (int i = 0; i < c_legCount; i++)
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFootStrikeTime[i]);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneToeOffAngle);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFootStrikeAngle);
         for (int i = 0; i < c_legCount; i++)
         for (int p = 0; p < 2; p++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFD[i,p]);
