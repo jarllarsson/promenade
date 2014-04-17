@@ -174,7 +174,7 @@ public class TestHandler : MonoBehaviour
         // Perturb and assign to candidates
         for (int i = p_offset; i < m_optimizableControllers.Length; i++)
         {
-            m_currentParams[i] = m_changer.change(m_lastBestParams); // different perturbation to each
+            m_currentParams[i] = m_changer.change(m_lastBestParams, m_testCount); // different perturbation to each
         }
     }
 

@@ -12,11 +12,11 @@ public class ParamChanger
         UnityEngine.Random.seed = (int)Time.time;
     }
 
-    public List<float> change(List<float> p_params)
+    public List<float> change(List<float> p_params, int p_iteration)
     {
         int size = p_params.Count;
         float[] result = new float[size];
-        List<double> deltaP = getDeltaP(p_params);
+        List<double> deltaP = getDeltaP(p_params,p_iteration);
         for (int i = 0; i < size; i++)
         {
             result[i] = (float)((double)p_params[i] + deltaP[i]);
