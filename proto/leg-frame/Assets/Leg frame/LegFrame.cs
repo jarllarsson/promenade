@@ -541,15 +541,15 @@ public class LegFrame : MonoBehaviour, IOptimizable
             float footStrikeStart = stepcycle.m_tuneStepTrigger - footStrikeStartOffset;
             if (toeOffStart < 0.0f) footStrikeStart += 1.0f;
             //         
-            Vector3 torque; Color rot = Color.red;
-            if (p_phi>footStrikeStart && p_phi<toeOffStart) // catch first
+            Vector3 torque=Vector3.zero; Color rot = Color.red;
+            if ((p_phi > footStrikeStart && footStrikeStart > toeOffStart) || p_phi < toeOffStart) // catch first
                 torque=Vector3.right*(foot.localRotation.eulerAngles.x - m_tuneFootStrikeAngle);
-            else /*if (p_phi>toeOffStart) can be either smaller or bigger*/
+            else/* if (p_phi < toeOffStart)*/
             {
                 torque=Vector3.right*(foot.localRotation.eulerAngles.x-m_tuneToeOffAngle);
                 rot = Color.green;
             }
-            foot.rigidbody.AddRelativeTorque(torque*Time.deltaTime);
+            foot.rigidbody.AddRelativeTorque(torque/**Time.deltaTime*/);
             
             foot.renderer.material.color = rot*Mathf.Abs(torque.x);
         }
