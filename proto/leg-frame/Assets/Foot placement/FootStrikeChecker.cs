@@ -13,9 +13,9 @@ public class FootStrikeChecker : MonoBehaviour
 	void Update () 
     {
         if (isFootStrike())
-            renderer.material.color = Color.blue;
+            renderer.material.color += Color.blue*0.3f;
         else
-            renderer.material.color = Color.white;
+            renderer.material.color += Color.white*0.3f;
 	}
 
     public bool isFootStrike()

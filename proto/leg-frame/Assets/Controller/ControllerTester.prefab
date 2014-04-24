@@ -61,7 +61,7 @@ GameObject:
   - 4: {fileID: 400006}
   - 33: {fileID: 3300004}
   - 23: {fileID: 2300004}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -82,7 +82,7 @@ GameObject:
   - 65: {fileID: 6500000}
   - 153: {fileID: 15300002}
   - 114: {fileID: 11400042}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FootL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -326,7 +326,7 @@ GameObject:
   - 4: {fileID: 400034}
   - 33: {fileID: 3300028}
   - 23: {fileID: 2300026}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -364,7 +364,7 @@ GameObject:
   - 65: {fileID: 6500004}
   - 153: {fileID: 15300008}
   - 114: {fileID: 11400040}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FootR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -415,7 +415,7 @@ GameObject:
   - 4: {fileID: 400044}
   - 33: {fileID: 3300036}
   - 23: {fileID: 2300034}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -432,7 +432,7 @@ GameObject:
   - 4: {fileID: 400046}
   - 33: {fileID: 3300038}
   - 23: {fileID: 2300036}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -501,7 +501,7 @@ GameObject:
   - 33: {fileID: 3300046}
   - 136: {fileID: 13600000}
   - 23: {fileID: 2300044}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -519,7 +519,7 @@ GameObject:
   - 33: {fileID: 3300048}
   - 136: {fileID: 13600002}
   - 23: {fileID: 2300046}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -537,7 +537,7 @@ GameObject:
   - 33: {fileID: 3300050}
   - 136: {fileID: 13600004}
   - 23: {fileID: 2300048}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -555,7 +555,7 @@ GameObject:
   - 33: {fileID: 3300052}
   - 136: {fileID: 13600006}
   - 23: {fileID: 2300050}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -568,8 +568,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: .130526468, y: 0, z: 0, w: .991444826}
-  m_LocalPosition: {x: -.498016357, y: -.498213053, z: .00360488892}
+  m_LocalRotation: {x: 4.65764032e-07, y: 3.02556873e-12, z: 3.58522517e-11, w: 1}
+  m_LocalPosition: {x: -.498016357, y: -.498213053, z: .00360870361}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400052}
@@ -617,8 +617,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
-  m_LocalRotation: {x: .130526468, y: 0, z: 0, w: .991444826}
-  m_LocalPosition: {x: -.498016357, y: -2.58597398, z: -.46749112}
+  m_LocalRotation: {x: 4.65764032e-07, y: 3.02556873e-12, z: 3.58522517e-11, w: 1}
+  m_LocalPosition: {x: -.498016357, y: -2.63676262, z: .0889129639}
   m_LocalScale: {x: .5, y: .184720993, z: .5}
   m_Children:
   - {fileID: 400006}
@@ -677,7 +677,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.100917101, y: 3.83361101, z: 0}
+  m_LocalPosition: {x: 245.810608, y: 2.32642221, z: 66.2708511}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400008}
@@ -695,8 +695,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100020}
-  m_LocalRotation: {x: -.130526468, y: 0, z: 0, w: .991444826}
-  m_LocalPosition: {x: .493350983, y: -1.46392155, z: .263982624}
+  m_LocalRotation: {x: -4.65764032e-07, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .493347168, y: -1.49821353, z: .00351715088}
   m_LocalScale: {x: .25, y: 1, z: .25}
   m_Children:
   - {fileID: 400050}
@@ -730,8 +730,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100026}
-  m_LocalRotation: {x: .130526468, y: 0, z: 0, w: .991444826}
-  m_LocalPosition: {x: -.498016357, y: -1.46413875, z: -.255214691}
+  m_LocalRotation: {x: 4.65764032e-07, y: 3.02556873e-12, z: 3.58522517e-11, w: 1}
+  m_LocalPosition: {x: -.498016357, y: -1.49821234, z: .00360870361}
   m_LocalScale: {x: .25, y: 1, z: .25}
   m_Children:
   - {fileID: 400012}
@@ -798,8 +798,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100038}
-  m_LocalRotation: {x: -.130526468, y: 0, z: 0, w: .991444826}
-  m_LocalPosition: {x: .493350983, y: -2.53544927, z: .639418244}
+  m_LocalRotation: {x: -4.65764032e-07, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .493347168, y: -2.63039923, z: .0888290405}
   m_LocalScale: {x: .5, y: .18472071, z: .5}
   m_Children:
   - {fileID: 400034}
@@ -824,8 +824,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100042}
-  m_LocalRotation: {x: -.130526468, y: 0, z: 0, w: .991444826}
-  m_LocalPosition: {x: .48884201, y: -.491846085, z: .00351503491}
+  m_LocalRotation: {x: -4.65764032e-07, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .488845825, y: -.491846085, z: .00351715088}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400028}
@@ -1092,7 +1092,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 2100000, guid: cbf4b1022059c80419046aa25d60dda1, type: 2}
+  - {fileID: 2100000, guid: 9fb4765acb668c94985af1d556985d91, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -1675,7 +1675,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1705,7 +1705,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 12
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1720,7 +1720,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100020}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1735,7 +1735,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100026}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1765,7 +1765,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100042}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1838,7 +1838,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: 1
+  m_resetScale: .800000012
   m_reset: 1
 --- !u!114 &11400002
 MonoBehaviour:
@@ -1976,9 +1976,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 30
+  m_Kp: 1
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .200000003
   m_P:
   - 0
   - 0
@@ -2041,7 +2041,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: 1}
+  m_tuneStepLength: {x: 1, y: .100000001}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 11400008}
@@ -2063,9 +2063,9 @@ MonoBehaviour:
   m_tuneFootTransitionEase: {fileID: 11400000}
   m_heightForceCalc: {fileID: 11400020}
   m_tuneLFHeightTraj: {fileID: 11400018}
-  m_tuneHeightForcePIDKp: 1
-  m_tuneHeightForcePIDKd: .5
-  m_tuneVelocityRegulatorKv: .100000001
+  m_tuneHeightForcePIDKp: 3
+  m_tuneHeightForcePIDKd: .25
+  m_tuneVelocityRegulatorKv: .200000003
   m_tunePropGainFootTrackingKft: {fileID: 11400046}
   m_FootTrackingSpringDamper: {fileID: 11400044}
 --- !u!114 &11400018
@@ -2110,10 +2110,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 275553676fb3de44fbb345f441353738, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NAME: HeightRegulatingForce_Estimator
-  m_Kp: 2
+  NAME: heightTrackingForce
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .25
   m_P: 0
   m_I: 0
   m_D: 0
@@ -2129,6 +2129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 11400024}
+  m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
   m_frWeight: 5
@@ -2208,7 +2209,7 @@ MonoBehaviour:
   - {fileID: 11400036}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: .100000001}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
@@ -2248,6 +2249,8 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 11400034}
   m_testPIDLower: {fileID: 11400032}
+  m_kneePos: {x: 0, y: 0, z: 0}
+  m_endPos: {x: 0, y: 0, z: 0}
 --- !u!114 &11400030
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2269,6 +2272,8 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 11400038}
   m_testPIDLower: {fileID: 11400036}
+  m_kneePos: {x: 0, y: 0, z: 0}
+  m_endPos: {x: 0, y: 0, z: 0}
 --- !u!114 &11400032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2281,9 +2286,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 20
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .00100000005
   m_P:
   - 0
   - 0
@@ -2309,9 +2314,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 30
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .00100000005
   m_P:
   - 0
   - 0
@@ -2337,9 +2342,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 20
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .00100000005
   m_P:
   - 0
   - 0
@@ -2365,9 +2370,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 30
+  m_Kp: .100000001
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .00100000005
   m_P:
   - 0
   - 0
@@ -2415,9 +2420,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 20
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .25
   m_P: 0
   m_I: 0
   m_D: 0
@@ -2514,7 +2519,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -.498016357, y: -.498213053, z: .00360488892}
+  m_ConnectedAnchor: {x: -.498016357, y: -.498213053, z: .00360870361}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2605,7 +2610,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: .5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1.04619026, z: .341238707}
+  m_ConnectedAnchor: {x: -2.6122518e-10, y: -1.04618943, z: .341223389}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2696,7 +2701,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: .00450897217, y: -1.00636673, z: 1.70568711e-07}
+  m_ConnectedAnchor: {x: .00450134277, y: -1.00636744, z: -9.37459504e-07}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2787,7 +2792,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1, z: 2.89253421e-09}
+  m_ConnectedAnchor: {x: -5.90723165e-11, y: -.999999285, z: 7.06696142e-07}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2878,7 +2883,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: .5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1.03982604, z: .341242045}
+  m_ConnectedAnchor: {x: 0, y: -1.03982556, z: .341243684}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2969,7 +2974,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: .48884201, y: -.491846085, z: .00351503491}
+  m_ConnectedAnchor: {x: .488845825, y: -.491846085, z: .00351715088}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0

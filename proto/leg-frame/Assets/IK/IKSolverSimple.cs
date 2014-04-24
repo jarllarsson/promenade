@@ -13,6 +13,8 @@ public class IKSolverSimple : MonoBehaviour
     public float m_kneeAngle;
     public PIDn m_testPIDUpper;
     public PIDn m_testPIDLower;
+    public Vector3 m_kneePos;
+    public Vector3 m_endPos;
 
 	// Use this for initialization
 	void Start () 
@@ -32,31 +34,40 @@ public class IKSolverSimple : MonoBehaviour
         // Retrieve the current wanted foot position
         Vector3 footPos;
         if (m_foot!=null)
-            footPos = m_foot.position - m_legFrame.transform.position;
+            footPos = m_foot.position;
         else
-            footPos = m_legFrame.m_footTarget[(int)m_legType] - m_legFrame.transform.position;
-
+        {
+            // get non-corrected foot pos here
+            footPos = new Vector3(0.0f, m_legFrame.getGraphedFootPos((int)m_legType), 0.0f/*m_legFrame.m_footTarget[(int)m_legType].z-m_legFrame.transform.position.z*/);
+        }
+            //footPos = m_legFrame.m_footTarget[(int)m_legType];
+     
+        //footPos = new Vector3(footPos.x, 0.0f, footPos.z);        
+        //footPos -= m_legFrame.transform.position;   
         Vector3 upperLegLocalPos = (m_upperLeg.position - m_legFrame.transform.position);
+        upperLegLocalPos = new Vector3(0.0f, m_upperLeg.localScale.y + m_lowerLeg.localScale.y + 0.2f, 0.0f);
+
+        Debug.DrawLine(footPos, footPos + Vector3.up, Color.black);
 
         // Vector between foot and hip
-        Vector3 topToFoot = footPos - upperLegLocalPos;
+        Vector3 topToFoot = upperLegLocalPos - footPos;
         
         //Debug.DrawLine(m_upperLeg.position, m_upperLeg.position+topToFoot,Color.black);
 
         // This ik calc is in 2d, so eliminate rotation
         // Use the coordinate system of the leg frame as
         // in the paper
-        if (m_legFrame != null)
-            topToFoot = m_legFrame.transform.InverseTransformDirection(topToFoot);
+        /*if (m_legFrame != null)
+            topToFoot = m_legFrame.transform.InverseTransformDirection(topToFoot);*/
         //Debug.DrawLine(m_upperLeg.position, m_upperLeg.position + topToFoot, Color.yellow);
         topToFoot.x = 0.0f; // squish x axis
         //Debug.DrawLine(m_upperLeg.position, m_upperLeg.position + topToFoot, Color.yellow*2.0f);
         //
-        float toFootLen = topToFoot.magnitude;
+        float toFootLen = topToFoot.magnitude*1.0f;
         float upperLegAngle = 0.0f;
         float lowerLegAngle = 0.0f;
-        float uB = m_upperLeg.localScale.y; // the length of the legs
-        float lB = m_lowerLeg.localScale.y;
+        float uB = m_upperLeg.localScale.y*1.0f; // the length of the legs
+        float lB = m_lowerLeg.localScale.y*1.0f;
         //Debug.Log(uB);
         // first get offset angle beetween foot and axis
         float offsetAngle = Mathf.Atan2(topToFoot.y, topToFoot.z);
@@ -97,12 +108,12 @@ public class IKSolverSimple : MonoBehaviour
         m_kneeAngle = lowerAngleW;
 
         // Debug draw bones
-        Vector3 kneePos=new Vector3(0.0f, uB *Mathf.Sin(upperLegAngle), uB *Mathf.Cos(upperLegAngle));        
-        Vector3 endPos = new Vector3(0.0f, lB * Mathf.Sin(lowerAngleW), lB * Mathf.Cos(lowerAngleW));
+        m_kneePos = new Vector3(0.0f, uB * Mathf.Sin(upperLegAngle), uB * Mathf.Cos(upperLegAngle));
+        m_endPos = new Vector3(0.0f, lB * Mathf.Sin(lowerAngleW), lB * Mathf.Cos(lowerAngleW));
         if (m_legFrame != null)
         {
-            kneePos = upperLegLocalPos + m_legFrame.transform.TransformDirection(kneePos);
-            endPos = kneePos + m_legFrame.transform.TransformDirection(endPos);
+            m_kneePos = upperLegLocalPos + m_kneePos/* m_legFrame.transform.TransformDirection(m_kneePos)*/;
+            m_endPos = m_kneePos + m_endPos/*m_legFrame.transform.TransformDirection()*/;
             // PID test
             Quaternion localUpper = Quaternion.Inverse(m_legFrame.transform.rotation) * m_upperLeg.rotation;
             Quaternion localLower = Quaternion.Inverse(m_upperLeg.rotation) * m_lowerLeg.rotation;
@@ -113,13 +124,14 @@ public class IKSolverSimple : MonoBehaviour
         }
         else
         {
-            kneePos += upperLegLocalPos;
-            endPos += kneePos;
+            m_kneePos += upperLegLocalPos;
+            m_endPos += m_kneePos;
         }
 
-        Vector3 offset = m_legFrame.transform.position;
-        Debug.DrawLine(offset + upperLegLocalPos,   offset+kneePos);
-        Debug.DrawLine(offset+kneePos,              offset + endPos);
+        Vector3 offset = new Vector3(m_legFrame.m_footTarget[(int)m_legType].x, m_legFrame.transform.position.y, m_legFrame.m_footTarget[(int)m_legType].z)/* + m_legFrame.transform.position*/;
+        
+        Debug.DrawLine(offset + m_kneePos, offset + m_endPos, Color.blue);
+        Debug.DrawLine(offset + upperLegLocalPos, offset + m_kneePos,Color.red);
 
         if (m_dbgMesh)
         {

@@ -73,6 +73,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
     public Vector3[] m_footStrikePlacement = new Vector3[c_legCount]; // The place on the ground where the foot should strike next
     public Vector3[] m_footTarget = new Vector3[c_legCount]; // The current position in the foot's swing trajectory
     public float m_tuneFootPlacementVelocityScale = 1.0f;
+    private float[] m_currentFootGraphHeight = new float[c_legCount]; // the graphed height for foot for current phi
     // hsw, step height trajectory
     public PcswiseLinear m_tuneStepHeightTraj;
     // tsw, step interpolation trajectory (horizontal easing between P1 and P2)
@@ -93,9 +94,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
     public PID m_FootTrackingSpringDamper;
 
     // Toe-off and foot strike params
-    float m_tuneToeOffAngle;
+    float m_tuneToeOffAngle = 90.0f;
     float[] m_tuneToeOffTime = new float[c_legCount]; // "delta-t"
-    float m_tuneFootStrikeAngle;
+    float m_tuneFootStrikeAngle = -10.0f;
     float[] m_tuneFootStrikeTime = new float[c_legCount]; // "delta-t"
 
     // Calculated Leg frame virtual forces to apply to stance legs
@@ -396,6 +397,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         float m_swingPhi = m_tuneStepCycles[p_idx].getSwingPhase(p_phi);
         // The height offset, ie. the "lift" that the foot makes between stepping points.
         Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(m_swingPhi), 0.0f);
+        m_currentFootGraphHeight[p_idx] = heightOffset.y;
         // scale the phi based on the easing function, for ground plane movement
         m_swingPhi = getFootTransitionPhase(m_swingPhi);
         // Calculate the position
@@ -407,6 +409,11 @@ public class LegFrame : MonoBehaviour, IOptimizable
         if (p_idx==0) 
             dbg = Color.red;
         Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg);
+    }
+
+    public float getGraphedFootPos(int p_idx)
+    {
+        return m_currentFootGraphHeight[p_idx];
     }
 
     // Project a foot position to the ground beneath it
@@ -483,7 +490,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=20.0f; // ?????
+        float mass=3.0f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
@@ -506,10 +513,53 @@ public class LegFrame : MonoBehaviour, IOptimizable
         return force;
     }
 
+    // Quick and dirty temporary solution for applying
+    // foot torque. This should be done to the global torque array
+    // in the final solution
+    public void tempApplyFootTorque(float p_phi)
+    {
+        /*
+         * Toe-off is modeled with a linear target trajectory towards a fixed toe-off 
+         * target angle θa that is triggered ∆ta seconds in advance of the start of the swing phase, 
+         * as dictated by the gait graph. 
+         * 
+         * Foot- strike anticipation is done in an analogous fashion with 
+         * respect to the anticipated foot-strike time and defined by θb and ∆tb.
+         */
+        for (int i = 0; i < c_legCount; i++)
+        {
+            StepCycle stepcycle = m_tuneStepCycles[i];
+            Transform foot = m_feet[i].transform;
+            float toeOffStartOffset = m_tuneToeOffTime[i];
+            float footStrikeStartOffset = m_tuneFootStrikeTime[i];
+            // get absolutes
+            // Get point in time when toe lifts off from ground
+            float toeOffStart = stepcycle.m_tuneStepTrigger + stepcycle.m_tuneDutyFactor - toeOffStartOffset;
+            if (toeOffStart >= 1.0f) toeOffStart -= 1.0f;
+            if (toeOffStart < 0.0f) toeOffStart += 1.0f;
+            // Get point in time when foot touches the ground
+            float footStrikeStart = stepcycle.m_tuneStepTrigger - footStrikeStartOffset;
+            if (toeOffStart < 0.0f) footStrikeStart += 1.0f;
+            //         
+            Vector3 torque; Color rot = Color.red;
+            if (p_phi>footStrikeStart && p_phi<toeOffStart) // catch first
+                torque=Vector3.right*(foot.localRotation.eulerAngles.x - m_tuneFootStrikeAngle);
+            else /*if (p_phi>toeOffStart) can be either smaller or bigger*/
+            {
+                torque=Vector3.right*(foot.localRotation.eulerAngles.x-m_tuneToeOffAngle);
+                rot = Color.green;
+            }
+            foot.rigidbody.AddRelativeTorque(torque*Time.deltaTime);
+            
+            foot.renderer.material.color = rot*Mathf.Abs(torque.x);
+        }
+    }
+
     Vector3 calculateFD(int p_legId)
     {
         Vector3 FD = Vector3.zero;
-        Vector3 footPos = transform.position - m_feet[p_legId].transform.position/*-transform.position)*/;
+        Vector3 footPos = transform.position - m_feet[p_legId].transform.position/*-transform.position)*/
+        ;
         footPos = transform.InverseTransformDirection(footPos);
         Color dbgCol = Color.magenta * 0.5f;
         int Dx = 1;

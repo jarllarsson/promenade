@@ -187,6 +187,7 @@ public class Controller : MonoBehaviour, IOptimizable
         for (int i = 0; i < m_legFrames.Length; i++)
         {
             m_legFrames[i].updateFeet(m_player.m_gaitPhase, m_currentVelocity, m_desiredVelocity);
+            m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase);
         }
     }
 
@@ -228,7 +229,8 @@ public class Controller : MonoBehaviour, IOptimizable
                      int jointID = lf.m_neighbourJointIds[n];
                      if (lf.isInControlledStance(i, m_player.m_gaitPhase))
                      {
-                         newTorques[jointID] = m_jointTorques[jointID];
+                         newTorques[jointID] = Vector3.zero;
+                         //m_jointTorques[jointID];
                      }
                      else if (m_desiredJointTorquesPD.Length > 0)
                      {

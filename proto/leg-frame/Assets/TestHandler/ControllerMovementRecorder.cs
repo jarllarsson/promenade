@@ -31,11 +31,15 @@ public class ControllerMovementRecorder : MonoBehaviour
     List<double> m_fvVelocityDeviations = new List<double>(); // (current, mean)-desired
     List<Vector3> m_fpMovementDist = new List<Vector3>(); // travel distance
     List<double> m_fhHeadAcceleration = new List<double>();
+    List<double> m_fdBodyHeightSqrDiffs = new List<double>();
     List<List<float>> m_frBodyRotationDeviations = new List<List<float>>(); //per-leg frame, arcos(current,desired)
+    public float m_fdWeight = 100.0f;
     public float m_fvWeight = 5.0f;
     public float m_fhWeight = 0.5f;
     public float m_frWeight = 5.0f;
     public float m_fpWeight = 0.5f;
+    float m_origBodyHeight = 0.0f;
+    float m_origHeadHeight = 0.0f;
 
     List<Vector3> m_temp_currentStrideVelocities = new List<Vector3>(); // used to calculate mean stride velocity
     List<Vector3> m_temp_currentStrideDesiredVelocities = new List<Vector3>();
@@ -49,6 +53,8 @@ public class ControllerMovementRecorder : MonoBehaviour
         {
             m_frBodyRotationDeviations.Add(new List<float>());
         }
+        m_origBodyHeight = m_myController.transform.position.y;
+        m_origHeadHeight = m_myController.m_head.transform.position.y;
 	}
 	
 	// Update is called once per frame
@@ -57,6 +63,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         fv_calcStrideMeanVelocity();
         fr_calcRotationDeviations();
         fh_calcHeadAccelerations();
+        fd_calcHeightSqrDiff();
         fp_calcMovementDistance();
 	}
 
@@ -110,6 +117,15 @@ public class ControllerMovementRecorder : MonoBehaviour
         m_fhHeadAcceleration.Add((double)m_myController.m_headAcceleration.magnitude);
     }
 
+    void fd_calcHeightSqrDiff()
+    {
+        double lenBod = (double)m_myController.transform.position.y - (double)m_origBodyHeight;
+        lenBod *= lenBod; // sqr
+        double lenHd = (double)m_myController.m_head.transform.position.y - (double)m_origHeadHeight;
+        lenHd*= lenHd; // sqr
+        m_fdBodyHeightSqrDiffs.Add(lenBod+lenHd*0.01f);
+    }
+
     void fp_calcMovementDistance()
     {
         m_fpMovementDist.Add(m_myController.transform.position - m_myController.m_oldPos);
@@ -122,7 +138,8 @@ public class ControllerMovementRecorder : MonoBehaviour
         double fr = EvaluateFR();
         double fh = EvaluateFH();
         double fp = EvaluateFP();
-        double fobj = (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
+        double fd = EvaluateFD();
+        double fobj = (double)m_fdWeight*fd + (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
         //Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
         return fobj;
     }                 
@@ -146,7 +163,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             totmeandiffsqr += mdiff * mdiff;
         }
         double sdeviation = Math.Sqrt(totmeandiffsqr / (double)m_fvVelocityDeviations.Count);
-        return avg;
+        return avg+sdeviation;
     }
 
     // mean of FR
@@ -180,6 +197,26 @@ public class ControllerMovementRecorder : MonoBehaviour
         }
         double avg = total /= (double)(sz);
         return avg;
+    }
+
+    public double EvaluateFD()
+    {
+        double total = 0.0f;
+        // mean
+        foreach (double d in m_fdBodyHeightSqrDiffs)
+        {
+            total += d;
+        }
+        double avg = total /= (double)(m_fvVelocityDeviations.Count);
+        double totmeandiffsqr = 0.0f;
+        // std
+        foreach (double d in m_fvVelocityDeviations)
+        {
+            double mdiff = d - avg;
+            totmeandiffsqr += mdiff * mdiff;
+        }
+        double sdeviation = Math.Sqrt(totmeandiffsqr / (double)m_fvVelocityDeviations.Count);
+        return avg+sdeviation;
     }
     
     public double EvaluateFP()
