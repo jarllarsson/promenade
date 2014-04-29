@@ -197,16 +197,16 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
         maxList.Add(10.0f); // FootPlacementVelocityScale
         for (int n = 0; n < PcswiseLinear.s_size; n++)
-            maxList.Add(1.5f); // step height
+            maxList.Add(5.5f); // step height
         for (int n = 0; n < PcswiseLinear.s_size; n++)
             maxList.Add(1.0f); // transition ease (foot, phi multiplier)
         for (int n = 0; n < PcswiseLinear.s_size; n++)
             maxList.Add(5.0f); // LFHeightTraj
         for (int n = 0; n < PcswiseLinear.s_size; n++)
             maxList.Add(10.0f); // PropGainFootTrackingKft
-        maxList.Add(10.0f); // HeightForcePIDKp
-        maxList.Add(1.0f); // HeightForcePIDKd
-        maxList.Add(10.0f); // VelocityRegulatorKv
+        maxList.Add(200.0f); // HeightForcePIDKp
+        maxList.Add(20.0f); // HeightForcePIDKd
+        maxList.Add(100.0f); // VelocityRegulatorKv
 
         for (int i = 0; i < c_legCount; i++)
             maxList.Add(0.5f);  // ToeOffTime
@@ -490,7 +490,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=3.0f; // ?????
+        float mass=10.0f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
@@ -549,7 +549,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
                 torque=Vector3.right*(foot.localRotation.eulerAngles.x-m_tuneToeOffAngle);
                 rot = Color.green;
             }
-            //foot.rigidbody.AddRelativeTorque(torque/**Time.deltaTime*/);
+            foot.rigidbody.AddRelativeTorque(torque/**Time.deltaTime*/);
             
             foot.renderer.material.color = rot*Mathf.Abs(torque.x);
         }
@@ -571,7 +571,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
         float FDx = m_tuneFD[p_legId, Dx].x;
         float FDz = m_tuneFD[p_legId, Dz].z;
-        Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
+        //Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
         FD = new Vector3(FDx, 0.0f, FDz);
         return FD;
     }

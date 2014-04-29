@@ -143,8 +143,8 @@ public class Controller : MonoBehaviour, IOptimizable
         {
             Vector3 torque = m_jointTorques[i];
             m_joints[i].AddTorque(torque);
-            Vector3 drawTorque = new Vector3(torque.y, torque.x, torque.z);
-            Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+drawTorque*0.1f,Color.cyan );
+            Vector3 drawTorque = new Vector3(0.0f, 0.0f, -torque.x);
+            Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+drawTorque*0.001f,Color.cyan );
         }
     }
 
@@ -154,7 +154,7 @@ public class Controller : MonoBehaviour, IOptimizable
         m_headAcceleration = (headVelocity - m_oldHeadVelocity)/Time.deltaTime;
         m_oldHeadPos = m_head.transform.position;
         m_oldHeadVelocity = headVelocity;
-        Debug.DrawLine(m_head.transform.position, m_head.transform.position + m_headAcceleration*0.01f,Color.blue,0.5f);
+        Debug.DrawLine(m_head.transform.position, m_head.transform.position + m_headAcceleration*0.001f,Color.blue,0.5f);
     }
 
     void LateUpdate()
@@ -301,7 +301,8 @@ public class Controller : MonoBehaviour, IOptimizable
                         int x = m_dofJointId[g];
                         Vector3 addT = m_dofs[g] * Vector3.Dot(new Vector3(Jt[g, 0], Jt[g, 1], Jt[g, 2]), VF);
                         newTorques[x] += addT;
-                        //Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + addT, Color.blue);
+                        //Vector3 drawTorque = new Vector3(0.0f, 0.0f, -addT.x);
+                        //Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + drawTorque*0.1f, Color.cyan);
 
                     }
                     // Come to think of it, the jacobian and torque could be calculated in the same

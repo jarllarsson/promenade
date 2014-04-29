@@ -41,6 +41,11 @@ public class ControllerMovementRecorder : MonoBehaviour
     float m_origBodyHeight = 0.0f;
     float m_origHeadHeight = 0.0f;
 
+    Transform m_ghostController;
+    Vector3 m_ghostStart;
+    Vector3 m_mycontrollerStart;
+    TestHandler m_tester;
+
     List<Vector3> m_temp_currentStrideVelocities = new List<Vector3>(); // used to calculate mean stride velocity
     List<Vector3> m_temp_currentStrideDesiredVelocities = new List<Vector3>();
 
@@ -55,16 +60,24 @@ public class ControllerMovementRecorder : MonoBehaviour
         }
         m_origBodyHeight = m_myController.transform.position.y;
         m_origHeadHeight = m_myController.m_head.transform.position.y;
+        m_ghostController = GameObject.FindGameObjectWithTag("ghost").transform;
+        m_ghostStart = m_ghostController.position;
+        m_mycontrollerStart = m_myController.transform.position;
+
+        m_tester = GameObject.FindGameObjectWithTag("testhandler").GetComponent<TestHandler>();
 	}
 	
 	// Update is called once per frame
 	void Update () 
     {
-        fv_calcStrideMeanVelocity();
-        fr_calcRotationDeviations();
-        fh_calcHeadAccelerations();
-        fd_calcHeightSqrDiff();
-        fp_calcMovementDistance();
+        if (m_tester.getCurrentSimTime()>0.0f)
+        {
+            fv_calcStrideMeanVelocity();
+            fr_calcRotationDeviations();
+            fh_calcHeadAccelerations();
+            fd_calcHeightSqrDiff();
+            fp_calcMovementDistance();
+        }
 	}
 
     void fv_calcStrideMeanVelocity(bool p_forceStore=false)
@@ -122,8 +135,13 @@ public class ControllerMovementRecorder : MonoBehaviour
         double lenBod = (double)m_myController.transform.position.y - (double)m_origBodyHeight;
         lenBod *= lenBod; // sqr
         double lenHd = (double)m_myController.m_head.transform.position.y - (double)m_origHeadHeight;
-        lenHd*= lenHd; // sqr
-        m_fdBodyHeightSqrDiffs.Add(lenBod+lenHd*0.01f);
+        lenHd*= lenHd; // sqr      
+        double ghostDist = (double)(m_ghostController.position.z - m_ghostStart.z);
+        double controllerDist = (double)(m_myController.transform.position.z - m_mycontrollerStart.z);
+        double lenDist = ghostDist - controllerDist;
+        if (controllerDist < 0.0) lenDist *= 2.0; // penalty for falling or walking backwards
+        lenDist *= lenDist; // sqr
+        m_fdBodyHeightSqrDiffs.Add(lenDist+lenBod + lenHd*0.025f);
     }
 
     void fp_calcMovementDistance()
@@ -207,15 +225,15 @@ public class ControllerMovementRecorder : MonoBehaviour
         {
             total += d;
         }
-        double avg = total /= (double)(m_fvVelocityDeviations.Count);
+        double avg = total /= (double)(m_fdBodyHeightSqrDiffs.Count);
         double totmeandiffsqr = 0.0f;
         // std
-        foreach (double d in m_fvVelocityDeviations)
+        foreach (double d in m_fdBodyHeightSqrDiffs)
         {
             double mdiff = d - avg;
             totmeandiffsqr += mdiff * mdiff;
         }
-        double sdeviation = Math.Sqrt(totmeandiffsqr / (double)m_fvVelocityDeviations.Count);
+        double sdeviation = Math.Sqrt(totmeandiffsqr / (double)m_fdBodyHeightSqrDiffs.Count);
         return avg+sdeviation;
     }
     

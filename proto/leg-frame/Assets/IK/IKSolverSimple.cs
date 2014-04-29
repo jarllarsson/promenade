@@ -111,7 +111,7 @@ public class IKSolverSimple : MonoBehaviour
         // Debug draw bones
         m_kneePos = new Vector3(0.0f, uB * Mathf.Sin(upperLegAngle), uB * Mathf.Cos(upperLegAngle));
         m_endPos = new Vector3(0.0f, lB * Mathf.Sin(lowerAngleW), lB * Mathf.Cos(lowerAngleW));
-        Debug.Log("upper angle: " + upperLegAngle);
+        //Debug.Log("upper angle: " + upperLegAngle);
         if (m_legFrame != null)
         {
             m_kneePos = upperLegLocalPos + m_kneePos/* m_legFrame.transform.TransformDirection(m_kneePos)*/;

@@ -8,6 +8,7 @@ public class TestHandler : MonoBehaviour
     private Controller m_bestScoreController;
     private ParamChanger m_changer;
     public float m_simTime = 1.0f;
+    public float m_warmupTime = 1.0f;
     private float m_currentSimTime = 0.0f;
     public bool m_instantEval = false;
 
@@ -30,7 +31,8 @@ public class TestHandler : MonoBehaviour
     void Awake()
     {
         if (!m_testHandlerCreated)
-        {        
+        {
+            m_currentSimTime = -m_warmupTime;
             m_testHandlerCreated = true;        
             Object.DontDestroyOnLoad(transform.gameObject);
         }
@@ -38,6 +40,11 @@ public class TestHandler : MonoBehaviour
         {
             DestroyImmediate(gameObject);
         }
+    }
+
+    public float getCurrentSimTime()
+    {
+        return m_currentSimTime;
     }
 
     void Init()
@@ -68,7 +75,8 @@ public class TestHandler : MonoBehaviour
             for (int i = 2; i < m_optimizableControllers.Length; i++)
             {
                 IOptimizable opt = m_optimizableControllers[i];
-                List<float> paramslist = new List<float>(m_currentParams[i]);
+                List<float> paramslist = new List<float>();
+                paramslist.AddRange(m_currentParams[i]);
                 opt.ConsumeParams(paramslist); // consume it to controller
             }
 
@@ -81,14 +89,16 @@ public class TestHandler : MonoBehaviour
             for (int i = 0; i < m_optimizableControllers.Length; i++)
             {
                 IOptimizable opt = m_optimizableControllers[i];
-                List<float> paramslist = new List<float>(m_currentParams[i]);
+                List<float> paramslist = new List<float>();
+                paramslist.AddRange(m_currentParams[i]);
                 opt.ConsumeParams(paramslist); // consume it to controller
             }
             if (m_bestScoreController && m_lastBestParams != null && m_lastBestParams.Count>0)
             {
                 // and the best score visualizer
                 IOptimizable opt = m_bestScoreController;
-                List<float> paramslist = new List<float>(m_lastBestParams);
+                List<float> paramslist = new List<float>();
+                paramslist.AddRange(m_lastBestParams);
                 opt.ConsumeParams(paramslist);
             }
         }
@@ -105,7 +115,7 @@ public class TestHandler : MonoBehaviour
             EvaluateAll();
             FindCurrentBestCandidate();
             if (m_currentBestCandidate >= 0)
-                Debug.Log("New best candidate was: " + m_currentBestCandidate);
+                Debug.Log("New best candidate was: " + m_currentBestCandidate +" ["+m_lastBestScore+"p]");
             else
                 Debug.Log("No new candidate ("+m_currentBestCandidate+")");
             if (m_lastBestScore > 0.01f)
@@ -121,7 +131,7 @@ public class TestHandler : MonoBehaviour
     {
         m_oneRun = false;
         m_optimizableControllers = null;
-        m_currentSimTime = 0.0f;
+        m_currentSimTime = -m_warmupTime;
         //StoreParams();
         VoidBestCandidate();
         ResetScores();

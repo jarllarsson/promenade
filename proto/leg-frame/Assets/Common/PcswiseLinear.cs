@@ -19,6 +19,7 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
         SIN,
         COS,
         COS_INV_NORM, // inverted and normalized cos
+        COS_INV_NORM_PADDED, // same as above but with padding at end
         HALF_SIN,      // half sine
         FLAT,        // flat zero
         LIN_INC,    // Linear increase
@@ -92,6 +93,10 @@ public class PcswiseLinear : MonoBehaviour, IOptimizable
                     break;
                 case INITTYPE.COS_INV_NORM:
                     m_tuneDataPoints[i] = p_scale * ((Mathf.Cos(t * 2.0f * Mathf.PI) - 1.0f) * -0.5f);
+                    break;
+                case INITTYPE.COS_INV_NORM_PADDED:
+                    m_tuneDataPoints[i] = p_scale * ((Mathf.Cos(t * 2.0f * Mathf.PI) - 1.0f) * -0.5f);
+                    if (i > s_size - 3 && i >= 0) m_tuneDataPoints[i] = 0.0f;
                     break;
                 case INITTYPE.HALF_SIN:
                     m_tuneDataPoints[i] = p_scale * Mathf.Sin(t * Mathf.PI);

@@ -677,7 +677,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 245.810608, y: 2.32642221, z: 66.2708511}
+  m_LocalPosition: {x: 200.723114, y: 2.18000007, z: 123.899384}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400008}
@@ -1675,7 +1675,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1690,7 +1690,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1705,7 +1705,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   serializedVersion: 2
-  m_Mass: 12
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1750,7 +1750,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100038}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: .5
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1853,7 +1853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 2
+  m_initAsFunc: 3
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -1976,9 +1976,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 1
+  m_Kp: 250
   m_Ki: 0
-  m_Kd: .200000003
+  m_Kd: 20
   m_P:
   - 0
   - 0
@@ -2063,9 +2063,9 @@ MonoBehaviour:
   m_tuneFootTransitionEase: {fileID: 11400000}
   m_heightForceCalc: {fileID: 11400020}
   m_tuneLFHeightTraj: {fileID: 11400018}
-  m_tuneHeightForcePIDKp: 3
-  m_tuneHeightForcePIDKd: .25
-  m_tuneVelocityRegulatorKv: .200000003
+  m_tuneHeightForcePIDKp: 25
+  m_tuneHeightForcePIDKd: 5
+  m_tuneVelocityRegulatorKv: 3
   m_tunePropGainFootTrackingKft: {fileID: 11400046}
   m_FootTrackingSpringDamper: {fileID: 11400044}
 --- !u!114 &11400018
@@ -2111,9 +2111,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 3
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: .25
+  m_Kd: 5
   m_P: 0
   m_I: 0
   m_D: 0
@@ -2208,7 +2208,7 @@ MonoBehaviour:
   - {fileID: 11400038}
   - {fileID: 11400036}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: -10}
   m_goalVelocity: {x: 0, y: 0, z: 1}
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
@@ -2286,9 +2286,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .100000001
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: .00100000005
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -2314,9 +2314,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .100000001
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: .00100000005
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -2342,9 +2342,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .100000001
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: .00100000005
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -2370,9 +2370,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .100000001
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: .00100000005
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -2420,9 +2420,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 3
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: .25
+  m_Kd: 5
   m_P: 0
   m_I: 0
   m_D: 0
@@ -2610,7 +2610,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: .5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -2.6122518e-10, y: -1.04618943, z: .341223389}
+  m_ConnectedAnchor: {x: -3.0213082e-10, y: -1.04618967, z: .341220945}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2792,7 +2792,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -5.90723165e-11, y: -.999999285, z: 7.06696142e-07}
+  m_ConnectedAnchor: {x: -7.17044549e-11, y: -.999999285, z: 9.31527381e-07}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
