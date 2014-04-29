@@ -28,6 +28,7 @@ public class ControllerMovementRecorder : MonoBehaviour
      * */
 
     public Controller m_myController;
+    public LegFrame m_myLegFrame;
     List<double> m_fvVelocityDeviations = new List<double>(); // (current, mean)-desired
     List<Vector3> m_fpMovementDist = new List<Vector3>(); // travel distance
     List<double> m_fhHeadAcceleration = new List<double>();
@@ -141,7 +142,14 @@ public class ControllerMovementRecorder : MonoBehaviour
         double lenDist = ghostDist - controllerDist;
         if (controllerDist < 0.0) lenDist *= 2.0; // penalty for falling or walking backwards
         lenDist *= lenDist; // sqr
-        m_fdBodyHeightSqrDiffs.Add(lenDist*0.5f+lenBod + lenHd*0.025f);
+
+        double lenFt = 0.0;
+        for (int i = 0; i < m_myLegFrame.m_feet.Length; i++)
+        {
+            lenFt+=(double)Vector3.SqrMagnitude(m_myLegFrame.m_feet[i].transform.position-m_myLegFrame.m_footTarget[i]);
+        }
+
+        m_fdBodyHeightSqrDiffs.Add(lenFt+lenDist * 0.5f + lenBod + lenHd * 0.025f);
     }
 
     void fp_calcMovementDistance()

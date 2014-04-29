@@ -1031,7 +1031,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 48864858}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1052,6 +1052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 48864868}
+  m_myLegFrame: {fileID: 923873641}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -2515,7 +2516,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 98454169}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2555,6 +2556,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 98454179}
+  m_myLegFrame: {fileID: 1695448026}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -4464,7 +4466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -4480,7 +4482,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &147239623
 MonoBehaviour:
@@ -5139,7 +5141,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 172532130}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -5160,6 +5162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 172532140}
+  m_myLegFrame: {fileID: 524307911}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -6384,7 +6387,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -6400,7 +6403,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &203892532
 MonoBehaviour:
@@ -7412,7 +7415,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 217361970}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -7433,6 +7436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 217361980}
+  m_myLegFrame: {fileID: 1405646538}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -9426,7 +9430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -9442,7 +9446,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &271764919
 MonoBehaviour:
@@ -13000,6 +13004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 408855614}
+  m_myLegFrame: {fileID: 271764915}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -13273,7 +13278,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 408855605}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -14110,7 +14115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -14126,7 +14131,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &446532197
 MonoBehaviour:
@@ -15162,7 +15167,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -15178,7 +15183,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &479014438
 MonoBehaviour:
@@ -16544,7 +16549,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -16560,7 +16565,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &524307904
 MonoBehaviour:
@@ -17161,7 +17166,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 532043467}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -17182,6 +17187,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 532043477}
+  m_myLegFrame: {fileID: 2142385627}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -18573,7 +18579,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 593680950}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -18594,6 +18600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 593680960}
+  m_myLegFrame: {fileID: 1082410490}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -19335,7 +19342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -19351,7 +19358,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &602636672
 MonoBehaviour:
@@ -23406,7 +23413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -23422,7 +23429,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &768870072
 MonoBehaviour:
@@ -24909,7 +24916,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 853343067}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -24949,6 +24956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 853343079}
+  m_myLegFrame: {fileID: 479014445}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -26917,7 +26925,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -26933,7 +26941,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &923873634
 MonoBehaviour:
@@ -29277,7 +29285,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1038023364}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29298,6 +29306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1038023374}
+  m_myLegFrame: {fileID: 1678298933}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -30131,7 +30140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -30147,7 +30156,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &1057451079
 MonoBehaviour:
@@ -31375,7 +31384,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -31391,7 +31400,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &1082410494
 MonoBehaviour:
@@ -32715,7 +32724,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1139609871}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -32736,6 +32745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1139609881}
+  m_myLegFrame: {fileID: 147239630}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -39329,7 +39339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -39345,7 +39355,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &1405646542
 MonoBehaviour:
@@ -40258,7 +40268,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1444713218}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -40279,6 +40289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1444713228}
+  m_myLegFrame: {fileID: 768870079}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -44335,7 +44346,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1636496567}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -44356,6 +44367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1636496577}
+  m_myLegFrame: {fileID: 1848022050}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -45195,6 +45207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1655278265}
+  m_myLegFrame: {fileID: 1057451075}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -45468,7 +45481,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1655278256}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -45836,6 +45849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1660461594}
+  m_myLegFrame: {fileID: 203892528}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -46109,7 +46123,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1660461585}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -46738,7 +46752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -46754,7 +46768,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &1678298937
 MonoBehaviour:
@@ -47163,7 +47177,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1692768343}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47184,6 +47198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1692768353}
+  m_myLegFrame: {fileID: 446532204}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -47547,7 +47562,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47568,6 +47583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 1694673926}
+  m_myLegFrame: {fileID: 2055361493}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -48031,7 +48047,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -48047,7 +48063,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &1695448030
 MonoBehaviour:
@@ -51523,7 +51539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -51539,7 +51555,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &1848022043
 MonoBehaviour:
@@ -55210,7 +55226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -55226,7 +55242,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &2055361486
 MonoBehaviour:
@@ -57068,7 +57084,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -57084,7 +57100,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &2142385620
 MonoBehaviour:
@@ -57491,6 +57507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 2145673698}
+  m_myLegFrame: {fileID: 602636668}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
@@ -57764,7 +57781,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2145673689}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1

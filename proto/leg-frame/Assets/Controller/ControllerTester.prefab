@@ -1705,7 +1705,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   serializedVersion: 2
-  m_Mass: 20
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1822,7 +1822,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: FootEase
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 5
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -1838,7 +1838,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  m_resetScale: .800000012
+  m_resetScale: 1
   m_reset: 1
 --- !u!114 &11400002
 MonoBehaviour:
@@ -2129,6 +2129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_myController: {fileID: 11400024}
+  m_myLegFrame: {fileID: 11400016}
   m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5

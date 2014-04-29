@@ -461,6 +461,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         if (p_idx==0) 
             dbg = Color.red;
         Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg,1.0f);
+
     }
 
     public float getGraphedFootPos(int p_idx)
@@ -542,7 +543,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=20.0f; // ?????
+        float mass=2.0f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
