@@ -44,13 +44,14 @@ public class IKSolverSimple : MonoBehaviour
      
         //footPos = new Vector3(footPos.x, 0.0f, footPos.z);        
         //footPos -= m_legFrame.transform.position;   
-        Vector3 upperLegLocalPos = (m_upperLeg.position - m_legFrame.transform.position);
+        Vector3 upperLegLocalPos/* = (m_upperLeg.position - m_legFrame.transform.position)*/;
         upperLegLocalPos = new Vector3(0.0f, m_upperLeg.localScale.y + m_lowerLeg.localScale.y + 0.2f, 0.0f);
 
         Debug.DrawLine(footPos, footPos + Vector3.up, Color.black);
 
         // Vector between foot and hip
         Vector3 topToFoot = upperLegLocalPos - footPos;
+        topToFoot = new Vector3(topToFoot.x, -topToFoot.y, topToFoot.z);
         
         //Debug.DrawLine(m_upperLeg.position, m_upperLeg.position+topToFoot,Color.black);
 
@@ -110,15 +111,16 @@ public class IKSolverSimple : MonoBehaviour
         // Debug draw bones
         m_kneePos = new Vector3(0.0f, uB * Mathf.Sin(upperLegAngle), uB * Mathf.Cos(upperLegAngle));
         m_endPos = new Vector3(0.0f, lB * Mathf.Sin(lowerAngleW), lB * Mathf.Cos(lowerAngleW));
+        Debug.Log("upper angle: " + upperLegAngle);
         if (m_legFrame != null)
         {
             m_kneePos = upperLegLocalPos + m_kneePos/* m_legFrame.transform.TransformDirection(m_kneePos)*/;
             m_endPos = m_kneePos + m_endPos/*m_legFrame.transform.TransformDirection()*/;
             // PID test
-            Quaternion localUpper = Quaternion.Inverse(m_legFrame.transform.rotation) * m_upperLeg.rotation;
+            Quaternion localUpper = /*Quaternion.Inverse(m_legFrame.transform.rotation) **/ m_upperLeg.rotation;
             Quaternion localLower = Quaternion.Inverse(m_upperLeg.rotation) * m_lowerLeg.rotation;
-            Quaternion localGoalUpper = Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle /*+ Mathf.PI*0.5f*/), Vector3.left);
-            Quaternion localGoalLower = Quaternion.AngleAxis(Mathf.Rad2Deg * (lowerLegAngle/* + Mathf.PI*0.5f*/), Vector3.left);
+            Quaternion localGoalUpper = Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle + Mathf.PI*0.5f), Vector3.left);
+            Quaternion localGoalLower = Quaternion.AngleAxis(Mathf.Rad2Deg * (lowerLegAngle/* - Mathf.PI*0.5f*/), Vector3.left);
             m_testPIDUpper.drive(localUpper, localGoalUpper, Time.deltaTime);
             m_testPIDLower.drive(localLower, localGoalLower, Time.deltaTime);
         }
@@ -130,8 +132,9 @@ public class IKSolverSimple : MonoBehaviour
 
         Vector3 offset = new Vector3(m_legFrame.m_footTarget[(int)m_legType].x, m_legFrame.transform.position.y, m_legFrame.m_footTarget[(int)m_legType].z)/* + m_legFrame.transform.position*/;
         
-        Debug.DrawLine(offset + m_kneePos, offset + m_endPos, Color.blue);
         Debug.DrawLine(offset + upperLegLocalPos, offset + m_kneePos,Color.red);
+        Debug.DrawLine(offset + m_kneePos, offset + m_endPos, Color.blue);
+        
 
         if (m_dbgMesh)
         {

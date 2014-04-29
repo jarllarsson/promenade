@@ -143,7 +143,8 @@ public class Controller : MonoBehaviour, IOptimizable
         {
             Vector3 torque = m_jointTorques[i];
             m_joints[i].AddTorque(torque);
-            //Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+torque,Color.cyan );
+            Vector3 drawTorque = new Vector3(torque.y, torque.x, torque.z);
+            Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+drawTorque*0.1f,Color.cyan );
         }
     }
 
@@ -207,7 +208,7 @@ public class Controller : MonoBehaviour, IOptimizable
         // feed back corrections for hip joints
         for (int i = 0; i < m_legFrames.Length; i++)
         {
-            m_jointTorques = m_legFrames[i].applyNetLegFrameTorque(m_jointTorques, phi);
+           m_jointTorques = m_legFrames[i].applyNetLegFrameTorque(m_jointTorques, phi);
         }
     }
 
@@ -229,8 +230,9 @@ public class Controller : MonoBehaviour, IOptimizable
                      int jointID = lf.m_neighbourJointIds[n];
                      if (lf.isInControlledStance(i, m_player.m_gaitPhase))
                      {
-                         newTorques[jointID] = Vector3.zero;
-                         //m_jointTorques[jointID];
+                         newTorques[jointID] = m_jointTorques[jointID];
+                             //Vector3.zero;
+                         //
                      }
                      else if (m_desiredJointTorquesPD.Length > 0)
                      {

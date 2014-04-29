@@ -38298,7 +38298,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: 9667bda03bec17d4ab2d397c4250ce41, type: 2}
     - target: {fileID: 5400004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_Constraints
-      value: 0
+      value: 126
       objectReference: {fileID: 0}
     - target: {fileID: 15300002, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.y
@@ -38307,6 +38307,50 @@ Prefab:
     - target: {fileID: 15300006, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.y
       value: -.999999285
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_useVFTorque
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Kp
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400034, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Kd
+      value: .25
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400032, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Kp
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400032, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Kd
+      value: .25
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400038, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Kp
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400038, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Kd
+      value: .25
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400036, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Kp
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400036, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Kd
+      value: .25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400012, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Constraints
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -47625,7 +47669,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &1694673919
 MonoBehaviour:
@@ -47658,9 +47702,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: .100000001
+  m_Kp: 2.5
   m_Ki: 0
-  m_Kd: .00100000005
+  m_Kd: .25
   m_P:
   - 0
   - 0
@@ -47687,9 +47731,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: .100000001
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: .00100000005
+  m_Kd: .25
   m_P:
   - 0
   - 0
@@ -47716,9 +47760,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: .100000001
+  m_Kp: 2.5
   m_Ki: 0
-  m_Kd: .00100000005
+  m_Kd: .25
   m_P:
   - 0
   - 0
@@ -47745,9 +47789,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: .100000001
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: .00100000005
+  m_Kd: .25
   m_P:
   - 0
   - 0
@@ -47890,7 +47934,7 @@ MonoBehaviour:
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
-  m_useVFTorque: 1
+  m_useVFTorque: 0
 --- !u!114 &1694673927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50073,7 +50117,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_simTime
-      value: 3
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
@@ -52467,7 +52511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff1af29098b8a242a8d1d3cb6eabf82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_simTime: 3
+  m_simTime: 20
   m_instantEval: 0
 --- !u!23 &1877541815
 Renderer:

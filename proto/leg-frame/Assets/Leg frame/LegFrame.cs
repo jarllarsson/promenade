@@ -549,7 +549,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
                 torque=Vector3.right*(foot.localRotation.eulerAngles.x-m_tuneToeOffAngle);
                 rot = Color.green;
             }
-            foot.rigidbody.AddRelativeTorque(torque/**Time.deltaTime*/);
+            //foot.rigidbody.AddRelativeTorque(torque/**Time.deltaTime*/);
             
             foot.renderer.material.color = rot*Mathf.Abs(torque.x);
         }
