@@ -144,6 +144,15 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int i = 0; i < m_legFgravityComp.Length; i++)
             vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_legFgravityComp[i]));
 
+        vals.Add(m_desiredLFTorquePD.m_Kp);
+        vals.Add(m_desiredLFTorquePD.m_Kd);
+
+        vals.Add(m_heightForceCalc.m_Kp);
+        vals.Add(m_heightForceCalc.m_Kd);
+
+        vals.Add(m_FootTrackingSpringDamper.m_Kp);
+        vals.Add(m_FootTrackingSpringDamper.m_Kd);
+
         return vals;
     }
 
@@ -181,6 +190,20 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
         for (int i = 0; i < m_legFgravityComp.Length; i++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_legFgravityComp[i]);
+
+
+
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredLFTorquePD.m_Kp);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredLFTorquePD.m_Kd);
+
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_heightForceCalc.m_Kp);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_heightForceCalc.m_Kd);
+
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_FootTrackingSpringDamper.m_Kp);
+        OptimizableHelper.ConsumeParamsTo(p_params, ref m_FootTrackingSpringDamper.m_Kd);
+
+
+
     }
 
     public List<float> GetParamsMax()
@@ -227,6 +250,23 @@ public class LegFrame : MonoBehaviour, IOptimizable
         {
             maxList.Add(20.0f); maxList.Add(20.0f); maxList.Add(20.0f);
         }
+
+        maxList.Add(200);
+        maxList.Add(20);
+
+        maxList.Add(200);
+        maxList.Add(20);
+
+        maxList.Add(200);
+        maxList.Add(20);
+
+
+
+
+
+
+
+
         return maxList;
     }
 
@@ -274,6 +314,18 @@ public class LegFrame : MonoBehaviour, IOptimizable
         {
             minList.Add(0.0f); minList.Add(0.0f); minList.Add(0.0f);
         }
+
+        minList.Add(0.1f);
+        minList.Add(0.01f);
+
+        minList.Add(0.1f);
+        minList.Add(0.01f);
+
+        minList.Add(0.1f);
+        minList.Add(0.01f);
+
+
+
         return minList;
     }
 
@@ -408,7 +460,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         Color dbg=Color.green;
         if (p_idx==0) 
             dbg = Color.red;
-        Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg);
+        Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg,1.0f);
     }
 
     public float getGraphedFootPos(int p_idx)
@@ -490,7 +542,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=10.0f; // ?????
+        float mass=20.0f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
@@ -715,8 +767,8 @@ public class LegFrame : MonoBehaviour, IOptimizable
                     Gizmos.color = Color.red;
                 else
                     Gizmos.color = Color.green;
-                Gizmos.DrawSphere(m_footStrikePlacement[i], 0.5f);
-                Gizmos.DrawCube(m_footLiftPlacement[i], Vector3.one * 0.5f);
+                Gizmos.DrawWireSphere(m_footStrikePlacement[i], 0.5f);
+                Gizmos.DrawWireCube(m_footLiftPlacement[i], Vector3.one * 0.5f);
                 Gizmos.color *= 1.2f;
                 Gizmos.DrawSphere(m_footTarget[i], 0.25f);
             }

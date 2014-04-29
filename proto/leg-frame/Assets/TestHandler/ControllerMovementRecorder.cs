@@ -141,7 +141,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         double lenDist = ghostDist - controllerDist;
         if (controllerDist < 0.0) lenDist *= 2.0; // penalty for falling or walking backwards
         lenDist *= lenDist; // sqr
-        m_fdBodyHeightSqrDiffs.Add(lenDist+lenBod + lenHd*0.025f);
+        m_fdBodyHeightSqrDiffs.Add(lenDist*0.5f+lenBod + lenHd*0.025f);
     }
 
     void fp_calcMovementDistance()

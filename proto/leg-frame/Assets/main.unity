@@ -1031,7 +1031,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 48864858}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2515,7 +2515,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 98454169}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -4210,7 +4210,7 @@ Transform:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 140699673}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 217361971}
@@ -4623,9 +4623,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -4692,7 +4692,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 147239626}
   - {fileID: 147239625}
@@ -4732,7 +4732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -4934,7 +4934,7 @@ Transform:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 161566061}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 1139609872}
@@ -5139,7 +5139,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 172532130}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -5963,7 +5963,7 @@ Transform:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 181424992}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 2145673690}
@@ -6293,7 +6293,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 203892536}
   - {fileID: 203892535}
@@ -6447,9 +6447,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -6601,7 +6601,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -7412,7 +7412,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 217361970}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -9335,7 +9335,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 271764923}
   - {fileID: 271764922}
@@ -9489,9 +9489,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -9643,7 +9643,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -11051,7 +11051,7 @@ Transform:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 335741007}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 1444713219}
@@ -13273,7 +13273,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 408855605}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -14269,9 +14269,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -14338,7 +14338,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 446532200}
   - {fileID: 446532199}
@@ -14397,7 +14397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -15321,9 +15321,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -15390,7 +15390,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 479014441}
   - {fileID: 479014440}
@@ -15500,7 +15500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -16217,7 +16217,7 @@ Transform:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 520558772}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 1660461586}
@@ -16703,9 +16703,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -16772,7 +16772,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 524307907}
   - {fileID: 524307906}
@@ -16831,7 +16831,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -17161,7 +17161,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 532043467}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -18573,7 +18573,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 593680950}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -19244,7 +19244,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 602636676}
   - {fileID: 602636675}
@@ -19398,9 +19398,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -19552,7 +19552,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -20770,7 +20770,7 @@ Transform:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 674221748}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 1694673917}
@@ -21803,7 +21803,7 @@ Transform:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 707681916}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 98454171}
@@ -23565,9 +23565,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -23634,7 +23634,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 768870075}
   - {fileID: 768870074}
@@ -23674,7 +23674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -23939,7 +23939,7 @@ Transform:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 795056933}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 853343069}
@@ -24360,7 +24360,7 @@ Transform:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 817545863}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 593680951}
@@ -24909,7 +24909,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 853343067}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -27076,9 +27076,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -27145,7 +27145,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 923873637}
   - {fileID: 923873636}
@@ -27185,7 +27185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -28098,7 +28098,7 @@ Transform:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 987172279}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 532043468}
@@ -29277,7 +29277,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1038023364}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -30040,7 +30040,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 1057451083}
   - {fileID: 1057451082}
@@ -30194,9 +30194,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -30367,7 +30367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -31284,7 +31284,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 1082410498}
   - {fileID: 1082410497}
@@ -31438,9 +31438,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -31592,7 +31592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -32394,7 +32394,7 @@ Transform:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1121333716}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 1038023365}
@@ -32715,7 +32715,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1139609871}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -35787,7 +35787,7 @@ Transform:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1256398982}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 1692768344}
@@ -39238,7 +39238,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 1405646546}
   - {fileID: 1405646545}
@@ -39392,9 +39392,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -39565,7 +39565,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -40258,7 +40258,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1444713218}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -42303,7 +42303,7 @@ Transform:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1513250444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 1655278257}
@@ -42865,7 +42865,7 @@ Transform:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1547675298}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 1636496568}
@@ -44335,7 +44335,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1636496567}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -45468,7 +45468,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1655278256}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -46109,7 +46109,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1660461585}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -46647,7 +46647,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 1678298941}
   - {fileID: 1678298940}
@@ -46801,9 +46801,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -46955,7 +46955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -47163,7 +47163,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1692768343}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47547,7 +47547,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47940,7 +47940,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 1695448034}
   - {fileID: 1695448033}
@@ -48094,9 +48094,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -48248,7 +48248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -49902,7 +49902,7 @@ Transform:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 1793536374}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 48864859}
@@ -50001,7 +50001,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_simTime
-      value: 3
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_TagString
@@ -51682,9 +51682,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -51751,7 +51751,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 1848022046}
   - {fileID: 1848022045}
@@ -51810,7 +51810,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -51910,7 +51910,7 @@ Transform:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 1859228874}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 172532131}
@@ -52403,7 +52403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff1af29098b8a242a8d1d3cb6eabf82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_simTime: 3
+  m_simTime: 10
   m_warmupTime: 1
   m_instantEval: 0
 --- !u!23 &1877541815
@@ -52716,7 +52716,7 @@ Transform:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 1914766433}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
+  m_LocalPosition: {x: 0, y: .75, z: -.0130226612}
   m_LocalScale: {x: .804235101, y: .804235101, z: .804235101}
   m_Children: []
   m_Father: {fileID: 408855606}
@@ -55369,9 +55369,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -55438,7 +55438,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 2055361489}
   - {fileID: 2055361488}
@@ -55478,7 +55478,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -57227,9 +57227,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 250
+  m_Kp: 25
   m_Ki: 0
-  m_Kd: 20
+  m_Kd: 5
   m_P:
   - 0
   - 0
@@ -57296,7 +57296,7 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
   m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: 3
+  m_lateStrikeOffsetDeltaH: .100000001
   m_tuneOrientationLFTraj:
   - {fileID: 2142385623}
   - {fileID: 2142385622}
@@ -57336,7 +57336,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: footTrackingKft
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 7
+  m_initAsFunc: 6
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -57764,7 +57764,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2145673689}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
