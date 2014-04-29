@@ -725,7 +725,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -1031,7 +1031,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 48864858}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1058,6 +1058,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &48864862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1654,7 +1657,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -2412,7 +2415,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -2516,7 +2519,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 98454169}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2562,6 +2565,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &98454173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4844,7 +4850,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -5141,7 +5147,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 172532130}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -5168,6 +5174,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &172532134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5816,7 +5825,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -7415,7 +7424,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 217361970}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -7442,6 +7451,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &217361974
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8381,7 +8393,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -9018,7 +9030,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -13010,6 +13022,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &408855608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13278,7 +13293,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 408855605}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -13418,7 +13433,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -14683,7 +14698,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -17001,7 +17016,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -17166,7 +17181,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 532043467}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -17193,6 +17208,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &532043471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18579,7 +18597,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 593680950}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -18606,6 +18624,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &593680954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20643,7 +20664,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -21157,7 +21178,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -22129,7 +22150,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -23031,7 +23052,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -24916,7 +24937,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 853343067}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -24962,6 +24983,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &853343079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25470,7 +25494,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -26711,7 +26735,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -29285,7 +29309,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1038023364}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29312,6 +29336,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &1038023368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29889,6 +29916,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 5400004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400022, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -30483,7 +30514,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -30856,7 +30887,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -32724,7 +32755,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1139609871}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -32751,6 +32782,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &1139609875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33702,7 +33736,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -37071,7 +37105,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -37985,7 +38019,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -38183,7 +38217,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -40268,7 +40302,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1444713218}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -40295,6 +40329,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &1444713222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40687,7 +40724,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -41229,7 +41266,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -41633,7 +41670,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -43894,7 +43931,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -44077,7 +44114,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -44346,7 +44383,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1636496567}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -44373,6 +44410,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &1636496571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44964,7 +45004,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -45213,6 +45253,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &1655278259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45481,7 +45524,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1655278256}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -45855,6 +45898,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &1660461588
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46123,7 +46169,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1660461585}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47177,7 +47223,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1692768343}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47204,6 +47250,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &1692768347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47562,7 +47611,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47577,7 +47626,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df77cf5fad3efeb4587b1079db2413f8, type: 3}
   m_Name: 
@@ -47589,6 +47638,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &1694673920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49032,7 +49084,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -50121,7 +50173,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -51267,7 +51319,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -53354,7 +53406,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -53984,7 +54036,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -55794,7 +55846,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -57513,6 +57565,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &2145673692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57781,7 +57836,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2145673689}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1

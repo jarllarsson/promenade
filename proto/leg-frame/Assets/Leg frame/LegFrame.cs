@@ -461,7 +461,13 @@ public class LegFrame : MonoBehaviour, IOptimizable
         if (p_idx==0) 
             dbg = Color.red;
         Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg,1.0f);
-
+        if (transform.parent.tag=="bestscore")
+        {
+            float mirror = (float)(p_idx * 2 - 1);
+            Transform go = GameObject.FindGameObjectWithTag("ghost").transform;
+            Debug.DrawLine(new Vector3(mirror * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y) + new Vector3(go.position.x, 0.0f, go.position.z),
+                heightOffset + new Vector3(mirror * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y) + new Vector3(go.position.x, 0.0f, go.position.z), dbg, 1.0f);
+        }
     }
 
     public float getGraphedFootPos(int p_idx)
@@ -543,7 +549,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=2.0f; // ?????
+        float mass=2.5f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }

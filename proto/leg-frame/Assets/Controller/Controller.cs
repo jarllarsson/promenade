@@ -263,7 +263,8 @@ public class Controller : MonoBehaviour, IOptimizable
                      int jointID = lf.m_neighbourJointIds[n];
                      if (lf.isInControlledStance(i, m_player.m_gaitPhase))
                      {
-                         newTorques[jointID] = m_jointTorques[jointID];
+                         newTorques[jointID] = Vector3.zero;
+                            // m_jointTorques[jointID];
                              //Vector3.zero;
                          //
                      }

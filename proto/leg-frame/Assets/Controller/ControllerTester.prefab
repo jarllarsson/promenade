@@ -1705,7 +1705,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2135,6 +2135,9 @@ MonoBehaviour:
   m_fhWeight: .5
   m_frWeight: 5
   m_fpWeight: 0
+  m_pushInterval: .5
+  m_pushForceInterval: .100000001
+  m_pushIntervalCount: 0
 --- !u!114 &11400024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2549,7 +2552,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -3004,7 +3007,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 10
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0

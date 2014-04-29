@@ -50,6 +50,10 @@ public class ControllerMovementRecorder : MonoBehaviour
     List<Vector3> m_temp_currentStrideVelocities = new List<Vector3>(); // used to calculate mean stride velocity
     List<Vector3> m_temp_currentStrideDesiredVelocities = new List<Vector3>();
 
+    public float m_pushInterval = 0.5f;
+    public float m_pushForceInterval = 0.1f;
+    public float m_pushIntervalCount = 0.0f;
+
 
 	// Use this for initialization
 	void Start () 
@@ -78,8 +82,24 @@ public class ControllerMovementRecorder : MonoBehaviour
             fh_calcHeadAccelerations();
             fd_calcHeightSqrDiff();
             fp_calcMovementDistance();
+
+            m_pushIntervalCount+=Time.deltaTime;
         }
 	}
+
+    void FixedUpdate()
+    {
+        if (m_pushIntervalCount > m_pushInterval - m_pushForceInterval)
+        {
+            Vector3 force = new Vector3(UnityEngine.Random.Range(-1.0f, 1.0f), 0.0f, UnityEngine.Random.Range(-1.0f, 1.0f))*100.0f;
+            rigidbody.AddForce(force);
+            Debug.DrawLine(transform.position, transform.position + force, Color.green, 1.0f);
+        }
+        if (m_pushIntervalCount > m_pushInterval - m_pushForceInterval)
+        {
+            m_pushIntervalCount = 0.0f;
+        }
+    }
 
     void fv_calcStrideMeanVelocity(bool p_forceStore=false)
     {
@@ -149,7 +169,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             lenFt+=(double)Vector3.SqrMagnitude(m_myLegFrame.m_feet[i].transform.position-m_myLegFrame.m_footTarget[i]);
         }
 
-        m_fdBodyHeightSqrDiffs.Add(lenFt+lenDist * 0.5f + lenBod + lenHd * 0.025f);
+        m_fdBodyHeightSqrDiffs.Add(lenFt * 0.01f+lenDist + lenBod + lenHd * 0.025f);
     }
 
     void fp_calcMovementDistance()
