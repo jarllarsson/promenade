@@ -83,7 +83,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             fd_calcHeightSqrDiff();
             fp_calcMovementDistance();
 
-            m_pushIntervalCount+=Time.deltaTime;
+            //m_pushIntervalCount+=Time.deltaTime;
         }
 	}
 
@@ -169,7 +169,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             lenFt+=(double)Vector3.SqrMagnitude(m_myLegFrame.m_feet[i].transform.position-m_myLegFrame.m_footTarget[i]);
         }
 
-        m_fdBodyHeightSqrDiffs.Add(lenFt * 0.01f+lenDist + lenBod + lenHd * 0.025f);
+        m_fdBodyHeightSqrDiffs.Add(0.5f*lenFt * lenDist + lenBod + lenHd * 0.025f);
     }
 
     void fp_calcMovementDistance()
@@ -186,7 +186,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         double fp = EvaluateFP();
         double fd = EvaluateFD();
         double fobj = (double)m_fdWeight*fd + (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
-        //Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
+        Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
         return fobj;
     }                 
                       
@@ -273,7 +273,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         {
             total += dist;
         }
-        float movementSign = m_myController.m_goalVelocity.z / Mathf.Abs(m_myController.m_goalVelocity.z);
+        float movementSign = m_myController.m_goalVelocity.z / Mathf.Abs(Mathf.Max(0.1f,m_myController.m_goalVelocity.z));
         double scoreInRightDir = Math.Max(0.0f,total.z * movementSign);
         return scoreInRightDir;
     }

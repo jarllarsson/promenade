@@ -117,7 +117,7 @@ public class TestHandler : MonoBehaviour
             if (m_currentBestCandidate >= 0)
                 Debug.Log("New best candidate was: " + m_currentBestCandidate +" ["+m_lastBestScore+"p]");
             else
-                Debug.Log("No new candidate ("+m_currentBestCandidate+")");
+                Debug.Log("No new candidate ("+m_currentBestCandidate+")  ["+m_lastBestScore+"p]");
             if (m_lastBestScore > 0.01f)
                 PerturbParams();
             RestartSim();
@@ -145,7 +145,7 @@ public class TestHandler : MonoBehaviour
         //Debug.Log("R"+bestScore);
         for (int i = 0; i < m_totalScores.Length; i++)
         {
-            //Debug.Log("NR " + m_totalScores[i]);
+            Debug.Log("score("+i+") " + m_totalScores[i]);
             if (m_totalScores[i] < bestScore)
             {
                 m_currentBestCandidate = i;

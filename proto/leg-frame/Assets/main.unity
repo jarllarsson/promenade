@@ -276,7 +276,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -1011,7 +1011,7 @@ Transform:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 48864858}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 169.259995, y: 2.07064676, z: -41.7163239}
+  m_LocalPosition: {x: 169.259995, y: 2.1690526, z: -41.7163239}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 735951342}
@@ -1031,7 +1031,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 48864858}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1300,9 +1300,9 @@ MonoBehaviour:
   - {fileID: 48864863}
   - {fileID: 48864862}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -2181,7 +2181,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -2519,7 +2519,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 98454169}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2534,7 +2534,7 @@ Transform:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 98454169}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 158.315857, y: 2.07064676, z: 66.2708511}
+  m_LocalPosition: {x: 158.315857, y: 2.1690526, z: 66.2708511}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 216019610}
@@ -2807,9 +2807,9 @@ MonoBehaviour:
   - {fileID: 98454174}
   - {fileID: 98454173}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -3776,7 +3776,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -4699,8 +4699,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 147239626}
   - {fileID: 147239625}
@@ -5127,7 +5127,7 @@ Transform:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 172532130}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 321.092163, y: 2.07064676, z: 66.2708511}
+  m_LocalPosition: {x: 321.092163, y: 2.1690526, z: 66.2708511}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 15872870}
@@ -5147,7 +5147,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 172532130}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -5416,9 +5416,9 @@ MonoBehaviour:
   - {fileID: 172532135}
   - {fileID: 172532134}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -6304,8 +6304,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 203892536}
   - {fileID: 203892535}
@@ -7404,7 +7404,7 @@ Transform:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 217361970}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 138.825287, y: 2.07064676, z: 7.99386597}
+  m_LocalPosition: {x: 138.825287, y: 2.1690526, z: 7.99386597}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 316279009}
@@ -7424,7 +7424,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 217361970}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -7693,9 +7693,9 @@ MonoBehaviour:
   - {fileID: 217361975}
   - {fileID: 217361974}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -8201,7 +8201,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -8858,7 +8858,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -9350,8 +9350,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 271764923}
   - {fileID: 271764922}
@@ -9767,7 +9767,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -9941,7 +9941,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -10103,7 +10103,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -12991,7 +12991,7 @@ Transform:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 408855605}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 286.850586, y: 2.07064676, z: 123.899384}
+  m_LocalPosition: {x: 286.850586, y: 2.1690526, z: 123.899384}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 139195841}
@@ -13264,9 +13264,9 @@ MonoBehaviour:
   - {fileID: 408855609}
   - {fileID: 408855608}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -13293,7 +13293,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 408855605}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -14357,8 +14357,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 446532200}
   - {fileID: 446532199}
@@ -14448,7 +14448,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -15409,8 +15409,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 479014441}
   - {fileID: 479014440}
@@ -16791,8 +16791,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 524307907}
   - {fileID: 524307906}
@@ -17161,7 +17161,7 @@ Transform:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 532043467}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 206.512054, y: 2.07064676, z: 13.3558655}
+  m_LocalPosition: {x: 206.512054, y: 2.1690526, z: 13.3558655}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2108978384}
@@ -17181,7 +17181,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 532043467}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -17450,9 +17450,9 @@ MonoBehaviour:
   - {fileID: 532043472}
   - {fileID: 532043471}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -17527,7 +17527,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -18515,7 +18515,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -18577,7 +18577,7 @@ Transform:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 593680950}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 325.287659, y: 2.07064676, z: -40.8342209}
+  m_LocalPosition: {x: 325.287659, y: 2.1690526, z: -40.8342209}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1262079946}
@@ -18597,7 +18597,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 593680950}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -18866,9 +18866,9 @@ MonoBehaviour:
   - {fileID: 593680955}
   - {fileID: 593680954}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -19271,8 +19271,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 602636676}
   - {fileID: 602636675}
@@ -22796,7 +22796,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 745957528}
   m_LocalRotation: {x: -.00509165041, y: .000729680934, z: .00129454758, w: .999985933}
-  m_LocalPosition: {x: -31.9290447, y: 2.44834876, z: -.0106042074}
+  m_LocalPosition: {x: -31.9290447, y: 2.5467546, z: -.567510903}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1247253866}
@@ -23661,8 +23661,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 768870075}
   - {fileID: 768870074}
@@ -24937,7 +24937,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 853343067}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -24952,7 +24952,7 @@ Transform:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 853343067}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.100917101, y: 2.07064676, z: 0}
+  m_LocalPosition: {x: -.100917101, y: 2.1690526, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 369881575}
@@ -25061,9 +25061,9 @@ MonoBehaviour:
   - {fileID: 853343089}
   - {fileID: 853343088}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -27176,8 +27176,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 923873637}
   - {fileID: 923873636}
@@ -28608,7 +28608,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -29289,7 +29289,7 @@ Transform:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1038023364}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.2878914, y: 2.07064676, z: -40.0980988}
+  m_LocalPosition: {x: 26.2878914, y: 2.1690526, z: -40.0980988}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1373318562}
@@ -29309,7 +29309,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1038023364}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29578,9 +29578,9 @@ MonoBehaviour:
   - {fileID: 1038023369}
   - {fileID: 1038023368}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -29860,7 +29860,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064652
+      value: 2.16905284
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -29898,26 +29898,14 @@ Prefab:
       propertyPath: m_TagString
       value: bestscore
       objectReference: {fileID: 0}
-    - target: {fileID: 2300012, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 9667bda03bec17d4ab2d397c4250ce41, type: 2}
     - target: {fileID: 2300014, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9667bda03bec17d4ab2d397c4250ce41, type: 2}
-    - target: {fileID: 11400024, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_useVFTorque
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400024, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_usePDTorque
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_Constraints
-      value: 0
-      objectReference: {fileID: 0}
+    - target: {fileID: 2300012, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9667bda03bec17d4ab2d397c4250ce41, type: 2}
     - target: {fileID: 11400022, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_Enabled
       value: 0
@@ -30079,8 +30067,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1057451083}
   - {fileID: 1057451082}
@@ -31323,8 +31311,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1082410498}
   - {fileID: 1082410497}
@@ -32735,7 +32723,7 @@ Transform:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1139609871}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 67.4023056, y: 2.07064676, z: 4.09559631}
+  m_LocalPosition: {x: 67.4023056, y: 2.1690526, z: 4.09559631}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 45930331}
@@ -32755,7 +32743,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1139609871}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -33024,9 +33012,9 @@ MonoBehaviour:
   - {fileID: 1139609876}
   - {fileID: 1139609875}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -39281,8 +39269,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1405646546}
   - {fileID: 1405646545}
@@ -39955,7 +39943,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -40282,7 +40270,7 @@ Transform:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1444713218}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 285.641052, y: 2.07064676, z: 12.358139}
+  m_LocalPosition: {x: 285.641052, y: 2.1690526, z: 12.358139}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2095141210}
@@ -40302,7 +40290,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1444713218}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -40571,9 +40559,9 @@ MonoBehaviour:
   - {fileID: 1444713223}
   - {fileID: 1444713222}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -40963,7 +40951,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -44363,7 +44351,7 @@ Transform:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1636496567}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 251.452271, y: 2.07064676, z: -40.1891785}
+  m_LocalPosition: {x: 251.452271, y: 2.1690526, z: -40.1891785}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 225434709}
@@ -44383,7 +44371,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1636496567}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -44652,9 +44640,9 @@ MonoBehaviour:
   - {fileID: 1636496572}
   - {fileID: 1636496571}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -45222,7 +45210,7 @@ Transform:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1655278256}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.5360413, y: 2.07064676, z: 66.2708511}
+  m_LocalPosition: {x: 98.5360413, y: 2.1690526, z: 66.2708511}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 173091143}
@@ -45495,9 +45483,9 @@ MonoBehaviour:
   - {fileID: 1655278260}
   - {fileID: 1655278259}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -45524,7 +45512,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1655278256}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -45867,7 +45855,7 @@ Transform:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1660461585}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 101.327942, y: 2.07064676, z: -39.4450989}
+  m_LocalPosition: {x: 101.327942, y: 2.1690526, z: -39.4450989}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1416491070}
@@ -46140,9 +46128,9 @@ MonoBehaviour:
   - {fileID: 1660461589}
   - {fileID: 1660461588}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -46169,7 +46157,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1660461585}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -46706,8 +46694,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1678298941}
   - {fileID: 1678298940}
@@ -47203,7 +47191,7 @@ Transform:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1692768343}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 245.810608, y: 2.07064676, z: 66.2708511}
+  m_LocalPosition: {x: 245.810608, y: 2.1690526, z: 66.2708511}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2108867155}
@@ -47223,7 +47211,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1692768343}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47492,9 +47480,9 @@ MonoBehaviour:
   - {fileID: 1692768348}
   - {fileID: 1692768347}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -47591,7 +47579,7 @@ Transform:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -36.6021881, y: 2.07064652, z: 0}
+  m_LocalPosition: {x: -36.6021881, y: 2.16905284, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1245786536}
@@ -47611,7 +47599,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47880,9 +47868,9 @@ MonoBehaviour:
   - {fileID: 1694673921}
   - {fileID: 1694673920}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -48007,8 +47995,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1695448034}
   - {fileID: 1695448033}
@@ -50069,7 +50057,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_simTime
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_TagString
@@ -50078,6 +50066,10 @@ Prefab:
     - target: {fileID: 11400000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_currentSimTime
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
+      propertyPath: m_warmupTime
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
@@ -51818,8 +51810,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1848022046}
   - {fileID: 1848022045}
@@ -52471,8 +52463,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff1af29098b8a242a8d1d3cb6eabf82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_simTime: 10
-  m_warmupTime: 1
+  m_simTime: 5
+  m_warmupTime: 0
   m_instantEval: 0
 --- !u!23 &1877541815
 Renderer:
@@ -54101,7 +54093,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -54390,7 +54382,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.07064676
+      value: 2.1690526
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -55505,8 +55497,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 2055361489}
   - {fileID: 2055361488}
@@ -57363,8 +57355,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 2142385623}
   - {fileID: 2142385622}
@@ -57534,7 +57526,7 @@ Transform:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2145673689}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 200.723114, y: 2.07064676, z: 123.899384}
+  m_LocalPosition: {x: 200.723114, y: 2.1690526, z: 123.899384}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 382413170}
@@ -57807,9 +57799,9 @@ MonoBehaviour:
   - {fileID: 2145673693}
   - {fileID: 2145673692}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -57836,7 +57828,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2145673689}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1

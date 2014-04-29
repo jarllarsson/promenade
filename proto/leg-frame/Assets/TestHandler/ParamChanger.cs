@@ -9,7 +9,7 @@ public class ParamChanger
     public ParamChanger()
     {
         m_uniformDistribution = new UniformDistribution();
-        UnityEngine.Random.seed = (int)Time.time;
+        //UnityEngine.Random.seed = (int)Time.time;
     }
 
     public List<float> change(List<float> p_params, List<float> p_Pmin, List<float> p_Pmax, int p_iteration)

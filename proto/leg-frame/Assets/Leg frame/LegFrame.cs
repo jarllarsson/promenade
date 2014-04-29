@@ -113,12 +113,12 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
         for (int i = 0; i < m_tuneStepCycles.Length; i++)
             vals.AddRange(m_tuneStepCycles[i].GetParams());
-
+        
         vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneStepLength));
-
+        
         for (int i=0;i<m_tuneOrientationLFTraj.Length;i++)
             vals.AddRange(m_tuneOrientationLFTraj[i].GetParams());
-
+        
         vals.Add(m_tuneFootPlacementVelocityScale);
         vals.AddRange(m_tuneStepHeightTraj.GetParams());
         vals.AddRange(m_tuneFootTransitionEase.GetParams());
@@ -127,20 +127,20 @@ public class LegFrame : MonoBehaviour, IOptimizable
         vals.Add(m_tuneHeightForcePIDKp);
         vals.Add(m_tuneHeightForcePIDKd);
         vals.Add(m_tuneVelocityRegulatorKv);
-
+        
         for (int i = 0; i < c_legCount; i++)
             vals.Add(m_tuneToeOffTime[i]);
-
+        
         for (int i = 0; i < c_legCount; i++)
             vals.Add(m_tuneFootStrikeTime[i]);
-
+        
         vals.Add(m_tuneToeOffAngle);
         vals.Add(m_tuneFootStrikeAngle);
-
+        
         for (int i = 0; i < c_legCount; i++)
         for (int p = 0; p < 2; p++)
             vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneFD[i,p]));
-
+        
         for (int i = 0; i < m_legFgravityComp.Length; i++)
             vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_legFgravityComp[i]));
 
@@ -160,12 +160,12 @@ public class LegFrame : MonoBehaviour, IOptimizable
     {
         for (int i = 0; i < m_tuneStepCycles.Length; i++)
             m_tuneStepCycles[i].ConsumeParams(p_params);
-
+        
         OptimizableHelper.ConsumeParamsTo(p_params,ref m_tuneStepLength);
-
+        
         for (int i = 0; i < m_tuneOrientationLFTraj.Length; i++)
             m_tuneOrientationLFTraj[i].ConsumeParams(p_params);
-
+        
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFootPlacementVelocityScale);
         m_tuneStepHeightTraj.ConsumeParams(p_params);
         m_tuneFootTransitionEase.ConsumeParams(p_params);
@@ -174,23 +174,23 @@ public class LegFrame : MonoBehaviour, IOptimizable
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKp);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneHeightForcePIDKd);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneVelocityRegulatorKv);
-
+        
         for (int i = 0; i < c_legCount; i++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneToeOffTime[i]);
-
+        
         for (int i = 0; i < c_legCount; i++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFootStrikeTime[i]);
-
+        
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneToeOffAngle);
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFootStrikeAngle);
-
+        
         for (int i = 0; i < c_legCount; i++)
         for (int p = 0; p < 2; p++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFD[i,p]);
-
+        
         for (int i = 0; i < m_legFgravityComp.Length; i++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_legFgravityComp[i]);
-
+        
 
 
         OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredLFTorquePD.m_Kp);
@@ -211,13 +211,13 @@ public class LegFrame : MonoBehaviour, IOptimizable
         List<float> maxList = new List<float>();
         for (int i = 0; i < m_tuneStepCycles.Length; i++)
             maxList.AddRange(m_tuneStepCycles[i].GetParamsMax());
-
+        
         maxList.Add(3.0f); maxList.Add(3.0f); // step length
-
+        
         for (int i = 0; i < m_tuneOrientationLFTraj.Length; i++)
         for (int n = 0; n < PcswiseLinear.s_size; n++)
             maxList.Add(360.0f); // orientation, degrees
-
+        
         maxList.Add(10.0f); // FootPlacementVelocityScale
         for (int n = 0; n < PcswiseLinear.s_size; n++)
             maxList.Add(5.5f); // step height
@@ -230,22 +230,22 @@ public class LegFrame : MonoBehaviour, IOptimizable
         maxList.Add(200.0f); // HeightForcePIDKp
         maxList.Add(20.0f); // HeightForcePIDKd
         maxList.Add(100.0f); // VelocityRegulatorKv
-
+        
         for (int i = 0; i < c_legCount; i++)
             maxList.Add(0.5f);  // ToeOffTime
-
+        
         for (int i = 0; i < c_legCount; i++)
             maxList.Add(0.5f); // FootStrikeTime
-
+        
         maxList.Add(360.0f); // ToeOffAngle
         maxList.Add(360.0f); // FootStrikeAngle
-
+        
         for (int i = 0; i < c_legCount; i++)
         for (int p = 0; p < 2; p++) // FD
         {
             maxList.Add(200.0f); maxList.Add(200.0f); maxList.Add(200.0f);
         }
-
+        
         for (int i = 0; i < m_legFgravityComp.Length; i++) // F gravity comp
         {
             maxList.Add(20.0f); maxList.Add(20.0f); maxList.Add(20.0f);
@@ -254,11 +254,11 @@ public class LegFrame : MonoBehaviour, IOptimizable
         maxList.Add(200);
         maxList.Add(20);
 
-        maxList.Add(200);
-        maxList.Add(20);
+        maxList.Add(40);
+        maxList.Add(5);
 
-        maxList.Add(200);
-        maxList.Add(20);
+        maxList.Add(40);
+        maxList.Add(5);
 
 
 
@@ -275,13 +275,13 @@ public class LegFrame : MonoBehaviour, IOptimizable
         List<float> minList = new List<float>();
         for (int i = 0; i < m_tuneStepCycles.Length; i++)
             minList.AddRange(m_tuneStepCycles[i].GetParamsMin());
-
+        
         minList.Add(0.0f); minList.Add(0.0f); // step length
-
+        
         for (int i = 0; i < m_tuneOrientationLFTraj.Length; i++)
             for (int n = 0; n < PcswiseLinear.s_size; n++)
                 minList.Add(0.0f); // orientation, degrees
-
+        
         minList.Add(0.0f); // FootPlacementVelocityScale
         for (int n = 0; n < PcswiseLinear.s_size; n++)
             minList.Add(0.0f); // step height
@@ -294,27 +294,27 @@ public class LegFrame : MonoBehaviour, IOptimizable
         minList.Add(0.0f); // HeightForcePIDKp
         minList.Add(0.0f); // HeightForcePIDKd
         minList.Add(0.0f); // VelocityRegulatorKv
-
+        
         for (int i = 0; i < c_legCount; i++)
             minList.Add(0.0f);  // ToeOffTime
-
+        
         for (int i = 0; i < c_legCount; i++)
             minList.Add(0.0f); // FootStrikeTime
-
+        
         minList.Add(0.0f); // ToeOffAngle
         minList.Add(0.0f); // FootStrikeAngle
-
+        
         for (int i = 0; i < c_legCount; i++)
             for (int p = 0; p < 2; p++) // FD
             {
                 minList.Add(-200.0f); minList.Add(-200.0f); minList.Add(-200.0f);
             }
-
+        
         for (int i = 0; i < m_legFgravityComp.Length; i++) // F gravity comp
         {
             minList.Add(0.0f); minList.Add(0.0f); minList.Add(0.0f);
         }
-
+        
         minList.Add(0.1f);
         minList.Add(0.01f);
 

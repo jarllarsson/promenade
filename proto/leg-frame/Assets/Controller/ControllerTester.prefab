@@ -1705,7 +1705,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2041,8 +2041,8 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .100000001}
-  m_lateStrikeOffsetDeltaH: .100000001
+  m_tuneStepLength: {x: 1, y: .300000012}
+  m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 11400008}
   - {fileID: 11400006}
@@ -2212,9 +2212,9 @@ MonoBehaviour:
   - {fileID: 11400038}
   - {fileID: 11400036}
   m_oldPos: {x: 0, y: 0, z: 0}
-  m_currentVelocity: {x: 0, y: 0, z: -10}
-  m_goalVelocity: {x: 0, y: 0, z: 1}
-  m_desiredVelocity: {x: 0, y: 0, z: 0}
+  m_currentVelocity: {x: 0, y: 0, z: 0}
+  m_goalVelocity: {x: 0, y: 0, z: 0}
+  m_desiredVelocity: {x: 0, y: 0, z: 1}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
