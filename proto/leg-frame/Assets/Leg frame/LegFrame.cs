@@ -15,7 +15,7 @@ using UnityEditor;
 
 public class LegFrame : MonoBehaviour, IOptimizable
 {
-    public const int c_legCount = 2; // always two legs per frame
+    public static int c_legCount = 2; // always two legs per frame
     public const int c_nonHipLegSegments = 1;
     public enum LEG { LEFT = 0, RIGHT = 1 }
     public enum NEIGHBOUR_JOINTS { HIP_LEFT=0, HIP_RIGHT=1, SPINE=2, COUNT=3 }
@@ -260,13 +260,6 @@ public class LegFrame : MonoBehaviour, IOptimizable
         maxList.Add(40);
         maxList.Add(5);
 
-
-
-
-
-
-
-
         return maxList;
     }
 
@@ -446,28 +439,21 @@ public class LegFrame : MonoBehaviour, IOptimizable
         //
         m_footLiftPlacementPerformed[p_idx]=false; // reset
         // Get the fractional swing phase
-        float m_swingPhi = m_tuneStepCycles[p_idx].getSwingPhase(p_phi);
+        float swingPhi = m_tuneStepCycles[p_idx].getSwingPhase(p_phi);
         // The height offset, ie. the "lift" that the foot makes between stepping points.
-        Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(m_swingPhi), 0.0f);
+        Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(swingPhi), 0.0f);
         m_currentFootGraphHeight[p_idx] = heightOffset.y;
         // scale the phi based on the easing function, for ground plane movement
-        m_swingPhi = getFootTransitionPhase(m_swingPhi);
+        swingPhi = getFootTransitionPhase(swingPhi);
         // Calculate the position
         // Foot movement along the ground
-        Vector3 groundPlacement=Vector3.Lerp(m_footLiftPlacement[p_idx],m_footStrikePlacement[p_idx],m_swingPhi);
+        Vector3 groundPlacement=Vector3.Lerp(m_footLiftPlacement[p_idx],m_footStrikePlacement[p_idx],swingPhi);
         m_footTarget[p_idx] = groundPlacement+heightOffset;
         //
         Color dbg=Color.green;
         if (p_idx==0) 
             dbg = Color.red;
         Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg,1.0f);
-        if (transform.parent.tag=="bestscore")
-        {
-            float mirror = (float)(p_idx * 2 - 1);
-            Transform go = GameObject.FindGameObjectWithTag("ghost").transform;
-            Debug.DrawLine(new Vector3(mirror * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y) + new Vector3(go.position.x, 0.0f, go.position.z),
-                heightOffset + new Vector3(mirror * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y) + new Vector3(go.position.x, 0.0f, go.position.z), dbg, 1.0f);
-        }
     }
 
     public float getGraphedFootPos(int p_idx)
