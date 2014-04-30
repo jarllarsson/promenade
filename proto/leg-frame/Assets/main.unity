@@ -1301,8 +1301,8 @@ MonoBehaviour:
   - {fileID: 48864862}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -2808,8 +2808,8 @@ MonoBehaviour:
   - {fileID: 98454173}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -5490,8 +5490,8 @@ MonoBehaviour:
   - {fileID: 172532134}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -7767,8 +7767,8 @@ MonoBehaviour:
   - {fileID: 217361974}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -13400,8 +13400,8 @@ MonoBehaviour:
   - {fileID: 408855608}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -17659,8 +17659,8 @@ MonoBehaviour:
   - {fileID: 532043471}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -19075,8 +19075,8 @@ MonoBehaviour:
   - {fileID: 593680954}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -25416,8 +25416,8 @@ MonoBehaviour:
   - {fileID: 853343088}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -29991,8 +29991,8 @@ MonoBehaviour:
   - {fileID: 1038023368}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -33425,8 +33425,8 @@ MonoBehaviour:
   - {fileID: 1139609875}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 90
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -41107,8 +41107,8 @@ MonoBehaviour:
   - {fileID: 1444713222}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -45246,8 +45246,8 @@ MonoBehaviour:
   - {fileID: 1636496571}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -46089,8 +46089,8 @@ MonoBehaviour:
   - {fileID: 1655278259}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 60
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -46734,8 +46734,8 @@ MonoBehaviour:
   - {fileID: 1660461588}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -48086,8 +48086,8 @@ MonoBehaviour:
   - {fileID: 1692768347}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -48474,8 +48474,8 @@ MonoBehaviour:
   - {fileID: 1694673920}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
@@ -58594,8 +58594,8 @@ MonoBehaviour:
   - {fileID: 2145673692}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1

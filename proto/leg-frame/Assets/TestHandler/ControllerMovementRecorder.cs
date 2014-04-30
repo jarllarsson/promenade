@@ -200,7 +200,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         {
             total += d;
         }
-        double avg = total /= (double)(m_fvVelocityDeviations.Count);
+        double avg = total /= Math.Max(1.0, ((double)(m_fvVelocityDeviations.Count)));
         double totmeandiffsqr = 0.0f;
         // std
         foreach (double d in m_fvVelocityDeviations)
@@ -208,7 +208,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             double mdiff = d - avg;
             totmeandiffsqr += mdiff * mdiff;
         }
-        double sdeviation = Math.Sqrt(totmeandiffsqr / (double)m_fvVelocityDeviations.Count);
+        double sdeviation = Math.Sqrt(totmeandiffsqr / Math.Max(1.0, ((double)m_fvVelocityDeviations.Count)));
         return avg+sdeviation;
     }
 
@@ -225,7 +225,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             total += (double)f;
             sz++;
         }
-        double avg = total /= (double)(sz);
+        double avg = total /= Math.Max(1, (double)(sz));
         return avg;
     }
 
@@ -241,7 +241,9 @@ public class ControllerMovementRecorder : MonoBehaviour
             total += d;
             sz++;
         }
-        double avg = total /= (double)(sz);
+        // total becomes NaN:::
+        Debug.Log("sz: " + sz + " head "+total);
+        double avg = total /= Math.Max(1.0,(double)(sz));
         return avg;
     }
 
@@ -253,7 +255,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         {
             total += d;
         }
-        double avg = total /= (double)(m_fdBodyHeightSqrDiffs.Count);
+        double avg = total /= Math.Max(1.0,(double)(m_fdBodyHeightSqrDiffs.Count));
         double totmeandiffsqr = 0.0f;
         // std
         foreach (double d in m_fdBodyHeightSqrDiffs)
@@ -261,7 +263,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             double mdiff = d - avg;
             totmeandiffsqr += mdiff * mdiff;
         }
-        double sdeviation = Math.Sqrt(totmeandiffsqr / (double)m_fdBodyHeightSqrDiffs.Count);
+        double sdeviation = Math.Sqrt(totmeandiffsqr / Math.Max(1.0,(double)m_fdBodyHeightSqrDiffs.Count));
         return avg+sdeviation;
     }
     
@@ -273,7 +275,8 @@ public class ControllerMovementRecorder : MonoBehaviour
         {
             total += dist;
         }
-        float movementSign = m_myController.m_goalVelocity.z / Mathf.Abs(Mathf.Max(0.1f,m_myController.m_goalVelocity.z));
+        float movementSign = Mathf.Max(0.1f,m_myController.m_goalVelocity.z) / Mathf.Abs(Mathf.Max(0.1f,m_myController.m_goalVelocity.z));
+        if (movementSign == 0.0) movementSign = 1.0f;
         double scoreInRightDir = Math.Max(0.0f,total.z * movementSign);
         return scoreInRightDir;
     }

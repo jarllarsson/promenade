@@ -77,6 +77,8 @@ public class TestHandler : MonoBehaviour
                 IOptimizable opt = m_optimizableControllers[i];
                 List<float> paramslist = new List<float>();
                 paramslist.AddRange(m_currentParams[i]);
+                //Debug.Log("opt "+opt);
+               // Debug.Log("params " + m_currentParams[i]);
                 opt.ConsumeParams(paramslist); // consume it to controller
             }
 

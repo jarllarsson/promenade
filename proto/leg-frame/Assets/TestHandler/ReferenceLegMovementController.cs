@@ -69,7 +69,7 @@ public class ReferenceLegMovementController : MonoBehaviour
             }
             Color debugColor = Color.red;
             if (i == 1) debugColor = Color.green;
-            Debug.DrawLine(m_oldFootPos[i], m_foot[i].position, debugColor, 1.0f);
+            Debug.DrawLine(m_oldFootPos[i], m_foot[i].position, debugColor, 10.0f);
             m_oldFootPos[i] = m_foot[i].position;
         }
     }

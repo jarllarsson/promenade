@@ -2213,8 +2213,8 @@ MonoBehaviour:
   - {fileID: 11400036}
   m_oldPos: {x: 0, y: 0, z: 0}
   m_currentVelocity: {x: 0, y: 0, z: 0}
-  m_goalVelocity: {x: 0, y: 0, z: 0}
-  m_desiredVelocity: {x: 0, y: 0, z: 1}
+  m_goalVelocity: {x: 0, y: 0, z: 1}
+  m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
