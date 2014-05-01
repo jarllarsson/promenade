@@ -5,6 +5,7 @@ public class ReferenceLegMovementController : MonoBehaviour
 {
     public IKSolverSimple[] m_IK = new IKSolverSimple[LegFrame.c_legCount];
     public Transform[] m_foot = new Transform[LegFrame.c_legCount];
+    public Transform[] m_knee = new Transform[LegFrame.c_legCount];
     private Vector3[] m_oldFootPos = new Vector3[LegFrame.c_legCount];
     public StepCycle[] m_stepCycles = new StepCycle[LegFrame.c_legCount];
     public GaitPlayer m_player;
@@ -41,7 +42,17 @@ public class ReferenceLegMovementController : MonoBehaviour
         m_player.updatePhase(Time.deltaTime);
 
         updateFeetPositions(m_player.m_gaitPhase);
+        updateKneeRefs();
 	}
+
+    void updateKneeRefs()
+    {
+        for (int i = 0; i < m_knee.Length; i++)
+        {
+            m_knee[i].position = m_IK[i].m_kneePosW;
+        }
+    }
+
 
     void updateFeetPositions(float p_phi)
     {

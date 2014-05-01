@@ -16,7 +16,7 @@ public class IKSolverSimple : MonoBehaviour
     public PIDn m_testPIDLower;
     public Vector3 m_kneePos;
     public Vector3 m_endPos;
-
+    public Vector3 m_kneePosW;
     
 
 	// Use this for initialization
@@ -37,7 +37,7 @@ public class IKSolverSimple : MonoBehaviour
         // Retrieve the current wanted foot position
         Vector3 footPos=Vector3.zero;
         if (m_foot!=null)
-            footPos = m_foot.position;
+            footPos = new Vector3(0.0f, m_foot.position.y, -(m_foot.position.z-transform.position.z));
         else if (m_legFrame!=null)
         {
             // get non-corrected foot pos here
@@ -141,11 +141,11 @@ public class IKSolverSimple : MonoBehaviour
         if (m_legFrame!=null)
             offset = new Vector3(m_legFrame.m_footTarget[(int)m_legType].x, m_legFrame.transform.position.y, m_legFrame.m_footTarget[(int)m_legType].z)/* + m_legFrame.transform.position*/;
         else if (m_foot!=null)
-            offset = new Vector3(m_foot.position.x, 0.0f, transform.position.z)/* + m_legFrame.transform.position*/;
+            offset = new Vector3(m_upperLeg.position.x, 0.0f, m_upperLeg.position.z)/* + m_legFrame.transform.position*/;
 
-
-        Debug.DrawLine(offset + upperLegLocalPos, offset + m_kneePos,Color.red);
-        Debug.DrawLine(offset + m_kneePos, offset + m_endPos, Color.blue);
+        m_kneePosW = offset + m_kneePos;
+        Debug.DrawLine(offset + upperLegLocalPos, m_kneePosW,Color.red);
+        Debug.DrawLine(m_kneePosW, offset + m_endPos, Color.blue);
         
 
         if (m_dbgMesh)
