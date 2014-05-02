@@ -43,6 +43,7 @@ public class ControllerMovementRecorder : MonoBehaviour
     float m_origHeadHeight = 0.0f;
 
     Transform m_ghostController;
+    ReferenceLegMovementController m_referenceHandler;
     Vector3 m_ghostStart;
     Vector3 m_mycontrollerStart;
     TestHandler m_tester;
@@ -66,6 +67,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         m_origBodyHeight = m_myController.transform.position.y;
         m_origHeadHeight = m_myController.m_head.transform.position.y;
         m_ghostController = GameObject.FindGameObjectWithTag("ghost").transform;
+        m_referenceHandler = m_ghostController.GetComponent<ReferenceLegMovementController>();
         m_ghostStart = m_ghostController.position;
         m_mycontrollerStart = m_myController.transform.position;
 
@@ -80,7 +82,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             fv_calcStrideMeanVelocity();
             fr_calcRotationDeviations();
             fh_calcHeadAccelerations();
-            fd_calcHeightSqrDiff();
+            fd_calcReferenceMotion();
             fp_calcMovementDistance();
 
             //m_pushIntervalCount+=Time.deltaTime;
@@ -151,7 +153,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         m_fhHeadAcceleration.Add((double)m_myController.m_headAcceleration.magnitude);
     }
 
-    void fd_calcHeightSqrDiff()
+    void fd_calcReferenceMotion()
     {
         double lenBod = (double)m_myController.transform.position.y - (double)m_origBodyHeight;
         lenBod *= lenBod; // sqr
@@ -164,12 +166,22 @@ public class ControllerMovementRecorder : MonoBehaviour
         lenDist *= lenDist; // sqr
 
         double lenFt = 0.0;
+        double lenKnees = 0.0;
+        Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z-m_ghostStart.z+m_mycontrollerStart.z);
         for (int i = 0; i < m_myLegFrame.m_feet.Length; i++)
         {
-            lenFt+=(double)Vector3.SqrMagnitude(m_myLegFrame.m_feet[i].transform.position-m_myLegFrame.m_footTarget[i]);
+            Vector3 footRefToFoot = (m_myLegFrame.m_feet[i].transform.position - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
+            Vector3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
+            Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position, 
+                           m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white,0.3f);
+            Debug.DrawLine(m_myController.m_joints[(i + 1) * 2].transform.position,
+                           m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow*2.0f,0.3f);
+
+            lenFt += (double)Vector3.SqrMagnitude(footRefToFoot);
+            lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);
         }
 
-        m_fdBodyHeightSqrDiffs.Add(0.5f*lenFt * lenDist + lenBod + lenHd * 0.025f);
+        m_fdBodyHeightSqrDiffs.Add(lenFt*0.01f + lenKnees + 0.001f * lenDist + 0.001f * lenBod + lenHd * 0.0025f);
     }
 
     void fp_calcMovementDistance()
@@ -241,8 +253,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             total += d;
             sz++;
         }
-        // total becomes NaN:::
-        Debug.Log("sz: " + sz + " head "+total);
+        
         double avg = total /= Math.Max(1.0,(double)(sz));
         return avg;
     }

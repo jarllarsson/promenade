@@ -39,6 +39,13 @@ public class Controller : MonoBehaviour, IOptimizable
     public bool m_usePDTorque = true;
     public bool m_useVFTorque = true;
 
+    public bool m_optimizePDs = false;
+
+    void Awake()
+    {
+
+    }
+
     // IOptimizable
     public List<float> GetParams()
     {
@@ -47,10 +54,13 @@ public class Controller : MonoBehaviour, IOptimizable
             vals.AddRange(m_legFrames[i].GetParams()); // append
         vals.AddRange(m_player.GetParams());
 
-        for (int i = 1; i < (m_desiredJointTorquesPD.Length+1)/2; i++)
+        if (m_optimizePDs)
         {
-            vals.Add(m_desiredJointTorquesPD[i].m_Kp);
-            vals.Add(m_desiredJointTorquesPD[i].m_Kd);
+            for (int i = 1; i < (m_desiredJointTorquesPD.Length + 1) / 2; i++)
+            {
+                vals.Add(m_desiredJointTorquesPD[i].m_Kp);
+                vals.Add(m_desiredJointTorquesPD[i].m_Kd);
+            }
         }
         
 
@@ -65,12 +75,15 @@ public class Controller : MonoBehaviour, IOptimizable
             m_legFrames[i].ConsumeParams(p_params); // consume
         m_player.ConsumeParams(p_params);
 
-        for (int i = 1; i < (m_desiredJointTorquesPD.Length + 1) / 2; i++)
+        if (m_optimizePDs)
         {
-            OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredJointTorquesPD[i].m_Kp);
-            m_desiredJointTorquesPD[i+2].m_Kp = m_desiredJointTorquesPD[i].m_Kp;
-            OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredJointTorquesPD[i].m_Kd);
-            m_desiredJointTorquesPD[i + 2].m_Kd = m_desiredJointTorquesPD[i].m_Kd;
+            for (int i = 1; i < (m_desiredJointTorquesPD.Length + 1) / 2; i++)
+            {
+                OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredJointTorquesPD[i].m_Kp);
+                m_desiredJointTorquesPD[i + 2].m_Kp = m_desiredJointTorquesPD[i].m_Kp;
+                OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredJointTorquesPD[i].m_Kd);
+                m_desiredJointTorquesPD[i + 2].m_Kd = m_desiredJointTorquesPD[i].m_Kd;
+            }
         }
 
     }
@@ -82,11 +95,14 @@ public class Controller : MonoBehaviour, IOptimizable
             maxList.AddRange(m_legFrames[i].GetParamsMax()); // append
         maxList.AddRange(m_player.GetParamsMax());
 
-        maxList.Add(30);
-        maxList.Add(5);
+        if (m_optimizePDs)
+        {
+            maxList.Add(30);
+            maxList.Add(5);
 
-        maxList.Add(30);
-        maxList.Add(5);
+            maxList.Add(30);
+            maxList.Add(5);
+        }
 
         return maxList;
     }
@@ -98,11 +114,14 @@ public class Controller : MonoBehaviour, IOptimizable
             minList.AddRange(m_legFrames[i].GetParamsMin()); // append
         minList.AddRange(m_player.GetParamsMin());
 
-        minList.Add(0.01f);
-        minList.Add(0.001f);
+        if (m_optimizePDs)
+        {
+            minList.Add(0.01f);
+            minList.Add(0.001f);
 
-        minList.Add(0.01f);
-        minList.Add(0.001f);
+            minList.Add(0.01f);
+            minList.Add(0.001f);
+        }
 
         return minList;
     }
@@ -136,6 +155,11 @@ public class Controller : MonoBehaviour, IOptimizable
         for (int i=0; i<m_joints.Length; i++)
         {
             m_chainObjs.Add(m_joints[i].gameObject);
+        }
+
+        for (int i = 0; i < m_legFrames.Length; i++)
+        {
+            m_legFrames[i].OptimizePDs(m_optimizePDs);
         }
 
         //

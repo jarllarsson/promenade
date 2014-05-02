@@ -445,7 +445,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -467,7 +467,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -540,7 +540,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 15872869}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -843,7 +843,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -865,7 +865,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -938,7 +938,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 45930330}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1031,7 +1031,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 48864858}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1074,7 +1074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -1103,9 +1103,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -1132,7 +1132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -1161,9 +1161,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -1309,6 +1309,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &48864869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1516,7 +1517,7 @@ Rigidbody:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100006, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 67299327}
@@ -1533,7 +1534,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400006, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 67299326}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -.5, z: 0}
@@ -1545,7 +1546,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300004, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 67299326}
   m_Enabled: 0
   m_CastShadows: 1
@@ -1567,7 +1568,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300004, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 67299326}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &67930223
@@ -1808,7 +1809,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 83125661}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2104,7 +2105,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 86226927}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2521,7 +2522,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 98454169}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2583,7 +2584,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -2612,9 +2613,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -2641,7 +2642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -2670,9 +2671,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -2818,6 +2819,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &98454180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2941,7 +2943,7 @@ Transform:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100010, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 111732177}
@@ -2959,7 +2961,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400010, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 111732176}
   m_LocalRotation: {x: 1.34274306e-14, y: -1.34274306e-14, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: -.0344551727, z: -.672225356}
@@ -2971,7 +2973,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300008, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 111732176}
   m_Enabled: 1
   m_CastShadows: 1
@@ -2993,7 +2995,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600000, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 111732176}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -3007,7 +3009,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300008, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 111732176}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &113136632
@@ -3180,7 +3182,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 117985870}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -4080,7 +4082,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -4102,7 +4104,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -4175,7 +4177,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 139195840}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -4275,7 +4277,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100012, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 140982671}
@@ -4292,7 +4294,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400012, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 140982670}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -.5, z: -0}
@@ -4304,7 +4306,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300010, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 140982670}
   m_Enabled: 0
   m_CastShadows: 1
@@ -4326,7 +4328,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300010, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 140982670}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &141126323
@@ -4471,7 +4473,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -4650,7 +4652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -4718,7 +4720,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 147239626}
@@ -4790,7 +4792,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -5166,7 +5168,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 172532130}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -5209,7 +5211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -5238,9 +5240,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -5267,7 +5269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -5296,9 +5298,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -5444,6 +5446,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &172532141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5567,7 +5570,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -5589,7 +5592,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -5662,7 +5665,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 173091142}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -5906,7 +5909,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 177119446}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -6325,7 +6328,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 203892536}
@@ -6397,7 +6400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -6480,7 +6483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -6665,7 +6668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -6737,7 +6740,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -6759,7 +6762,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -6832,7 +6835,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 206896436}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -6967,7 +6970,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 207878289}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -7257,7 +7260,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -7279,7 +7282,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -7352,7 +7355,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 216019609}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -7445,7 +7448,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 217361970}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -7488,7 +7491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -7517,9 +7520,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -7546,7 +7549,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -7575,9 +7578,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -7723,6 +7726,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &217361981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7904,7 +7908,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -7926,7 +7930,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -7999,7 +8003,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 225434708}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -8368,7 +8372,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 236386631}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -8787,7 +8791,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 251060027}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -9113,7 +9117,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 261288005}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -9198,7 +9202,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100014, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 262830947}
@@ -9215,7 +9219,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400014, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 262830946}
   m_LocalRotation: {x: -.00509199966, y: .000729999971, z: .00129499985, w: .999985933}
   m_LocalPosition: {x: .342744827, y: -1.32246923, z: -.23465699}
@@ -9231,7 +9235,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300012, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 262830946}
   m_Enabled: 1
   m_CastShadows: 1
@@ -9253,7 +9257,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300012, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 262830946}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &263769127
@@ -9435,7 +9439,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 271764923}
@@ -9507,7 +9511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -9590,7 +9594,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -9775,7 +9779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -10579,7 +10583,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 313097649}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -10674,7 +10678,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -10696,7 +10700,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -10769,7 +10773,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 316279008}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -10904,7 +10908,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 331184568}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -11167,7 +11171,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 335817716}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -11909,7 +11913,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -11931,7 +11935,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -11991,7 +11995,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 369881574}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -12294,7 +12298,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -12316,7 +12320,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -12389,7 +12393,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 382413169}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -13065,7 +13069,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -13094,9 +13098,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -13123,7 +13127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -13152,9 +13156,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -13300,6 +13304,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &408855615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13322,7 +13327,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 408855605}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -13398,7 +13403,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 412207749}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -13580,7 +13585,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -13602,7 +13607,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -13675,7 +13680,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 414714293}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -13809,7 +13814,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 425729506}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -14139,7 +14144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -14318,7 +14323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -14386,7 +14391,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 446532200}
@@ -14426,7 +14431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -14992,7 +14997,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 466709323}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -15312,7 +15317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -15380,7 +15385,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 479014441}
@@ -15452,7 +15457,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -15471,7 +15476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -15605,7 +15610,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 479664585}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -15709,7 +15714,7 @@ ConfigurableJoint:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100020, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 480197130}
@@ -15727,7 +15732,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400020, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 480197129}
   m_LocalRotation: {x: 1.34274306e-14, y: -1.34274306e-14, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: -.0344551727, z: -.672225356}
@@ -15739,7 +15744,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300018, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 480197129}
   m_Enabled: 1
   m_CastShadows: 1
@@ -15761,7 +15766,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600002, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 480197129}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -15775,7 +15780,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300018, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 480197129}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &483348019
@@ -16530,7 +16535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -16709,7 +16714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -16777,7 +16782,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 524307907}
@@ -16817,7 +16822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -17167,7 +17172,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 532043467}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -17210,7 +17215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -17239,9 +17244,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -17268,7 +17273,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -17297,9 +17302,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -17445,6 +17450,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &532043478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18527,7 +18533,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 593680950}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -18570,7 +18576,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -18599,9 +18605,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -18628,7 +18634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -18657,9 +18663,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -18805,6 +18811,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &593680961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18959,7 +18966,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 598806052}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -19203,7 +19210,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 602636676}
@@ -19275,7 +19282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -19358,7 +19365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -19543,7 +19550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -20548,7 +20555,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 669888217}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -20830,7 +20837,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -20852,7 +20859,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -20925,7 +20932,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 684513041}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -21062,7 +21069,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 689135235}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -21301,7 +21308,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -21323,7 +21330,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -21396,7 +21403,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 692120896}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -21972,7 +21979,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 709576422}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -22034,7 +22041,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 727624680}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -22172,7 +22179,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 730808557}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -22338,7 +22345,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -22360,7 +22367,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -22433,7 +22440,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 735951341}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -22707,7 +22714,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100026, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 745957529}
@@ -22732,7 +22739,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400026, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_LocalRotation: {x: -.00509165041, y: .000729680934, z: .00129454758, w: .999985933}
   m_LocalPosition: {x: -.157558441, y: 1.30560637, z: -.349535882}
@@ -22753,7 +22760,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400000, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22766,7 +22773,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300024, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_CastShadows: 1
@@ -22788,7 +22795,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300024, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &745957533
@@ -22796,7 +22803,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400002, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22810,7 +22817,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400004, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22824,7 +22831,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400006, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22838,7 +22845,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400008, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22863,7 +22870,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400010, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22888,7 +22895,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400012, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -22915,7 +22922,7 @@ MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11400014, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 745957528}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -23259,7 +23266,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100028, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 760595940}
@@ -23275,7 +23282,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400028, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 760595939}
   m_LocalRotation: {x: -4.65764032e-07, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .493347168, y: -1.49821353, z: .00351715088}
@@ -23288,7 +23295,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300026, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 760595939}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &767467182
@@ -23506,7 +23513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -23685,7 +23692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -23753,7 +23760,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 768870075}
@@ -23825,7 +23832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -25029,7 +25036,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 853343067}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -25160,6 +25167,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &853343080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25280,7 +25288,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -25309,9 +25317,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -25338,7 +25346,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -25367,9 +25375,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -25917,7 +25925,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 882517218}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -26238,7 +26246,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 888160326}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -26524,7 +26532,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 913927468}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -27023,7 +27031,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -27202,7 +27210,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -27270,7 +27278,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 923873637}
@@ -27342,7 +27350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -27483,7 +27491,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100030, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 948230813}
@@ -27501,7 +27509,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300026, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 948230810}
   m_Enabled: 1
   m_CastShadows: 1
@@ -27523,14 +27531,14 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300028, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 948230810}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &948230813
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400030, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 948230810}
   m_LocalRotation: {x: 0, y: 0, z: 9.99999997e-07, w: 1}
   m_LocalPosition: {x: -0, y: .544579983, z: -.121872187}
@@ -27951,7 +27959,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -27973,7 +27981,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -28046,7 +28054,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 964992897}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -28614,7 +28622,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -28636,7 +28644,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -28709,7 +28717,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 997351511}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29180,7 +29188,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 1015602174}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29240,7 +29248,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1022868868}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29461,7 +29469,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1038023364}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29504,7 +29512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -29533,9 +29541,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -29562,7 +29570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -29591,9 +29599,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -29739,6 +29747,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &1038023375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29985,7 +29994,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1045670301}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -30131,7 +30140,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100032, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1056701089}
@@ -30146,7 +30155,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400032, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1056701088}
   m_LocalRotation: {x: 4.65764032e-07, y: 3.02557046e-12, z: 3.58522517e-11, w: 1}
   m_LocalPosition: {x: -.498016357, y: -.498213053, z: .00360488892}
@@ -30217,7 +30226,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1057451083}
@@ -30289,7 +30298,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -30372,7 +30381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -30525,7 +30534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -30604,7 +30613,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1061320849}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -31174,7 +31183,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 1077204326}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -31461,7 +31470,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1082410498}
@@ -31533,7 +31542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -31616,7 +31625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -31801,7 +31810,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -32000,7 +32009,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100034, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1097823560}
@@ -32018,7 +32027,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400034, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1097823559}
   m_LocalRotation: {x: -3.29344914e-07, y: 3.29344914e-07, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: -2.98612144e-06, z: -.672402143}
@@ -32030,7 +32039,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300028, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1097823559}
   m_Enabled: 1
   m_CastShadows: 1
@@ -32052,7 +32061,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600004, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1097823559}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -32066,7 +32075,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300030, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1097823559}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1098693860
@@ -32893,7 +32902,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1139609871}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -32936,7 +32945,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -32965,9 +32974,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -32994,7 +33003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -33023,9 +33032,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -33171,6 +33180,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &1139609882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33348,7 +33358,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100036, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1145037072}
@@ -33366,7 +33376,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400036, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1145037071}
   m_LocalRotation: {x: -2.82470921e-07, y: 2.82470921e-07, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: 1.6112906e-06, z: .639034271}
@@ -33378,7 +33388,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300030, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1145037071}
   m_Enabled: 1
   m_CastShadows: 1
@@ -33400,7 +33410,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600006, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1145037071}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -33414,7 +33424,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300032, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1145037071}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1148038551
@@ -33687,7 +33697,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 1164190806}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -34025,7 +34035,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1171089867}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -34837,7 +34847,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1198743232}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -34849,7 +34859,7 @@ Rigidbody:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100004, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1215045571}
@@ -34866,7 +34876,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400004, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1215045570}
   m_LocalRotation: {x: 6.51068319e-07, y: 3.15943765e-07, z: 4.54483313e-07, w: 1}
   m_LocalPosition: {x: -.499919295, y: -1.4702512, z: .155721977}
@@ -34878,7 +34888,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300002, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1215045570}
   m_Enabled: 1
   m_CastShadows: 1
@@ -34900,7 +34910,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300002, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1215045570}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1216652846
@@ -35096,7 +35106,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100038, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1235292876}
@@ -35115,7 +35125,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300032, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1235292872}
   m_Enabled: 1
   m_CastShadows: 1
@@ -35137,7 +35147,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600008, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1235292872}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -35151,14 +35161,14 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300034, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1235292872}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1235292876
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400038, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1235292872}
   m_LocalRotation: {x: 1.34274306e-14, y: -1.34274306e-14, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: -.0344577543, z: .639210582}
@@ -35455,7 +35465,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1243444177}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -35693,7 +35703,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 1244642257}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -35767,7 +35777,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -35789,7 +35799,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -35862,7 +35872,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1245786535}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -35904,7 +35914,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100040, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1247253866}
@@ -35921,7 +35931,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400040, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1247253865}
   m_LocalRotation: {x: 4.65764032e-07, y: 3.02557046e-12, z: 3.58522517e-11, w: 1}
   m_LocalPosition: {x: -.498016357, y: -2.6367631, z: .0889129639}
@@ -35937,7 +35947,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300034, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1247253865}
   m_Enabled: 1
   m_CastShadows: 1
@@ -35959,7 +35969,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300036, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1247253865}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1250459717
@@ -36202,7 +36212,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -36224,7 +36234,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -36297,7 +36307,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 1262079945}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -36523,7 +36533,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 1266115836}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -36874,7 +36884,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -36896,7 +36906,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -36969,7 +36979,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1284294531}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -37045,7 +37055,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 1289444901}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -37436,7 +37446,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 1295511028}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -37638,7 +37648,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100044, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1323042596}
@@ -37655,7 +37665,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400044, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1323042595}
   m_LocalRotation: {x: -.00509199966, y: .000729999971, z: .00129499985, w: .999985933}
   m_LocalPosition: {x: -.64859581, y: -1.33139133, z: -.233048677}
@@ -37671,7 +37681,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300038, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1323042595}
   m_Enabled: 1
   m_CastShadows: 1
@@ -37693,7 +37703,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300040, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1323042595}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1325917215
@@ -38246,7 +38256,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1356498819}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -38552,7 +38562,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 1361811062}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -38695,7 +38705,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100046, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1371978283}
@@ -38712,7 +38722,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400046, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1371978282}
   m_LocalRotation: {x: -4.65764032e-07, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .493347168, y: -2.63039923, z: .0888290405}
@@ -38728,7 +38738,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300040, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1371978282}
   m_Enabled: 1
   m_CastShadows: 1
@@ -38750,7 +38760,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300042, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1371978282}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1373318561
@@ -38819,7 +38829,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -38841,7 +38851,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -38914,7 +38924,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1373318561}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -39261,7 +39271,7 @@ Transform:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100048, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1396193962}
@@ -39276,7 +39286,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400048, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1396193961}
   m_LocalRotation: {x: -4.65764032e-07, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .488845825, y: -.491846085, z: .00351715088}
@@ -39323,7 +39333,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 1396941233}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -39552,7 +39562,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1405646546}
@@ -39624,7 +39634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -39707,7 +39717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -39860,7 +39870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -40014,6 +40024,46 @@ MeshFilter:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1410464825}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1001 &1411144114
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -31.7714863
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1.24114823
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -.21797502
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
+  m_RootGameObject: {fileID: 1837911544}
+  m_IsPrefabParent: 0
+  m_IsExploded: 1
 --- !u!1 &1416491069
 GameObject:
   m_ObjectHideFlags: 0
@@ -40080,7 +40130,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -40102,7 +40152,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -40175,7 +40225,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1416491069}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -40573,7 +40623,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1444713218}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -40616,7 +40666,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -40645,9 +40695,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -40674,7 +40724,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -40703,9 +40753,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -40851,6 +40901,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &1444713229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41599,7 +41650,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1466326675}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -41669,7 +41720,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100050, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1479020984}
@@ -41686,7 +41737,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400050, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1479020983}
   m_LocalRotation: {x: 0, y: 0, z: 9.99999997e-07, w: 1}
   m_LocalPosition: {x: -0, y: .544579983, z: -.121872187}
@@ -41698,7 +41749,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300042, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1479020983}
   m_Enabled: 1
   m_CastShadows: 1
@@ -41720,7 +41771,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300044, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1479020983}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1487957346
@@ -41895,7 +41946,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1495675862}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -42119,7 +42170,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -42141,7 +42192,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -42214,7 +42265,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1501536393}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -42430,7 +42481,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100054, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1510335642}
@@ -42447,7 +42498,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400054, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1510335641}
   m_LocalRotation: {x: 0, y: 0, z: 9.99999997e-07, w: 1}
   m_LocalPosition: {x: -0, y: .544579983, z: -.121872187}
@@ -42459,7 +42510,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300046, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1510335641}
   m_Enabled: 1
   m_CastShadows: 1
@@ -42481,14 +42532,14 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300048, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1510335641}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1510473919
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100056, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1510473920}
@@ -42505,7 +42556,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400056, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1510473919}
   m_LocalRotation: {x: 0, y: 0, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: .579034388, z: -.122001387}
@@ -42517,7 +42568,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300048, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1510473919}
   m_Enabled: 1
   m_CastShadows: 1
@@ -42539,7 +42590,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300050, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1510473919}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1512756184
@@ -42782,7 +42833,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -42804,7 +42855,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -42877,7 +42928,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 1517136521}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -43340,7 +43391,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100058, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1550185723}
@@ -43358,7 +43409,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300050, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1550185720}
   m_Enabled: 0
   m_CastShadows: 1
@@ -43380,14 +43431,14 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300052, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1550185720}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1550185723
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400058, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1550185720}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -.5, z: 0}
@@ -43398,7 +43449,7 @@ Transform:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100060, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1553264936}
@@ -43415,7 +43466,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400060, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1553264935}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -.5, z: .000363752246}
@@ -43427,7 +43478,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300052, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1553264935}
   m_Enabled: 0
   m_CastShadows: 1
@@ -43449,7 +43500,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300054, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1553264935}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1553341780
@@ -43866,7 +43917,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -43888,7 +43939,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -43961,7 +44012,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1570067609}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -44447,7 +44498,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 1622515056}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -44656,7 +44707,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1636496567}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -44699,7 +44750,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -44728,9 +44779,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -44757,7 +44808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -44786,9 +44837,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -44934,6 +44985,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &1636496578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45057,7 +45109,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -45079,7 +45131,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -45152,7 +45204,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 1640539421}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -45544,7 +45596,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -45573,9 +45625,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -45602,7 +45654,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -45631,9 +45683,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -45779,6 +45831,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &1655278266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45801,7 +45854,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1655278256}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -45964,7 +46017,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -45986,7 +46039,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -46046,7 +46099,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 1657964681}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -46191,7 +46244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -46220,9 +46273,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -46249,7 +46302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -46278,9 +46331,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -46426,6 +46479,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &1660461595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46448,7 +46502,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1660461585}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -46985,7 +47039,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1678298941}
@@ -47057,7 +47111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -47140,7 +47194,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -47325,7 +47379,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -47502,7 +47556,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1692768343}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47545,7 +47599,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -47574,9 +47628,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -47603,7 +47657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -47632,9 +47686,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -47780,6 +47834,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &1692768354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47892,7 +47947,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -47935,7 +47990,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -47964,9 +48019,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -47993,7 +48048,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -48022,9 +48077,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -48170,6 +48225,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &1694673927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48290,7 +48346,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1695448034}
@@ -48362,7 +48418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -48445,7 +48501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -48630,7 +48686,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -48702,7 +48758,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -48724,7 +48780,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -48797,7 +48853,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1711306538}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -48985,7 +49041,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100062, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1746834789}
@@ -49000,7 +49056,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400062, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1746834788}
   m_LocalRotation: {x: 4.65764032e-07, y: 3.02557046e-12, z: 3.58522517e-11, w: 1}
   m_LocalPosition: {x: -.498008728, y: -1.49821258, z: .00360488892}
@@ -49119,7 +49175,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1748235514}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -49260,7 +49316,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 1756825194}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -49422,7 +49478,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100066, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1772679394}
@@ -49439,7 +49495,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400066, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1772679393}
   m_LocalRotation: {x: 0, y: 0, z: 9.99999997e-07, w: 1}
   m_LocalPosition: {x: 0, y: .579034448, z: -.122001387}
@@ -49451,7 +49507,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300056, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1772679393}
   m_Enabled: 1
   m_CastShadows: 1
@@ -49473,14 +49529,14 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300058, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1772679393}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1778407404
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100068, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1778407405}
@@ -49497,7 +49553,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400068, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1778407404}
   m_LocalRotation: {x: 0, y: 0, z: .707106829, w: .707106829}
   m_LocalPosition: {x: -0, y: .579034388, z: -.121872187}
@@ -49509,7 +49565,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300058, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1778407404}
   m_Enabled: 1
   m_CastShadows: 1
@@ -49531,7 +49587,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300060, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1778407404}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1778902638
@@ -49600,7 +49656,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -49622,7 +49678,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -49695,7 +49751,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 1778902638}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -49922,7 +49978,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 1780832773}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -50549,7 +50605,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1800464083}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -50947,7 +51003,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -50969,7 +51025,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -51042,7 +51098,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 1815409843}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -51258,7 +51314,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100072, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1829640307}
@@ -51276,7 +51332,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400072, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1829640306}
   m_LocalRotation: {x: 1.34274306e-14, y: -1.34274306e-14, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: -.0344577543, z: .639210582}
@@ -51288,7 +51344,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300062, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1829640306}
   m_Enabled: 1
   m_CastShadows: 1
@@ -51310,7 +51366,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600010, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1829640306}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -51324,7 +51380,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300064, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1829640306}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1830169946
@@ -51719,7 +51775,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1837911545}
@@ -51734,7 +51790,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400000, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1837911544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -31.7714863, y: 1.24114823, z: -.21797502}
@@ -51828,7 +51884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -52007,7 +52063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -52075,7 +52131,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 1848022046}
@@ -52115,7 +52171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -52215,7 +52271,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100074, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1853844959}
@@ -52233,7 +52289,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400074, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1853844958}
   m_LocalRotation: {x: 1.34274306e-14, y: -1.34274306e-14, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: -.0344577543, z: .639210582}
@@ -52245,7 +52301,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300064, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1853844958}
   m_Enabled: 1
   m_CastShadows: 1
@@ -52267,7 +52323,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600012, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1853844958}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -52281,7 +52337,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300066, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1853844958}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1859228874
@@ -52646,7 +52702,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 1874055362}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -53375,7 +53431,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1954995859}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -53537,7 +53593,7 @@ Transform:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100078, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1959657533}
@@ -53554,7 +53610,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400078, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1959657532}
   m_LocalRotation: {x: 0, y: 0, z: .707106829, w: .707106829}
   m_LocalPosition: {x: -0, y: .579034388, z: -.121872187}
@@ -53566,7 +53622,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300068, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1959657532}
   m_Enabled: 1
   m_CastShadows: 1
@@ -53588,7 +53644,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300070, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 1959657532}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1967243044
@@ -54144,7 +54200,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -54166,7 +54222,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -54239,7 +54295,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 1987674635}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -54318,7 +54374,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1992712623}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -54522,7 +54578,7 @@ Prefab:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100080, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2005781104}
@@ -54539,7 +54595,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400080, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2005781103}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 3.25933838, z: -.0130226612}
@@ -54551,7 +54607,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300070, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2005781103}
   m_Enabled: 1
   m_CastShadows: 1
@@ -54573,7 +54629,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300072, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2005781103}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2012967878
@@ -54950,7 +55006,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -54972,7 +55028,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -55045,7 +55101,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 2026021443}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -55203,7 +55259,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100082, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2037750921}
@@ -55221,7 +55277,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400082, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2037750920}
   m_LocalRotation: {x: 1.34274306e-14, y: -1.34274306e-14, z: .707106829, w: .707106829}
   m_LocalPosition: {x: 0, y: -.0344551727, z: -.672225356}
@@ -55233,7 +55289,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300072, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2037750920}
   m_Enabled: 1
   m_CastShadows: 1
@@ -55255,7 +55311,7 @@ CapsuleCollider:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 13600014, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2037750920}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -55269,14 +55325,14 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300074, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2037750920}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2038722291
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100084, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2038722292}
@@ -55293,7 +55349,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400084, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2038722291}
   m_LocalRotation: {x: 0, y: 0, z: .707106829, w: .707106829}
   m_LocalPosition: {x: -0, y: .579034388, z: -.121872187}
@@ -55305,7 +55361,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300074, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2038722291}
   m_Enabled: 1
   m_CastShadows: 1
@@ -55327,7 +55383,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300076, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2038722291}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2046925107
@@ -55588,7 +55644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -55767,7 +55823,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -55835,7 +55891,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 2055361489}
@@ -55907,7 +55963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -56128,7 +56184,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2062804386}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -56599,7 +56655,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -56621,7 +56677,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -56694,7 +56750,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 2095141209}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -56856,7 +56912,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -56878,7 +56934,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -56951,7 +57007,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 2108867154}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -57055,7 +57111,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -57077,7 +57133,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -57150,7 +57206,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 2108978383}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -57250,7 +57306,7 @@ MeshFilter:
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 100002, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2120425686}
@@ -57267,7 +57323,7 @@ GameObject:
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 400002, guid: 9d7de4a5200aae24192fd977e78c7724, type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2120425685}
   m_LocalRotation: {x: -3.49623718e-07, y: 3.17181588e-07, z: 4.53636403e-07, w: 1}
   m_LocalPosition: {x: .48884505, y: -1.47025084, z: .155726954}
@@ -57279,7 +57335,7 @@ Renderer:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 2300000, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2120425685}
   m_Enabled: 1
   m_CastShadows: 1
@@ -57301,7 +57357,7 @@ MeshFilter:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 3300000, guid: 9d7de4a5200aae24192fd977e78c7724,
     type: 2}
-  m_PrefabInternal: {fileID: 0}
+  m_PrefabInternal: {fileID: 1411144114}
   m_GameObject: {fileID: 2120425685}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2120853173
@@ -57504,7 +57560,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -57683,7 +57739,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -57751,7 +57807,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 2142385623}
@@ -57823,7 +57879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -57969,7 +58025,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -57998,9 +58054,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -58027,7 +58083,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -58056,9 +58112,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -58204,6 +58260,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &2145673699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58226,7 +58283,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2145673689}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1

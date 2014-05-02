@@ -1690,7 +1690,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100008}
   serializedVersion: 2
-  m_Mass: 2
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1705,7 +1705,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1720,7 +1720,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100020}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1735,7 +1735,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100026}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1750,7 +1750,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100038}
   serializedVersion: 2
-  m_Mass: .5
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1765,7 +1765,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100042}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 4
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1976,7 +1976,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P:
@@ -2041,7 +2041,7 @@ MonoBehaviour:
   m_netLegVirtualForces:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 0}
-  m_tuneStepLength: {x: 1, y: .300000012}
+  m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
   - {fileID: 11400008}
@@ -2111,7 +2111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -2219,6 +2219,7 @@ MonoBehaviour:
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
   m_useVFTorque: 1
+  m_optimizePDs: 0
 --- !u!114 &11400026
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2255,6 +2256,7 @@ MonoBehaviour:
   m_testPIDLower: {fileID: 11400032}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
+  m_kneePosW: {x: 0, y: 0, z: 0}
 --- !u!114 &11400030
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2278,6 +2280,7 @@ MonoBehaviour:
   m_testPIDLower: {fileID: 11400036}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
+  m_kneePosW: {x: 0, y: 0, z: 0}
 --- !u!114 &11400032
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2290,7 +2293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -2318,9 +2321,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -2346,7 +2349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 25
+  m_Kp: 2.5
   m_Ki: 0
   m_Kd: 2.5
   m_P:
@@ -2374,9 +2377,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 25
+  m_Kp: 3
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: 2.5
   m_P:
   - 0
   - 0
@@ -2424,7 +2427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 25
+  m_Kp: 5
   m_Ki: 0
   m_Kd: 5
   m_P: 0
@@ -2621,7 +2624,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -2643,7 +2646,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0
@@ -2894,7 +2897,7 @@ ConfigurableJoint:
   m_ZMotion: 0
   m_AngularXMotion: 1
   m_AngularYMotion: 1
-  m_AngularZMotion: 0
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -2916,7 +2919,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularZLimit:
-    limit: 0
+    limit: 30
     bounciness: 0
     spring: 0
     damper: 0

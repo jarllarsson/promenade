@@ -91,9 +91,13 @@ public class TestHandler : MonoBehaviour
             for (int i = 0; i < m_optimizableControllers.Length; i++)
             {
                 IOptimizable opt = m_optimizableControllers[i];
-                List<float> paramslist = new List<float>();
-                paramslist.AddRange(m_currentParams[i]);
-                opt.ConsumeParams(paramslist); // consume it to controller
+                //if (opt != null && i<m_currentParams.Count)
+                {
+                    List<float> paramslist = new List<float>();
+                    paramslist.AddRange(m_currentParams[i]);
+                    Debug.Log("current params "+m_currentParams[i]);
+                    opt.ConsumeParams(paramslist); // consume it to controller
+                }
             }
             if (m_bestScoreController && m_lastBestParams != null && m_lastBestParams.Count>0)
             {

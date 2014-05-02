@@ -106,6 +106,13 @@ public class LegFrame : MonoBehaviour, IOptimizable
     Vector3[,] m_tuneFD = new Vector3[c_legCount,2]; // Individualized leg "distance"-force (2 phases, guessing in front of- and behind LF)
     Vector3[] m_legFgravityComp = new Vector3[c_legCount]; // Individualized leg force
 
+    private bool m_optimizePDs = true;
+
+    public void OptimizePDs(bool p_opt)
+    {
+        m_optimizePDs = p_opt;
+    }
+
     // IOptimizable
     public List<float> GetParams()
     {
@@ -144,14 +151,17 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int i = 0; i < m_legFgravityComp.Length; i++)
             vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_legFgravityComp[i]));
 
-        vals.Add(m_desiredLFTorquePD.m_Kp);
-        vals.Add(m_desiredLFTorquePD.m_Kd);
+        if (m_optimizePDs)
+        {
+            vals.Add(m_desiredLFTorquePD.m_Kp);
+            vals.Add(m_desiredLFTorquePD.m_Kd);
 
-        vals.Add(m_heightForceCalc.m_Kp);
-        vals.Add(m_heightForceCalc.m_Kd);
+            vals.Add(m_heightForceCalc.m_Kp);
+            vals.Add(m_heightForceCalc.m_Kd);
 
-        vals.Add(m_FootTrackingSpringDamper.m_Kp);
-        vals.Add(m_FootTrackingSpringDamper.m_Kd);
+            vals.Add(m_FootTrackingSpringDamper.m_Kp);
+            vals.Add(m_FootTrackingSpringDamper.m_Kd);
+        }
 
         return vals;
     }
@@ -190,17 +200,19 @@ public class LegFrame : MonoBehaviour, IOptimizable
         
         for (int i = 0; i < m_legFgravityComp.Length; i++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_legFgravityComp[i]);
-        
 
 
-        OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredLFTorquePD.m_Kp);
-        OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredLFTorquePD.m_Kd);
+        if (m_optimizePDs)
+        {
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredLFTorquePD.m_Kp);
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_desiredLFTorquePD.m_Kd);
 
-        OptimizableHelper.ConsumeParamsTo(p_params, ref m_heightForceCalc.m_Kp);
-        OptimizableHelper.ConsumeParamsTo(p_params, ref m_heightForceCalc.m_Kd);
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_heightForceCalc.m_Kp);
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_heightForceCalc.m_Kd);
 
-        OptimizableHelper.ConsumeParamsTo(p_params, ref m_FootTrackingSpringDamper.m_Kp);
-        OptimizableHelper.ConsumeParamsTo(p_params, ref m_FootTrackingSpringDamper.m_Kd);
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_FootTrackingSpringDamper.m_Kp);
+            OptimizableHelper.ConsumeParamsTo(p_params, ref m_FootTrackingSpringDamper.m_Kd);
+        }
 
 
 
@@ -251,14 +263,17 @@ public class LegFrame : MonoBehaviour, IOptimizable
             maxList.Add(20.0f); maxList.Add(20.0f); maxList.Add(20.0f);
         }
 
-        maxList.Add(200);
-        maxList.Add(20);
+        if (m_optimizePDs)
+        {
+            maxList.Add(200);
+            maxList.Add(20);
 
-        maxList.Add(40);
-        maxList.Add(5);
+            maxList.Add(40);
+            maxList.Add(5);
 
-        maxList.Add(40);
-        maxList.Add(5);
+            maxList.Add(40);
+            maxList.Add(5);
+        }
 
         return maxList;
     }
@@ -307,16 +322,18 @@ public class LegFrame : MonoBehaviour, IOptimizable
         {
             minList.Add(0.0f); minList.Add(0.0f); minList.Add(0.0f);
         }
-        
-        minList.Add(0.1f);
-        minList.Add(0.01f);
 
-        minList.Add(0.1f);
-        minList.Add(0.01f);
+        if (m_optimizePDs)
+        {
+            minList.Add(0.1f);
+            minList.Add(0.01f);
 
-        minList.Add(0.1f);
-        minList.Add(0.01f);
+            minList.Add(0.1f);
+            minList.Add(0.01f);
 
+            minList.Add(0.1f);
+            minList.Add(0.01f);
+        }
 
 
         return minList;
@@ -535,7 +552,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
     {
-        float mass=2.5f; // ?????
+        float mass=15.0f; // ?????
         int i = p_legId;
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
