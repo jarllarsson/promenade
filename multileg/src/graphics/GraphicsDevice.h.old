@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "RenderStateHelper.h"
 
+
 struct PVertex;
 class ViewFactory;
 class BufferFactory;
@@ -13,7 +14,6 @@ class ComposeShader;
 class MeshShader;
 class Texture;
 class Mesh;
-
 
 
 // =======================================================================================
@@ -36,8 +36,8 @@ public:
 	const static int DEPTH_IDX = 10;
 	enum GBufferChannel {
 		GBUF_INVALID	= -1,
-		GBUF_DIFFUSE	= RT0,				// R, G, B, LinDepth(Raytracer)
-		GBUF_NORMAL		= RT1,				// X, Y, Z		
+		GBUF_DIFFUSE	= RT0,				// R, G, B, LinDepth
+		GBUF_NORMAL		= RT1,				// X, Y, Z, (Something)		
 		GBUF_COUNT,
 		GBUF_DEPTH		= DEPTH_IDX,		// Depth
 	};
@@ -53,15 +53,14 @@ public:
 
 	enum ShaderId {
 		SI_NONE,
+		SI_MESHSHADER,
 		SI_COMPOSESHADER,
-		SI_WIREFRAMESHADER,
 		SI_COUNT,
 	};
 
 	enum RenderPass {
 		P_BASEPASS,
 		P_COMPOSEPASS,
-		P_WIREFRAMEPASS,
 		P_COUNT,
 	};
 
@@ -84,15 +83,11 @@ public:
 	int getHeight();
 
 	// Stages
-	void executeRenderPass(RenderPass p_pass,
-						   BufferBase* p_cbuf=NULL, 
-						   BufferBase* p_instances=NULL );
-
+	void executeRenderPass(RenderPass p_pass);
 
 	// Getters
 	void* getDevicePointer();
 	void** getInteropCanvasHandle();
-	BufferFactory* getBufferFactoryRef();
 
 protected:
 private:	
@@ -127,7 +122,7 @@ private:
 
 	// Draw
 	void drawFullscreen();
-	void drawInstancedAABB(UINT32 p_instanceElementCount, int p_instanceElemSz, void* p_instanceRef);
+	void drawMeshes();
 
 	// Initialisations
 	void initSwapChain(HWND p_hWnd);
@@ -155,12 +150,12 @@ private:
 	TextureFactory* m_textureFactory;
 
 	// Shaders
-	ComposeShader* m_composeShader;
-	MeshShader* m_wireframeShader;
+	ComposeShader*	m_composeShader;
+	MeshShader*		m_meshShader;
 
 	// Fullscreen quad for drawing
-	Buffer<PVertex>* m_fullscreenQuad;
-	Buffer<PVertex>* m_aabbLineMesh;
+	Buffer<PVertex>*	m_fullscreenQuad;
+	Mesh*				m_boxMesh;
 
 	// Blend states
 	vector<ID3D11BlendState*> m_blendStates;
@@ -188,5 +183,4 @@ private:
 	Texture**					m_interopCanvasHandle; ///< Handle enabling texture reallocation
 	ID3D11RenderTargetView*		m_gRtv[GBufferChannel::GBUF_COUNT];
 	ID3D11ShaderResourceView*	m_gSrv[GBufferChannel::GBUF_COUNT];
-
 };

@@ -106,6 +106,12 @@
     <ClInclude Include="MeshShader.h">
       <Filter>Shaders</Filter>
     </ClInclude>
+    <ClInclude Include="CBuffers.h">
+      <Filter>Buffers</Filter>
+    </ClInclude>
+    <ClInclude Include="InstanceData.h">
+      <Filter>Buffers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferBase.cpp">

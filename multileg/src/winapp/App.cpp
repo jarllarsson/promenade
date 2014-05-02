@@ -51,20 +51,6 @@ App::App( HINSTANCE p_hInstance )
 		DEBUGWARNING((e.what()));
 	}
 
-	// Kernels
-	/*
-	try
-	{
-		m_kernelDevice = new KernelDevice(m_graphicsDevice->getDevicePointer());
-		m_kernelDevice->registerCanvas(m_graphicsDevice->getInteropCanvasHandle());
-	}
-	catch (KernelException& e)
-	{
-		DEBUGWARNING((e.what()));
-	}
-	*/
-
-	//
 
 	fpsUpdateTick=0.0f;
 	m_controller = new TempController();

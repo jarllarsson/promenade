@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "D3DUtil.h"
 
+
 BufferFactory::BufferFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext)
 {
 	m_device = p_device;
@@ -15,6 +16,52 @@ BufferFactory::~BufferFactory()
 
 }
 
+
+Buffer<Mat4CBuffer>* BufferFactory::createMat4CBuffer()
+{
+	Buffer<Mat4CBuffer>* cBuffer;
+	/// initialization data
+	Mat4CBuffer data={
+		{1.0f,0.0f,0.0f,  0.0f, // this here is an identity matrix
+		0.0f,1.0f,0.0f,   0.0f,
+		0.0f,0.0f,1.0f,   0.0f,
+		0.0f,0.0f,0.0f,   1.0f}
+	};
+
+	// set up buffer description: usage, type and size
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = m_elementSize;
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = sizeof(data)/m_elementSize;
+	bufferDesc.Type = BufferConfig::CONSTANT_BUFFER_VS_PS;
+	bufferDesc.Slot = BufferConfig::PERFRAME;
+
+
+	// create and return the buffer
+	cBuffer = new Buffer<Mat4CBuffer>(m_device,m_deviceContext,&data,bufferDesc);
+	return cBuffer;
+}
+
+
+Buffer<InstanceData>* BufferFactory::createMat4InstanceBuffer( void* p_instanceList, 
+															  unsigned int p_numberOfElements)
+{
+	Buffer<InstanceData>* instanceBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = sizeof(InstanceData);
+	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	bufferDesc.NumElements = p_numberOfElements;
+	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+	bufferDesc.Slot = BufferConfig::SLOT0;
+
+	// Create buffer from config and data
+	instanceBuffer = new Buffer<InstanceData>(m_device,m_deviceContext,
+		(InstanceData*)p_instanceList,bufferDesc);
+
+	return instanceBuffer;
+}
 
 Buffer<PVertex>* BufferFactory::createFullScreenQuadBuffer()
 {
@@ -43,6 +90,7 @@ Buffer<PVertex>* BufferFactory::createFullScreenQuadBuffer()
 
 	return quadBuffer;
 }
+
 
 Mesh* BufferFactory::createBoxMesh()
 {
@@ -128,4 +176,48 @@ Buffer<unsigned int>* BufferFactory::createIndexBuffer( unsigned int* p_indices,
 									 indexBufferDesc);
 
 	return indexBuffer;
+}
+
+Buffer<PVertex>* BufferFactory::createLineBox()
+{
+	PVertex mesh[]= {{-1.0f, -1.0f, -1.0f},
+					 {1.0f, -1.0f, -1.0f},
+					 {-1.0f, -1.0f, -1.0f},
+					 {-1.0f, 1.0f, -1.0f},
+					 {-1.0f, 1.0f, -1.0f},
+					 {1.0f, 1.0f, -1.0f},
+					 {1.0f, -1.0f, -1.0f},
+					 {1.0f, 1.0f, -1.0f},
+					 {-1.0f, -1.0f, 1.0f},
+					 {1.0f, -1.0f, 1.0f},
+					 {-1.0f, -1.0f, 1.0f},
+					 {-1.0f, 1.0f, 1.0f},
+					 {-1.0f, 1.0f, 1.0f},
+					 {1.0f, 1.0f, 1.0f},
+					 {1.0f, -1.0f, 1.0f},
+					 {1.0f, 1.0f, 1.0f},
+					 {-1.0f, -1.0f, -1.0f},
+					 {-1.0f, -1.0f, 1.0f},
+					 {1.0f, -1.0f, -1.0f},
+					 {1.0f, -1.0f, 1.0f},
+					 {-1.0f, 1.0f, -1.0f},
+					 {-1.0f, 1.0f, 1.0f},
+					 {1.0f, 1.0f, -1.0f},
+					 {1.0f, 1.0f, 1.0f}};
+
+	Buffer<PVertex>* lineboxBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	bufferDesc.ElementSize = sizeof(PVertex);
+	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	bufferDesc.NumElements = sizeof(mesh)/sizeof(PVertex);
+	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+	bufferDesc.Slot = BufferConfig::SLOT0;
+
+	// Create buffer from config and data
+	lineboxBuffer = new Buffer<PVertex>(m_device,m_deviceContext,&mesh[0],bufferDesc);
+	SETDEBUGNAME((lineboxBuffer->getBufferPointer()),("linebox_buffer"));
+
+	return lineboxBuffer;
 }
