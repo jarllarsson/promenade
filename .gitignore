@@ -64,3 +64,5 @@ bin/x64/*.txt
 /proto/greedy-optimization/greedy-optimization-csharp.sln
 /proto/greedy-optimization/greedy-optimization.sln
 
+*.psess
+*.vspx

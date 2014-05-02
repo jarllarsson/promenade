@@ -60,7 +60,7 @@ App::App( HINSTANCE p_hInstance )
 	for (int z = 0; z < 10; z++)
 	{
 		glm::mat4 transMat = glm::translate(glm::mat4(1.0f),
-			glm::vec3((float)x, (float)y, (float)z)*10.0f);
+			glm::vec3((float)x*10.0f, (float)y*10.0f, (float)z)*10.0f);
 		m_instance.push_back(transMat);
 	}
 	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instance[0], m_instance.size());
