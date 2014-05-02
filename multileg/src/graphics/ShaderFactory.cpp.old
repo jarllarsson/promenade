@@ -8,7 +8,6 @@
 #include <d3d11.h>
 #include <vector>
 #include <d3d11shader.h>
-#include <DebugPrint.h>
 
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
@@ -73,6 +72,7 @@ ComposeShader* ShaderFactory::createComposeShader( const LPCWSTR& p_filePath )
 	return new ComposeShader(shaderVariables);
 }
 
+
 MeshShader* ShaderFactory::createMeshShader( const LPCWSTR& p_filePath )
 {
 	ID3D11SamplerState*		samplerState = NULL;
@@ -92,6 +92,7 @@ MeshShader* ShaderFactory::createMeshShader( const LPCWSTR& p_filePath )
 
 	return new MeshShader(shaderVariables);
 }
+
 
 void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 
 									    const string &p_entryPoint, 
@@ -126,7 +127,8 @@ void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile,
 		if (blobError!=NULL)
 			throw GraphicsException(blobError,__FILE__,__FUNCTION__,__LINE__);
 		else
-			throw GraphicsException(res,__FILE__,__FUNCTION__,__LINE__);		
+			throw GraphicsException(res,__FILE__,__FUNCTION__,__LINE__);
+
 		return;
 	}
 
@@ -322,28 +324,13 @@ void ShaderFactory::createVertexInputLayout( VSData* p_vs, ID3D11InputLayout** p
 		D3D11_INPUT_ELEMENT_DESC elementDesc;   
 		elementDesc.SemanticName = paramDesc.SemanticName;      
 		elementDesc.SemanticIndex = paramDesc.SemanticIndex;
+		elementDesc.InputSlot = 0;
 		elementDesc.AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-		int inputslot=0,instancestep=0;
 		if (p_maxPerVertexElements==-1 || i<(unsigned int)p_maxPerVertexElements)
-		{
-			string semname(elementDesc.SemanticName);
-			if (semname.substr(0,8)=="INSTANCE")
-			{
-				elementDesc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
-				inputslot=1;
-				instancestep=1;
-			}
-			else
-				elementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		}
+			elementDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 		else
-		{
 			elementDesc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
-			inputslot=1;
-			instancestep=1;
-		}
-		elementDesc.InputSlot = inputslot;
-		elementDesc.InstanceDataStepRate = instancestep;   
+		elementDesc.InstanceDataStepRate = 0;   
 
 		// determine DXGI format
 		if ( paramDesc.Mask == 1 )

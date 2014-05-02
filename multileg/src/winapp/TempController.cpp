@@ -62,6 +62,10 @@ glm::mat4& TempController::getRotationMatrix()
 	return m_rotationMat;
 }
 
+glm::mat4& TempController::getViewProjMatrix()
+{
+	return m_viewProjMat;
+}
 
 glm::vec4& TempController::getPos()
 {
@@ -115,6 +119,15 @@ void TempController::calcRotationMatrix()
 	m_rotationMat=glm::toMat4(m_rotation);
 }
 
+void TempController::calcViewProjMatrix(float p_fovYAngleDeg, float p_aspectRatio)
+{
+	glm::mat4 proj = glm::perspective(p_fovYAngleDeg, p_aspectRatio, 0.1f, 1000.0f);
+	glm::mat4 transMat = glm::translate(glm::mat4(1.0f), glm::vec3(m_position.x, m_position.y, m_position.z));
+	glm::mat4 viewMat = m_rotationMat*glm::inverse(transMat);
+	m_viewProjMat = m_projMat*viewMat;
+	m_viewProjMat = glm::transpose(m_viewProjMat);
+}
+
 void TempController::rotate( glm::vec3 p_angularVelocity )
 {
 	if (glm::sqrLength(p_angularVelocity)>0.0f)
@@ -126,5 +139,5 @@ void TempController::rotate( glm::vec3 p_angularVelocity )
 
 float TempController::getVelocityAmount()
 {
-	return m_velocity.length();
+	return (float)m_velocity.length();
 }
