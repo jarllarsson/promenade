@@ -677,7 +677,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 22809547}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -702,8 +702,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -1034,10 +1034,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &48864861
 MonoBehaviour:
@@ -1074,9 +1074,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -1103,9 +1103,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -1132,9 +1132,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -1161,9 +1161,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -1596,7 +1596,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 67930223}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1637,8 +1637,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -1809,7 +1809,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 83125661}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2105,7 +2105,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 86226927}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2395,8 +2395,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -2478,7 +2478,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 98029740}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2525,10 +2525,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!4 &98454171
 Transform:
@@ -2584,9 +2584,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2613,9 +2613,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2642,9 +2642,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -2671,9 +2671,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -3182,7 +3182,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 117985870}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -4473,9 +4473,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -4652,9 +4652,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -4792,9 +4792,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -4848,8 +4848,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -4931,7 +4931,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 158806501}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -5171,10 +5171,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &172532133
 MonoBehaviour:
@@ -5211,9 +5211,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -5240,9 +5240,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -5269,9 +5269,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -5298,9 +5298,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -5826,8 +5826,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -5909,7 +5909,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 177119446}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -6400,9 +6400,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -6483,9 +6483,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -6668,9 +6668,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -6970,7 +6970,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 207878289}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -7451,10 +7451,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &217361973
 MonoBehaviour:
@@ -7491,9 +7491,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -7520,9 +7520,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -7549,9 +7549,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -7578,9 +7578,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -8372,7 +8372,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 236386631}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -8397,8 +8397,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -8791,7 +8791,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 251060027}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -9034,8 +9034,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -9117,7 +9117,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 261288005}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -9511,9 +9511,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -9594,9 +9594,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -9779,9 +9779,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -10583,7 +10583,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 313097649}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -10908,7 +10908,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 331184568}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -11171,7 +11171,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 335817716}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -13069,9 +13069,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -13098,9 +13098,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -13127,9 +13127,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -13156,9 +13156,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -13330,10 +13330,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!23 &408855617
 Renderer:
@@ -13403,7 +13403,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 412207749}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -13444,8 +13444,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -13814,7 +13814,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 425729506}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -14144,9 +14144,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -14323,9 +14323,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -14431,9 +14431,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -14626,7 +14626,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 458519846}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -14651,8 +14651,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -14997,7 +14997,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 466709323}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -15317,9 +15317,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -15457,9 +15457,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -15476,9 +15476,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -15610,7 +15610,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 479664585}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -16535,9 +16535,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -16714,9 +16714,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -16822,9 +16822,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -16959,7 +16959,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 531019845}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -16984,8 +16984,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -17175,10 +17175,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &532043470
 MonoBehaviour:
@@ -17215,9 +17215,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -17244,9 +17244,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -17273,9 +17273,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -17302,9 +17302,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -18536,10 +18536,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &593680953
 MonoBehaviour:
@@ -18576,9 +18576,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -18605,9 +18605,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -18634,9 +18634,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -18663,9 +18663,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -18966,7 +18966,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 598806052}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -19282,9 +19282,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -19365,9 +19365,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -19550,9 +19550,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -20555,7 +20555,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 669888217}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -20580,8 +20580,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -21069,7 +21069,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 689135235}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -21094,8 +21094,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -21979,7 +21979,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 709576422}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -22041,7 +22041,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 727624680}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -22066,8 +22066,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -22179,7 +22179,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 730808557}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -23104,7 +23104,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 754541814}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -23129,8 +23129,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -23513,9 +23513,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -23692,9 +23692,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -23832,9 +23832,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -25039,10 +25039,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!4 &853343069
 Transform:
@@ -25288,9 +25288,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -25317,9 +25317,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -25346,9 +25346,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -25375,9 +25375,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -25548,7 +25548,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 872318598}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -25573,8 +25573,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -25925,7 +25925,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 882517218}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -26246,7 +26246,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 888160326}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -26532,7 +26532,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 913927468}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -26789,7 +26789,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 917665541}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -26814,8 +26814,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -27031,9 +27031,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -27210,9 +27210,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -27350,9 +27350,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -29188,7 +29188,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 1015602174}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29248,7 +29248,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1022868868}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -29472,10 +29472,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &1038023367
 MonoBehaviour:
@@ -29512,9 +29512,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -29541,9 +29541,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -29570,9 +29570,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -29599,9 +29599,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -29994,7 +29994,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1045670301}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -30023,7 +30023,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.16905284
+      value: 2.50195765
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -30072,6 +30072,10 @@ Prefab:
     - target: {fileID: 11400022, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Constraints
+      value: 108
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -30298,9 +30302,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -30381,9 +30385,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -30534,9 +30538,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -30613,7 +30617,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1061320849}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -30638,8 +30642,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -30986,7 +30990,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 1074839491}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -31011,8 +31015,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -31183,7 +31187,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 1077204326}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -31542,9 +31546,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -31625,9 +31629,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -31810,9 +31814,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -32905,10 +32909,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &1139609874
 MonoBehaviour:
@@ -32945,9 +32949,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -32974,9 +32978,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -33003,9 +33007,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -33032,9 +33036,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -33697,7 +33701,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 1164190806}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -33838,7 +33842,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 1164324470}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -33863,8 +33867,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -34035,7 +34039,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1171089867}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -34847,7 +34851,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1198743232}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -35465,7 +35469,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1243444177}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -35703,7 +35707,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 1244642257}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -36533,7 +36537,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 1266115836}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -37055,7 +37059,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 1289444901}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -37363,8 +37367,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -37446,7 +37450,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 1295511028}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -38256,7 +38260,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1356498819}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -38281,8 +38285,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -38479,8 +38483,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -38562,7 +38566,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 1361811062}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -39333,7 +39337,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 1396941233}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -39634,9 +39638,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -39717,9 +39721,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -39870,9 +39874,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -40626,10 +40630,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &1444713221
 MonoBehaviour:
@@ -40666,9 +40670,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40695,9 +40699,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40724,9 +40728,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -40753,9 +40757,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -41000,7 +41004,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1445635591}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -41025,8 +41029,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -41567,8 +41571,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -41650,7 +41654,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1466326675}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -41946,7 +41950,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1495675862}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -41971,8 +41975,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -44207,7 +44211,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 1588524716}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -44232,8 +44236,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -44415,8 +44419,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -44498,7 +44502,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 1622515056}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -44710,10 +44714,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &1636496570
 MonoBehaviour:
@@ -44750,9 +44754,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -44779,9 +44783,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -44808,9 +44812,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -44837,9 +44841,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -45283,7 +45287,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 1648741902}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -45308,8 +45312,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -45596,9 +45600,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -45625,9 +45629,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -45654,9 +45658,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -45683,9 +45687,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -45857,10 +45861,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!23 &1655278268
 Renderer:
@@ -46244,9 +46248,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -46273,9 +46277,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -46302,9 +46306,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -46331,9 +46335,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -46505,10 +46509,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!23 &1660461597
 Renderer:
@@ -47111,9 +47115,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -47194,9 +47198,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -47379,9 +47383,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -47559,10 +47563,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &1692768346
 MonoBehaviour:
@@ -47599,9 +47603,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -47628,9 +47632,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -47657,9 +47661,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -47686,9 +47690,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -47927,7 +47931,7 @@ Transform:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -36.6021881, y: 2.16905284, z: 0}
+  m_LocalPosition: {x: -36.6021881, y: 2.50195765, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1245786536}
@@ -47950,10 +47954,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 108
   m_CollisionDetection: 0
 --- !u!114 &1694673919
 MonoBehaviour:
@@ -47990,9 +47994,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -48019,9 +48023,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -48048,9 +48052,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -48077,9 +48081,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -48418,9 +48422,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -48501,9 +48505,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -48686,9 +48690,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -49175,7 +49179,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1748235514}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -49316,7 +49320,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 2019476409}
   m_GameObject: {fileID: 1756825194}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -49341,8 +49345,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -49978,7 +49982,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 1780832773}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -50409,7 +50413,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1795593649}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -50434,8 +50438,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -50605,7 +50609,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1800464083}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -51555,7 +51559,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1835151234}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -51580,8 +51584,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -51884,9 +51888,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -52063,9 +52067,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -52171,9 +52175,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -52702,7 +52706,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 1874055362}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -53431,7 +53435,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1954995859}
   serializedVersion: 2
-  m_Mass: 3
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -53744,7 +53748,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 1968959068}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -53769,8 +53773,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -54374,7 +54378,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1992712623}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -54399,8 +54403,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -55644,9 +55648,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -55823,9 +55827,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -55963,9 +55967,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -56184,7 +56188,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2062804386}
   serializedVersion: 2
-  m_Mass: 4
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -56209,8 +56213,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 1
-  m_AngularZMotion: 1
+  m_AngularYMotion: 0
+  m_AngularZMotion: 0
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -57560,9 +57564,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: heightTrackingForce
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -57739,9 +57743,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Torque LF
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -57879,9 +57883,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: footTrackingController
-  m_Kp: 5
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 5
+  m_Kd: .0250000004
   m_P: 0
   m_I: 0
   m_D: 0
@@ -58025,9 +58029,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 4
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -58054,9 +58058,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 3
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -58083,9 +58087,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 2
-  m_Kp: 2.5
+  m_Kp: .25
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -58112,9 +58116,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NAME: Desired Joint Torques 1
-  m_Kp: 3
+  m_Kp: .300000012
   m_Ki: 0
-  m_Kd: 2.5
+  m_Kd: .0250000004
   m_P:
   - 0
   - 0
@@ -58286,10 +58290,10 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!23 &2145673701
 Renderer:

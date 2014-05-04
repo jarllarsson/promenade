@@ -17,6 +17,13 @@ public class PID : MonoBehaviour
     public float m_I = 0.0f;  // Integral error     (What we should have corrected before)
     public float m_D = 0.0f;  // Derivative error   (How fast the P error is changing)
 
+    public static bool m_autoKd = true;
+
+    public void Start()
+    {
+        if (m_autoKd) m_Kd = 2.0f * Mathf.Sqrt(m_Kp);
+    }
+
     // Drive the controller and get new value
     // p_error This is the current error
     // p_dt this is the step size

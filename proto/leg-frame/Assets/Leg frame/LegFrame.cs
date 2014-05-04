@@ -554,6 +554,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
     {
         float mass=0.0f; // ?????
         int i = p_legId;
+        Debug.Log(Physics.gravity);
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
 
