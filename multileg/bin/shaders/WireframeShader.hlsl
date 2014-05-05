@@ -29,5 +29,5 @@ VertexOut VS(VertexIn p_input)
 float4 PS(VertexOut input) : SV_TARGET
 {
 	//float4(1,0.6470588235294118,0,0.5f);
-	return float4(0.7333,0.99,0.45f,1.0f)*0.05f;
+	return float4(0.7333,0.99,0.45f,1.0f);
 }

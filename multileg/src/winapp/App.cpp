@@ -163,7 +163,7 @@ void App::run()
 				std::cout << static_cast<char>(pplRes[i]); 
 
 			// C++AMP (GPU)
-			concurrency::array_view<int> av(11, v); 
+			/*concurrency::array_view<int> av(11, v); 
 			concurrency::parallel_for_each(av.extent, [=](concurrency::index<1> idx) restrict(amp) 
 			{ 
 				av[idx] += 1; 
@@ -172,7 +172,7 @@ void App::run()
 
 			// Print C++AMP
 			for(unsigned int i = 0; i < 11; i++) 
-				std::cout << static_cast<char>(av[i]); 
+				std::cout << static_cast<char>(av[i]); */
 
 
 			// ====================================================

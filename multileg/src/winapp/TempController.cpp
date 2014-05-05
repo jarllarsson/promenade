@@ -5,7 +5,7 @@
 
 TempController::TempController()
 {
-	m_position = glm::vec4(0.0f,0.0f,-10.0f,1.0f);
+	m_position = glm::vec4(1.0f,1.0f,-10.0f,1.0f);
 	m_rotation = glm::quat(glm::vec3(0.0f,0.2f,0.0f));
 	m_fovDirtyBit = false;
 
