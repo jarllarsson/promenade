@@ -55,12 +55,13 @@ App::App( HINSTANCE p_hInstance )
 	//m_input = new OISHelper();
 	//m_input->doStartup(m_context->getWindowHandle());
 	//
-	for (int x = 0; x < 10; x++)
-	for (int y = 0; y < 10; y++)
+	for (int x = 0; x < 100; x++)
+	for (int y = 0; y < 100; y++)
 	for (int z = 0; z < 10; z++)
 	{
 		glm::mat4 transMat = glm::translate(glm::mat4(1.0f),
-			glm::vec3((float)x*10.0f, (float)y*10.0f, (float)z)*10.0f);
+			glm::vec3((float)x*2.0f -100.0f, (float)y*2.0f-100.0f, (float)z*2.0f));
+		transMat = glm::transpose(transMat);
 		m_instance.push_back(transMat);
 	}
 	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instance[0], m_instance.size());
@@ -163,7 +164,7 @@ void App::run()
 				std::cout << static_cast<char>(pplRes[i]); 
 
 			// C++AMP (GPU)
-			/*concurrency::array_view<int> av(11, v); 
+			concurrency::array_view<int> av(11, v); 
 			concurrency::parallel_for_each(av.extent, [=](concurrency::index<1> idx) restrict(amp) 
 			{ 
 				av[idx] += 1; 
@@ -171,8 +172,12 @@ void App::run()
 
 
 			// Print C++AMP
-			for(unsigned int i = 0; i < 11; i++) 
-				std::cout << static_cast<char>(av[i]); */
+			for (unsigned int i = 0; i < 11; i++)
+			{
+				char ch = static_cast<char>(av[i]);
+				DEBUGPRINT(( toString(ch).c_str() ));
+			}
+			DEBUGPRINT((string("\n").c_str()));
 
 
 			// ====================================================
@@ -188,7 +193,7 @@ void App::run()
 
 void App::updateController()
 {
-	m_controller->moveThrust(glm::vec3(0.0f, 0.0f, -3.0f));
+	m_controller->moveThrust(glm::vec3(0.0f, 0.0f, -0.8f));
 	m_controller->moveAngularThrust(glm::vec3(0.0f, 0.0f, 1.0f)*0.07f);
 	// // get joystate
 	// //Just dump the current joy state
