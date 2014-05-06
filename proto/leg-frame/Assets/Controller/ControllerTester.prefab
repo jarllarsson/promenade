@@ -189,6 +189,7 @@ GameObject:
   - 114: {fileID: 11400038}
   - 114: {fileID: 11400036}
   - 114: {fileID: 11400022}
+  - 75: {fileID: 7500000}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
@@ -677,7 +678,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 200.723114, y: 2.18000007, z: 123.899384}
+  m_LocalPosition: {x: -.100917101, y: 2.1690526, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400008}
@@ -896,7 +897,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100054}
   m_LocalRotation: {x: 1.34274306e-14, y: -1.34274306e-14, z: .707106829, w: .707106829}
-  m_LocalPosition: {x: 0, y: -.0344577543, z: .639210582}
+  m_LocalPosition: {x: 0, y: .211123303, z: .501966655}
   m_LocalScale: {x: 1.430668, y: .355055988, z: .522141993}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -907,7 +908,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100056}
   m_LocalRotation: {x: 1.34274306e-14, y: -1.34274306e-14, z: .707106829, w: .707106829}
-  m_LocalPosition: {x: 0, y: -.0344551727, z: -.672225356}
+  m_LocalPosition: {x: 0, y: .193432927, z: -.498116374}
   m_LocalScale: {x: 1.430668, y: .355055988, z: .522141993}
   m_Children: []
   m_Father: {fileID: 400038}
@@ -918,7 +919,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100058}
   m_LocalRotation: {x: -3.29344914e-07, y: 3.29344914e-07, z: .707106829, w: .707106829}
-  m_LocalPosition: {x: 0, y: -2.98612144e-06, z: -.672402143}
+  m_LocalPosition: {x: 0, y: .193432897, z: -.498116404}
   m_LocalScale: {x: 1.43066585, y: .355055988, z: .522141993}
   m_Children: []
   m_Father: {fileID: 400008}
@@ -929,7 +930,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100060}
   m_LocalRotation: {x: -2.82470921e-07, y: 2.82470921e-07, z: .707106829, w: .707106829}
-  m_LocalPosition: {x: 0, y: 1.6112906e-06, z: .639034271}
+  m_LocalPosition: {x: 2.55636528e-12, y: .211122945, z: .501790345}
   m_LocalScale: {x: 1.43066812, y: .355056405, z: .522141695}
   m_Children: []
   m_Father: {fileID: 400008}
@@ -1697,7 +1698,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!54 &5400004
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -1708,7 +1709,7 @@ Rigidbody:
   m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 96
@@ -1757,7 +1758,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!54 &5400012
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -1809,6 +1810,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: -4.76837158e-07, z: 0}
+--- !u!75 &7500000
+ConstantForce:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100018}
+  m_Enabled: 1
+  m_Force: {x: 0, y: 145, z: 0}
+  m_RelativeForce: {x: 0, y: 0, z: 0}
+  m_Torque: {x: 0, y: 0, z: 0}
+  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2130,7 +2142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 11400024}
   m_myLegFrame: {fileID: 11400016}
-  m_fdWeight: 100
+  m_fdWeight: 1000
   m_fvWeight: 5
   m_fhWeight: .5
   m_frWeight: 5
@@ -2618,7 +2630,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: .5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: -3.0213082e-10, y: -1.04618967, z: .341220945}
+  m_ConnectedAnchor: {x: -3.0213082e-10, y: -1.04618967, z: .341221303}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0
@@ -2891,7 +2903,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: .5, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: -1.03982556, z: .341243684}
+  m_ConnectedAnchor: {x: 0, y: -1.03982556, z: .341243327}
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
   m_YMotion: 0

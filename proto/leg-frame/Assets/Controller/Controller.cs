@@ -45,7 +45,7 @@ public class Controller : MonoBehaviour, IOptimizable
 
     void Awake()
     {
-
+        m_oldPos = transform.position;
     }
 
     // IOptimizable

@@ -14,15 +14,18 @@ public class IKSolverSimple : MonoBehaviour
     public float m_kneeAngle;
     public PIDn m_testPIDUpper;
     public PIDn m_testPIDLower;
+    public Vector3 m_hipPos;
     public Vector3 m_kneePos;
     public Vector3 m_endPos;
     public Vector3 m_kneePosW;
+
+    private Vector3 m_startPos;
     
 
 	// Use this for initialization
 	void Start () 
     {
-	
+        m_startPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -41,7 +44,7 @@ public class IKSolverSimple : MonoBehaviour
         else if (m_legFrame!=null)
         {
             // get non-corrected foot pos here
-            footPos = new Vector3(0.0f, m_legFrame.getReferenceFootPos((int)m_legType).y, -(m_legFrame.getReferenceFootPos((int)m_legType).z /*- m_legFrame.getOptimalProgress()*/ - m_legFrame.getReferenceLiftPos((int)m_legType).z /*- transform.position.z*/));
+            footPos = new Vector3(0.0f, m_legFrame.getReferenceFootPos((int)m_legType).y, -(m_legFrame.getReferenceFootPos((int)m_legType).z - m_legFrame.getOptimalProgress()) /*- (m_legFrame.getOptimalProgress() + m_legFrame.getReferenceLiftPos((int)m_legType).z)) + */ /*- transform.position.z*/);
                 //new Vector3(0.0f, m_legFrame.getGraphedFootPos((int)m_legType), 0.0f/*m_legFrame.m_footTarget[(int)m_legType].z-m_legFrame.transform.position.z*/);
         }
             //footPos = m_legFrame.m_footTarget[(int)m_legType];
@@ -141,11 +144,12 @@ public class IKSolverSimple : MonoBehaviour
         Vector3 offset = Vector3.zero;
         int idx=(int)m_legType;
         if (m_legFrame!=null)
-            offset = new Vector3(m_legFrame.m_footTarget[(int)m_legType].x, 0.0f/*m_legFrame.transform.position.y*/, m_legFrame.transform.position.z)/* + m_legFrame.transform.position*/;
+            offset = new Vector3(m_legFrame.m_footTarget[idx].x, 0.0f/*m_legFrame.transform.position.y*/, m_startPos.z+m_legFrame.getOptimalProgress() /*-m_legFrame.getReferenceLiftPos(idx).z/* + m_legFrame.transform.position*/);
             //offset = new Vector3(m_legFrame.getReferenceFootPos(idx).x, m_legFrame.transform.position.y, m_legFrame.getReferenceFootPos(idx).z);
         else if (m_foot!=null)
             offset = new Vector3(m_upperLeg.position.x, 0.0f, m_upperLeg.position.z)/* + m_legFrame.transform.position*/;
 
+        m_hipPos = offset + upperLegLocalPos;
         m_kneePosW = offset + m_kneePos;
         Debug.DrawLine(offset + upperLegLocalPos, m_kneePosW,Color.red);
         Debug.DrawLine(m_kneePosW, offset + m_endPos, Color.blue);

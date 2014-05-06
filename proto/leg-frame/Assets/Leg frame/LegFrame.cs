@@ -115,6 +115,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     private bool m_optimizePDs = true;
 
+
+    private Vector3 m_startPos;
+
     public void OptimizePDs(bool p_opt)
     {
         m_optimizePDs = p_opt;
@@ -373,7 +376,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
             m_footTarget[i] += new Vector3(0.0f, 0.0f, m_tuneStepLength.y);
             m_footLiftPlacement[i] -= new Vector3(0.0f, 0.0f, m_tuneStepLength.y);
             // reference data structures
-            m_referenceFootPos[i] = m_feet[i].transform.position;
+            m_referenceFootPos[i] = new Vector3(m_feet[i].transform.position.x,0.0f,0.0f);
             m_referenceOldFootPos[i] = m_referenceFootPos[i];
             m_referenceLiftPos[i] = m_referenceFootPos[i];
         }
@@ -396,7 +399,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 	// Use this for initialization
 	void Start () 
     {
-	
+        m_startPos = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -407,6 +410,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void updateReferenceFeetPositions(float p_phi, float p_t, Vector3 p_goalVelocity)
     {
+        m_optimalProgress = p_goalVelocity.z * p_t;
         for (int i = 0; i < m_referenceFootPos.Length; i++)
         {
             bool inStance = m_tuneStepCycles[i].isInStance(p_phi);
@@ -418,9 +422,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
                 Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(swingPhi), 0.0f);
                 float flip = (i * 2.0f) - 1.0f;
 
-                m_optimalProgress = (p_goalVelocity.z * p_t - m_referenceLiftPos[i].z);
+                float legOptimalProgress = m_optimalProgress - m_referenceLiftPos[i].z;
 
-                Vector3 offset = transform.position.x * Vector3.right + m_referenceLiftPos[i].z * Vector3.forward + Vector3.forward * m_optimalProgress;
+                Vector3 offset = transform.position.x * Vector3.right + m_referenceLiftPos[i].z * Vector3.forward + Vector3.forward * legOptimalProgress;
 
                 Vector3 wpos = Vector3.Lerp(m_referenceLiftPos[i],
                                             offset + new Vector3(flip * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y * 0.5f),
@@ -432,11 +436,11 @@ public class LegFrame : MonoBehaviour, IOptimizable
             else
             {
                 m_referenceLiftPos[i] = m_referenceFootPos[i];
-                Debug.DrawLine(m_referenceFootPos[i], m_referenceFootPos[i] + Vector3.up, Color.magenta - new Color(0.3f, 0.3f, 0.3f, 0.0f), 10.0f);
+                Debug.DrawLine(m_referenceFootPos[i] + Vector3.forward*m_startPos.z, m_referenceFootPos[i] + Vector3.up + Vector3.forward*m_startPos.z, Color.magenta - new Color(0.3f, 0.3f, 0.3f, 0.0f), 10.0f);
             }
             Color debugColor = Color.red;
             if (i == 1) debugColor = Color.green;
-            Debug.DrawLine(m_referenceOldFootPos[i], m_referenceFootPos[i], debugColor, 10.0f);
+            Debug.DrawLine(m_referenceOldFootPos[i] + Vector3.forward*m_startPos.z, m_referenceFootPos[i] + Vector3.forward*m_startPos.z, debugColor, 10.0f);
             m_referenceOldFootPos[i] = m_referenceFootPos[i];
         }
     }

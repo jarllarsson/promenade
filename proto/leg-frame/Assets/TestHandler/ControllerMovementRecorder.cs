@@ -166,22 +166,27 @@ public class ControllerMovementRecorder : MonoBehaviour
         lenDist *= lenDist; // sqr
 
         double lenFt = 0.0;
+        double lenHips = 0.0;
         double lenKnees = 0.0;
         Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z-m_ghostStart.z+m_mycontrollerStart.z);
         for (int i = 0; i < m_myLegFrame.m_feet.Length; i++)
         {
             Vector3 footRefToFoot = (m_myLegFrame.m_feet[i].transform.position - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
+            Vector3 hipRefToHip = (m_myController.m_joints[(i * 2)+1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
             Vector3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
             Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position, 
-                           m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white,0.3f);
+                           m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
+            Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,
+                           m_myController.m_joints[(i * 2) + 1].transform.position - hipRefToHip, Color.yellow*2.0f);
             Debug.DrawLine(m_myController.m_joints[(i + 1) * 2].transform.position,
-                           m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow*2.0f,0.3f);
+                           m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow);
 
             lenFt += (double)Vector3.SqrMagnitude(footRefToFoot);
+            lenHips += (double)Vector3.SqrMagnitude(hipRefToHip);
             lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);
         }
 
-        m_fdBodyHeightSqrDiffs.Add(lenFt*0.01f + lenKnees + 0.001f * lenDist + 0.001f * lenBod + lenHd * 0.0025f);
+        m_fdBodyHeightSqrDiffs.Add(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.0001 * lenDist);
     }
 
     void fp_calcMovementDistance()
@@ -221,7 +226,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             totmeandiffsqr += mdiff * mdiff;
         }
         double sdeviation = Math.Sqrt(totmeandiffsqr / Math.Max(1.0, ((double)m_fvVelocityDeviations.Count)));
-        return avg+sdeviation;
+        return avg/*+sdeviation*/;
     }
 
     // mean of FR
@@ -275,7 +280,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             totmeandiffsqr += mdiff * mdiff;
         }
         double sdeviation = Math.Sqrt(totmeandiffsqr / Math.Max(1.0,(double)m_fdBodyHeightSqrDiffs.Count));
-        return avg+sdeviation;
+        return avg/*+sdeviation*/;
     }
     
     public double EvaluateFP()
