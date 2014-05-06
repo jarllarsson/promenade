@@ -1310,6 +1310,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &48864869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2820,6 +2821,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &98454180
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4442,7 +4444,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -4525,7 +4527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -4557,7 +4559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -4589,7 +4591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -4621,7 +4623,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -5447,6 +5449,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &172532141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6369,7 +6372,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -6452,7 +6455,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -6513,7 +6516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -6545,7 +6548,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -6577,7 +6580,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -7727,6 +7730,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &217361981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9480,7 +9484,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -9563,7 +9567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -9624,7 +9628,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -9656,7 +9660,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -9688,7 +9692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -13305,6 +13309,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &408855615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14113,7 +14118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -14196,7 +14201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -14228,7 +14233,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -14260,7 +14265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -14292,7 +14297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -15000,7 +15005,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -15190,7 +15195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -15222,7 +15227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -15254,7 +15259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -15286,7 +15291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -15426,7 +15431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -16504,7 +16509,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -16587,7 +16592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -16619,7 +16624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -16651,7 +16656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -16683,7 +16688,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -17451,6 +17456,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &532043478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18812,6 +18818,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &593680961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19251,7 +19258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -19334,7 +19341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -19395,7 +19402,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -19427,7 +19434,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -19459,7 +19466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -23482,7 +23489,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -23565,7 +23572,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -23597,7 +23604,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -23629,7 +23636,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -23661,7 +23668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -25168,6 +25175,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &853343080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27000,7 +27008,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -27083,7 +27091,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -27115,7 +27123,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -27147,7 +27155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -27179,7 +27187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -29748,6 +29756,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &1038023375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30075,7 +30084,39 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 5400004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_Constraints
-      value: 108
+      value: 126
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_Mass
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400002, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400008, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400006, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5400012, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400024, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_useVFTorque
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -30271,7 +30312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -30354,7 +30395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -30415,7 +30456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -30447,7 +30488,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -30479,7 +30520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -31515,7 +31556,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -31598,7 +31639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -31659,7 +31700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -31691,7 +31732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -31723,7 +31764,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -33185,6 +33226,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &1139609882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35879,7 +35921,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -39607,7 +39649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -39690,7 +39732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -39751,7 +39793,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -39783,7 +39825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -39815,7 +39857,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -40906,6 +40948,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &1444713229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41657,7 +41700,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -44990,6 +45033,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &1636496578
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45836,6 +45880,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &1655278266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46484,6 +46529,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &1660461595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47084,7 +47130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -47167,7 +47213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -47228,7 +47274,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -47260,7 +47306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -47292,7 +47338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -47839,6 +47885,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &1692768354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47951,13 +47998,13 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   serializedVersion: 2
-  m_Mass: 15
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 108
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!114 &1694673919
 MonoBehaviour:
@@ -48228,8 +48275,9 @@ MonoBehaviour:
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
-  m_useVFTorque: 1
+  m_useVFTorque: 0
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &1694673927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48391,7 +48439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -48474,7 +48522,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -48535,7 +48583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -48567,7 +48615,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -48599,7 +48647,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -48860,7 +48908,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -50353,7 +50401,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_simTime
-      value: 5
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_TagString
@@ -50416,7 +50464,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -50612,7 +50660,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -51857,7 +51905,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -51940,7 +51988,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -51972,7 +52020,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -52004,7 +52052,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -52036,7 +52084,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -52861,7 +52909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff1af29098b8a242a8d1d3cb6eabf82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_simTime: 5
+  m_simTime: 1000
   m_warmupTime: 0
   m_instantEval: 0
 --- !u!23 &1877541815
@@ -55617,7 +55665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -55700,7 +55748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -55732,7 +55780,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -55764,7 +55812,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -55796,7 +55844,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -57533,7 +57581,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: DesiredLFHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -57616,7 +57664,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: StepHeightTraj
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 3
+  m_initAsFunc: 2
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -57648,7 +57696,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajRoll
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -57680,7 +57728,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajPitch
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -57712,7 +57760,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NAME: Orientation LFTrajYaw
   m_dbgDrawCol: {r: 0, g: 1, b: 0, a: 1}
-  m_initAsFunc: 4
+  m_initAsFunc: 5
   m_curve:
     serializedVersion: 2
     m_Curve:
@@ -58265,6 +58313,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &2145673699
 MonoBehaviour:
   m_ObjectHideFlags: 0

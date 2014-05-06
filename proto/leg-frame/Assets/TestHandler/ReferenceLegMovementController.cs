@@ -10,7 +10,7 @@ public class ReferenceLegMovementController : MonoBehaviour
     public StepCycle[] m_stepCycles = new StepCycle[LegFrame.c_legCount];
     public GaitPlayer m_player;
 
-    // PLF, the coronal(x) and saggital(y) step distance
+    // PLF, the coronal(x) and sagittal(y) step distance
     public Vector2 m_stepLength = new Vector2(3.0f, 5.0f);
 
     public PcswiseLinear m_stepHeightTraj;
@@ -76,11 +76,11 @@ public class ReferenceLegMovementController : MonoBehaviour
             else
             {
                 m_liftPos[i] = m_foot[i].position;
-                Debug.DrawLine(m_foot[i].position, m_foot[i].position+Vector3.up, Color.magenta-new Color(0.3f,0.3f,0.3f,0.0f), 1.0f);
+                Debug.DrawLine(m_foot[i].position, m_foot[i].position+Vector3.up, Color.magenta-new Color(0.3f,0.3f,0.3f,0.0f), 10.0f);
             }
             Color debugColor = Color.red;
             if (i == 1) debugColor = Color.green;
-            Debug.DrawLine(m_oldFootPos[i], m_foot[i].position, debugColor, 10.0f);
+            Debug.DrawLine(m_oldFootPos[i], m_foot[i].position, debugColor, 30.0f);
             m_oldFootPos[i] = m_foot[i].position;
         }
     }

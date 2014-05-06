@@ -106,6 +106,12 @@ public class LegFrame : MonoBehaviour, IOptimizable
     Vector3[,] m_tuneFD = new Vector3[c_legCount,2]; // Individualized leg "distance"-force (2 phases, guessing in front of- and behind LF)
     Vector3[] m_legFgravityComp = new Vector3[c_legCount]; // Individualized leg force
 
+    // Reference position for feet. The desired positions for perfect knee positioning using IK.
+    // Not necessarily the best in regards to balance and speed though. 
+    private Vector3[] m_referenceFootPos = new Vector3[LegFrame.c_legCount];
+    private Vector3[] m_referenceOldFootPos = new Vector3[LegFrame.c_legCount];
+    private Vector3[] m_referenceLiftPos = new Vector3[LegFrame.c_legCount];
+
     private bool m_optimizePDs = true;
 
     public void OptimizePDs(bool p_opt)
@@ -339,6 +345,12 @@ public class LegFrame : MonoBehaviour, IOptimizable
         return minList;
     }
 
+    public Vector3 getReferenceFootPos(int p_idx)
+    {
+        return m_referenceFootPos[p_idx];
+    }
+
+
     void Awake()
     {
         startH = transform.position.y;
@@ -349,6 +361,10 @@ public class LegFrame : MonoBehaviour, IOptimizable
             m_footLiftPlacement[i] = m_footStrikePlacement[i] = m_footTarget[i] = new Vector3(mirror * m_tuneStepLength.x + transform.position.x, 0.0f, m_tuneStepLength.y + transform.position.z);
             m_footTarget[i] += new Vector3(0.0f, 0.0f, m_tuneStepLength.y);
             m_footLiftPlacement[i] -= new Vector3(0.0f, 0.0f, m_tuneStepLength.y);
+            // reference data structures
+            m_referenceFootPos[i] = m_feet[i].transform.position;
+            m_referenceOldFootPos[i] = m_referenceFootPos[i];
+            m_referenceLiftPos[i] = m_referenceFootPos[i];
         }
         for (int i = 0; i < (int)NEIGHBOUR_JOINTS.COUNT; i++ )
         {
@@ -377,6 +393,40 @@ public class LegFrame : MonoBehaviour, IOptimizable
     {
 	
 	}
+
+    public void updateReferenceFeetPositions(float p_phi, float p_t, Vector3 p_goalVelocity)
+    {
+        for (int i = 0; i < m_referenceFootPos.Length; i++)
+        {
+            bool inStance = m_tuneStepCycles[i].isInStance(p_phi);
+            //
+            if (!inStance)
+            {
+                float swingPhi = m_tuneStepCycles[i].getSwingPhase(p_phi);
+                // The height offset, ie. the "lift" that the foot makes between stepping points.
+                Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(swingPhi), 0.0f);
+                float flip = (i * 2.0f) - 1.0f;
+
+                Vector3 offset = transform.position.x * Vector3.right + m_referenceLiftPos[i].z * Vector3.forward + Vector3.forward * (p_goalVelocity.z * p_t - m_referenceLiftPos[i].z);
+
+                Vector3 wpos = Vector3.Lerp(m_referenceLiftPos[i],
+                                            offset + new Vector3(flip * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y * 0.5f),
+                                            swingPhi);
+                wpos = new Vector3(wpos.x, 0.0f, wpos.z);
+                m_referenceFootPos[i] = wpos + heightOffset;
+
+            }
+            else
+            {
+                m_referenceLiftPos[i] = m_referenceFootPos[i];
+                Debug.DrawLine(m_referenceFootPos[i], m_referenceFootPos[i] + Vector3.up, Color.magenta - new Color(0.3f, 0.3f, 0.3f, 0.0f), 10.0f);
+            }
+            Color debugColor = Color.red;
+            if (i == 1) debugColor = Color.green;
+            Debug.DrawLine(m_referenceOldFootPos[i], m_referenceFootPos[i], debugColor, 10.0f);
+            m_referenceOldFootPos[i] = m_referenceFootPos[i];
+        }
+    }
 
     // Calculate the next position where the foot should be placed for legs in swing
     public void updateFeet(float p_phi, Vector3 p_velocity, Vector3 p_desiredVelocity)
@@ -554,7 +604,6 @@ public class LegFrame : MonoBehaviour, IOptimizable
     {
         float mass=0.0f; // ?????
         int i = p_legId;
-        Debug.Log(Physics.gravity);
         m_legFgravityComp[i] = -mass * Physics.gravity;
     }
 

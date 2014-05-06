@@ -41,6 +41,8 @@ public class Controller : MonoBehaviour, IOptimizable
 
     public bool m_optimizePDs = false;
 
+    public float m_time = 0.0f;
+
     void Awake()
     {
 
@@ -175,6 +177,7 @@ public class Controller : MonoBehaviour, IOptimizable
         m_currentVelocity = transform.position-m_oldPos;
         calcHeadAcceleration();
 
+        m_time += Time.deltaTime;
 
         // Advance the player
         m_player.updatePhase(Time.deltaTime);
@@ -245,6 +248,7 @@ public class Controller : MonoBehaviour, IOptimizable
     {
         for (int i = 0; i < m_legFrames.Length; i++)
         {
+            m_legFrames[i].updateReferenceFeetPositions(m_player.m_gaitPhase, m_time, m_goalVelocity);
             m_legFrames[i].updateFeet(m_player.m_gaitPhase, m_currentVelocity, m_desiredVelocity);
             m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase);
         }
