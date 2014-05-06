@@ -2220,6 +2220,7 @@ MonoBehaviour:
   m_usePDTorque: 1
   m_useVFTorque: 1
   m_optimizePDs: 0
+  m_time: 0
 --- !u!114 &11400026
 MonoBehaviour:
   m_ObjectHideFlags: 1

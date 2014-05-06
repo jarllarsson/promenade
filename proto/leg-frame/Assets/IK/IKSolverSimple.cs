@@ -41,7 +41,8 @@ public class IKSolverSimple : MonoBehaviour
         else if (m_legFrame!=null)
         {
             // get non-corrected foot pos here
-            footPos = new Vector3(0.0f, m_legFrame.getGraphedFootPos((int)m_legType), 0.0f/*m_legFrame.m_footTarget[(int)m_legType].z-m_legFrame.transform.position.z*/);
+            footPos = new Vector3(0.0f, m_legFrame.getReferenceFootPos((int)m_legType).y, -(m_legFrame.getReferenceFootPos((int)m_legType).z /*- m_legFrame.getOptimalProgress()*/ - m_legFrame.getReferenceLiftPos((int)m_legType).z /*- transform.position.z*/));
+                //new Vector3(0.0f, m_legFrame.getGraphedFootPos((int)m_legType), 0.0f/*m_legFrame.m_footTarget[(int)m_legType].z-m_legFrame.transform.position.z*/);
         }
             //footPos = m_legFrame.m_footTarget[(int)m_legType];
      
@@ -138,8 +139,10 @@ public class IKSolverSimple : MonoBehaviour
         }
 
         Vector3 offset = Vector3.zero;
+        int idx=(int)m_legType;
         if (m_legFrame!=null)
-            offset = new Vector3(m_legFrame.m_footTarget[(int)m_legType].x, m_legFrame.transform.position.y, m_legFrame.m_footTarget[(int)m_legType].z)/* + m_legFrame.transform.position*/;
+            offset = new Vector3(m_legFrame.m_footTarget[(int)m_legType].x, 0.0f/*m_legFrame.transform.position.y*/, m_legFrame.transform.position.z)/* + m_legFrame.transform.position*/;
+            //offset = new Vector3(m_legFrame.getReferenceFootPos(idx).x, m_legFrame.transform.position.y, m_legFrame.getReferenceFootPos(idx).z);
         else if (m_foot!=null)
             offset = new Vector3(m_upperLeg.position.x, 0.0f, m_upperLeg.position.z)/* + m_legFrame.transform.position*/;
 

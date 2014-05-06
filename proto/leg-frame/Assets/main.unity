@@ -15005,7 +15005,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -30032,7 +30032,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.50195765
+      value: 2.16905308
       objectReference: {fileID: 0}
     - target: {fileID: 400018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_LocalPosition.z
@@ -30078,46 +30078,6 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9667bda03bec17d4ab2d397c4250ce41, type: 2}
-    - target: {fileID: 11400022, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_Constraints
-      value: 126
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400004, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_Mass
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400002, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400008, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400006, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5400012, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400024, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_useVFTorque
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 1694673916}
@@ -35921,7 +35881,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -41700,7 +41660,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -47978,7 +47938,7 @@ Transform:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -36.6021881, y: 2.50195765, z: 0}
+  m_LocalPosition: {x: -36.6021881, y: 2.16905308, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1245786536}
@@ -47998,13 +47958,13 @@ Rigidbody:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   serializedVersion: 2
-  m_Mass: 5
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 96
   m_CollisionDetection: 0
 --- !u!114 &1694673919
 MonoBehaviour:
@@ -48013,7 +47973,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df77cf5fad3efeb4587b1079db2413f8, type: 3}
   m_Name: 
@@ -48275,7 +48235,7 @@ MonoBehaviour:
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
   m_usePDTorque: 1
-  m_useVFTorque: 0
+  m_useVFTorque: 1
   m_optimizePDs: 0
   m_time: 0
 --- !u!114 &1694673927
@@ -48908,7 +48868,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -50401,7 +50361,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_simTime
-      value: 1000
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
       propertyPath: m_TagString
@@ -50464,7 +50424,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -50660,7 +50620,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: .100000001
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -52909,7 +52869,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ff1af29098b8a242a8d1d3cb6eabf82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_simTime: 1000
+  m_simTime: 2
   m_warmupTime: 0
   m_instantEval: 0
 --- !u!23 &1877541815

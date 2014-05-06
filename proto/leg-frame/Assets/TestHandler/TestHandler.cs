@@ -95,7 +95,7 @@ public class TestHandler : MonoBehaviour
                 {
                     List<float> paramslist = new List<float>();
                     paramslist.AddRange(m_currentParams[i]);
-                    Debug.Log("current params "+m_currentParams[i]);
+                    //Debug.Log("current params "+m_currentParams[i]);
                     opt.ConsumeParams(paramslist); // consume it to controller
                 }
             }

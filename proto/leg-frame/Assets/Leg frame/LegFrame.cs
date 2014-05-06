@@ -111,6 +111,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
     private Vector3[] m_referenceFootPos = new Vector3[LegFrame.c_legCount];
     private Vector3[] m_referenceOldFootPos = new Vector3[LegFrame.c_legCount];
     private Vector3[] m_referenceLiftPos = new Vector3[LegFrame.c_legCount];
+    private float m_optimalProgress = 0.0f;
 
     private bool m_optimizePDs = true;
 
@@ -350,6 +351,16 @@ public class LegFrame : MonoBehaviour, IOptimizable
         return m_referenceFootPos[p_idx];
     }
 
+    public Vector3 getReferenceLiftPos(int p_idx)
+    {
+        return m_referenceLiftPos[p_idx];
+    }
+
+    public float getOptimalProgress()
+    {
+        return m_optimalProgress;
+    }
+
 
     void Awake()
     {
@@ -407,7 +418,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
                 Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(swingPhi), 0.0f);
                 float flip = (i * 2.0f) - 1.0f;
 
-                Vector3 offset = transform.position.x * Vector3.right + m_referenceLiftPos[i].z * Vector3.forward + Vector3.forward * (p_goalVelocity.z * p_t - m_referenceLiftPos[i].z);
+                m_optimalProgress = (p_goalVelocity.z * p_t - m_referenceLiftPos[i].z);
+
+                Vector3 offset = transform.position.x * Vector3.right + m_referenceLiftPos[i].z * Vector3.forward + Vector3.forward * m_optimalProgress;
 
                 Vector3 wpos = Vector3.Lerp(m_referenceLiftPos[i],
                                             offset + new Vector3(flip * m_tuneStepLength.x, 0.0f, m_tuneStepLength.y * 0.5f),
