@@ -17,6 +17,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 {
     public static int c_legCount = 2; // always two legs per frame
     public const int c_nonHipLegSegments = 1;
+    public const int c_legSegments = 2;
     public enum LEG { LEFT = 0, RIGHT = 1 }
     public enum NEIGHBOUR_JOINTS { HIP_LEFT=0, HIP_RIGHT=1, SPINE=2, COUNT=3 }
     public enum PLANE { CORONAL = 0, SAGGITAL = 1 }
@@ -42,8 +43,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
     // Feet
     public FootStrikeChecker[] m_feet = new FootStrikeChecker[c_legCount];
 
-    // Virtual forces
-    public Vector3[] m_netLegVirtualForces = new Vector3[c_legCount];
+    // Virtual forces (Swing force if swing leg and combined stance forces if stance)
+    public Vector3[] m_netLegBaseVirtualForces = new Vector3[c_legCount];
+    public Vector3[] m_legSegmentGravityCompVirtualForces = new Vector3[c_legCount * c_legSegments];
 
     // NOTE!
     // I've lessened the amount of parameters
@@ -104,7 +106,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
     Vector3 m_Fv; // Velocity regulate
     Vector3[] m_Fsw = new Vector3[c_legCount]; // Swing regulate, "pull to target pos"
     Vector3[,] m_tuneFD = new Vector3[c_legCount,2]; // Individualized leg "distance"-force (2 phases, guessing in front of- and behind LF)
-    Vector3[] m_legFgravityComp = new Vector3[c_legCount]; // Individualized leg force
+    //Vector3[] m_legFgravityComp = new Vector3[c_legCount]; // Individualized leg force
 
     // Reference position for feet. The desired positions for perfect knee positioning using IK.
     // Not necessarily the best in regards to balance and speed though. 
@@ -158,8 +160,8 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int p = 0; p < 2; p++)
             vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneFD[i,p]));
         
-        for (int i = 0; i < m_legFgravityComp.Length; i++)
-            vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_legFgravityComp[i]));
+        //for (int i = 0; i < m_legFgravityComp.Length; i++)
+        //    vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_legFgravityComp[i]));
 
         if (m_optimizePDs)
         {
@@ -208,8 +210,8 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int p = 0; p < 2; p++)
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFD[i,p]);
         
-        for (int i = 0; i < m_legFgravityComp.Length; i++)
-            OptimizableHelper.ConsumeParamsTo(p_params, ref m_legFgravityComp[i]);
+        //for (int i = 0; i < m_legFgravityComp.Length; i++)
+        //    OptimizableHelper.ConsumeParamsTo(p_params, ref m_legFgravityComp[i]);
 
 
         if (m_optimizePDs)
@@ -268,10 +270,10 @@ public class LegFrame : MonoBehaviour, IOptimizable
             maxList.Add(200.0f); maxList.Add(200.0f); maxList.Add(200.0f);
         }
         
-        for (int i = 0; i < m_legFgravityComp.Length; i++) // F gravity comp
-        {
-            maxList.Add(20.0f); maxList.Add(20.0f); maxList.Add(20.0f);
-        }
+        //for (int i = 0; i < m_legFgravityComp.Length; i++) // F gravity comp
+        //{
+        //    maxList.Add(20.0f); maxList.Add(20.0f); maxList.Add(20.0f);
+        //}
 
         if (m_optimizePDs)
         {
@@ -327,11 +329,11 @@ public class LegFrame : MonoBehaviour, IOptimizable
             {
                 minList.Add(-200.0f); minList.Add(-200.0f); minList.Add(-200.0f);
             }
-        
-        for (int i = 0; i < m_legFgravityComp.Length; i++) // F gravity comp
-        {
-            minList.Add(0.0f); minList.Add(0.0f); minList.Add(0.0f);
-        }
+
+        //for (int i = 0; i < m_legFgravityComp.Length; i++) // F gravity comp
+        //{
+        //    minList.Add(0.0f); minList.Add(0.0f); minList.Add(0.0f);
+        //}
 
         if (m_optimizePDs)
         {
@@ -367,6 +369,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     void Awake()
     {
+        m_netLegBaseVirtualForces = new Vector3[c_legCount];
+        m_legSegmentGravityCompVirtualForces = new Vector3[c_legCount * c_legSegments];
+        //
         startH = transform.position.y;
         for (int i = 0; i < c_legCount; i++ )
         {
@@ -617,11 +622,12 @@ public class LegFrame : MonoBehaviour, IOptimizable
         m_Fh = p_up * m_heightForceCalc.drive(hLF - p_currentH, p_dt);
     }
 
-    public void calculateFgravcomp(int p_legId, float p_phi, Vector3 p_up)
+    public void calculateFgravcomp(int p_legSegmentId, Rigidbody p_legSegment)
     {
-        float mass=0.0f; // ?????
-        int i = p_legId;
-        m_legFgravityComp[i] = -mass * Physics.gravity;
+        float mass=p_legSegment.mass;
+        int i = p_legSegmentId;
+        m_legSegmentGravityCompVirtualForces[i] = -mass * Physics.gravity;
+        Debug.DrawLine(p_legSegment.transform.position+p_legSegment.centerOfMass, p_legSegment.transform.position+p_legSegment.centerOfMass+m_legSegmentGravityCompVirtualForces[i],Color.green);
     }
 
     public void calculateFsw(int p_legId, float p_phi)
@@ -638,7 +644,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
     Vector3 calculateSwingLegVF(int p_legId)
     {
         Vector3 force;
-        force = /*-m_tuneFD[p_legId] +*/ m_Fsw[p_legId] + m_legFgravityComp[p_legId];// note fd is only for stance
+        force = /*-m_tuneFD[p_legId] +*/ m_Fsw[p_legId]/* + Physics.gravity * 2.0f;*//* + m_legFgravityComp[p_legId]*/;// note fd is only for stance
         return force;
     }
 
@@ -729,16 +735,16 @@ public class LegFrame : MonoBehaviour, IOptimizable
             // Swing force
             if (!isInControlledStance(i,p_phi))
             {
-                calculateFgravcomp(i, p_phi, Vector3.up);
+                //calculateFgravcomp(i, p_phi, Vector3.up);
                 calculateFsw(i,p_phi);
-                m_netLegVirtualForces[i] = calculateSwingLegVF(i);
+                m_netLegBaseVirtualForces[i] = calculateSwingLegVF(i);
             }
             else
             // Stance force
             {
                 calculateFv(p_currentVelocity, p_desiredVelocity);
                 calculateFh(p_phi, transform.position.y - startH, p_dt, Vector3.up);
-                m_netLegVirtualForces[i] = calculateStanceLegVF(i, stanceLegs);
+                m_netLegBaseVirtualForces[i] = calculateStanceLegVF(i, stanceLegs);
             }
         }
     }

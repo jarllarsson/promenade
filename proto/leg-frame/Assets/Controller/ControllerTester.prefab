@@ -1705,7 +1705,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   serializedVersion: 2
-  m_Mass: 15
+  m_Mass: 10
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2038,9 +2038,8 @@ MonoBehaviour:
   m_feet:
   - {fileID: 11400042}
   - {fileID: 11400040}
-  m_netLegVirtualForces:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
+  m_netLegBaseVirtualForces: []
+  m_legSegmentGravityCompVirtualForces: []
   m_tuneStepLength: {x: .5, y: 1}
   m_lateStrikeOffsetDeltaH: 3
   m_tuneOrientationLFTraj:
@@ -2063,9 +2062,9 @@ MonoBehaviour:
   m_tuneFootTransitionEase: {fileID: 11400000}
   m_heightForceCalc: {fileID: 11400020}
   m_tuneLFHeightTraj: {fileID: 11400018}
-  m_tuneHeightForcePIDKp: 25
-  m_tuneHeightForcePIDKd: 5
-  m_tuneVelocityRegulatorKv: 3
+  m_tuneHeightForcePIDKp: .300000012
+  m_tuneHeightForcePIDKd: 1
+  m_tuneVelocityRegulatorKv: .300000012
   m_tunePropGainFootTrackingKft: {fileID: 11400046}
   m_FootTrackingSpringDamper: {fileID: 11400044}
 --- !u!114 &11400018

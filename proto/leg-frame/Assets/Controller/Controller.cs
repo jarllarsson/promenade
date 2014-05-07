@@ -156,6 +156,8 @@ public class Controller : MonoBehaviour, IOptimizable
         //
         for (int i=0; i<m_joints.Length; i++)
         {
+            m_joints[i].centerOfMass += -m_joints[i].transform.up * m_joints[i].transform.localScale.y * 0.5f;
+            //Debug.Log("COM Joint "+i+" "+m_joints[i].centerOfMass);
             m_chainObjs.Add(m_joints[i].gameObject);
         }
 
@@ -259,6 +261,7 @@ public class Controller : MonoBehaviour, IOptimizable
         float phi = m_player.m_gaitPhase;
         // Get the two variants of torque
         Vector3[] tPD = computePDTorques(phi);
+        computeCGVFTorques(phi, p_dt);
         Vector3[] tVF = computeVFTorques(phi,p_dt);
         // Sum them
         for (int i = 0; i < m_jointTorques.Length; i++)
@@ -316,6 +319,25 @@ public class Controller : MonoBehaviour, IOptimizable
 
 
     // Compute the torque of all applied virtual forces
+    void computeCGVFTorques(float p_phi, float p_dt)
+    {
+        if (m_useVFTorque)
+        {
+            for (int i = 0; i < m_legFrames.Length; i++)
+            {
+                LegFrame lf = m_legFrames[i];
+                // Calculate torques using each leg chain
+                for (int n = 1; n < 1+LegFrame.c_legCount*LegFrame.c_legSegments; n++)
+                {
+                    //  get the joints
+                    Rigidbody segment = m_joints[n];
+                    lf.calculateFgravcomp(n-1, segment);
+                }
+            }
+        }
+    }
+
+    // Compute the torque of all applied virtual forces
     Vector3[] computeVFTorques(float p_phi, float p_dt)
     {
         Vector3[] newTorques = new Vector3[m_jointTorques.Length];
@@ -332,7 +354,7 @@ public class Controller : MonoBehaviour, IOptimizable
                     int legFrameRoot = lf.m_id;
                     //legFrameRoot = -1;
                     int legRoot = lf.m_neighbourJointIds[n];
-                    int legSegmentCount = 2; // hardcoded now
+                    int legSegmentCount = LegFrame.c_legSegments; // hardcoded now
                     // Use joint ids to get dof ids
                     // Start in chain
                     int legFrameRootDofId = -1; // if we have separate root as base link
@@ -344,7 +366,7 @@ public class Controller : MonoBehaviour, IOptimizable
                     int legDofEnd = m_chain[lastDofIdx].m_dofListIdx + m_chain[lastDofIdx].m_dof.Length;
                     //
                     // get force for the leg
-                    Vector3 VF = lf.m_netLegVirtualForces[n];
+                    Vector3 VF = lf.m_netLegBaseVirtualForces[n];
                     // Calculate torques for each joint
                     // Start by updating joint information based on their gameobjects
                     Vector3 end = transform.localPosition;
@@ -391,7 +413,7 @@ public class Controller : MonoBehaviour, IOptimizable
                         extra = m_chain[legFrameRoot].m_dof.Length;
                     }
                     
-                    // MAKE SAME LOOP HERE AS IN JACOBIAN!!!
+
                     for (int g = start; g < legDofEnd; g++)
                     {
                         if (extra > 0)
