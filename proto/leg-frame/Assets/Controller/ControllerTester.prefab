@@ -189,7 +189,6 @@ GameObject:
   - 114: {fileID: 11400038}
   - 114: {fileID: 11400036}
   - 114: {fileID: 11400022}
-  - 75: {fileID: 7500000}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
@@ -1810,17 +1809,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: -4.76837158e-07, z: 0}
---- !u!75 &7500000
-ConstantForce:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100018}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2267,6 +2255,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 11400034}
   m_testPIDLower: {fileID: 11400032}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -2291,6 +2280,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 11400038}
   m_testPIDLower: {fileID: 11400036}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}

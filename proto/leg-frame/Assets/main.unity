@@ -374,6 +374,10 @@ Prefab:
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 593680950}
@@ -997,14 +1001,13 @@ GameObject:
   - 114: {fileID: 48864863}
   - 114: {fileID: 48864862}
   - 114: {fileID: 48864861}
-  - 75: {fileID: 48864873}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &48864859
 Transform:
   m_ObjectHideFlags: 0
@@ -1200,6 +1203,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 48864863}
   m_testPIDLower: {fileID: 48864862}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -1225,6 +1229,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 48864865}
   m_testPIDLower: {fileID: 48864864}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -1369,18 +1374,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 90361241}
   m_GameObject: {fileID: 48864858}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &48864873
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 90361241}
-  m_GameObject: {fileID: 48864858}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &58715136
 GameObject:
   m_ObjectHideFlags: 0
@@ -2296,6 +2289,10 @@ Prefab:
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 48864858}
@@ -2521,14 +2518,13 @@ GameObject:
   - 114: {fileID: 98454174}
   - 114: {fileID: 98454173}
   - 114: {fileID: 98454172}
-  - 75: {fileID: 98454184}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &98454170
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2724,6 +2720,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 98454174}
   m_testPIDLower: {fileID: 98454173}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -2749,6 +2746,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 98454176}
   m_testPIDLower: {fileID: 98454175}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -2893,18 +2891,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 256121096}
   m_GameObject: {fileID: 98454169}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &98454184
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 256121096}
-  m_GameObject: {fileID: 98454169}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &106144030
 GameObject:
   m_ObjectHideFlags: 0
@@ -3922,6 +3908,10 @@ Prefab:
     - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -5162,14 +5152,13 @@ GameObject:
   - 114: {fileID: 172532135}
   - 114: {fileID: 172532134}
   - 114: {fileID: 172532133}
-  - 75: {fileID: 172532145}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &172532131
 Transform:
   m_ObjectHideFlags: 0
@@ -5365,6 +5354,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 172532135}
   m_testPIDLower: {fileID: 172532134}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -5390,6 +5380,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 172532137}
   m_testPIDLower: {fileID: 172532136}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -5534,18 +5525,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 998455937}
   m_GameObject: {fileID: 172532130}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &172532145
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 998455937}
-  m_GameObject: {fileID: 172532130}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &173091142
 GameObject:
   m_ObjectHideFlags: 0
@@ -7456,14 +7435,13 @@ GameObject:
   - 114: {fileID: 217361975}
   - 114: {fileID: 217361974}
   - 114: {fileID: 217361973}
-  - 75: {fileID: 217361985}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &217361971
 Transform:
   m_ObjectHideFlags: 0
@@ -7659,6 +7637,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 217361975}
   m_testPIDLower: {fileID: 217361974}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -7684,6 +7663,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 217361977}
   m_testPIDLower: {fileID: 217361976}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -7828,18 +7808,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 306337322}
   m_GameObject: {fileID: 217361970}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &217361985
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 306337322}
-  m_GameObject: {fileID: 217361970}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &222187009
 GameObject:
   m_ObjectHideFlags: 0
@@ -8381,6 +8349,10 @@ Prefab:
     - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -9034,6 +9006,10 @@ Prefab:
     - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.z
       value: .00351715088
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -10010,6 +9986,10 @@ Prefab:
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 408855605}
@@ -10171,6 +10151,10 @@ Prefab:
     - target: {fileID: 15300008, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.z
       value: .341243684
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -10341,6 +10325,10 @@ Prefab:
     - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -13064,14 +13052,13 @@ GameObject:
   - 114: {fileID: 408855609}
   - 114: {fileID: 408855608}
   - 114: {fileID: 408855607}
-  - 75: {fileID: 408855620}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &408855606
 Transform:
   m_ObjectHideFlags: 0
@@ -13251,6 +13238,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 408855609}
   m_testPIDLower: {fileID: 408855608}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -13276,6 +13264,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 408855611}
   m_testPIDLower: {fileID: 408855610}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -13436,18 +13425,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 294315001}
   m_GameObject: {fileID: 408855605}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &408855620
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 294315001}
-  m_GameObject: {fileID: 408855605}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &412207749
 GameObject:
   m_ObjectHideFlags: 0
@@ -14649,6 +14626,10 @@ Prefab:
     - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -17208,14 +17189,13 @@ GameObject:
   - 114: {fileID: 532043472}
   - 114: {fileID: 532043471}
   - 114: {fileID: 532043470}
-  - 75: {fileID: 532043482}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &532043468
 Transform:
   m_ObjectHideFlags: 0
@@ -17411,6 +17391,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 532043472}
   m_testPIDLower: {fileID: 532043471}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -17436,6 +17417,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 532043474}
   m_testPIDLower: {fileID: 532043473}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -17580,18 +17562,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 454234182}
   m_GameObject: {fileID: 532043467}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &532043482
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 454234182}
-  m_GameObject: {fileID: 532043467}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1001 &538743111
 Prefab:
   m_ObjectHideFlags: 0
@@ -17702,6 +17672,10 @@ Prefab:
     - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -18565,6 +18539,10 @@ Prefab:
       propertyPath: m_ConnectedAnchor.z
       value: .341243684
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 2145673689}
@@ -18591,14 +18569,13 @@ GameObject:
   - 114: {fileID: 593680955}
   - 114: {fileID: 593680954}
   - 114: {fileID: 593680953}
-  - 75: {fileID: 593680965}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &593680951
 Transform:
   m_ObjectHideFlags: 0
@@ -18794,6 +18771,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 593680955}
   m_testPIDLower: {fileID: 593680954}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -18819,6 +18797,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 593680957}
   m_testPIDLower: {fileID: 593680956}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -18963,18 +18942,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 14926236}
   m_GameObject: {fileID: 593680950}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &593680965
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 14926236}
-  m_GameObject: {fileID: 593680950}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &598699804
 GameObject:
   m_ObjectHideFlags: 0
@@ -22968,6 +22935,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 0}
   m_testPIDLower: {fileID: 0}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -22993,6 +22961,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 0}
   m_testPIDLower: {fileID: 0}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -25127,14 +25096,13 @@ GameObject:
   - 114: {fileID: 853343089}
   - 114: {fileID: 853343088}
   - 114: {fileID: 853343070}
-  - 75: {fileID: 853343071}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &853343068
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -25192,18 +25160,6 @@ MonoBehaviour:
   m_pushInterval: .5
   m_pushForceInterval: .100000001
   m_pushIntervalCount: 0
---- !u!75 &853343071
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1849456582}
-  m_GameObject: {fileID: 853343067}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!114 &853343079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25367,6 +25323,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 853343087}
   m_testPIDLower: {fileID: 853343086}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -25392,6 +25349,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 853343089}
   m_testPIDLower: {fileID: 853343088}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -28982,6 +28940,10 @@ Prefab:
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 172532130}
@@ -29555,14 +29517,13 @@ GameObject:
   - 114: {fileID: 1038023369}
   - 114: {fileID: 1038023368}
   - 114: {fileID: 1038023367}
-  - 75: {fileID: 1038023379}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1038023365
 Transform:
   m_ObjectHideFlags: 0
@@ -29758,6 +29719,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1038023369}
   m_testPIDLower: {fileID: 1038023368}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -29783,6 +29745,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1038023371}
   m_testPIDLower: {fileID: 1038023370}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -29927,18 +29890,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 136005661}
   m_GameObject: {fileID: 1038023364}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &1038023379
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 136005661}
-  m_GameObject: {fileID: 1038023364}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1038646190
 GameObject:
   m_ObjectHideFlags: 0
@@ -33002,14 +32953,13 @@ GameObject:
   - 114: {fileID: 1139609876}
   - 114: {fileID: 1139609875}
   - 114: {fileID: 1139609874}
-  - 75: {fileID: 1139609886}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1139609872
 Transform:
   m_ObjectHideFlags: 0
@@ -33205,6 +33155,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1139609876}
   m_testPIDLower: {fileID: 1139609875}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -33230,6 +33181,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1139609878}
   m_testPIDLower: {fileID: 1139609877}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -33374,18 +33326,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 538743111}
   m_GameObject: {fileID: 1139609871}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &1139609886
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 538743111}
-  m_GameObject: {fileID: 1139609871}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1141144856
 GameObject:
   m_ObjectHideFlags: 0
@@ -40522,6 +40462,10 @@ Prefab:
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 1655278256}
@@ -40737,14 +40681,13 @@ GameObject:
   - 114: {fileID: 1444713223}
   - 114: {fileID: 1444713222}
   - 114: {fileID: 1444713221}
-  - 75: {fileID: 1444713233}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1444713219
 Transform:
   m_ObjectHideFlags: 0
@@ -40940,6 +40883,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1444713223}
   m_testPIDLower: {fileID: 1444713222}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -40965,6 +40909,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1444713225}
   m_testPIDLower: {fileID: 1444713224}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -41109,18 +41054,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1459835204}
   m_GameObject: {fileID: 1444713218}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &1444713233
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1459835204}
-  m_GameObject: {fileID: 1444713218}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1445635591
 GameObject:
   m_ObjectHideFlags: 0
@@ -41542,6 +41475,10 @@ Prefab:
     - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.y
       value: -.491846085
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -44835,14 +44772,13 @@ GameObject:
   - 114: {fileID: 1636496572}
   - 114: {fileID: 1636496571}
   - 114: {fileID: 1636496570}
-  - 75: {fileID: 1636496582}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1636496568
 Transform:
   m_ObjectHideFlags: 0
@@ -45038,6 +44974,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1636496572}
   m_testPIDLower: {fileID: 1636496571}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -45063,6 +45000,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1636496574}
   m_testPIDLower: {fileID: 1636496573}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -45207,18 +45145,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 234914412}
   m_GameObject: {fileID: 1636496567}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &1636496582
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 234914412}
-  m_GameObject: {fileID: 1636496567}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1640539421
 GameObject:
   m_ObjectHideFlags: 0
@@ -45711,14 +45637,13 @@ GameObject:
   - 114: {fileID: 1655278260}
   - 114: {fileID: 1655278259}
   - 114: {fileID: 1655278258}
-  - 75: {fileID: 1655278271}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1655278257
 Transform:
   m_ObjectHideFlags: 0
@@ -45898,6 +45823,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1655278260}
   m_testPIDLower: {fileID: 1655278259}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -45923,6 +45849,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1655278262}
   m_testPIDLower: {fileID: 1655278261}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -46083,18 +46010,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1418853040}
   m_GameObject: {fileID: 1655278256}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &1655278271
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1418853040}
-  m_GameObject: {fileID: 1655278256}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1656168593
 GameObject:
   m_ObjectHideFlags: 0
@@ -46373,14 +46288,13 @@ GameObject:
   - 114: {fileID: 1660461589}
   - 114: {fileID: 1660461588}
   - 114: {fileID: 1660461587}
-  - 75: {fileID: 1660461600}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1660461586
 Transform:
   m_ObjectHideFlags: 0
@@ -46560,6 +46474,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1660461589}
   m_testPIDLower: {fileID: 1660461588}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -46585,6 +46500,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1660461591}
   m_testPIDLower: {fileID: 1660461590}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -46745,18 +46661,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 299560247}
   m_GameObject: {fileID: 1660461585}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &1660461600
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 299560247}
-  m_GameObject: {fileID: 1660461585}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1664586099
 GameObject:
   m_ObjectHideFlags: 0
@@ -47726,14 +47630,13 @@ GameObject:
   - 114: {fileID: 1692768348}
   - 114: {fileID: 1692768347}
   - 114: {fileID: 1692768346}
-  - 75: {fileID: 1692768358}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1692768344
 Transform:
   m_ObjectHideFlags: 0
@@ -47929,6 +47832,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1692768348}
   m_testPIDLower: {fileID: 1692768347}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -47954,6 +47858,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1692768350}
   m_testPIDLower: {fileID: 1692768349}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -48098,18 +48003,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 2005693541}
   m_GameObject: {fileID: 1692768343}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &1692768358
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 2005693541}
-  m_GameObject: {fileID: 1692768343}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1694673916
 GameObject:
   m_ObjectHideFlags: 0
@@ -48131,7 +48024,6 @@ GameObject:
   - 114: {fileID: 1694673921}
   - 114: {fileID: 1694673920}
   - 114: {fileID: 1694673919}
-  - 75: {fileID: 1694673931}
   m_Layer: 0
   m_Name: ControllerTester_BestScore
   m_TagString: bestscore
@@ -48334,6 +48226,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1694673921}
   m_testPIDLower: {fileID: 1694673920}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -48359,6 +48252,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 1694673923}
   m_testPIDLower: {fileID: 1694673922}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -48503,18 +48397,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 1047900139}
   m_GameObject: {fileID: 1694673916}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &1694673931
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 1047900139}
-  m_GameObject: {fileID: 1694673916}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
 --- !u!1 &1695448024
 GameObject:
   m_ObjectHideFlags: 0
@@ -50595,6 +50477,10 @@ Prefab:
       propertyPath: m_warmupTime
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f336195211cf8cf41849c4ca14d60029, type: 2}
   m_RootGameObject: {fileID: 1877541813}
@@ -52476,6 +52362,10 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
   m_RootGameObject: {fileID: 853343067}
@@ -53116,7 +53006,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1877541814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54840,6 +54730,10 @@ Prefab:
     - target: {fileID: 15300000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.z
       value: .00360870361
+      objectReference: {fileID: 0}
+    - target: {fileID: 100018, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
@@ -58132,14 +58026,13 @@ GameObject:
   - 114: {fileID: 2145673693}
   - 114: {fileID: 2145673692}
   - 114: {fileID: 2145673691}
-  - 75: {fileID: 2145673704}
   m_Layer: 0
   m_Name: ControllerTester
   m_TagString: optimizable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2145673690
 Transform:
   m_ObjectHideFlags: 0
@@ -58319,6 +58212,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 2145673693}
   m_testPIDLower: {fileID: 2145673692}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -58344,6 +58238,7 @@ MonoBehaviour:
   m_kneeAngle: 0
   m_testPIDUpper: {fileID: 2145673695}
   m_testPIDLower: {fileID: 2145673694}
+  m_hipPos: {x: 0, y: 0, z: 0}
   m_kneePos: {x: 0, y: 0, z: 0}
   m_endPos: {x: 0, y: 0, z: 0}
   m_kneePosW: {x: 0, y: 0, z: 0}
@@ -58504,15 +58399,3 @@ MeshFilter:
   m_PrefabInternal: {fileID: 591890613}
   m_GameObject: {fileID: 2145673689}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!75 &2145673704
-ConstantForce:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 7500000, guid: b04916b83cbc8d1468ad9ea9f2b496ca,
-    type: 2}
-  m_PrefabInternal: {fileID: 591890613}
-  m_GameObject: {fileID: 2145673689}
-  m_Enabled: 1
-  m_Force: {x: 0, y: 145, z: 0}
-  m_RelativeForce: {x: 0, y: 0, z: 0}
-  m_Torque: {x: 0, y: 0, z: 0}
-  m_RelativeTorque: {x: 0, y: 0, z: 0}
