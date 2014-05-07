@@ -57,7 +57,7 @@ public class Jacobian
 
         // Construct Jacobian matrix
         CMatrix J = new CMatrix(3, jointCount); // 3 is position in xyz
-        Debug.Log("DOF count="+jointCount+" from: "+start+" to: "+(p_dofListEnd-1));
+        //Debug.Log("DOF count="+jointCount+" from: "+start+" to: "+(p_dofListEnd-1));
 
         Vector3 astart=Vector3.zero;
         int jIdx = 0; // incremented by one for each jacobian row
@@ -72,17 +72,19 @@ public class Jacobian
             
             // Fetch the id for the DOF from the global list
             int id = p_dofJointIds[i];
-            Debug.Log("D" + i + " n" + jIdx + " joint id: "+id);
+            //Debug.Log("D" + i + " n" + jIdx + " joint id: "+id);
             // Start calculating the jacobian for the current DOF
             Joint joint = p_joints[id];
             Vector3 linkPos = joint.m_position;
-            Debug.Log(linkPos.ToString());
+            //Debug.Log(linkPos.ToString());
             if (i == start)
                 astart = linkPos;
             if (i == p_dofListEnd - 1)
             {
-                Vector3 offset = p_jointObjs[id].transform.parent.position;
-                Debug.DrawLine(offset+astart, offset+linkPos, new Color(257.0f / 256.0f, 121.0f / 256.0f, 5.0f / 256.0f));
+                //Transform offsetTransform = p_jointObjs[id].transform;
+                //Vector3 offset = offsetTransform.position;
+                Debug.DrawLine(astart, linkPos, new Color(257.0f / 256.0f, 121.0f / 256.0f, 5.0f / 256.0f));
+                Debug.DrawLine(linkPos, p_targetPos, new Color(257.0f / 256.0f, 100.0f / 256.0f, 0.0f));
             }
             
             // Currently only solve for given axis

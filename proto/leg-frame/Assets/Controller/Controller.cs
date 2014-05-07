@@ -330,7 +330,7 @@ public class Controller : MonoBehaviour, IOptimizable
                 {
                     //  get the joints
                     int legFrameRoot = lf.m_id;
-                    legFrameRoot = -1;
+                    //legFrameRoot = -1;
                     int legRoot = lf.m_neighbourJointIds[n];
                     int legSegmentCount = 2; // hardcoded now
                     // Use joint ids to get dof ids
@@ -348,7 +348,7 @@ public class Controller : MonoBehaviour, IOptimizable
                     // Calculate torques for each joint
                     // Start by updating joint information based on their gameobjects
                     Vector3 end = transform.localPosition;
-                    Debug.Log("legroot "+legRoot+" legseg "+legSegmentCount);
+                    //Debug.Log("legroot "+legRoot+" legseg "+legSegmentCount);
                     int jointstart = legRoot;
                     if (legFrameRoot != -1) jointstart = legFrameRoot;
                     for (int x = jointstart; x < legRoot + legSegmentCount; x++)
@@ -360,11 +360,11 @@ public class Controller : MonoBehaviour, IOptimizable
                         //Debug.Log("joint pos: " + currentObj.transform.localPosition);
                         // Update Joint
                         current.length      = currentObj.transform.localScale.y;
-                        current.m_position = currentObj.transform.localPosition /*- (-currentObj.transform.up) * current.length * 0.5f*/;
-                        current.m_endPoint = currentObj.transform.localPosition + (-currentObj.transform.up) * current.length/* * 0.5f*/;
+                        current.m_position = currentObj.transform.position /*- (-currentObj.transform.up) * current.length * 0.5f*/;
+                        current.m_endPoint = currentObj.transform.position + (-currentObj.transform.up) * current.length/* * 0.5f*/;
                         //m_chain[i] = current;
                         //Debug.DrawLine(current.m_position, current.m_endPoint, Color.red);
-                        Debug.Log(x+" joint pos: " + current.m_position + " = " + m_chain[x].m_position);
+                        //Debug.Log(x+" joint pos: " + current.m_position + " = " + m_chain[x].m_position);
                         end = current.m_endPoint;
                     }
                     //foreach(Joint j in m_chain)
