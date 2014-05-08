@@ -77,6 +77,8 @@ public class Jacobian
             Joint joint = p_joints[id];
             Vector3 linkPos = joint.m_position;
             //Debug.Log(linkPos.ToString());
+
+            /*
             if (i == start)
                 astart = linkPos;
             if (i == p_dofListEnd - 1)
@@ -86,6 +88,7 @@ public class Jacobian
                 Debug.DrawLine(astart, linkPos, new Color(257.0f / 256.0f, 121.0f / 256.0f, 5.0f / 256.0f));
                 Debug.DrawLine(linkPos, p_targetPos, new Color(257.0f / 256.0f, 100.0f / 256.0f, 0.0f));
             }
+             */
             
             // Currently only solve for given axis
             Vector3 rotAxis = p_jointObjs[id].transform.TransformDirection(p_dofs[i]);

@@ -169,11 +169,12 @@ public class ControllerMovementRecorder : MonoBehaviour
         double lenHips = 0.0;
         double lenKnees = 0.0;
         Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z-m_ghostStart.z+m_mycontrollerStart.z);
+        wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_myController.transform.position.z);
         for (int i = 0; i < m_myLegFrame.m_feet.Length; i++)
         {
-            Vector3 footRefToFoot = (m_myLegFrame.m_feet[i].transform.position - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
-            Vector3 hipRefToHip = (m_myController.m_joints[(i * 2)+1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
-            Vector3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
+            Vector3 footRefToFoot   = (m_myLegFrame.m_feet[i].transform.position - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
+            Vector3 hipRefToHip     = (m_myController.m_joints[(i * 2)+1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
+            Vector3 kneeRefToKnee   = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
             Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position, 
                            m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
             Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,

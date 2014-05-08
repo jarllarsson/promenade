@@ -627,7 +627,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         float mass=p_legSegment.mass;
         int i = p_legSegmentId;
         m_legSegmentGravityCompVirtualForces[i] = -mass * Physics.gravity;
-        Debug.DrawLine(p_legSegment.transform.position+p_legSegment.centerOfMass, p_legSegment.transform.position+p_legSegment.centerOfMass+m_legSegmentGravityCompVirtualForces[i],Color.green);
+        //Debug.DrawLine(p_legSegment.transform.position+p_legSegment.centerOfMass, p_legSegment.transform.position+p_legSegment.centerOfMass+m_legSegmentGravityCompVirtualForces[i],Color.green);
     }
 
     public void calculateFsw(int p_legId, float p_phi)

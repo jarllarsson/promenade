@@ -619,7 +619,7 @@ Transform:
   m_GameObject: {fileID: 100008}
   m_LocalRotation: {x: 4.65764032e-07, y: 3.02556873e-12, z: 3.58522517e-11, w: 1}
   m_LocalPosition: {x: -.498016357, y: -2.63676262, z: .0889129639}
-  m_LocalScale: {x: .5, y: .184720993, z: .5}
+  m_LocalScale: {x: .571618021, y: .184720993, z: .801682711}
   m_Children:
   - {fileID: 400006}
   - {fileID: 400044}
@@ -677,7 +677,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.100917101, y: 2.1690526, z: 0}
+  m_LocalPosition: {x: -36.6021881, y: 2.16905308, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400008}
@@ -800,7 +800,7 @@ Transform:
   m_GameObject: {fileID: 100038}
   m_LocalRotation: {x: -4.65764032e-07, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: .493347168, y: -2.63039923, z: .0888290405}
-  m_LocalScale: {x: .5, y: .18472071, z: .5}
+  m_LocalScale: {x: .571618021, y: .18472071, z: .801682711}
   m_Children:
   - {fileID: 400034}
   - {fileID: 400046}
@@ -1675,7 +1675,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1705,7 +1705,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100018}
   serializedVersion: 2
-  m_Mass: 10
+  m_Mass: 15
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1720,7 +1720,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100020}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1735,7 +1735,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100026}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -1765,7 +1765,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100042}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 3
   m_Drag: 0
   m_AngularDrag: .100000001
   m_UseGravity: 1
@@ -2129,7 +2129,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_myController: {fileID: 11400024}
   m_myLegFrame: {fileID: 11400016}
-  m_fdWeight: 1000
+  m_fdWeight: 100
   m_fvWeight: 5
   m_fhWeight: .5
   m_frWeight: 5
@@ -2475,7 +2475,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: .5
+  m_Radius: .340000004
   m_Height: 2.80999994
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -2488,7 +2488,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: .5
+  m_Radius: .319999993
   m_Height: 2.80999994
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -2501,7 +2501,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: .5
+  m_Radius: .319999993
   m_Height: 2.80999994
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -2514,7 +2514,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: .5
+  m_Radius: .340000004
   m_Height: 2.80999994
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
@@ -2633,12 +2633,12 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LowAngularXLimit:
-    limit: -20
+    limit: -50
     bounciness: 0
     spring: 0
     damper: 0
   m_HighAngularXLimit:
-    limit: 20
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
@@ -2906,12 +2906,12 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LowAngularXLimit:
-    limit: -20
+    limit: -50
     bounciness: 0
     spring: 0
     damper: 0
   m_HighAngularXLimit:
-    limit: 20
+    limit: 50
     bounciness: 0
     spring: 0
     damper: 0
