@@ -1,31 +1,45 @@
-#include "OISHelper.h"
+#include "Input.h"
 #include <DebugPrint.h>
 
 
-const char* OISHelper::g_DeviceType[6] = {"OISUnknown", "OISKeyboard", "OISMouse", "OISJoyStick",
+const char* Input::g_DeviceType[6] = {"OISUnknown", "OISKeyboard", "OISMouse", "OISJoyStick",
 	"OISTablet", "OISOther"};
 
-OISHelper::OISHelper()
+Input::Input()
 {
 	g_InputManager = NULL;
 	g_kb  = NULL;			
 	g_m   = NULL;			
-	for (int i=0;i<4;i++) g_joys[i] = NULL;
+	m_hasJoysticks = false;
+	for (int i = 0; i<4; i++) g_joys[i] = NULL;
 }
 
-OISHelper::~OISHelper()
+Input::~Input()
 {
 	//Destroying the manager will cleanup unfreed devices
 	if( g_InputManager )
 		InputManager::destroyInputSystem(g_InputManager);
 }
 
-void OISHelper::doStartup( HWND p_hWnd )
+void Input::doStartup( HWND p_hWnd )
 {
 	ParamList pl;
 	std::ostringstream wnd;
 	wnd << (size_t)p_hWnd;
 	pl.insert(std::make_pair( std::string("WINDOW"), wnd.str() ));
+
+
+#if defined OIS_WIN32_PLATFORM
+	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND")));
+	pl.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
+	pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
+	pl.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
+#elif defined OIS_LINUX_PLATFORM
+	pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
+	pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
+	pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
+	pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
+#endif
 
 	//This never returns null.. it will raise an exception on errors
 	g_InputManager = InputManager::createInputSystem(pl);
@@ -43,6 +57,7 @@ void OISHelper::doStartup( HWND p_hWnd )
 		<< "\nTotal Keyboards: " << g_InputManager->getNumberOfDevices(OISKeyboard)
 		<< "\nTotal Mice: " << g_InputManager->getNumberOfDevices(OISMouse)
 		<< "\nTotal JoySticks: " << g_InputManager->getNumberOfDevices(OISJoyStick);
+	m_hasJoysticks = g_InputManager->getNumberOfDevices(OISJoyStick)>0;
 
 	DEBUGPRINT((ss.str().c_str()));
 	ss.clear();
@@ -91,7 +106,7 @@ void OISHelper::doStartup( HWND p_hWnd )
 	}
 }
 
-void OISHelper::handleNonBufferedKeys()
+void Input::handleNonBufferedKeys()
 {
 	std::stringstream ss;
 	if( g_kb->isModifierDown(Keyboard::Shift) )
@@ -104,7 +119,7 @@ void OISHelper::handleNonBufferedKeys()
 	ss.clear();
 }
 
-void OISHelper::handleNonBufferedMouse()
+void Input::handleNonBufferedMouse()
 {
 	std::stringstream ss;
 	//Just dump the current mouse state
@@ -115,7 +130,7 @@ void OISHelper::handleNonBufferedMouse()
 	ss.clear();
 }
 
-void OISHelper::handleNonBufferedJoy( JoyStick* js )
+void Input::handleNonBufferedJoy( JoyStick* js )
 {
 	std::stringstream ss;
 	//Just dump the current joy state
@@ -128,7 +143,24 @@ void OISHelper::handleNonBufferedJoy( JoyStick* js )
 	}
 }
 
-void OISHelper::run()
+bool Input::gamepadButtonDown(int p_gamepadNum, int p_btnNum)
+{
+	bool result = false;
+	JoyStick* joy = nullptr;
+	if (hasJoysticks())
+	{
+		joy = g_joys[p_gamepadNum];
+		if (joy != nullptr &&
+			joy->getJoyStickState().mButtons.size() < (unsigned int)(p_btnNum + 1) &&
+			joy->getJoyStickState().mButtons[p_btnNum])
+		{
+			result = true;
+		}
+	}
+	return result;
+}
+
+void Input::run()
 {
 	if( g_kb )
 	{
@@ -143,7 +175,7 @@ void OISHelper::run()
 		if( !g_m->buffered() )
 			handleNonBufferedMouse();
 	}
-
+	
 	for( int i = 0; i < 4 ; ++i )
 	{
 		if( g_joys[i] )
@@ -155,3 +187,7 @@ void OISHelper::run()
 	}
 }
 
+bool Input::hasJoysticks()
+{
+	return m_hasJoysticks;
+}

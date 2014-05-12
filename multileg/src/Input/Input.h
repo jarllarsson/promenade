@@ -2,15 +2,15 @@
 
 
 // =======================================================================================
-//                                      OISHelper
+//                                      Input
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
 /// \brief	Brief
 ///        
-/// # OISHelper
+/// # Input
 /// 
-/// 29-9-2013 Jarl Larsson
+/// 29-9-2013 Jarl Larsson - Updated 12-5-2014
 ///---------------------------------------------------------------------------------------
 
 
@@ -47,11 +47,11 @@
 using namespace OIS;
 
 
-class OISHelper
+class Input
 {
 public:
-	OISHelper();
-	virtual ~OISHelper();
+	Input();
+	virtual ~Input();
 	
 	OISEventHandler handler;
 
@@ -62,6 +62,12 @@ public:
 	void handleNonBufferedKeys();
 	void handleNonBufferedMouse();
 	void handleNonBufferedJoy( JoyStick* js );
+	bool hasJoysticks();
+
+	// Return state of gamepad key
+	// Returns false if gamepad doesn't exist, button doesn't exist or
+	// if key isn't down
+	bool gamepadButtonDown(int p_gamepadNum, int p_btnNum);
 	
 	static const char *g_DeviceType[6];
 
@@ -71,4 +77,5 @@ public:
 	JoyStick*		g_joys[4];			//Support up to 4 controllers
 protected:
 private:
+	bool m_hasJoysticks;
 };

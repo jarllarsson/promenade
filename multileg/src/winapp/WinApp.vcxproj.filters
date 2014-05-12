@@ -7,9 +7,6 @@
     <Filter Include="TempLogic">
       <UniqueIdentifier>{d97fcd18-2338-466e-8f58-c4a86d0f7211}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TempLogic\Input">
-      <UniqueIdentifier>{084f3a0b-3ec8-403c-a1d3-0f4e66903365}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">

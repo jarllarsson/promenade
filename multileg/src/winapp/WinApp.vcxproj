@@ -64,14 +64,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)src\context;$(SolutionDir)src\graphics;$(SolutionDir)src\util;$(SolutionDir)ext\GLM\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)src\context;$(SolutionDir)src\graphics;$(SolutionDir)src\util;$(SolutionDir)ext\GLM\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
@@ -81,14 +81,14 @@
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)src\context;$(SolutionDir)src\graphics;$(SolutionDir)src\util;$(SolutionDir)ext\GLM\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)src\context;$(SolutionDir)src\graphics;$(SolutionDir)src\util;$(SolutionDir)ext\GLM\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -100,7 +100,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -113,7 +113,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -130,7 +130,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -146,7 +146,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

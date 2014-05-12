@@ -1,7 +1,7 @@
 #pragma once
 #include <algorithm>
 using namespace std;
-#pragma once
+
 
 // =======================================================================================
 //                                      ValueClamp
@@ -45,6 +45,15 @@ static double clamp (double p_val, double p_min, double p_max)
 static int clamp (int p_val, int p_min, int p_max)
 {
 	return max(p_min,min(p_max,p_val));
+}
+
+// inverse clamp that returns zero when not outside minmax
+static int invclampcap(int p_val, int p_min, int p_max)
+{
+	if (p_val>p_max || p_val<p_min)
+		return p_val;
+	else
+		return 0;
 }
 
 ///-----------------------------------------------------------------------------------

@@ -8,11 +8,11 @@
 #include <Buffer.h>
 #include <vector>
 
+
 class Context;
 class GraphicsDevice;
-class KernelDevice;
 class TempController;
-class OISHelper;
+class Input;
 
 using namespace std;
 
@@ -38,14 +38,13 @@ public:
 protected:
 	Context* m_context;
 	GraphicsDevice* m_graphicsDevice;
-	KernelDevice* m_kernelDevice;
 private:
 	static const double DTCAP;
 	float fpsUpdateTick;
 
-	void updateController();
+	void updateController(float p_dt);
 	TempController* m_controller;
-	OISHelper*		m_input;
+	Input*		m_input;
 	
 	vector<glm::mat4> m_instance;
 	Buffer<InstanceData>* m_instances;

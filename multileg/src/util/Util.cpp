@@ -2,3 +2,5 @@
 #include "ToString.h"
 #include "DebugPrint.h"
 #include "ValueClamp.h"
+#include "BaseException.h"
+#include "MathHelp.h"
