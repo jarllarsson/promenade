@@ -8,7 +8,7 @@ typedef HINSTANCE__* HINSTANCE;
 #include "App.h"
 #include <DebugPrint.h>
 #include <ToString.h>
-//#include <vld.h>
+#include <vld.h>
 
 using namespace std;
 

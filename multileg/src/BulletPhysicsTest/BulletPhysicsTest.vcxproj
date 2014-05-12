@@ -73,36 +73,36 @@
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
     <LibraryWPath>$(LibraryWPath)</LibraryWPath>
-    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
     <LibraryWPath>$(LibraryWPath)</LibraryWPath>
-    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
     <LibraryWPath>$(LibraryWPath)</LibraryWPath>
-    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <TargetExt>.exe</TargetExt>
-    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
     <LibraryWPath>$(LibraryWPath)</LibraryWPath>
-    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

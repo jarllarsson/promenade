@@ -123,6 +123,10 @@ void GraphicsDevice::updateResolution( int p_width, int p_height )
 
 	HRESULT hr;
 	// Resize the swap chain
+								   // !HACK! !IMPORTANT!
+	m_deviceContext->ClearState(); // MUST DO PROPER HANDLING OF BUFFER DEALLOCATION AND THEN REALLOCATION HERE!! *****TEDIOUS!!!*****
+								   // NOW WE GET THE D3D LIVE LEAKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+								   // http://msdn.microsoft.com/en-us/library/windows/desktop/bb174577(v=vs.85).aspx
 	hr = m_swapChain->ResizeBuffers(0, p_width, p_height, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 	if(FAILED(hr))
 		throw GraphicsException(hr,__FILE__,__FUNCTION__,__LINE__);

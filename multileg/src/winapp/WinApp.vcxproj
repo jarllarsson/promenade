@@ -64,15 +64,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
@@ -81,15 +81,15 @@
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
