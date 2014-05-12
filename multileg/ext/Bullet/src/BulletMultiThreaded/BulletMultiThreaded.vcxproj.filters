@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuFakeDma.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuLibspe2Support.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btThreadSupportInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\Win32ThreadSupport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\PosixThreadSupport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SequentialThreadSupport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuSampleTaskProcess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuCollisionObjectWrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuCollisionTaskProcess.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuGatheringCollisionDispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuContactManifoldCollisionAlgorithm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btParallelConstraintSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\boxBoxDistance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuContactResult.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuMinkowskiPenetrationDepthSolver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuGatheringCollisionTask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuCollisionShapes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btGpu3DGridBroadphase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\PlatformDefinitions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\PpuAddressSpace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuFakeDma.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuDoubleBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuLibspe2Support.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btThreadSupportInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\Win32ThreadSupport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\PosixThreadSupport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SequentialThreadSupport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuSampleTaskProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuCollisionObjectWrapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuCollisionTaskProcess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuGatheringCollisionDispatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuContactManifoldCollisionAlgorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btParallelConstraintSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btGpu3DGridBroadphase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btGpu3DGridBroadphaseSharedCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btGpu3DGridBroadphaseSharedDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btGpu3DGridBroadphaseSharedTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btGpuDefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btGpuUtilsSharedCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\btGpuUtilsSharedDefs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\Box.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\boxBoxDistance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuContactResult.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuMinkowskiPenetrationDepthSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuConvexPenetrationDepthSolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuPreferredPenetrationDirections.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuGatheringCollisionTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\SpuNarrowPhaseCollisionTask\SpuCollisionShapes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\Downloads\bullet-2.82-r2704 (1)\bullet-2.82-r2704\src\BulletMultiThreaded\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{DE068F96-EEB2-421F-91B9-A3E29E168AD0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{313E2D32-5F14-4865-8937-9D6E67CF7D16}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
