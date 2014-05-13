@@ -39,11 +39,19 @@ protected:
 	Context* m_context;
 	GraphicsDevice* m_graphicsDevice;
 
-	__int64 getTimeStamp();
-	__int64 getFrequency();
+	LARGE_INTEGER getTimeStamp();
+	LARGE_INTEGER getFrequency();
+
+	void processInput();
+	void handleContext(double p_dt, double p_physDt);
+	void gameUpdate(double p_dt);
+	void physUpdate();
+	void render();
 private:
+	bool pumpMessage(MSG& p_msg);
+
 	static const double DTCAP;
-	float fpsUpdateTick;
+	float m_fpsUpdateTick;
 
 	void updateController(float p_dt);
 	TempController* m_controller;

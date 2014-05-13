@@ -51,7 +51,7 @@ App::App( HINSTANCE p_hInstance )
 	}
 
 
-	fpsUpdateTick=0.0f;
+	m_fpsUpdateTick=0.0f;
 	m_controller = new TempController();
 	m_input = new Input();
 	m_input->doStartup(m_context->getWindowHandle());
@@ -65,7 +65,7 @@ App::App( HINSTANCE p_hInstance )
 		transMat = glm::transpose(transMat);
 		m_instance.push_back(transMat);
 	}
-	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instance[0], m_instance.size());
+	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instance[0], (unsigned int)m_instance.size());
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 }
 
@@ -84,18 +84,19 @@ App::~App()
 void App::run()
 {
 	// Set up windows timer
-	__int64 countsPerSec = 0;
-	__int64 currTimeStamp = 0;
-	QueryPerformanceFrequency((LARGE_INTEGER*)&countsPerSec);
-	double secsPerCount = 1.0f / (float)countsPerSec;
+	LARGE_INTEGER countsPerSec = getFrequency();
+	double secondsPerCount = 1.0 / (double)countsPerSec.QuadPart;
+	// The physics clock is just used to run the physics and runs asynchronously with the gameclock
+	LARGE_INTEGER currTimeStamp = getTimeStamp();
+	LARGE_INTEGER prevTimeStamp = currTimeStamp;
+	// There's an inner loop in here where things happen once every TickMs. These variables are for that.
+	LARGE_INTEGER timeStartStamp = getTimeStamp();
+	double timeStart = (double)timeStartStamp.QuadPart * secondsPerCount;
+	const unsigned int gameTickMs = 16;
+	double gameTickS = (double)gameTickMs / 1000.0;
 
-	double dt = 0.0;
-	double fps = 0.0f;
-	__int64 m_prevTimeStamp = 0;
 
-	QueryPerformanceCounter((LARGE_INTEGER*)&m_prevTimeStamp);
-	QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
-
+	// Message pump struct
 	MSG msg = {0};
 
 	// secondary run variable
@@ -104,105 +105,61 @@ void App::run()
 
 	while (!m_context->closeRequested() && run)
 	{
-		if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE) )
+		if (!pumpMessage(msg))
 		{
-			TranslateMessage( &msg );
-			DispatchMessage( &msg );
+
+			render();
+
+			// Physics handling part of the loop
+			/* This, like the rendering, ticks every time around.
+			Bullet does the interpolation for us. */
+
+			currTimeStamp = getTimeStamp();
+			//time_physics_curr = getMilliseconds();
+			double phys_dt = (double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
+
+			// Tick the bullet world. Keep in mind that bullet takes seconds
+			physUpdate(phys_dt);
+
+			prevTimeStamp = currTimeStamp;
+
+
+			// Game Clock part of the loop
+			/*  This ticks once every TickMs milliseconds on average */
+			double dt = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
+
+			// Game clock based updates
+			while (dt >= gameTickS)
+			{
+				dt -= gameTickS;
+				timeStart += gameTickS;
+				// Handle all input
+
+				{
+					processInput();
+					// Update logic
+					double interval = gameTickS;
+					handleContext(interval, phys_dt);
+					gameUpdate(interval);
+				}
+			}
 		}
-		else
-		{
-			m_input->run();
-			// apply resizing on graphics device if it has been triggered by the context
-			if (m_context->isSizeDirty())
-			{
-				pair<int,int> sz=m_context->getSize();
-				m_graphicsDevice->updateResolution(sz.first,sz.second);
-			}
 
-			// Get Delta time
-			QueryPerformanceCounter((LARGE_INTEGER*)&currTimeStamp);
-
-			// Calculate delta time and fps
-			dt = (currTimeStamp - m_prevTimeStamp) * secsPerCount;
-			fps = 1.0f/dt;
-			
-			dt = clamp(dt,0.0,DTCAP);
-			m_prevTimeStamp = currTimeStamp;
-
-			fpsUpdateTick-=(float)dt;
-			if (fpsUpdateTick<=0.0f)
-			{
-				m_context->updateTitle((" | FPS: "+toString((int)fps)).c_str());
-				//DEBUGPRINT((("\n"+toString(dt)).c_str())); 
-				fpsUpdateTick=0.3f;
-			}
-
-			// Clear render targets
-			m_graphicsDevice->clearRenderTargets();									// Clear render targets
-
-			// temp controller update code
-			updateController((float)dt);
-			m_controller->setFovFromAngle(52.0f,m_graphicsDevice->getAspectRatio());
-			m_controller->update((float)dt);
-			// Get camera info to buffer
-			std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float)* 4 * 4);
-			m_vp->update();
-
-			// Run the devices
-			// ---------------------------------------------------------------------------------------------
-			
-			int v[11] = {'G', 'd', 'k', 'k', 'n', 31, 'v', 'n', 'q', 'k', 'c'};
-
-			// Serial (CPU)
-
-
-			// PPL (CPU)
-			int pplRes[11];
-			concurrency::parallel_for(0, 11, [&](int n) {
-				pplRes[n]=v[n]+1;
-			});
-			for(unsigned int i = 0; i < 11; i++) 
-				std::cout << static_cast<char>(pplRes[i]); 
-
-			// C++AMP (GPU)
-			concurrency::array_view<int> av(11, v); 
-			concurrency::parallel_for_each(av.extent, [=](concurrency::index<1> idx) restrict(amp) 
-			{ 
-				av[idx] += 1; 
-			});
-
-
-			// Print C++AMP
-			for (unsigned int i = 0; i < 11; i++)
-			{
-				char ch = static_cast<char>(av[i]);
-				DEBUGPRINT(( toString(ch).c_str() ));
-			}
-			DEBUGPRINT((string("\n").c_str()));
-
-
-			// ====================================================
-
-			m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);		// Run passes
-			m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_instances);
-			m_graphicsDevice->flipBackBuffer();										// Flip!
-			// ---------------------------------------------------------------------------------------------
-		}
 	}
 }
 
 
-__int64 getTimeStamp()
+LARGE_INTEGER App::getTimeStamp()
 {
-	__int64 stamp = 0;
-	QueryPerformanceCounter((LARGE_INTEGER*)&stamp);
+	LARGE_INTEGER stamp;
+	QueryPerformanceCounter(&stamp);
 	return stamp;
 }
 
-__int64 getFrequency()
+LARGE_INTEGER App::getFrequency()
 {
-	__int64 freq = 0;
-	QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
+	LARGE_INTEGER freq;
+	QueryPerformanceFrequency(&freq);
 	return freq;
 }
 
@@ -268,4 +225,100 @@ void App::updateController(float p_dt)
 	{
 		m_controller->rotate(glm::vec3(clamp(mouseY,-1.0f,1.0f),clamp(mouseX,-1.0f,1.0f),0.0f));
 	}
+}
+
+bool App::pumpMessage( MSG& p_msg )
+{
+	bool res = PeekMessage(&p_msg, NULL, 0, 0, PM_REMOVE)>0?true:false;
+	if (res)
+	{
+		TranslateMessage(&p_msg);
+		DispatchMessage(&p_msg);
+	}
+	return res;
+}
+
+
+void App::processInput()
+{
+	m_input->run();
+}
+
+void App::handleContext(double p_dt, double p_physDt)
+{
+	// apply resizing on graphics device if it has been triggered by the context
+	if (m_context->isSizeDirty())
+	{
+		pair<int, int> sz = m_context->getSize();
+		m_graphicsDevice->updateResolution(sz.first, sz.second);
+	}
+	// Print fps in window head border
+	m_fpsUpdateTick -= (float)p_dt;
+	if (m_fpsUpdateTick <= 0.0f)
+	{
+		float fps = (1.0f / (float)(p_dt*1000.0f))*1000.0f;
+		float pfps = 1.0f / (float)p_physDt;
+		m_context->updateTitle((" | Game FPS: " + toString(fps) + " | Phys FPS: " + toString(pfps)).c_str());
+		m_fpsUpdateTick = 0.3f;
+	}
+}
+
+void App::gameUpdate( double p_dt )
+{
+	float dt = (float)p_dt;
+	// temp controller update code
+	updateController(dt);
+	m_controller->setFovFromAngle(52.0f, m_graphicsDevice->getAspectRatio());
+	m_controller->update(dt);
+	// Get camera info to buffer
+	std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float)* 4 * 4);
+	m_vp->update();
+
+	// Run the devices
+	// ---------------------------------------------------------------------------------------------
+
+	//int v[11] = {'G', 'd', 'k', 'k', 'n', 31, 'v', 'n', 'q', 'k', 'c'};
+	//
+	//// Serial (CPU)
+	//
+	//
+	//// PPL (CPU)
+	//int pplRes[11];
+	//concurrency::parallel_for(0, 11, [&](int n) {
+	//	pplRes[n]=v[n]+1;
+	//});
+	//for(unsigned int i = 0; i < 11; i++) 
+	//	std::cout << static_cast<char>(pplRes[i]); 
+	//
+	//// C++AMP (GPU)
+	//concurrency::array_view<int> av(11, v); 
+	//concurrency::parallel_for_each(av.extent, [=](concurrency::index<1> idx) restrict(amp) 
+	//{ 
+	//	av[idx] += 1; 
+	//});
+	//
+	//
+	//// Print C++AMP
+	//for (unsigned int i = 0; i < 11; i++)
+	//{
+	//	char ch = static_cast<char>(av[i]);
+	//	DEBUGPRINT(( toString(ch).c_str() ));
+	//}
+	//DEBUGPRINT((string("\n").c_str()));
+}
+
+void App::physUpdate(double p_dt)
+{
+	mWorld->stepSimulation((float)phys_dt, 10);
+}
+
+void App::render()
+{
+	// Clear render targets
+	m_graphicsDevice->clearRenderTargets();
+	// Run passes
+	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
+	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_instances);
+	// Flip!
+	m_graphicsDevice->flipBackBuffer();										
 }
