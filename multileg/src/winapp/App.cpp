@@ -60,7 +60,7 @@ App::App( HINSTANCE p_hInstance )
 	m_input->doStartup(m_context->getWindowHandle());
 	//
 	for (int x = 0; x < 100; x++)
-	for (int y = 0; y < 10; y++)
+	for (int y = 0; y < 2; y++)
 	for (int z = 0; z < 100; z++)
 	{
 		glm::mat4 transMat = glm::translate(glm::mat4(1.0f),
@@ -123,7 +123,7 @@ void App::run()
 	// Create the physics world
 	// ==================================
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	dynamicsWorld->setGravity(btVector3(0, -9.82, 0));
 	// -----------
 	// Objects
 	// -----------
@@ -134,7 +134,7 @@ void App::run()
 	// http://bulletphysics.org/mediawiki-1.5.8/index.php/MotionStates#MotionStates
 	// Are used to retreive the calculated transform data from bullet
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
-		btVector3(0, -1, 0)));
+		btVector3(0, -100, 0)));
 	// Create rigidbody for ground
 	// Bullet considers passing a mass of zero equivalent to making a body with infinite mass - it is immovable.
 	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
@@ -192,12 +192,17 @@ void App::run()
 			physUpdate(phys_dt);
 
 
-			dynamicsWorld->stepSimulation(phys_dt, 10);
+			dynamicsWorld->stepSimulation((btScalar)phys_dt, 10);
 			btTransform trans;
 			fallRigidBody->getMotionState()->getWorldTransform(trans);
 			DEBUGPRINT(( (toString(trans.getOrigin().getY())+"\n").c_str() ));
 
+			glm::mat4* firstTransform = m_instances->readElementPtrAt(0);
+			*firstTransform = glm::transpose(*firstTransform);
+			*firstTransform = glm::translate(glm::mat4(1.0f), glm::vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+			*firstTransform = glm::transpose(*firstTransform);
 
+			m_instances->update();
 
 
 			prevTimeStamp = currTimeStamp;
@@ -353,10 +358,17 @@ void App::gameUpdate( double p_dt )
 	std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float)* 4 * 4);
 	m_vp->update();
 
-	//glm::mat4 firstTransform = m_instances[0].accessBuffer;
-	//glm::translate(firstTransform, glm::vec3(0.0f, p_dt, 0.0f));
-	//m_instances[0].accessBuffer = firstTransform;
-	//m_instances[0].update();
+	for (unsigned int i = 1; i < m_instances->getElementCount();i++)
+	{
+		glm::mat4* firstTransform = m_instances->readElementPtrAt(i);
+		*firstTransform = glm::transpose(*firstTransform);
+		*firstTransform *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin(i)+cos(i), 0.0f)*0.1f*(float)p_dt);
+		*firstTransform = glm::transpose(*firstTransform);
+		//m_instances->writeElementAt(i, firstTransform);
+		//m_instances[0].accessBuffer = firstTransform;
+		int x = 0;
+	}
+	m_instances->update();
 
 	// Run the devices
 	// ---------------------------------------------------------------------------------------------

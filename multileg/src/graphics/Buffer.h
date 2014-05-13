@@ -44,7 +44,7 @@ public:
 			}
 		}
 			
-		init(static_cast<void*>(p_initData));
+		init(reinterpret_cast<void*>(p_initData));
 	}
 	virtual ~Buffer() 
 	{
@@ -66,9 +66,9 @@ public:
 			unsigned int arrSz = m_config->arraySize;
 			if (arrSz > 0) // multi element copy
 			{
-				T** bufArr = reinterpret_cast<T**>(bufferGenericData);
+				T* bufArr = reinterpret_cast<T*>(bufferGenericData);
 				for (unsigned int i = 0; i < arrSz; i++)
-					*bufArr[i] = accessBufferArr[i];
+					bufArr[i] = accessBufferArr[i];
 			}
 			else // single element copy
 			{
@@ -108,9 +108,9 @@ template <class T>
 void Buffer<T>::writeElementAt(int p_idx, T* p_elem)
 {
 	if (m_config->arraySize > 0)
-		return accessBufferArr[p_idx]=*p_elem;
+		accessBufferArr[p_idx]=*p_elem;
 	else
-		return accessBuffer=*p_elem;
+		accessBuffer=*p_elem;
 }
 
 template <class T>
