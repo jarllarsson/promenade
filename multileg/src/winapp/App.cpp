@@ -27,8 +27,8 @@ const double App::DTCAP=0.5;
 
 App::App( HINSTANCE p_hInstance )
 {
-	int width=600,
-		height=400;
+	int width=1280,
+		height=1024;
 	bool windowMode=true;
 	// Context
 	try
@@ -191,6 +191,20 @@ void App::run()
 	}
 }
 
+
+__int64 getTimeStamp()
+{
+	__int64 stamp = 0;
+	QueryPerformanceCounter((LARGE_INTEGER*)&stamp);
+	return stamp;
+}
+
+__int64 getFrequency()
+{
+	__int64 freq = 0;
+	QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
+	return freq;
+}
 
 void App::updateController(float p_dt)
 {

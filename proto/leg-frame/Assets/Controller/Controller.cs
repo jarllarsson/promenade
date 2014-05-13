@@ -156,7 +156,11 @@ public class Controller : MonoBehaviour, IOptimizable
         //
         for (int i=0; i<m_joints.Length; i++)
         {
-            m_joints[i].centerOfMass += -m_joints[i].transform.up * m_joints[i].transform.localScale.y * 0.5f;
+            if (i!=0)
+                m_joints[i].centerOfMass += -m_joints[i].transform.up * m_joints[i].transform.localScale.y * 0.5f;
+            else
+                m_joints[i].centerOfMass += -m_joints[i].transform.up * m_joints[i].transform.localScale.y;
+            Debug.DrawLine(m_joints[i].centerOfMass + m_joints[i].transform.position, m_joints[i].centerOfMass + m_joints[i].transform.position + Vector3.up, Color.red, 1.0f);
             //Debug.Log("COM Joint "+i+" "+m_joints[i].centerOfMass);
             m_chainObjs.Add(m_joints[i].gameObject);
         }

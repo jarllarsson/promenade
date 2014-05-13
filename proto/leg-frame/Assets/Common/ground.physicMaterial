@@ -7,10 +7,10 @@ PhysicMaterial:
   m_PrefabInternal: {fileID: 0}
   m_Name: ground
   dynamicFriction: .800000012
-  staticFriction: 1
+  staticFriction: .800000012
   bounciness: 0
   frictionCombine: 0
   bounceCombine: 0
   frictionDirection2: {x: 0, y: 0, z: 0}
-  dynamicFriction2: 0
-  staticFriction2: 0
+  dynamicFriction2: .800000012
+  staticFriction2: .800000012

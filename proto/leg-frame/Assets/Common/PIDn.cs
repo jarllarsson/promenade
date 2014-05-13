@@ -27,7 +27,8 @@ public class PIDn : MonoBehaviour
 
     public void Start()
     {
-        if (m_autoKd) m_Kd = 2.0f * Mathf.Sqrt(m_Kp);
+        if (m_autoKd) { m_Kp = 10.0f; m_Kd = 0.1f * m_Kp; }
+            //2.0f * Mathf.Sqrt(m_Kp);
     }
 
     // Drive the controller and get new value

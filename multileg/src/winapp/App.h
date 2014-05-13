@@ -38,6 +38,9 @@ public:
 protected:
 	Context* m_context;
 	GraphicsDevice* m_graphicsDevice;
+
+	__int64 getTimeStamp();
+	__int64 getFrequency();
 private:
 	static const double DTCAP;
 	float fpsUpdateTick;
