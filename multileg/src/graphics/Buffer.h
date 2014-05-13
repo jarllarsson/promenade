@@ -25,12 +25,34 @@ public:
 		T* p_initData, BufferConfig::BUFFER_INIT_DESC& p_configDesc)
 		: BufferBase(p_device, p_deviceContext, p_configDesc)
 	{
-		// Access buffer *HACK*, Prettier way to solve this?
-		if (m_config->usage!=BufferConfig::BUFFER_DEFAULT) 
-			accessBuffer = *p_initData;
+		// Access buffer should only be allocated for types that has write properties
+		if (m_config->usage != BufferConfig::BUFFER_DEFAULT)
+		{
+			unsigned int arrSz = p_configDesc.arraySize;
+			// if defined as a whole array of element clusters, allocate an array
+			// for memberwise access abilities as well
+			// For example writeable instance buffers
+			if (arrSz > 0)
+			{
+				accessBufferArr = new T[arrSz];
+				for (unsigned int i = 0; i < arrSz; i++)
+					accessBufferArr[i] = p_initData[i];
+			}
+			else // otherwise, store as single copy, for example constant buffers
+			{
+				accessBuffer = *p_initData;
+			}
+		}
+			
 		init(static_cast<void*>(p_initData));
 	}
-	virtual ~Buffer() {}
+	virtual ~Buffer() 
+	{
+		if (m_config->arraySize > 0)
+		{
+			delete[] accessBufferArr;
+		}
+	}
 
 	///-----------------------------------------------------------------------------------
 	/// Update buffer on GPU from CPU representation (accessBuffer)
@@ -41,8 +63,18 @@ public:
 		if (m_config->usage!=BufferConfig::BUFFER_DEFAULT) 
 		{
 			void* bufferGenericData = map();
-			T* buf = static_cast<T*>(bufferGenericData);
-			*buf = accessBuffer;
+			unsigned int arrSz = m_config->arraySize;
+			if (arrSz > 0) // multi element copy
+			{
+				T** bufArr = reinterpret_cast<T**>(bufferGenericData);
+				for (unsigned int i = 0; i < arrSz; i++)
+					*bufArr[i] = accessBufferArr[i];
+			}
+			else // single element copy
+			{
+				T* buf = reinterpret_cast<T*>(bufferGenericData);
+				*buf = accessBuffer;
+			}
 			unmap();
 		}
 	}
@@ -51,7 +83,41 @@ public:
 	/// Buffer for CPU access, gets copied to GPU(map/write/unmap) on update
 	///
 	T accessBuffer;
+	T* accessBufferArr;
+
+	// Single element access on array buffers
+	T readElementAt(int p_idx);
+	T* readElementPtrAt(int p_idx);
+
+	void writeElementAt(int p_idx, T* p_elem);
 
 protected:
 private:
 };
+
+template <class T>
+T* Buffer<T>::readElementPtrAt(int p_idx)
+{
+	if (m_config->arraySize > 0)
+		return &accessBufferArr[p_idx];
+	else
+		return &accessBuffer;
+}
+
+template <class T>
+void Buffer<T>::writeElementAt(int p_idx, T* p_elem)
+{
+	if (m_config->arraySize > 0)
+		return accessBufferArr[p_idx]=*p_elem;
+	else
+		return accessBuffer=*p_elem;
+}
+
+template <class T>
+T Buffer<T>::readElementAt(int p_idx)
+{
+	if (m_config->arraySize > 0)
+		return accessBufferArr[p_idx];
+	else
+		return accessBuffer;
+}

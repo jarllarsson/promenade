@@ -62,6 +62,7 @@ struct BufferConfig
 		UINT32			ElementSize;
 		BUFFER_USAGE	Usage;
 		BUFFER_SLOT		Slot;
+		unsigned int	arraySize;
 	};
 
 	BufferConfig(BUFFER_INIT_DESC& p_initDesc);
@@ -73,6 +74,13 @@ struct BufferConfig
 
 	UINT32			elementSize;
 	UINT32			elementCount;
+
+	// If the buffer is an array of elementclusters this > 0,
+	// such as vertexbuffers or instance buffers. This is optional
+	// and doesn't change the layout of the buffer, but provides extended
+	// information for accessing array members.
+	// For single matrices or vectors it is 0.
+	unsigned int	arraySize;
 
 	const D3D11_BUFFER_DESC* getBufferDesc() const;
 private:

@@ -30,6 +30,7 @@ Buffer<Mat4CBuffer>* BufferFactory::createMat4CBuffer()
 
 	// set up buffer description: usage, type and size
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	ZeroMemory((void*)&bufferDesc, sizeof(bufferDesc));
 	bufferDesc.ElementSize = m_elementSize;
 	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
 	bufferDesc.NumElements = sizeof(data)/m_elementSize;
@@ -43,22 +44,24 @@ Buffer<Mat4CBuffer>* BufferFactory::createMat4CBuffer()
 }
 
 
-Buffer<InstanceData>* BufferFactory::createMat4InstanceBuffer( void* p_instanceList, 
-															  unsigned int p_numberOfElements)
+Buffer<glm::mat4>* BufferFactory::createMat4InstanceBuffer( void* p_instanceList, 
+															unsigned int p_numberOfElements)
 {
-	Buffer<InstanceData>* instanceBuffer;
+	Buffer<glm::mat4>* instanceBuffer;
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
-	bufferDesc.ElementSize = sizeof(InstanceData);
-	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
+	ZeroMemory((void*)&bufferDesc, sizeof(bufferDesc));
+	bufferDesc.ElementSize = sizeof(glm::mat4);
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
 	bufferDesc.NumElements = p_numberOfElements;
 	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
 	bufferDesc.Slot = BufferConfig::SLOT0;
+	bufferDesc.arraySize = p_numberOfElements;
 
 	// Create buffer from config and data
-	instanceBuffer = new Buffer<InstanceData>(m_device,m_deviceContext,
-		(InstanceData*)p_instanceList,bufferDesc);
+	instanceBuffer = new Buffer<glm::mat4>(m_device, m_deviceContext,
+		(glm::mat4*)p_instanceList, bufferDesc);
 
 	return instanceBuffer;
 }
@@ -78,6 +81,7 @@ Buffer<PVertex>* BufferFactory::createFullScreenQuadBuffer()
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	ZeroMemory((void*)&bufferDesc, sizeof(bufferDesc));
 	bufferDesc.ElementSize = sizeof(PVertex);
 	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	bufferDesc.NumElements = 6;
@@ -166,6 +170,7 @@ Buffer<unsigned int>* BufferFactory::createIndexBuffer( unsigned int* p_indices,
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC indexBufferDesc;
+	ZeroMemory((void*)&indexBufferDesc, sizeof(indexBufferDesc));
 	indexBufferDesc.ElementSize = sizeof(unsigned int);
 	indexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	indexBufferDesc.NumElements = p_numberOfElements;
@@ -209,6 +214,7 @@ Buffer<PVertex>* BufferFactory::createLineBox()
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	ZeroMemory((void*)&bufferDesc, sizeof(bufferDesc));
 	bufferDesc.ElementSize = sizeof(PVertex);
 	bufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	bufferDesc.NumElements = sizeof(mesh)/sizeof(PVertex);

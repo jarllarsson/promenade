@@ -15,5 +15,5 @@
 struct InstanceData
 {
 public:
-	float vp[16];
+	float m[16];
 };

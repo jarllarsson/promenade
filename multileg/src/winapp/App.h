@@ -45,7 +45,7 @@ protected:
 	void processInput();
 	void handleContext(double p_dt, double p_physDt);
 	void gameUpdate(double p_dt);
-	void physUpdate();
+	void physUpdate(double p_dt);
 	void render();
 private:
 	bool pumpMessage(MSG& p_msg);
@@ -58,6 +58,6 @@ private:
 	Input*		m_input;
 	
 	vector<glm::mat4> m_instance;
-	Buffer<InstanceData>* m_instances;
+	Buffer<glm::mat4>* m_instances;
 	Buffer<Mat4CBuffer>* m_vp;
 };

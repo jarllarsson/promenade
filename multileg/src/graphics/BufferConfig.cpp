@@ -7,6 +7,7 @@ BufferConfig::BufferConfig(BUFFER_INIT_DESC& p_initDesc)
 	usage = p_initDesc.Usage;
 	elementSize = p_initDesc.ElementSize;
 	elementCount = p_initDesc.NumElements;
+	arraySize = p_initDesc.arraySize;
 
 	switch (p_initDesc.Slot)
 	{

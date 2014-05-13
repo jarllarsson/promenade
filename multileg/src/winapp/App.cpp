@@ -18,6 +18,9 @@
 #include <amp.h> 
 #include <ppl.h>
 
+#include <btBulletDynamicsCommon.h>
+#include <BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h>
+
 
 
 using namespace std;
@@ -96,6 +99,73 @@ void App::run()
 	double gameTickS = (double)gameTickMs / 1000.0;
 
 
+
+
+
+
+
+	// BP TEST
+	// Broadphase object
+	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+
+	// Collision dispatcher with default config
+	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+
+	// Register collision algorithm (needed for mesh collisions)
+	// btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+
+	// Register physics solver
+	// (Single threaded)
+	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+
+	// ==================================
+	// Create the physics world
+	// ==================================
+	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	// -----------
+	// Objects
+	// -----------
+	// Create shapes
+	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
+	btCollisionShape* fallShape = new btSphereShape(1);
+	// Create motion state for ground
+	// http://bulletphysics.org/mediawiki-1.5.8/index.php/MotionStates#MotionStates
+	// Are used to retreive the calculated transform data from bullet
+	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
+		btVector3(0, -1, 0)));
+	// Create rigidbody for ground
+	// Bullet considers passing a mass of zero equivalent to making a body with infinite mass - it is immovable.
+	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
+	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+	// Add ground to world
+	dynamicsWorld->addRigidBody(groundRigidBody);
+
+	// Same procedure for sphere
+	// Create rigidbody for sphere (with motion state 50m above ground)
+	btDefaultMotionState* fallMotionState =
+		new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0)));
+	btScalar mass = 1; // 1kg
+	btVector3 fallInertia(0, 0, 0);
+	fallShape->calculateLocalInertia(mass, fallInertia); // sphere inertia
+	// And the rigidbody
+	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, fallMotionState, fallShape, fallInertia);
+	btRigidBody* fallRigidBody = new btRigidBody(fallRigidBodyCI);
+	dynamicsWorld->addRigidBody(fallRigidBody);
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// Message pump struct
 	MSG msg = {0};
 
@@ -120,6 +190,15 @@ void App::run()
 
 			// Tick the bullet world. Keep in mind that bullet takes seconds
 			physUpdate(phys_dt);
+
+
+			dynamicsWorld->stepSimulation(phys_dt, 10);
+			btTransform trans;
+			fallRigidBody->getMotionState()->getWorldTransform(trans);
+			DEBUGPRINT(( (toString(trans.getOrigin().getY())+"\n").c_str() ));
+
+
+
 
 			prevTimeStamp = currTimeStamp;
 
@@ -274,6 +353,11 @@ void App::gameUpdate( double p_dt )
 	std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float)* 4 * 4);
 	m_vp->update();
 
+	//glm::mat4 firstTransform = m_instances[0].accessBuffer;
+	//glm::translate(firstTransform, glm::vec3(0.0f, p_dt, 0.0f));
+	//m_instances[0].accessBuffer = firstTransform;
+	//m_instances[0].update();
+
 	// Run the devices
 	// ---------------------------------------------------------------------------------------------
 
@@ -309,7 +393,7 @@ void App::gameUpdate( double p_dt )
 
 void App::physUpdate(double p_dt)
 {
-	mWorld->stepSimulation((float)phys_dt, 10);
+	//mWorld->stepSimulation((float)p_dt, 10);
 }
 
 void App::render()

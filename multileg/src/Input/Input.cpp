@@ -121,26 +121,26 @@ void Input::handleNonBufferedKeys()
 
 void Input::handleNonBufferedMouse()
 {
-	std::stringstream ss;
-	//Just dump the current mouse state
-	const MouseState &ms = g_m->getMouseState();
-	ss << "\nMouse: Abs(" << ms.X.abs << " " << ms.Y.abs << " " << ms.Z.abs
-		<< ") B: " << ms.buttons << " Rel(" << ms.X.rel << " " << ms.Y.rel << " " << ms.Z.rel << ")";
-	DEBUGPRINT((ss.str().c_str()));
-	ss.clear();
+// 	std::stringstream ss;
+// 	//Just dump the current mouse state
+// 	const MouseState &ms = g_m->getMouseState();
+// 	ss << "\nMouse: Abs(" << ms.X.abs << " " << ms.Y.abs << " " << ms.Z.abs
+// 		<< ") B: " << ms.buttons << " Rel(" << ms.X.rel << " " << ms.Y.rel << " " << ms.Z.rel << ")";
+// 	DEBUGPRINT((ss.str().c_str()));
+// 	ss.clear();
 }
 
 void Input::handleNonBufferedJoy( JoyStick* js )
 {
-	std::stringstream ss;
-	//Just dump the current joy state
-	const JoyStickState &joy = js->getJoyStickState();
-	for( unsigned int i = 0; i < joy.mAxes.size(); ++i )
-	{
-		ss << "\nAxis " << i << " X: " << joy.mAxes[i].abs;
-		DEBUGPRINT((ss.str().c_str()));
-		ss.clear();
-	}
+// 	std::stringstream ss;
+// 	//Just dump the current joy state
+// 	const JoyStickState &joy = js->getJoyStickState();
+// 	for( unsigned int i = 0; i < joy.mAxes.size(); ++i )
+// 	{
+// 		ss << "\nAxis " << i << " X: " << joy.mAxes[i].abs;
+// 		DEBUGPRINT((ss.str().c_str()));
+// 		ss.clear();
+// 	}
 }
 
 bool Input::gamepadButtonDown(int p_gamepadNum, int p_btnNum)

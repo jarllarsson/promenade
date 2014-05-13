@@ -3,6 +3,7 @@
 #include "Buffer.h"
 #include "InstanceData.h"
 #include "CBuffers.h"
+#include <glm\gtc\type_ptr.hpp>
 
 struct PVertex;
 class Mesh;
@@ -50,7 +51,7 @@ public:
 											unsigned int p_numberOfElements);
 
 	Buffer<Mat4CBuffer>* createMat4CBuffer();
-	Buffer<InstanceData>* createMat4InstanceBuffer( void* p_instanceList, unsigned int p_numberOfElements);
+	Buffer<glm::mat4>* createMat4InstanceBuffer( void* p_instanceList, unsigned int p_numberOfElements);
 protected:
 private:
 	ID3D11Device* m_device;
