@@ -13,6 +13,9 @@
     <Filter Include="Entity System\Physics">
       <UniqueIdentifier>{2ec90c05-e9e7-47f9-9b2c-425b9e808de9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity System\Rendering">
+      <UniqueIdentifier>{6c2284ad-8ba9-47c1-8569-b76a670d1d9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -35,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="RigidBodySystem.h">
       <Filter>Entity System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderComponent.h">
+      <Filter>Entity System\Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
