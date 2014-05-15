@@ -73,7 +73,7 @@ private:
 	//ResourceManager<btCollisionShape> m_collisionShapes;
 
 	
-	vector<glm::mat4> m_instance;
+	vector<glm::mat4> m_instanceOrigins;
 	Buffer<glm::mat4>* m_instances;
 	Buffer<Mat4CBuffer>* m_vp;
 };

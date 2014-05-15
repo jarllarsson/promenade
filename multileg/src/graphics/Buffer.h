@@ -88,12 +88,19 @@ public:
 	// Single element access on array buffers
 	T readElementAt(int p_idx);
 	T* readElementPtrAt(int p_idx);
+	unsigned int getArraySize();
 
 	void writeElementAt(int p_idx, T* p_elem);
 
 protected:
 private:
 };
+
+template <class T>
+unsigned int Buffer<T>::getArraySize()
+{
+	return m_config->arraySize;
+}
 
 template <class T>
 T* Buffer<T>::readElementPtrAt(int p_idx)

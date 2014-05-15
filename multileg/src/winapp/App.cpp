@@ -68,9 +68,9 @@ App::App( HINSTANCE p_hInstance )
 		glm::mat4 transMat = glm::translate(glm::mat4(1.0f),
 			glm::vec3((float)x*2.0f -100.0f, (float)y*2.0f-100.0f, (float)z*2.0f));
 		transMat = glm::transpose(transMat);
-		m_instance.push_back(transMat);
+		m_instanceOrigins.push_back(transMat);
 	}
-	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instance[0], (unsigned int)m_instance.size());
+	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instanceOrigins[0], (unsigned int)m_instanceOrigins.size());
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 }
 
@@ -394,7 +394,9 @@ void App::gameUpdate( double p_dt )
 	m_world.loopStart();
 	m_world.setDelta(p_dt);
 	processSystemCollection(&m_gameLogicSystems);
-
+	//
+	// RUN RENDERSYSTEM HERE!!
+	// it must be run last, it only prepares rendering for later
 
 	// Run the devices
 	// ---------------------------------------------------------------------------------------------
