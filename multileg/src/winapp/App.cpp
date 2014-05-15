@@ -104,18 +104,18 @@ void App::run()
 	// Artemis
 	// Create and initialize systems
 	artemis::SystemManager * sm = m_world.getSystemManager();
-	MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
-	addGameLogic(movementsys);
+	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
+	//addGameLogic(movementsys);
 	sm->initializeAll();
 
 	// Create an entity
 	artemis::EntityManager * em = m_world.getEntityManager();
 	artemis::Entity & player = em->create();
 	//player.addComponent(new MovementComponent(2, 4));
-	player.addComponent(new PositionComponent(0, 0));
+	//player.addComponent(new PositionComponent(0, 0));
 	player.refresh();
 
-	PositionComponent * comp = (PositionComponent*)player.getComponent<PositionComponent>();
+	//PositionComponent * comp = (PositionComponent*)player.getComponent<PositionComponent>();
 
 
 
@@ -456,7 +456,7 @@ void App::addPhysicsLogic(artemis::EntityProcessingSystem* p_system)
 
 void App::processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_systemCollection)
 {
-	unsigned int count = p_systemCollection->size();
+	unsigned int count = (unsigned int)p_systemCollection->size();
 	for (unsigned int i = 0; i < count; i++)
 	{
 		artemis::EntityProcessingSystem* system = (*p_systemCollection)[i];

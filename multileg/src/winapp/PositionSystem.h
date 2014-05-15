@@ -1,9 +1,8 @@
 #pragma once
 
 #include <Artemis.h>
-#include "PositionComponent.h"
 #include <DebugPrint.h>
-
+/*
 class MovementSystem : public artemis::EntityProcessingSystem {
 private:
 	//artemis::ComponentMapper<MovementComponent> velocityMapper;
@@ -28,4 +27,4 @@ public:
 		DEBUGPRINT(( (string("ART")+toString(positionMapper.get(e)->posX)).c_str()));
 	};
 
-};
+};*/

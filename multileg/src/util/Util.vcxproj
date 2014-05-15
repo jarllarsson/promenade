@@ -148,6 +148,7 @@
     <ClInclude Include="ValueClamp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MathHelp.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

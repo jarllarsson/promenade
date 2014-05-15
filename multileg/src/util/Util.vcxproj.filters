@@ -24,5 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />
+    <ClCompile Include="MathHelp.cpp" />
   </ItemGroup>
 </Project>
