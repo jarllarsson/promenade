@@ -22,6 +22,8 @@
 #include <BulletCollision/Gimpact/btGImpactCollisionAlgorithm.h>
 
 
+#include "PositionSystem.h"
+
 
 using namespace std;
 
@@ -99,6 +101,21 @@ void App::run()
 	double gameTickS = (double)gameTickMs / 1000.0;
 
 
+	// Artemis
+	// Create and initialize systems
+	artemis::SystemManager * sm = m_world.getSystemManager();
+	MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
+	addGameLogic(movementsys);
+	sm->initializeAll();
+
+	// Create an entity
+	artemis::EntityManager * em = m_world.getEntityManager();
+	artemis::Entity & player = em->create();
+	//player.addComponent(new MovementComponent(2, 4));
+	player.addComponent(new PositionComponent(0, 0));
+	player.refresh();
+
+	PositionComponent * comp = (PositionComponent*)player.getComponent<PositionComponent>();
 
 
 
@@ -370,6 +387,12 @@ void App::gameUpdate( double p_dt )
 	}
 	m_instances->update();
 
+	// Update entity systems
+	m_world.loopStart();
+	m_world.setDelta(p_dt);
+	processSystemCollection(&m_gameLogicSystems);
+
+
 	// Run the devices
 	// ---------------------------------------------------------------------------------------------
 
@@ -417,4 +440,26 @@ void App::render()
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_instances);
 	// Flip!
 	m_graphicsDevice->flipBackBuffer();										
+}
+
+// Add a system for game logic processing
+void App::addGameLogic(artemis::EntityProcessingSystem* p_system)
+{
+	m_gameLogicSystems.push_back(p_system);
+}
+
+// Add system for processing in the physics ticker
+void App::addPhysicsLogic(artemis::EntityProcessingSystem* p_system)
+{
+	m_physicsLogicSystems.push_back(p_system);
+}
+
+void App::processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_systemCollection)
+{
+	unsigned int count = p_systemCollection->size();
+	for (unsigned int i = 0; i < count; i++)
+	{
+		artemis::EntityProcessingSystem* system = (*p_systemCollection)[i];
+		system->process();
+	}
 }

@@ -7,6 +7,12 @@
     <Filter Include="TempLogic">
       <UniqueIdentifier>{d97fcd18-2338-466e-8f58-c4a86d0f7211}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity System">
+      <UniqueIdentifier>{f5e22b82-edd9-4de8-b738-c4b76f8178df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity System\Physics">
+      <UniqueIdentifier>{2ec90c05-e9e7-47f9-9b2c-425b9e808de9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -17,6 +23,15 @@
     </ClInclude>
     <ClInclude Include="TempController.h">
       <Filter>TempLogic</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionSystem.h">
+      <Filter>Entity System</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyComponent.h">
+      <Filter>Entity System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Entity System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

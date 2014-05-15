@@ -7,6 +7,8 @@
 #include <CBuffers.h>
 #include <Buffer.h>
 #include <vector>
+#include <Artemis.h>
+#include <ResourceManager.h>
 
 
 class Context;
@@ -46,16 +48,30 @@ protected:
 	void handleContext(double p_dt, double p_physDt);
 	void gameUpdate(double p_dt);
 	void physUpdate(double p_dt);
+
+	void addGameLogic(artemis::EntityProcessingSystem* p_system);
+	void addPhysicsLogic(artemis::EntityProcessingSystem* p_system);
+
 	void render();
 private:
 	bool pumpMessage(MSG& p_msg);
+	void processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_systemCollection);
 
 	static const double DTCAP;
 	float m_fpsUpdateTick;
 
 	void updateController(float p_dt);
-	TempController* m_controller;
-	Input*		m_input;
+	TempController*			m_controller;
+	Input*					m_input;
+
+	// Entity system handling
+	artemis::World			m_world;
+	vector<artemis::EntityProcessingSystem*> m_gameLogicSystems;
+	vector<artemis::EntityProcessingSystem*> m_physicsLogicSystems;
+
+	// Resource managers
+	//ResourceManager<btCollisionShape> m_collisionShapes;
+
 	
 	vector<glm::mat4> m_instance;
 	Buffer<glm::mat4>* m_instances;
