@@ -256,7 +256,7 @@ public class Controller : MonoBehaviour, IOptimizable
         {
             m_legFrames[i].updateReferenceFeetPositions(m_player.m_gaitPhase, m_time, m_goalVelocity);
             m_legFrames[i].updateFeet(m_player.m_gaitPhase, m_currentVelocity, m_desiredVelocity);
-            m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase);
+            //m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase);
         }
     }
 

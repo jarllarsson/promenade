@@ -187,7 +187,7 @@ public class ControllerMovementRecorder : MonoBehaviour
             lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);
         }
 
-        m_fdBodyHeightSqrDiffs.Add(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.0001 * lenDist);
+        m_fdBodyHeightSqrDiffs.Add(lenFt * 0.4 + lenKnees + lenHips + lenBod + 2.0f*lenHd + 0.1 * lenDist);
     }
 
     void fp_calcMovementDistance()
@@ -204,7 +204,7 @@ public class ControllerMovementRecorder : MonoBehaviour
         double fp = EvaluateFP();
         double fd = EvaluateFD();
         double fobj = (double)m_fdWeight*fd + (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
-        Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
+        //Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
         return fobj;
     }                 
                       

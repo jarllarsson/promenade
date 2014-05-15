@@ -22,6 +22,9 @@ public class TestHandler : MonoBehaviour
     List<float> m_paramsMax;
     List<float> m_paramsMin;
 
+    private int m_sampleCounter=0;
+    public int m_samplesPerIteration = 1;
+
     private double[] m_totalScores;
     bool m_inited = false;
     bool m_oneRun = false;
@@ -49,8 +52,17 @@ public class TestHandler : MonoBehaviour
 
     void Init()
     {
-        m_testCount++;
-        Debug.Log("Starting new iteration (no." + m_testCount + ")");
+        if (m_sampleCounter == 0)
+        {
+            m_testCount++;
+            Debug.Log("Starting new iteration (no." + m_testCount + ")");
+        }
+
+        m_sampleCounter++;
+        Debug.Log("Sample " + m_sampleCounter);
+
+
+        
         GameObject[] controllerObjects = GameObject.FindGameObjectsWithTag("optimizable");
         GameObject bestScoreVisualizerObject = GameObject.FindGameObjectWithTag("bestscore");
         m_optimizableControllers = new Controller[controllerObjects.Length];
@@ -119,14 +131,21 @@ public class TestHandler : MonoBehaviour
         if (m_oneRun && (m_instantEval || m_currentSimTime >= m_simTime))
         {            
             EvaluateAll();
-            FindCurrentBestCandidate();
-            if (m_currentBestCandidate >= 0)
-                Debug.Log("New best candidate was: " + m_currentBestCandidate +" ["+m_lastBestScore+"p]");
+            if (m_sampleCounter>=m_samplesPerIteration)
+            {
+                FindCurrentBestCandidate();
+                if (m_currentBestCandidate >= 0)
+                    Debug.Log("New best candidate was: " + m_currentBestCandidate + " [" + m_lastBestScore + "p]");
+                else
+                    Debug.Log("No new candidate (" + m_currentBestCandidate + ")  [" + m_lastBestScore + "p]");
+                if (m_lastBestScore > 0.01f)
+                    PerturbParams();            
+                RestartSim();
+            }
             else
-                Debug.Log("No new candidate ("+m_currentBestCandidate+")  ["+m_lastBestScore+"p]");
-            if (m_lastBestScore > 0.01f)
-                PerturbParams();
-            RestartSim();
+            {
+                RestartSample();
+            }
             // Possible scene restart here <-
         }
         else
@@ -138,9 +157,18 @@ public class TestHandler : MonoBehaviour
         m_oneRun = false;
         m_optimizableControllers = null;
         m_currentSimTime = -m_warmupTime;
+        m_sampleCounter = 0;
         //StoreParams();
         VoidBestCandidate();
         ResetScores();
+        Application.LoadLevel(0);
+    }
+
+    private void RestartSample()
+    {
+        m_oneRun = false;
+        m_optimizableControllers = null;
+        m_currentSimTime = -m_warmupTime;
         Application.LoadLevel(0);
     }
 
@@ -151,7 +179,7 @@ public class TestHandler : MonoBehaviour
         //Debug.Log("R"+bestScore);
         for (int i = 0; i < m_totalScores.Length; i++)
         {
-            Debug.Log("score("+i+") " + m_totalScores[i]);
+            //Debug.Log("score("+i+") " + m_totalScores[i]);
             if (m_totalScores[i] < bestScore)
             {
                 m_currentBestCandidate = i;

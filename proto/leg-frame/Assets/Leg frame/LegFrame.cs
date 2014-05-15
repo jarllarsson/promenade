@@ -158,7 +158,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
         
         for (int i = 0; i < c_legCount; i++)
         for (int p = 0; p < 2; p++)
+        {
             vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_tuneFD[i,p]));
+        }
         
         //for (int i = 0; i < m_legFgravityComp.Length; i++)
         //    vals.AddRange(OptimizableHelper.ExtractParamsListFrom(m_legFgravityComp[i]));
@@ -208,7 +210,11 @@ public class LegFrame : MonoBehaviour, IOptimizable
         
         for (int i = 0; i < c_legCount; i++)
         for (int p = 0; p < 2; p++)
+        {
             OptimizableHelper.ConsumeParamsTo(p_params, ref m_tuneFD[i,p]);
+            //Debug.Log("FD(" + i + "," + p + ")" + m_tuneFD[i, p]);
+            
+        }
         
         //for (int i = 0; i < m_legFgravityComp.Length; i++)
         //    OptimizableHelper.ConsumeParamsTo(p_params, ref m_legFgravityComp[i]);
@@ -267,7 +273,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         for (int i = 0; i < c_legCount; i++)
         for (int p = 0; p < 2; p++) // FD
         {
-            maxList.Add(200.0f); maxList.Add(200.0f); maxList.Add(200.0f);
+            maxList.Add(200.0f); maxList.Add(200.0f); maxList.Add(200.0f); // FD
         }
         
         //for (int i = 0; i < m_legFgravityComp.Length; i++) // F gravity comp
@@ -410,7 +416,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
 	// Update is called once per frame
 	void Update () 
     {
-	
+
 	}
 
     public void updateReferenceFeetPositions(float p_phi, float p_t, Vector3 p_goalVelocity)
