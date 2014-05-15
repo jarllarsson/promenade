@@ -4,3 +4,5 @@
 #include "ValueClamp.h"
 #include "BaseException.h"
 #include "MathHelp.h"
+#include "UniqueIndexList.h"
+#include "ResourceManager.h"

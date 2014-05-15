@@ -19,6 +19,8 @@
     <ClInclude Include="ToString.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="ValueClamp.h" />
+    <ClInclude Include="UniqueIndexList.h" />
+    <ClInclude Include="ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />
