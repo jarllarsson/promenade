@@ -66,9 +66,17 @@ public:
 		if (rigidBody->isInited())
 		{
 			btRigidBody* body = rigidBody->m_rigidBody;
-			btMotionState* motionState = body->getMotionState();
-			btTransform transform;
-			motionState->getWorldTransform(transform);
+			if (body->isInWorld() && body->isActive())
+			{			
+				btMotionState* motionState = body->getMotionState();
+				btTransform physTransform;
+				motionState->getWorldTransform(physTransform);
+				// update the transform component
+				btVector3 pos = physTransform.getOrigin();
+				btQuaternion rot = physTransform.getRotation();
+				transform->setPosRotToMatrix(glm::vec3(pos.x, pos.y, pos.z), 
+											 glm::quat(rot.x, rot.y, rot.z, rot.w));
+			}
 		}
 	};
 
