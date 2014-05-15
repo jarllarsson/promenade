@@ -149,7 +149,7 @@ void App::run()
 	btCollisionShape* fallShape = new btSphereShape(1);
 	// Create motion state for ground
 	// http://bulletphysics.org/mediawiki-1.5.8/index.php/MotionStates#MotionStates
-	// Are used to retreive the calculated transform data from bullet
+	// Are used to retrieve the calculated transform data from bullet
 	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
 		btVector3(0, -100, 0)));
 	// Create rigidbody for ground

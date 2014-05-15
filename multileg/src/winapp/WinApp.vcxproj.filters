@@ -33,6 +33,9 @@
     <ClInclude Include="TransformComponent.h">
       <Filter>Entity System</Filter>
     </ClInclude>
+    <ClInclude Include="RigidBodySystem.h">
+      <Filter>Entity System\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">

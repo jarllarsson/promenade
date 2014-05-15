@@ -27,6 +27,7 @@ public:
 		setRotationToMatrix(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
 		setScaleToMatrix(glm::vec3(1.0f));
 		updateMatrix();
+		m_matrixDirty = false;
 	};
 
 	TransformComponent(glm::vec3& p_position = glm::vec3(0.0f), 
@@ -37,18 +38,20 @@ public:
 		setRotationToMatrix(p_rotation);
 		setScaleToMatrix(p_scale);
 		updateMatrix();
+		m_matrixDirty = false;
 	};
 
 
-	void setPositionToMatrix(glm::vec3& p_position);
-	void setRotationToMatrix(glm::quat& p_rotation);
-	void setScaleToMatrix(glm::vec3& p_scale);
-	void setMatrixToComponents(glm::mat4& p_mat);
+	void setPositionToMatrix(const glm::vec3& p_position);
+	void setRotationToMatrix(const glm::quat& p_rotation);
+	void setScaleToMatrix(const glm::vec3& p_scale);
+	void setMatrixToComponents(const glm::mat4& p_mat);
+	void setMatrix(const glm::mat4& p_mat);
 
-	glm::vec3&	getPosition() { return m_position; }
-	glm::quat&	getRotation() { return m_rotation; }
-	glm::vec3&	getScale() { return m_scale; }
-	glm::mat4&	getMatrix() { return m_transform; }
+	const glm::vec3& getPosition() { updateOnDirty(); return m_position; }
+	const glm::quat& getRotation() { updateOnDirty(); return m_rotation; }
+	const glm::vec3& getScale() { updateOnDirty(); return m_scale; }
+	const glm::mat4& getMatrix() { updateOnDirty();return m_transform; }
 
 	void updateMatrix();
 
@@ -57,27 +60,33 @@ private:
 	glm::quat m_rotation;
 	glm::vec3 m_scale;
 	glm::mat4 m_transform;
+	//
+	void updateOnDirty();
+	bool m_matrixDirty; // is dirty if matrix updated but not components
 };
 
-void TransformComponent::setPositionToMatrix(glm::vec3& p_position)
+void TransformComponent::setPositionToMatrix(const glm::vec3& p_position)
 {
+	updateOnDirty();
 	m_position = p_position;
 	updateMatrix();
 }
 
-void TransformComponent::setRotationToMatrix(glm::quat& p_rotation)
+void TransformComponent::setRotationToMatrix(const glm::quat& p_rotation)
 {
+	updateOnDirty();
 	m_rotation = p_rotation;
 	updateMatrix();
 }
 
-void TransformComponent::setScaleToMatrix(glm::vec3& p_scale)
+void TransformComponent::setScaleToMatrix(const glm::vec3& p_scale)
 {
+	updateOnDirty();
 	m_scale = p_scale;
 	updateMatrix();
 }
 
-void TransformComponent::setMatrixToComponents(glm::mat4& p_mat)
+void TransformComponent::setMatrixToComponents(const glm::mat4& p_mat)
 {
 	m_transform = p_mat;
 	glm::mat4 rotation;
@@ -92,7 +101,21 @@ void TransformComponent::updateMatrix()
 {
 	glm::mat4 translate = glm::translate(glm::mat4(1.0f), m_position);
 	glm::mat4 rotate = glm::mat4_cast(m_rotation);
-	// decomposeTRS for scale
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), m_scale);
 	m_transform = translate * rotate * scale; // is the scale * rotate * translate
+}
+
+void TransformComponent::setMatrix(const glm::mat4& p_mat)
+{
+	m_transform = p_mat;
+	m_matrixDirty = true;
+}
+
+void TransformComponent::updateOnDirty()
+{
+	if (m_matrixDirty)
+	{
+		setMatrixToComponents(m_transform);
+		m_matrixDirty = false;
+	}
 }
