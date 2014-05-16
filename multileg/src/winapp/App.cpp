@@ -59,9 +59,12 @@ App::App( HINSTANCE p_hInstance )
 
 
 	m_fpsUpdateTick=0.0f;
-	m_controller = new TempController();
+	m_controller = new TempController(0.0f,10.0f,-50.0f,0.0f);
 	m_input = new Input();
 	m_input->doStartup(m_context->getWindowHandle());
+	m_timeScale = 1.0f;
+	m_timeScaleToggle = false;
+	m_timePauseStepToggle = false;
 	//
 	//for (int x = 0; x < 100; x++)
 	//for (int y = 0; y < 2; y++)
@@ -147,7 +150,7 @@ void App::run()
 		box.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f));
 		box.addComponent(new RenderComponent());
 		box.addComponent(new TransformComponent(pos,
-			glm::quat( glm::vec3(/*float(i)*0.05f*TWOPI*/0.0f, 0.0f, 0.0f/*float(i)*0.05f*TWOPI*/) )
+			glm::quat(glm::vec3(/*float(i)*0.05f*TWOPI*/TWOPI*0.05f, 0.0f, 0.0f/*float(i)*0.05f*TWOPI*/))
 			));
 		box.refresh();
 	}
@@ -156,9 +159,9 @@ void App::run()
 	artemis::Entity & ground = entityManager->create();
 	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(50.0f, 0.5f, 50.0f)), 0.0f));
 	ground.addComponent(new RenderComponent());
-	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -10.0f, 0.0f), 
-		glm::quat(glm::vec3(10.0f,0.0f,0.0f)),
-		glm::vec3(50.0f, 0.5f, 50.0f)));
+	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -20.0f, 0.0f), 
+		glm::quat(glm::vec3(TWOPI*0.1f, 0.0f, 0.0f)),
+		glm::vec3(100.0f, 1.0f, 100.0f)));
 	ground.refresh();
 
 
@@ -177,8 +180,8 @@ void App::run()
 	//
 	artemis::Entity & axisY = entityManager->create();
 	axisY.addComponent(new RenderComponent());
-	axisY.addComponent(new TransformComponent(glm::vec3(0.0f, 5.0f, 0.0f),
-		glm::vec3(1.0f, 10.0f, 1.0f)));
+	axisY.addComponent(new TransformComponent(glm::vec3(0.0f, 10.0f, 0.0f),
+		glm::vec3(1.0f, 20.0f, 1.0f)));
 	axisY.refresh();
 	//
 	artemis::Entity & axisZ = entityManager->create();
@@ -218,7 +221,7 @@ void App::run()
 			/* This, like the rendering, ticks every time around.
 			Bullet does the interpolation for us. */
 			currTimeStamp = getTimeStamp();
-			double phys_dt = (double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
+			double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
 			// Tick the bullet world. Keep in mind that bullet takes seconds
 			dynamicsWorld->stepSimulation((btScalar)phys_dt, 10);
 			// ========================================================
@@ -228,7 +231,7 @@ void App::run()
 
 			// Game Clock part of the loop
 			// ========================================================
-			double dt = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
+			double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - timeStart);
 			// Game clock based updates
 			while (dt >= gameTickS)
 			{
@@ -371,6 +374,7 @@ void App::handleContext(double p_dt, double p_physDt)
 void App::gameUpdate( double p_dt )
 {
 	float dt = (float)p_dt;
+	float game_dt = m_timeScale*(float)p_dt;
 	// temp controller update code
 	updateController(dt);
 	m_controller->setFovFromAngle(52.0f, m_graphicsDevice->getAspectRatio());
@@ -378,6 +382,37 @@ void App::gameUpdate( double p_dt )
 	// Get camera info to buffer
 	std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float)* 4 * 4);
 	m_vp->update();
+
+	if (m_timePauseStepToggle && m_timeScale > 0.0f)
+		m_timeScale = 0.0f;
+	if (m_input->g_kb->isKeyDown(KC_RETURN))
+	{
+		if (!m_timeScaleToggle)
+		{
+			if (m_timeScale < 1.0f)
+				m_timeScale = 1.0f;
+			else
+				m_timeScale = 0.0f;
+			m_timeScaleToggle = true;
+		}
+	}
+	else
+	{
+		m_timeScaleToggle = false;
+	}
+	if (m_input->g_kb->isKeyDown(KC_NUMPAD6))
+	{
+		if (m_timeScale < 1.0f && !m_timePauseStepToggle)
+		{
+			m_timePauseStepToggle = true;
+			m_timeScale = 1.0f;
+		}
+	}
+	else
+	{
+		m_timePauseStepToggle = false;
+	}
+
 
 	//for (unsigned int i = 1; i < m_instances->getElementCount();i++)
 	//{
@@ -393,7 +428,7 @@ void App::gameUpdate( double p_dt )
 
 	// Update entity systems
 	m_world.loopStart();
-	m_world.setDelta(p_dt);
+	m_world.setDelta(game_dt);
 
 	// Physics result gathering have to run first
 	m_rigidBodySystem->process();

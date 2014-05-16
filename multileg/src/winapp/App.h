@@ -71,6 +71,10 @@ private:
 	RigidBodySystem*		m_rigidBodySystem;
 	RenderSystem*			m_renderSystem;
 
+	float m_timeScale;
+	bool m_timeScaleToggle;
+	bool m_timePauseStepToggle;
+
 	// Resource managers
 	//ResourceManager<btCollisionShape> m_collisionShapes;
 

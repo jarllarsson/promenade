@@ -3,10 +3,10 @@
 #include <ToString.h>
 #include <DebugPrint.h>
 
-TempController::TempController()
+TempController::TempController( float p_x, float p_y, float p_z, float p_yangleRad )
 {
-	m_position = glm::vec4(1.0f,50.0f,-100.0f,1.0f);
-	m_rotation = glm::quat()/*(glm::vec3(0.0f,0.2f,0.0f))*/;
+	m_position = glm::vec4(p_x,p_y,p_z,1.0f);
+	m_rotation = glm::quat(glm::vec3(0.0f,p_yangleRad,0.0f));
 	m_fovDirtyBit = false;
 
 	m_damping=2.0f;

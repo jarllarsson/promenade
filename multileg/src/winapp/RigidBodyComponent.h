@@ -3,6 +3,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <glm\gtc\type_ptr.hpp>
 #include "TransformComponent.h"
+#include <glm\gtc\matrix_transform.hpp>
 
 // =======================================================================================
 //                                RigidBodyComponent
@@ -63,10 +64,21 @@ void RigidBodyComponent::init(TransformComponent* p_transform)
 {
 	m_inited = true;
 	// Set up the rigidbody
-	glm::vec3 position = p_transform->getPosition();
-	glm::quat rotation = p_transform->getRotation();
-	btDefaultMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w),
-																 btVector3(position.x, position.y, position.z)));
+	//glm::vec3 position = p_transform->getPosition();
+	//glm::quat rotation = p_transform->getRotation();
+	btTransform t;
+	//t.setFromOpenGLMatrix(glm::value_ptr(*p_transform->getMatrixPtr()));
+
+	// Construct matrix without scale (or the shape will bug)
+	glm::mat4 translate = glm::translate(glm::mat4(1.0f), p_transform->getPosition());
+	glm::mat4 rotate = glm::mat4_cast(p_transform->getRotation());
+	glm::mat4 mat = translate * rotate;
+	// Read to bt matrix
+	t.setFromOpenGLMatrix(glm::value_ptr(mat));
+	// Init motionstate with matrix
+	btDefaultMotionState* motionState = new btDefaultMotionState(t);
+// 		btTransform(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w),
+// 																 btVector3(position.x, position.y, position.z)));
 	// Calculate inertia, using our collision shape
 	btVector3 inertia(0, 0, 0);
 	m_collisionShape->calculateLocalInertia(m_mass, inertia);

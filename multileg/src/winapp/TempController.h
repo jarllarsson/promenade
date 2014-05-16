@@ -24,7 +24,7 @@ using namespace std;
 class TempController
 {
 public:
-	TempController();
+	TempController(float p_x, float p_y, float p_z, float p_yangleRad);
 	virtual ~TempController();
 
 	glm::mat4& getRotationMatrix();

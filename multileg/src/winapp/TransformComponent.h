@@ -23,36 +23,37 @@ class TransformComponent : public artemis::Component
 public:
 	TransformComponent(float p_x = 0.0f, float p_y = 0.0f, float p_z = 0.0f)
 	{
-		setPositionToMatrix(glm::vec3(p_x,p_y,p_z));
-		setRotationToMatrix(glm::quat(0.0f, 0.0f, 0.0f, 1.0f));
-		setScaleToMatrix(glm::vec3(1.0f));
-		updateMatrix();
 		m_matrixDirty = false;
 		m_transformRenderDirty = true;
+		m_position = glm::vec3(p_x,p_y,p_z);
+		m_rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
+		m_scale = glm::vec3(1.0f);
+		updateMatrix();
+
 	};
 
 	TransformComponent(glm::vec3& p_position, 
 					   glm::quat& p_rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f),
 					   glm::vec3& p_scale  = glm::vec3(1.0f))
 	{
-		setPositionToMatrix(p_position);
-		setRotationToMatrix(p_rotation);
-		setScaleToMatrix(p_scale);
-		updateMatrix();
 		m_matrixDirty = false;
 		m_transformRenderDirty = true;
+		m_position = p_position;
+		m_rotation = p_rotation;
+		m_scale = p_scale;
+		updateMatrix();
 	};
 
 	TransformComponent(glm::vec3& p_position,
 					   glm::vec3& p_scale,
 					   glm::quat& p_rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f))
 	{
-		setPositionToMatrix(p_position);
-		setRotationToMatrix(p_rotation);
-		setScaleToMatrix(p_scale);
-		updateMatrix();
 		m_matrixDirty = false;
 		m_transformRenderDirty = true;
+		m_position = p_position;
+		m_rotation = p_rotation;
+		m_scale = p_scale;
+		updateMatrix();
 	};
 
 
@@ -134,6 +135,9 @@ void TransformComponent::updateMatrix()
 {
 	glm::mat4 translate = glm::translate(glm::mat4(1.0f), m_position);
 	glm::mat4 rotate = glm::mat4_cast(m_rotation);
+// 	glm::vec3 test = glm::eulerAngles(m_rotation);
+// 	glm::quat castBack = glm::quat(rotate);
+// 	glm::vec3 test2 = glm::eulerAngles(castBack); // are they the same?
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), m_scale);
 	m_transform = translate * rotate * scale; // is the scale * rotate * translate
 	m_transformRenderDirty = true;

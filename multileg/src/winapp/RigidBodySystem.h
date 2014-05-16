@@ -73,11 +73,18 @@ public:
 				btTransform physTransform;
 				motionState->getWorldTransform(physTransform);
 				// update the transform component
-				btVector3 pos = physTransform.getOrigin();
-				btQuaternion rot = physTransform.getRotation();
-				//DEBUGPRINT(((string("run rigidbody py=") + toString(pos.y()) + "\n").c_str()));
-				transform->setPosRotToMatrix(glm::vec3(pos.x(), pos.y(), pos.z()),
-										     glm::quat(rot.x(), rot.y(), rot.z(), rot.w()));
+				// Get the transform from Bullet and into mat
+				glm::mat4 mat;
+				// first we need to keep scale as bullet doesn't
+				glm::vec3 scale = transform->getScale();
+				physTransform.getOpenGLMatrix(glm::value_ptr(mat));
+				transform->setMatrix(mat);
+				transform->setScaleToMatrix(scale);
+				//btVector3 pos = physTransform.getOrigin();
+				//btQuaternion rot = physTransform.getRotation();
+				////DEBUGPRINT(((string("run rigidbody py=") + toString(pos.y()) + "\n").c_str()));
+				//transform->setPosRotToMatrix(glm::vec3(pos.x(), pos.y(), pos.z()),
+				//						     glm::quat(rot.x(), rot.y(), rot.z(), rot.w()));
 			}
 		}
 	};
