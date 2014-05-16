@@ -66,17 +66,16 @@ App::App( HINSTANCE p_hInstance )
 	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
 	//
-	//for (int x = 0; x < 100; x++)
-	//for (int y = 0; y < 2; y++)
-	//for (int z = 0; z < 100; z++)
+	//for (int x = 0; x < 10; x++)
+	//for (int z = 0; z < 10; z++)
 	//{
-	//	glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 1.0f, 100.0f));
-	//	glm::mat4 transMat = glm::translate(scaleMat, glm::vec3(0.0f, -100.0f, 0.0f));
-	//		//glm::vec3((float)x*2.0f -100.0f, (float)y*2.0f-100.0f, (float)z*2.0f));
+	//	glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f, 1.0f, 20.0f));
+	//	glm::mat4 transMat = glm::translate(scaleMat, 
+	//		glm::vec3((float)x*5.0f -50.0f, 0.0f, (float)z*5.0f - 50.0f));
 	//	transMat = glm::transpose(transMat);
 	//	m_instanceOrigins.push_back(transMat);
 	//}
-	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer(NULL/*(void*)&m_instanceOrigins[0]*/, 0/*(unsigned int)m_instanceOrigins.size()*/);
+	//m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instanceOrigins[0], (unsigned int)m_instanceOrigins.size());
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 }
 
@@ -88,7 +87,7 @@ App::~App()
 	SAFE_DELETE(m_input);
 	SAFE_DELETE(m_controller);
 	//
-	delete m_instances;
+	//delete m_instances;
 	delete m_vp;
 }
 
@@ -133,7 +132,7 @@ void App::run()
 	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 	//addGameLogic(movementsys);
 	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
-	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice, m_instances));
+	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 	sysManager->initializeAll();
 
 
@@ -143,7 +142,7 @@ void App::run()
 	artemis::EntityManager * entityManager = m_world.getEntityManager();
 
 	// Create a box entity
-	for (int i = 0; i < 2000;i++)
+	for (int i = 0; i < 6000;i++)
 	{
 		artemis::Entity & box = entityManager->create();
 		glm::vec3 pos = glm::vec3(20.0f*sin(i*0.1f), 10.0f + i*4.0f, 20.0f*cos(i*0.1f));
@@ -481,7 +480,7 @@ void App::render()
 	m_graphicsDevice->clearRenderTargets();
 	// Run passes
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
-	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_instances);
+	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_renderSystem->getInstances());
 	// Flip!
 	m_graphicsDevice->flipBackBuffer();										
 }

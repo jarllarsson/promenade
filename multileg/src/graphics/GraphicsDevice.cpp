@@ -182,12 +182,12 @@ void GraphicsDevice::executeRenderPass( RenderPass p_pass,
 		drawFullscreen();
 		break;
 	case RenderPass::P_WIREFRAMEPASS:
-		if (p_instances!=NULL && p_cbuf!=NULL)
+		if (p_instances != NULL && p_cbuf != NULL)
 		{
 			m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 			setBlendState(BlendState::ADDITIVE);
-			setRasterizerStateSettings(RasterizerState::WIREFRAME,false);
-			setRenderTarget(RT_BACKBUFFER_NODEPTHSTENCIL);		
+			setRasterizerStateSettings(RasterizerState::WIREFRAME, false);
+			setRenderTarget(RT_BACKBUFFER_NODEPTHSTENCIL);
 			p_cbuf->apply();
 			setShader(SI_WIREFRAMESHADER);
 			drawInstancedAABB(p_instances->getElementCount(),

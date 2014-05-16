@@ -34,14 +34,19 @@ private:
 	// render stats
 	bool m_instancesUpdated;
 public:
-	RenderSystem(GraphicsDevice* p_graphicsDevice, Buffer<glm::mat4>* p_instances)
+	RenderSystem(GraphicsDevice* p_graphicsDevice)
 	{
 		addComponentType<TransformComponent>();
 		addComponentType<RenderComponent>();
 		m_graphicsDevice = p_graphicsDevice;
-		m_instances = p_instances;
-		m_instancesUpdated = true;
+		m_instances = NULL;
+		m_instancesUpdated = false;
 	};
+
+	virtual ~RenderSystem()
+	{
+		delete m_instances;
+	}
 
 	virtual void initialize()
 	{
@@ -63,23 +68,33 @@ public:
 		// warning quick and dirty
 		// If new entity added with rendercomponent
 		// resize instance array, ie. destroy it create new with new size, add new value
-		glm::mat4* instances = m_instances->accessBufferArr;
-		unsigned int arraySize = m_instances->getArraySize();
-		unsigned int newArraySize = arraySize+1;
-		unsigned int backIdxNew = arraySize; // when we resize
-		glm::mat4* newInstances = new glm::mat4[newArraySize]; // resize
-		// Copy over old data
-		for (unsigned int i = 0; i < arraySize; i++)
-		{
-			newInstances[i] = instances[i];
+		unsigned int arraySize = 0;
+		unsigned int newArraySize = 1;
+		glm::mat4* newInstances = NULL;
+		if (m_instances != NULL)
+		{		
+			glm::mat4* instances = m_instances->accessBufferArr;	
+			arraySize = m_instances->getArraySize();
+			newArraySize = arraySize + 1;
+			newInstances = new glm::mat4[newArraySize]; // resize
+			// Copy over old data
+			for (unsigned int i = 0; i < arraySize; i++)
+			{
+				newInstances[i] = instances[i];
+			}		
+			// remove the old buffer
+			SAFE_DELETE(m_instances);
 		}
-		// add the matrix
+		else
+		{
+			newInstances = new glm::mat4[newArraySize];
+		}
+		// add the matrix		
+		unsigned int backIdxNew = arraySize; // when we resize
 		newInstances[backIdxNew] = glm::transpose(transform->getMatrix());
-		// remove the old buffer
-		SAFE_DELETE(m_instances);
 		// recreate the buffer
 		m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)newInstances, newArraySize);
-		DEBUGPRINT(( (string("add renderobj (ilist sz[") + toString(arraySize) + "] -> [" + toString(newArraySize)+"])\n").c_str() ));
+		//DEBUGPRINT(( (string("add renderobj (ilist sz[") + toString(arraySize) + "] -> [" + toString(newArraySize)+"])\n").c_str() ));
 		renderStats->setInstanceIdx(backIdxNew);
 		//
 		m_instancesUpdated = true;
@@ -119,5 +134,10 @@ public:
 			m_instancesUpdated = false;
 		}
 	};
+
+	Buffer<glm::mat4>* getInstances()
+	{
+		return m_instances;
+	}
 
 };
