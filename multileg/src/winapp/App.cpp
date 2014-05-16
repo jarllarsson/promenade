@@ -336,17 +336,17 @@ void App::gameUpdate( double p_dt )
 	std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float)* 4 * 4);
 	m_vp->update();
 
-	for (unsigned int i = 1; i < m_instances->getElementCount();i++)
-	{
-		glm::mat4* firstTransform = m_instances->readElementPtrAt(i);
-		*firstTransform = glm::transpose(*firstTransform);
-		*firstTransform *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin(i)+cos(i), 0.0f)*0.1f*(float)p_dt);
-		*firstTransform = glm::transpose(*firstTransform);
-		//m_instances->writeElementAt(i, firstTransform);
-		//m_instances[0].accessBuffer = firstTransform;
-		int x = 0;
-	}
-	m_instances->update();
+	//for (unsigned int i = 1; i < m_instances->getElementCount();i++)
+	//{
+	//	glm::mat4* firstTransform = m_instances->readElementPtrAt(i);
+	//	*firstTransform = glm::transpose(*firstTransform);
+	//	*firstTransform *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin(i)+cos(i), 0.0f)*0.1f*(float)p_dt);
+	//	*firstTransform = glm::transpose(*firstTransform);
+	//	//m_instances->writeElementAt(i, firstTransform);
+	//	//m_instances[0].accessBuffer = firstTransform;
+	//	int x = 0;
+	//}
+	//m_instances->update();
 
 	// Update entity systems
 	m_world.loopStart();

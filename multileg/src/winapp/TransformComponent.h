@@ -31,7 +31,7 @@ public:
 		m_transformRenderDirty = true;
 	};
 
-	TransformComponent(glm::vec3& p_position = glm::vec3(0.0f), 
+	TransformComponent(glm::vec3& p_position, 
 					   glm::quat& p_rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f),
 					   glm::vec3& p_scale  = glm::vec3(1.0f))
 	{

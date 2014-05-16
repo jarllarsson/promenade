@@ -75,9 +75,9 @@ public:
 				// update the transform component
 				btVector3 pos = physTransform.getOrigin();
 				btQuaternion rot = physTransform.getRotation();
-				DEBUGPRINT(((string("run rigidbody py=") + toString(pos.y) + "\n").c_str()));
-				transform->setPosRotToMatrix(glm::vec3(pos.x, pos.y, pos.z), 
-											 glm::quat(rot.x, rot.y, rot.z, rot.w));
+				DEBUGPRINT(((string("run rigidbody py=") + toString(pos.y()) + "\n").c_str()));
+				transform->setPosRotToMatrix(glm::vec3(pos.x(), pos.y(), pos.z()),
+										     glm::quat(rot.x(), rot.y(), rot.z(), rot.w()));
 			}
 		}
 	};
