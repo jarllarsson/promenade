@@ -15,6 +15,8 @@ class Context;
 class GraphicsDevice;
 class TempController;
 class Input;
+class RenderSystem;
+class RigidBodySystem;
 
 using namespace std;
 
@@ -47,10 +49,8 @@ protected:
 	void processInput();
 	void handleContext(double p_dt, double p_physDt);
 	void gameUpdate(double p_dt);
-	void physUpdate(double p_dt);
 
-	void addGameLogic(artemis::EntityProcessingSystem* p_system);
-	void addPhysicsLogic(artemis::EntityProcessingSystem* p_system);
+	void addOrderIndependentSystem(artemis::EntityProcessingSystem* p_system);
 
 	void render();
 private:
@@ -66,8 +66,10 @@ private:
 
 	// Entity system handling
 	artemis::World			m_world;
-	vector<artemis::EntityProcessingSystem*> m_gameLogicSystems;
-	vector<artemis::EntityProcessingSystem*> m_physicsLogicSystems;
+	vector<artemis::EntityProcessingSystem*> m_orderIndependentSystems;
+	// Order dependant systems
+	RigidBodySystem*		m_rigidBodySystem;
+	RenderSystem*			m_renderSystem;
 
 	// Resource managers
 	//ResourceManager<btCollisionShape> m_collisionShapes;

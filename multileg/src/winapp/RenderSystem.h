@@ -74,6 +74,7 @@ public:
 		SAFE_DELETE(m_instances);
 		// recreate the buffer
 		m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)newInstances, newArraySize);
+		DEBUGPRINT(( (string("add renderobj (ilist sz[") + toString(arraySize) + "] -> [" + toString(newArraySize)+"])\n").c_str() ));
 		//
 		m_instancesUpdated = true;
 	};
@@ -95,6 +96,7 @@ public:
 			{
 				*writeMat = glm::transpose(*readMat);
 			}
+			DEBUGPRINT(((string("render instance ") + toString(instanceIdx) + "\n").c_str()));
 			transform->unsetTransformRenderDirty();
 			m_instancesUpdated = true;
 		}

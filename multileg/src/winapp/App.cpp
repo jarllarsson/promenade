@@ -23,6 +23,8 @@
 
 
 #include "PositionSystem.h"
+#include "RigidBodySystem.h"
+#include "RenderSystem.h"
 
 
 using namespace std;
@@ -61,12 +63,13 @@ App::App( HINSTANCE p_hInstance )
 	m_input = new Input();
 	m_input->doStartup(m_context->getWindowHandle());
 	//
-	for (int x = 0; x < 100; x++)
-	for (int y = 0; y < 2; y++)
-	for (int z = 0; z < 100; z++)
+	//for (int x = 0; x < 100; x++)
+	//for (int y = 0; y < 2; y++)
+	//for (int z = 0; z < 100; z++)
 	{
-		glm::mat4 transMat = glm::translate(glm::mat4(1.0f),
-			glm::vec3((float)x*2.0f -100.0f, (float)y*2.0f-100.0f, (float)z*2.0f));
+		glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 1.0f, 100.0f));
+		glm::mat4 transMat = glm::translate(scaleMat, glm::vec3(0.0f, -100.0f, 0.0f));
+			//glm::vec3((float)x*2.0f -100.0f, (float)y*2.0f-100.0f, (float)z*2.0f));
 		transMat = glm::transpose(transMat);
 		m_instanceOrigins.push_back(transMat);
 	}
@@ -101,12 +104,38 @@ void App::run()
 	double gameTickS = (double)gameTickMs / 1000.0;
 
 
+
+	// Bullet physics initialization
+	// Broadphase object
+	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+	// Collision dispatcher with default config
+	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	// Register collision algorithm (needed for mesh collisions)
+	// btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+	// Register physics solver
+	// (Single threaded)
+	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+	// ==================================
+	// Create the physics world
+	// ==================================
+	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+	dynamicsWorld->setGravity(btVector3(0, -9.82, 0));
+
+
+
 	// Artemis
 	// Create and initialize systems
-	artemis::SystemManager * sm = m_world.getSystemManager();
+	artemis::SystemManager * sysManager = m_world.getSystemManager();
 	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 	//addGameLogic(movementsys);
-	sm->initializeAll();
+	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
+	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice, m_instances));
+	sysManager->initializeAll();
+
+
+
+
 
 	// Create an entity
 	artemis::EntityManager * em = m_world.getEntityManager();
@@ -116,62 +145,6 @@ void App::run()
 	player.refresh();
 
 	//PositionComponent * comp = (PositionComponent*)player.getComponent<PositionComponent>();
-
-
-
-
-
-	// BP TEST
-	// Broadphase object
-	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-
-	// Collision dispatcher with default config
-	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-
-	// Register collision algorithm (needed for mesh collisions)
-	// btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
-
-	// Register physics solver
-	// (Single threaded)
-	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-
-	// ==================================
-	// Create the physics world
-	// ==================================
-	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0, -9.82, 0));
-	// -----------
-	// Objects
-	// -----------
-	// Create shapes
-	btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0, 1, 0), 1);
-	btCollisionShape* fallShape = new btSphereShape(1);
-	// Create motion state for ground
-	// http://bulletphysics.org/mediawiki-1.5.8/index.php/MotionStates#MotionStates
-	// Are used to retrieve the calculated transform data from bullet
-	btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),
-		btVector3(0, -100, 0)));
-	// Create rigidbody for ground
-	// Bullet considers passing a mass of zero equivalent to making a body with infinite mass - it is immovable.
-	btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0, 0, 0));
-	btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-	// Add ground to world
-	dynamicsWorld->addRigidBody(groundRigidBody);
-
-	// Same procedure for sphere
-	// Create rigidbody for sphere (with motion state 50m above ground)
-	btDefaultMotionState* fallMotionState =
-		new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 50, 0)));
-	btScalar mass = 1; // 1kg
-	btVector3 fallInertia(0, 0, 0);
-	fallShape->calculateLocalInertia(mass, fallInertia); // sphere inertia
-	// And the rigidbody
-	btRigidBody::btRigidBodyConstructionInfo fallRigidBodyCI(mass, fallMotionState, fallShape, fallInertia);
-	btRigidBody* fallRigidBody = new btRigidBody(fallRigidBodyCI);
-	dynamicsWorld->addRigidBody(fallRigidBody);
-
-
 
 
 
@@ -194,41 +167,25 @@ void App::run()
 	{
 		if (!pumpMessage(msg))
 		{
-
+			// Start by rendering
 			render();
 
 			// Physics handling part of the loop
+			// ========================================================
 			/* This, like the rendering, ticks every time around.
 			Bullet does the interpolation for us. */
-
 			currTimeStamp = getTimeStamp();
-			//time_physics_curr = getMilliseconds();
 			double phys_dt = (double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
-
 			// Tick the bullet world. Keep in mind that bullet takes seconds
-			physUpdate(phys_dt);
-
-
 			dynamicsWorld->stepSimulation((btScalar)phys_dt, 10);
-			btTransform trans;
-			fallRigidBody->getMotionState()->getWorldTransform(trans);
-			DEBUGPRINT(( (toString(trans.getOrigin().getY())+"\n").c_str() ));
-
-			glm::mat4* firstTransform = m_instances->readElementPtrAt(0);
-			*firstTransform = glm::transpose(*firstTransform);
-			*firstTransform = glm::translate(glm::mat4(1.0f), glm::vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
-			*firstTransform = glm::transpose(*firstTransform);
-
-			m_instances->update();
-
+			// ========================================================
 
 			prevTimeStamp = currTimeStamp;
 
 
 			// Game Clock part of the loop
-			/*  This ticks once every TickMs milliseconds on average */
+			// ========================================================
 			double dt = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
-
 			// Game clock based updates
 			while (dt >= gameTickS)
 			{
@@ -244,6 +201,7 @@ void App::run()
 					gameUpdate(interval);
 				}
 			}
+			// ========================================================
 		}
 
 	}
@@ -393,8 +351,14 @@ void App::gameUpdate( double p_dt )
 	// Update entity systems
 	m_world.loopStart();
 	m_world.setDelta(p_dt);
-	processSystemCollection(&m_gameLogicSystems);
-	//
+
+	// Physics result gathering have to run first
+	m_rigidBodySystem->process();
+	// Run all other systems, for which order doesn't matter
+	processSystemCollection(&m_orderIndependentSystems);
+	// Render system is processed last
+	m_renderSystem->process();
+
 	// RUN RENDERSYSTEM HERE!!
 	// it must be run last, it only prepares rendering for later
 
@@ -431,10 +395,6 @@ void App::gameUpdate( double p_dt )
 	//DEBUGPRINT((string("\n").c_str()));
 }
 
-void App::physUpdate(double p_dt)
-{
-	//mWorld->stepSimulation((float)p_dt, 10);
-}
 
 void App::render()
 {
@@ -448,16 +408,11 @@ void App::render()
 }
 
 // Add a system for game logic processing
-void App::addGameLogic(artemis::EntityProcessingSystem* p_system)
+void App::addOrderIndependentSystem(artemis::EntityProcessingSystem* p_system)
 {
-	m_gameLogicSystems.push_back(p_system);
+	m_orderIndependentSystems.push_back(p_system);
 }
 
-// Add system for processing in the physics ticker
-void App::addPhysicsLogic(artemis::EntityProcessingSystem* p_system)
-{
-	m_physicsLogicSystems.push_back(p_system);
-}
 
 void App::processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_systemCollection)
 {
