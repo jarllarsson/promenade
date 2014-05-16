@@ -66,14 +66,14 @@ App::App( HINSTANCE p_hInstance )
 	//for (int x = 0; x < 100; x++)
 	//for (int y = 0; y < 2; y++)
 	//for (int z = 0; z < 100; z++)
-	{
-		glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 1.0f, 100.0f));
-		glm::mat4 transMat = glm::translate(scaleMat, glm::vec3(0.0f, -100.0f, 0.0f));
-			//glm::vec3((float)x*2.0f -100.0f, (float)y*2.0f-100.0f, (float)z*2.0f));
-		transMat = glm::transpose(transMat);
-		m_instanceOrigins.push_back(transMat);
-	}
-	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instanceOrigins[0], (unsigned int)m_instanceOrigins.size());
+	//{
+	//	glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(100.0f, 1.0f, 100.0f));
+	//	glm::mat4 transMat = glm::translate(scaleMat, glm::vec3(0.0f, -100.0f, 0.0f));
+	//		//glm::vec3((float)x*2.0f -100.0f, (float)y*2.0f-100.0f, (float)z*2.0f));
+	//	transMat = glm::transpose(transMat);
+	//	m_instanceOrigins.push_back(transMat);
+	//}
+	m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer(NULL/*(void*)&m_instanceOrigins[0]*/, 0/*(unsigned int)m_instanceOrigins.size()*/);
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 }
 
@@ -136,14 +136,56 @@ void App::run()
 
 
 
-
-	// Create an entity
+	// Entity manager fetch
 	artemis::EntityManager * entityManager = m_world.getEntityManager();
-	artemis::Entity & box = entityManager->create();
-	box.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f));
-	box.addComponent(new RenderComponent());
-	box.addComponent(new TransformComponent());
-	box.refresh();
+
+	// Create a box entity
+	for (int i = 0; i < 20;i++)
+	{
+		artemis::Entity & box = entityManager->create();
+		glm::vec3 pos = glm::vec3(float(i)*4.0f - 10, 10.0f+float(i), float(i));
+		box.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f));
+		box.addComponent(new RenderComponent());
+		box.addComponent(new TransformComponent(pos,
+			glm::quat( glm::vec3(/*float(i)*0.05f*TWOPI*/0.0f, 0.0f, 0.0f/*float(i)*0.05f*TWOPI*/) )
+			));
+		box.refresh();
+	}
+
+	// Create a ground entity
+	artemis::Entity & ground = entityManager->create();
+	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(50.0f, 0.5f, 50.0f)), 0.0f));
+	ground.addComponent(new RenderComponent());
+	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -10.0f, 0.0f), 
+		glm::quat(glm::vec3(10.0f,0.0f,0.0f)),
+		glm::vec3(50.0f, 0.5f, 50.0f)));
+	ground.refresh();
+
+
+	// Create axes
+	artemis::Entity & axisC = entityManager->create();
+	axisC.addComponent(new RenderComponent());
+	axisC.addComponent(new TransformComponent(glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(2.0f, 2.0f, 2.0f)));
+	axisC.refresh();
+	//
+	artemis::Entity & axisX = entityManager->create();
+	axisX.addComponent(new RenderComponent());
+	axisX.addComponent(new TransformComponent(glm::vec3(5.0f, 0.0f, 0.0f),
+		glm::vec3(10.0f, 1.0f, 1.0f)));
+	axisX.refresh();
+	//
+	artemis::Entity & axisY = entityManager->create();
+	axisY.addComponent(new RenderComponent());
+	axisY.addComponent(new TransformComponent(glm::vec3(0.0f, 5.0f, 0.0f),
+		glm::vec3(1.0f, 10.0f, 1.0f)));
+	axisY.refresh();
+	//
+	artemis::Entity & axisZ = entityManager->create();
+	axisZ.addComponent(new RenderComponent());
+	axisZ.addComponent(new TransformComponent(glm::vec3(0.0f, 0.0f, 5.0f),
+		glm::vec3(1.0f, 2.0f, 10.0f)));
+	axisZ.refresh();
 
 	//PositionComponent * comp = (PositionComponent*)player.getComponent<PositionComponent>();
 

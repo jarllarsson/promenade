@@ -51,7 +51,7 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 
 	// 6. Create draw-quad
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
-	m_aabbLineMesh = m_bufferFactory->createLineBox();
+	m_aabbLineMesh = m_bufferFactory->createLineBox(0.5f);
 
 	fitViewport();
 }

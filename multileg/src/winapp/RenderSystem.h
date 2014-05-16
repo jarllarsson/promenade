@@ -68,6 +68,11 @@ public:
 		unsigned int newArraySize = arraySize+1;
 		unsigned int backIdxNew = arraySize; // when we resize
 		glm::mat4* newInstances = new glm::mat4[newArraySize]; // resize
+		// Copy over old data
+		for (unsigned int i = 0; i < arraySize; i++)
+		{
+			newInstances[i] = instances[i];
+		}
 		// add the matrix
 		newInstances[backIdxNew] = glm::transpose(transform->getMatrix());
 		// remove the old buffer
@@ -99,7 +104,7 @@ public:
 				{
 					*writeMat = glm::transpose(*readMat);
 				}
-				DEBUGPRINT(((string("render instance ") + toString(instanceIdx) + "\n").c_str()));
+				//DEBUGPRINT(((string("render instance ") + toString(instanceIdx) + "\n").c_str()));
 				transform->unsetTransformRenderDirty();
 				m_instancesUpdated = true;
 			}

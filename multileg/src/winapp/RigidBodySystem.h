@@ -52,7 +52,7 @@ public:
 		TransformComponent* transform = transformMapper.get(e);
 		if (!rigidBody->isInited())
 		{
-			DEBUGPRINT(((string("Init rigidbody m=") + toString(rigidBody->getMass()) + "\n").c_str()));
+			//DEBUGPRINT(((string("Init rigidbody m=") + toString(rigidBody->getMass()) + "\n").c_str()));
 			rigidBody->init(transform);
 			m_dynamicsWorldPtr->addRigidBody(rigidBody->m_rigidBody);
 		}
@@ -67,7 +67,7 @@ public:
 		if (rigidBody->isInited())
 		{
 			btRigidBody* body = rigidBody->m_rigidBody;
-			if (body!=NULL && body->isInWorld() && body->isActive())
+			if (body!=NULL/* && body->isInWorld() && body->isActive()*/)
 			{			
 				btMotionState* motionState = body->getMotionState();
 				btTransform physTransform;
@@ -75,7 +75,7 @@ public:
 				// update the transform component
 				btVector3 pos = physTransform.getOrigin();
 				btQuaternion rot = physTransform.getRotation();
-				DEBUGPRINT(((string("run rigidbody py=") + toString(pos.y()) + "\n").c_str()));
+				//DEBUGPRINT(((string("run rigidbody py=") + toString(pos.y()) + "\n").c_str()));
 				transform->setPosRotToMatrix(glm::vec3(pos.x(), pos.y(), pos.z()),
 										     glm::quat(rot.x(), rot.y(), rot.z(), rot.w()));
 			}

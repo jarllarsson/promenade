@@ -38,7 +38,7 @@ public:
 				for (unsigned int i = 0; i < arrSz; i++)
 					accessBufferArr[i] = p_initData[i];
 			}
-			else // otherwise, store as single copy, for example constant buffers
+			else if (p_initData!=NULL) // otherwise, store as single copy, for example constant buffers
 			{
 				accessBuffer = *p_initData;
 			}

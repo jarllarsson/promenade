@@ -43,6 +43,18 @@ public:
 		m_transformRenderDirty = true;
 	};
 
+	TransformComponent(glm::vec3& p_position,
+					   glm::vec3& p_scale,
+					   glm::quat& p_rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f))
+	{
+		setPositionToMatrix(p_position);
+		setRotationToMatrix(p_rotation);
+		setScaleToMatrix(p_scale);
+		updateMatrix();
+		m_matrixDirty = false;
+		m_transformRenderDirty = true;
+	};
+
 
 	void setPositionToMatrix(const glm::vec3& p_position);
 	void setRotationToMatrix(const glm::quat& p_rotation);

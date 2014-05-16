@@ -96,40 +96,40 @@ Buffer<PVertex>* BufferFactory::createFullScreenQuadBuffer()
 }
 
 
-Mesh* BufferFactory::createBoxMesh()
+Mesh* BufferFactory::createBoxMesh( float p_halfSizeLength/*=1.0f*/ )
 {
-
+	float r = p_halfSizeLength;
 #pragma region static data
 	PVertex mesh[]= {
-		{-1,-1,-1},	
-		{-1,1,-1},	
-		{1,1,-1},	
-		{1,-1,-1},	
+		{-r,-r,-r},	
+		{-r,r,-r},	
+		{r,r,-r},	
+		{r,-r,-r},	
 
-		{-1,-1,1},	
-		{1,-1,1},	
-		{1,1,1},	
-		{-1,1,1},	
+		{-r,-r,r},	
+		{r,-r,r},	
+		{r,r,r},	
+		{-r,r,r},	
 
-		{-1,1,-1},	
-		{-1,1,1},	
-		{1,1,1},	
-		{1,1,-1},	
+		{-r,r,-r},	
+		{-r,r,r},	
+		{r,r,r},	
+		{r,r,-r},	
 
-		{-1,-1,-1},	
-		{1,-1,-1},	
-		{1,-1,1},	
-		{-1,-1,1},	
+		{-r,-r,-r},	
+		{r,-r,-r},	
+		{r,-r,r},	
+		{-r,-r,r},	
 
-		{-1,-1,1},	
-		{-1,1,1},	
-		{-1,1,-1},	
-		{-1,-1,-1},	
+		{-r,-r,r},	
+		{-r,r,r},	
+		{-r,r,-r},	
+		{-r,-r,-r},	
 
-		{1,-1,-1},	
-		{1,1,-1},	
-		{1,1,1},	
-		{1,-1,1},	
+		{r,-r,-r},	
+		{r,r,-r},	
+		{r,r,r},	
+		{r,-r,r},	
 	};
 
 	unsigned int indices[] = {
@@ -183,32 +183,33 @@ Buffer<unsigned int>* BufferFactory::createIndexBuffer( unsigned int* p_indices,
 	return indexBuffer;
 }
 
-Buffer<PVertex>* BufferFactory::createLineBox()
+Buffer<PVertex>* BufferFactory::createLineBox( float p_halfSizeLength/*=1.0f*/ )
 {
-	PVertex mesh[]= {{-1.0f, -1.0f, -1.0f},
-					 {1.0f, -1.0f, -1.0f},
-					 {-1.0f, -1.0f, -1.0f},
-					 {-1.0f, 1.0f, -1.0f},
-					 {-1.0f, 1.0f, -1.0f},
-					 {1.0f, 1.0f, -1.0f},
-					 {1.0f, -1.0f, -1.0f},
-					 {1.0f, 1.0f, -1.0f},
-					 {-1.0f, -1.0f, 1.0f},
-					 {1.0f, -1.0f, 1.0f},
-					 {-1.0f, -1.0f, 1.0f},
-					 {-1.0f, 1.0f, 1.0f},
-					 {-1.0f, 1.0f, 1.0f},
-					 {1.0f, 1.0f, 1.0f},
-					 {1.0f, -1.0f, 1.0f},
-					 {1.0f, 1.0f, 1.0f},
-					 {-1.0f, -1.0f, -1.0f},
-					 {-1.0f, -1.0f, 1.0f},
-					 {1.0f, -1.0f, -1.0f},
-					 {1.0f, -1.0f, 1.0f},
-					 {-1.0f, 1.0f, -1.0f},
-					 {-1.0f, 1.0f, 1.0f},
-					 {1.0f, 1.0f, -1.0f},
-					 {1.0f, 1.0f, 1.0f}};
+	float r = p_halfSizeLength;
+	PVertex mesh[]= {{-r, -r, -r},
+					 {r, -r, -r},
+					 {-r, -r, -r},
+					 {-r, r, -r},
+					 {-r, r, -r},
+					 {r, r, -r},
+					 {r, -r, -r},
+					 {r, r, -r},
+					 {-r, -r, r},
+					 {r, -r, r},
+					 {-r, -r, r},
+					 {-r, r, r},
+					 {-r, r, r},
+					 {r, r, r},
+					 {r, -r, r},
+					 {r, r, r},
+					 {-r, -r, -r},
+					 {-r, -r, r},
+					 {r, -r, -r},
+					 {r, -r, r},
+					 {-r, r, -r},
+					 {-r, r, r},
+					 {r, r, -r},
+					 {r, r, r}};
 
 	Buffer<PVertex>* lineboxBuffer;
 

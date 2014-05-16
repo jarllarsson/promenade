@@ -28,8 +28,8 @@ public:
 	virtual ~BufferFactory();
 
 	Buffer<PVertex>* createFullScreenQuadBuffer();
-	Buffer<PVertex>* createLineBox();
-	Mesh* createBoxMesh();
+	Buffer<PVertex>* createLineBox(float p_halfSizeLength=1.0f);
+	Mesh* createBoxMesh(float p_halfSizeLength=1.0f);
 
 	///-----------------------------------------------------------------------------------
 	/// Constructs a vertex buffer of a specified type T.
