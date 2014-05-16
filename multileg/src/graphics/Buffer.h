@@ -86,11 +86,11 @@ public:
 	T* accessBufferArr;
 
 	// Single element access on array buffers
-	T readElementAt(int p_idx);
-	T* readElementPtrAt(int p_idx);
+	T readElementAt(unsigned int p_idx);
+	T* readElementPtrAt(unsigned int p_idx);
 	unsigned int getArraySize();
 
-	void writeElementAt(int p_idx, T* p_elem);
+	void writeElementAt(unsigned int p_idx, T* p_elem);
 
 protected:
 private:
@@ -103,7 +103,7 @@ unsigned int Buffer<T>::getArraySize()
 }
 
 template <class T>
-T* Buffer<T>::readElementPtrAt(int p_idx)
+T* Buffer<T>::readElementPtrAt(unsigned int p_idx)
 {
 	if (m_config->arraySize > 0)
 		return &accessBufferArr[p_idx];
@@ -112,7 +112,7 @@ T* Buffer<T>::readElementPtrAt(int p_idx)
 }
 
 template <class T>
-void Buffer<T>::writeElementAt(int p_idx, T* p_elem)
+void Buffer<T>::writeElementAt(unsigned int p_idx, T* p_elem)
 {
 	if (m_config->arraySize > 0)
 		accessBufferArr[p_idx]=*p_elem;
@@ -121,7 +121,7 @@ void Buffer<T>::writeElementAt(int p_idx, T* p_elem)
 }
 
 template <class T>
-T Buffer<T>::readElementAt(int p_idx)
+T Buffer<T>::readElementAt(unsigned int p_idx)
 {
 	if (m_config->arraySize > 0)
 		return accessBufferArr[p_idx];

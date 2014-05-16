@@ -138,11 +138,12 @@ void App::run()
 
 
 	// Create an entity
-	artemis::EntityManager * em = m_world.getEntityManager();
-	artemis::Entity & player = em->create();
-	//player.addComponent(new MovementComponent(2, 4));
-	//player.addComponent(new PositionComponent(0, 0));
-	player.refresh();
+	artemis::EntityManager * entityManager = m_world.getEntityManager();
+	artemis::Entity & box = entityManager->create();
+	box.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f));
+	box.addComponent(new RenderComponent());
+	box.addComponent(new TransformComponent());
+	box.refresh();
 
 	//PositionComponent * comp = (PositionComponent*)player.getComponent<PositionComponent>();
 

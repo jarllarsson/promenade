@@ -12,22 +12,25 @@
 /// 16-5-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class RenderComponent
+class RenderComponent : public artemis::Component
 {
 public:
-	RenderComponent(/*unsigned int p_meshIdx, unsigned int p_instanceListIdx, */unsigned int p_instanceIdx)
+	RenderComponent(/*unsigned int p_meshIdx, unsigned int p_instanceListIdx, unsigned int p_instanceIdx*/)
 	{
 // 		m_meshIdx = p_meshIdx;
 // 		m_instanceListIdx = p_instanceListIdx;
-		m_instanceIdx = p_instanceIdx;
+		m_instanceIdx = -1;
 	};
 
 // 	unsigned int getMeshIdx();
 // 	unsigned int getInstanceListIdx();
-	unsigned int getInstanceIdx();
-
+	int getInstanceIdx();
+	void setInstanceIdx(unsigned int p_idx)
+	{
+		m_instanceIdx = (int)p_idx;
+	}
 private:
-	unsigned int /*m_meshIdx, m_instanceListIdx, */m_instanceIdx;
+	int /*m_meshIdx, m_instanceListIdx, */m_instanceIdx;
 };
 
 // unsigned int RenderComponent::getMeshIdx()
@@ -40,7 +43,7 @@ private:
 // 	return m_instanceListIdx;
 // }
 
-unsigned int RenderComponent::getInstanceIdx()
+int RenderComponent::getInstanceIdx()
 {
 	return m_instanceIdx;
 }

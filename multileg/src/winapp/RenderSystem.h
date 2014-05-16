@@ -75,6 +75,7 @@ public:
 		// recreate the buffer
 		m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)newInstances, newArraySize);
 		DEBUGPRINT(( (string("add renderobj (ilist sz[") + toString(arraySize) + "] -> [" + toString(newArraySize)+"])\n").c_str() ));
+		renderStats->setInstanceIdx(backIdxNew);
 		//
 		m_instancesUpdated = true;
 	};
@@ -89,16 +90,19 @@ public:
 			// Update transform of object to instance list buffer
 			// gpu write to buffer is deferred for when all changes have been made
 			// the deferred update is done in end()
-			unsigned int instanceIdx = renderStats->getInstanceIdx();
-			glm::mat4* writeMat = m_instances->readElementPtrAt(instanceIdx);
-			const glm::mat4* readMat = transform->getMatrixPtr();
-			if (writeMat != NULL)
+			int instanceIdx = renderStats->getInstanceIdx();
+			if (instanceIdx>-1)
 			{
-				*writeMat = glm::transpose(*readMat);
+				glm::mat4* writeMat = m_instances->readElementPtrAt((unsigned int)instanceIdx);
+				const glm::mat4* readMat = transform->getMatrixPtr();
+				if (writeMat != NULL)
+				{
+					*writeMat = glm::transpose(*readMat);
+				}
+				DEBUGPRINT(((string("render instance ") + toString(instanceIdx) + "\n").c_str()));
+				transform->unsetTransformRenderDirty();
+				m_instancesUpdated = true;
 			}
-			DEBUGPRINT(((string("render instance ") + toString(instanceIdx) + "\n").c_str()));
-			transform->unsetTransformRenderDirty();
-			m_instancesUpdated = true;
 		}
 	};
 
