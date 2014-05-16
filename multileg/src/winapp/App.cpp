@@ -143,25 +143,26 @@ void App::run()
 	artemis::EntityManager * entityManager = m_world.getEntityManager();
 
 	// Create a box entity
-	for (int i = 0; i < 20;i++)
+	for (int i = 0; i < 2000;i++)
 	{
 		artemis::Entity & box = entityManager->create();
-		glm::vec3 pos = glm::vec3(float(i)*4.0f - 10, 10.0f+float(i), float(i));
+		glm::vec3 pos = glm::vec3(20.0f*sin(i*0.1f), 10.0f + i*4.0f, 20.0f*cos(i*0.1f));
+			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 		box.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f));
 		box.addComponent(new RenderComponent());
 		box.addComponent(new TransformComponent(pos,
-			glm::quat(glm::vec3(/*float(i)*0.05f*TWOPI*/TWOPI*0.05f, 0.0f, 0.0f/*float(i)*0.05f*TWOPI*/))
+			glm::quat(glm::vec3(TWOPI*0.05f, 0.0f, 0.0f))
 			));
 		box.refresh();
 	}
 
 	// Create a ground entity
 	artemis::Entity & ground = entityManager->create();
-	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(50.0f, 0.5f, 50.0f)), 0.0f));
+	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(50.0f, 10.0f, 50.0f)), 0.0f));
 	ground.addComponent(new RenderComponent());
 	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -20.0f, 0.0f), 
 		glm::quat(glm::vec3(TWOPI*0.1f, 0.0f, 0.0f)),
-		glm::vec3(100.0f, 1.0f, 100.0f)));
+		glm::vec3(100.0f, 20.0f, 100.0f)));
 	ground.refresh();
 
 
