@@ -32,7 +32,9 @@ public:
 		{
 			m_collisionShape = p_collisionShape;
 		}
+		m_rigidBody = NULL;
 		m_mass = p_mass;
+		m_inited = false;
 	};
 
 	~RigidBodyComponent()

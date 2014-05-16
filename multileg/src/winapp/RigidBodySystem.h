@@ -67,7 +67,7 @@ public:
 		if (rigidBody->isInited())
 		{
 			btRigidBody* body = rigidBody->m_rigidBody;
-			if (body->isInWorld() && body->isActive())
+			if (body!=NULL && body->isInWorld() && body->isActive())
 			{			
 				btMotionState* motionState = body->getMotionState();
 				btTransform physTransform;
