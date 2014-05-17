@@ -20,8 +20,6 @@
 class RigidBodyComponent : public artemis::Component
 {
 public:
-	btCollisionShape* m_collisionShape;
-	btRigidBody* m_rigidBody;
 
 	RigidBodyComponent(btCollisionShape* p_collisionShape = NULL, float p_mass=1.0f)
 	{
@@ -38,21 +36,25 @@ public:
 		m_inited = false;
 	};
 
-	~RigidBodyComponent()
+	virtual ~RigidBodyComponent()
 	{
 		delete m_collisionShape;
 		delete m_rigidBody->getMotionState();
 		delete m_rigidBody;
 	}
 
-	void init(TransformComponent* p_transform);
+	void init(btRigidBody* p_rigidBody);
 
 	float getMass();
 
+	btCollisionShape* getCollisionShape();
+	btRigidBody* getRigidBody();
 
 	bool isInited();
 
 private:
+	btCollisionShape* m_collisionShape;
+	btRigidBody* m_rigidBody;
 	float m_mass;
 
 	bool m_inited; ///< initialized into the bullet physics world
@@ -60,31 +62,10 @@ private:
 
 
 // Init called by system on start
-void RigidBodyComponent::init(TransformComponent* p_transform)
+void RigidBodyComponent::init( btRigidBody* p_rigidBody )
 {
+	m_rigidBody = p_rigidBody;
 	m_inited = true;
-	// Set up the rigidbody
-	//glm::vec3 position = p_transform->getPosition();
-	//glm::quat rotation = p_transform->getRotation();
-	btTransform t;
-	//t.setFromOpenGLMatrix(glm::value_ptr(*p_transform->getMatrixPtr()));
-
-	// Construct matrix without scale (or the shape will bug)
-	glm::mat4 translate = glm::translate(glm::mat4(1.0f), p_transform->getPosition());
-	glm::mat4 rotate = glm::mat4_cast(p_transform->getRotation());
-	glm::mat4 mat = translate * rotate;
-	// Read to bt matrix
-	t.setFromOpenGLMatrix(glm::value_ptr(mat));
-	// Init motionstate with matrix
-	btDefaultMotionState* motionState = new btDefaultMotionState(t);
-// 		btTransform(btQuaternion(rotation.x, rotation.y, rotation.z, rotation.w),
-// 																 btVector3(position.x, position.y, position.z)));
-	// Calculate inertia, using our collision shape
-	btVector3 inertia(0, 0, 0);
-	m_collisionShape->calculateLocalInertia(m_mass, inertia);
-	// Construction info
-	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(m_mass, motionState, m_collisionShape, inertia);
-	m_rigidBody = new btRigidBody(rigidBodyCI);
 }
 
 bool RigidBodyComponent::isInited()
@@ -95,4 +76,14 @@ bool RigidBodyComponent::isInited()
 float RigidBodyComponent::getMass()
 {
 	return m_mass;
+}
+
+btCollisionShape* RigidBodyComponent::getCollisionShape()
+{
+	return m_collisionShape;
+}
+
+btRigidBody* RigidBodyComponent::getRigidBody()
+{
+	return m_rigidBody;
 }

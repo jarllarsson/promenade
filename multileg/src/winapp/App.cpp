@@ -142,7 +142,7 @@ void App::run()
 	artemis::EntityManager * entityManager = m_world.getEntityManager();
 
 	// Create a box entity
-	for (int i = 0; i < 6000;i++)
+	for (int i = 0; i < 100;i++)
 	{
 		artemis::Entity & box = entityManager->create();
 		glm::vec3 pos = glm::vec3(20.0f*sin(i*0.1f), 10.0f + i*4.0f, 20.0f*cos(i*0.1f));

@@ -45,6 +45,9 @@
     <ClInclude Include="RenderSystem.h">
       <Filter>Entity System\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="ConstraintComponent.h">
+      <Filter>Entity System\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">

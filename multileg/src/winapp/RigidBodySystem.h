@@ -42,7 +42,7 @@ public:
 		RigidBodyComponent* rigidBody = rigidBodyMapper.get(e);
 		if (rigidBody->isInited())
 		{
-			m_dynamicsWorldPtr->removeRigidBody(rigidBody->m_rigidBody);
+			m_dynamicsWorldPtr->removeRigidBody(rigidBody->getRigidBody());
 		}
 	};
 
@@ -53,8 +53,27 @@ public:
 		if (!rigidBody->isInited())
 		{
 			//DEBUGPRINT(((string("Init rigidbody m=") + toString(rigidBody->getMass()) + "\n").c_str()));
-			rigidBody->init(transform);
-			m_dynamicsWorldPtr->addRigidBody(rigidBody->m_rigidBody);
+			// Set up the rigidbody
+			btTransform t;
+			// Construct matrix without scale (or the shape will bug)
+			glm::mat4 translate = glm::translate(glm::mat4(1.0f), transform->getPosition());
+			glm::mat4 rotate = glm::mat4_cast(transform->getRotation());
+			glm::mat4 mat = translate * rotate;
+			// Read to bt matrix
+			t.setFromOpenGLMatrix(glm::value_ptr(mat));
+			// Init motionstate with matrix
+			btDefaultMotionState* motionState = new btDefaultMotionState(t);
+			// Calculate inertia, using our collision shape
+			btVector3 inertia(0, 0, 0);
+			float mass = rigidBody->getMass();
+			btCollisionShape* collisionShape = rigidBody->getCollisionShape();
+			collisionShape->calculateLocalInertia(mass, inertia);
+			// Construction info
+			btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
+			btRigidBody* rigidBodyInstance = new btRigidBody(rigidBodyCI);
+			//
+			rigidBody->init(rigidBodyInstance);
+			m_dynamicsWorldPtr->addRigidBody(rigidBody->getRigidBody());
 		}
 	};
 
@@ -66,7 +85,7 @@ public:
 		// Update transform of object
 		if (rigidBody->isInited())
 		{
-			btRigidBody* body = rigidBody->m_rigidBody;
+			btRigidBody* body = rigidBody->getRigidBody();
 			if (body!=NULL/* && body->isInWorld() && body->isActive()*/)
 			{			
 				btMotionState* motionState = body->getMotionState();
