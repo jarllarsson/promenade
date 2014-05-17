@@ -20,7 +20,7 @@
 class ConstraintComponent : public artemis::Component
 {
 public:
-	struct ConstraintInit
+	struct ConstraintDesc
 	{
 		glm::vec3 m_localAxis;
 		glm::vec3 m_parentLocalAxis;
@@ -40,16 +40,45 @@ public:
 	};
 
 
-	ConstraintComponent(RigidBodyComponent* p_otherBody, const ConstraintInit& p_desc)
+	ConstraintComponent(RigidBodyComponent* p_otherBody, const ConstraintDesc& p_desc)
 	{
 		m_otherBody = p_otherBody;
+		m_desc = new ConstraintDesc(p_desc);
+		m_inited = false;
 	}
 
 	virtual ~ConstraintComponent()
 	{
 		delete m_constraint;
 	}
+
+	const ConstraintDesc* getDesc() const;
+
+	bool isInited();
+	void init(btGeneric6DofConstraint* p_constraint);
+
+	btGeneric6DofConstraint* getConstraint();
+
+
 private:
+	bool m_inited;
+	ConstraintDesc* m_desc;
 	RigidBodyComponent* m_otherBody;
 	btGeneric6DofConstraint* m_constraint;
 };
+
+const ConstraintComponent::ConstraintDesc* ConstraintComponent::getDesc() const
+{
+	return m_desc;
+}
+
+void ConstraintComponent::init(btGeneric6DofConstraint* p_constraint)
+{
+	m_constraint = p_constraint;
+	m_inited = true;
+}
+
+bool ConstraintComponent::isInited()
+{
+	return m_inited;
+}
