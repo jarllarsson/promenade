@@ -429,8 +429,8 @@ void App::gameUpdate( double p_dt )
 	// Update entity systems
 	m_world.loopStart();
 	m_world.setDelta(game_dt);
-
 	// Physics result gathering have to run first
+	m_rigidBodySystem->executeDeferredConstraintInits();
 	m_rigidBodySystem->process();
 	// Run all other systems, for which order doesn't matter
 	processSystemCollection(&m_orderIndependentSystems);

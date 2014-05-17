@@ -40,9 +40,9 @@ public:
 	};
 
 
-	ConstraintComponent(RigidBodyComponent* p_otherBody, const ConstraintDesc& p_desc)
+	ConstraintComponent(artemis::Entity* p_parent, const ConstraintDesc& p_desc)
 	{
-		m_otherBody = p_otherBody;
+		m_parent = p_parent;
 		m_desc = new ConstraintDesc(p_desc);
 		m_inited = false;
 	}
@@ -59,11 +59,11 @@ public:
 
 	btGeneric6DofConstraint* getConstraint();
 
-
+	artemis::Entity* getParent();
 private:
 	bool m_inited;
 	ConstraintDesc* m_desc;
-	RigidBodyComponent* m_otherBody;
+	artemis::Entity* m_parent;
 	btGeneric6DofConstraint* m_constraint;
 };
 
@@ -81,4 +81,9 @@ void ConstraintComponent::init(btGeneric6DofConstraint* p_constraint)
 bool ConstraintComponent::isInited()
 {
 	return m_inited;
+}
+
+artemis::Entity* ConstraintComponent::getParent()
+{
+	return m_parent;
 }
