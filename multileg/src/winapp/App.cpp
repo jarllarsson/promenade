@@ -156,11 +156,12 @@ void App::run()
 	}
 
 	// Create a ground entity
+
 	artemis::Entity & ground = entityManager->create();
 	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(50.0f, 10.0f, 50.0f)), 0.0f));
 	ground.addComponent(new RenderComponent());
 	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -20.0f, 0.0f), 
-		glm::quat(glm::vec3(TWOPI*0.1f, 0.0f, 0.0f)),
+		glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 		glm::vec3(100.0f, 20.0f, 100.0f)));
 	ground.refresh();
 
@@ -190,12 +191,31 @@ void App::run()
 		glm::vec3(1.0f, 2.0f, 10.0f)));
 	axisZ.refresh();
 
-	//PositionComponent * comp = (PositionComponent*)player.getComponent<PositionComponent>();
-
-
-
-
-
+	// Linked boxes
+	{
+		artemis::Entity & parentJoint = entityManager->create();
+		glm::vec3 pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
+		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+		parentJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 0.0f));
+		parentJoint.addComponent(new RenderComponent());
+		parentJoint.addComponent(new TransformComponent(pos,
+			glm::quat(glm::vec3(PI*0.1f, 0.0f, 0.0f)),
+			glm::vec3(2.0f, 4.0f, 2.0f)));
+		parentJoint.refresh();
+		//
+		artemis::Entity & childJoint = entityManager->create();
+		pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
+		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+		childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f));
+		childJoint.addComponent(new RenderComponent());
+		childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));
+		ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f,2.0f,0.0f),	  // child
+															glm::vec3(0.0f, -2.0f, 0.0f), // parent
+															{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
+															false};
+		childJoint.addComponent(new ConstraintComponent(&parentJoint, constraintDesc));
+		childJoint.refresh();
+	}
 
 
 
@@ -251,8 +271,7 @@ void App::run()
 		}
 
 	}
-
-
+	entityManager->removeAllEntities();
 
 }
 

@@ -55,6 +55,7 @@ public:
 
 private:
 	void checkForNewConstraints(artemis::Entity &e);
+	void checkForConstraintsToRemove(artemis::Entity &e, RigidBodyComponent* p_rigidBody);
 	void setupConstraints(artemis::Entity *e);
 
 };
@@ -64,6 +65,7 @@ void RigidBodySystem::removed(artemis::Entity &e)
 	RigidBodyComponent* rigidBody = rigidBodyMapper.get(e);
 	if (rigidBody->isInited())
 	{
+		checkForConstraintsToRemove(e, rigidBody);
 		m_dynamicsWorldPtr->removeRigidBody(rigidBody->getRigidBody());
 	}
 };
@@ -92,6 +94,7 @@ void RigidBodySystem::added(artemis::Entity &e)
 		// Construction info
 		btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
 		btRigidBody* rigidBodyInstance = new btRigidBody(rigidBodyCI);
+		rigidBodyInstance->setDamping(0.1f, 0.1f);
 		//
 		rigidBody->init(rigidBodyInstance);
 		m_dynamicsWorldPtr->addRigidBody(rigidBody->getRigidBody());
@@ -136,6 +139,19 @@ void RigidBodySystem::checkForNewConstraints(artemis::Entity &e)
 	}
 }
 
+void RigidBodySystem::checkForConstraintsToRemove(artemis::Entity &e, RigidBodyComponent* p_rigidBody)
+{
+	// First check if we have the constraint (we are child)
+	ConstraintComponent* constraint = (ConstraintComponent*)e.getComponent<ConstraintComponent>();
+	// Otherwise, if this is the parent, fetch the stowaway ptr for this case:
+	if (constraint == NULL) constraint = p_rigidBody->getChildConstraint();
+	if (constraint != NULL && constraint->isInited() && !constraint->isRemoved())
+	{
+		m_dynamicsWorldPtr->removeConstraint(constraint->getConstraint());
+		constraint->setRemovedFlag();
+	}
+}
+
 void RigidBodySystem::executeDeferredConstraintInits()
 {
 	for (int i = 0; i < m_constraintCreationsList.size(); i++)
@@ -156,9 +172,48 @@ void RigidBodySystem::setupConstraints(artemis::Entity *e)
 	{
 		RigidBodyComponent* parentRigidBody = (RigidBodyComponent*)constraint->getParent()->getComponent<RigidBodyComponent>();
 		TransformComponent* parentTransform = (TransformComponent*)constraint->getParent()->getComponent<TransformComponent>();
-		if (parentRigidBody != NULL && parentTransform != NULL)
+		if (parentRigidBody != NULL && parentTransform != NULL && parentRigidBody->isInited())
 		{
-
+			btRigidBody* rigidBodyInstance = rigidBody->getRigidBody();
+			btRigidBody* parentRigidBodyInstance = parentRigidBody->getRigidBody();
+			ConstraintComponent::ConstraintDesc constraintdesc = *constraint->getDesc();
+			// create a universal joint using generic 6DOF constraint
+			// add some (arbitrary) data to build constraint frames
+			glm::vec3 gparentAnchor = constraintdesc.m_parentLocalAnchor;
+			glm::vec3 gchildAnchor = constraintdesc.m_localAnchor;
+			// put in btvectors
+			btVector3 parentAnchor(gparentAnchor.x, gparentAnchor.y, gparentAnchor.z);
+			btVector3 childanchor(gchildAnchor.x, gchildAnchor.y, gchildAnchor.z);
+			// Get limits
+			btVector3 angularLimLow(constraintdesc.m_angularDOF_LULimits[0].x, constraintdesc.m_angularDOF_LULimits[0].y, constraintdesc.m_angularDOF_LULimits[0].z);
+			btVector3 angularLimHigh(constraintdesc.m_angularDOF_LULimits[1].x, constraintdesc.m_angularDOF_LULimits[1].y, constraintdesc.m_angularDOF_LULimits[1].z);
+			// Linear lims read here if used!
+			//
+			// build frame basis
+			// 6DOF constraint uses Euler angles and to define limits
+			// X - allowed limits are (-PI,PI);
+			// Y - second (allowed limits are (-PI/2 + epsilon, PI/2 - epsilon), where epsilon is a small positive number 
+			// Z - allowed limits are (-PI,PI);
+			btTransform frameInParent, frameInChild;
+			frameInParent = btTransform::getIdentity();
+			frameInParent.setOrigin(parentAnchor);
+			frameInChild = btTransform::getIdentity();
+			frameInChild.setOrigin(childanchor);
+			//
+			parentRigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
+			rigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
+			// now create the constraint
+			btGeneric6DofConstraint* pGen6DOF = new btGeneric6DofConstraint(*parentRigidBodyInstance, *rigidBodyInstance, frameInParent, frameInChild, true);
+			// linear limits in our case are allowed offset of origin of frameInB in frameInA, so set them to zero
+			pGen6DOF->setLinearLowerLimit(btVector3(0., 0., 0.));
+			pGen6DOF->setLinearUpperLimit(btVector3(0., 0., 0.));
+			// set limits for parent (axis z) and child (axis Y)
+			pGen6DOF->setAngularLowerLimit(angularLimLow);
+			pGen6DOF->setAngularUpperLimit(angularLimHigh);
+			// add constraint to world
+			m_dynamicsWorldPtr->addConstraint(pGen6DOF, !constraintdesc.m_collisionBetweenLinked);
+			constraint->init(pGen6DOF);
+			parentRigidBody->setChildConstraint(constraint);
 		}
 	}
 }

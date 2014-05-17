@@ -22481,14 +22481,6 @@ Prefab:
       propertyPath: m_ConnectedAnchor.x
       value: -3.03367304e-10
       objectReference: {fileID: 0}
-    - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_ConnectedAnchor.x
-      value: .488845825
-      objectReference: {fileID: 0}
-    - target: {fileID: 15300010, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
-      propertyPath: m_ConnectedAnchor.y
-      value: -.491846085
-      objectReference: {fileID: 0}
     - target: {fileID: 15300008, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_ConnectedAnchor.x
       value: 0

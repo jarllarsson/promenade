@@ -180,6 +180,8 @@ public class TestHandler : MonoBehaviour
         for (int i = 0; i < m_totalScores.Length; i++)
         {
             //Debug.Log("score("+i+") " + m_totalScores[i]);
+            // first make total into mean value
+            //m_totalScores[i] /= m_samplesPerIteration;
             if (m_totalScores[i] < bestScore)
             {
                 m_currentBestCandidate = i;
