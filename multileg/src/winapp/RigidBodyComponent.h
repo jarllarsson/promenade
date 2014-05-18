@@ -35,18 +35,19 @@ public:
 		m_rigidBody = NULL;
 		m_mass = p_mass;
 		m_inited = false;
-		m_childConstraint = NULL;
 	};
 
 	virtual ~RigidBodyComponent()
 	{
+		for (int i = 0; i < m_childConstraints.size();i++)
+			if (m_childConstraints[i] != NULL) m_childConstraints[i]->forceRemove(m_dynamicsWorldPtr);
 		delete m_collisionShape;
 		delete m_rigidBody->getMotionState();
 		delete m_rigidBody;
 	}
 
 
-	void init(btRigidBody* p_rigidBody);
+	void init(btRigidBody* p_rigidBody, btDiscreteDynamicsWorld* p_dynamicsWorldPtr);
 
 	float getMass();
 
@@ -56,31 +57,32 @@ public:
 	// These are set if another entity has this component's entity as parent
 	// In case the parent is removed before the child, as we always need to remove
 	// the constraint before any rigidbodies which it has references to. YIKES
-	void setChildConstraint(ConstraintComponent* p_constraint)
+	void addChildConstraint(ConstraintComponent* p_constraint)
 	{
-		m_childConstraint = p_constraint;
+		m_childConstraints.push_back(p_constraint);
 	}
-	ConstraintComponent* getChildConstraint()
-	{
-		return m_childConstraint;
-	}
+// 	ConstraintComponent* getChildConstraint()
+// 	{
+// 		return m_childConstraint;
+// 	}
 
 	bool isInited();
 
 private:
 	btCollisionShape* m_collisionShape;
 	btRigidBody* m_rigidBody;
-	ConstraintComponent* m_childConstraint;
+	vector<ConstraintComponent*> m_childConstraints;
 	float m_mass;
-
+	btDiscreteDynamicsWorld* m_dynamicsWorldPtr;
 	bool m_inited; ///< initialized into the bullet physics world
 };
 
 
 // Init called by system on start
-void RigidBodyComponent::init( btRigidBody* p_rigidBody )
+void RigidBodyComponent::init(btRigidBody* p_rigidBody, btDiscreteDynamicsWorld* p_dynamicsWorldPtr)
 {
 	m_rigidBody = p_rigidBody;
+	m_dynamicsWorldPtr = p_dynamicsWorldPtr;
 	m_inited = true;
 }
 

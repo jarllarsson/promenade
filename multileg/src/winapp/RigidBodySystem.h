@@ -55,7 +55,7 @@ public:
 
 private:
 	void checkForNewConstraints(artemis::Entity &e);
-	void checkForConstraintsToRemove(artemis::Entity &e, RigidBodyComponent* p_rigidBody);
+	//void checkForConstraintsToRemove(artemis::Entity &e, RigidBodyComponent* p_rigidBody);
 	void setupConstraints(artemis::Entity *e);
 
 };
@@ -65,7 +65,7 @@ void RigidBodySystem::removed(artemis::Entity &e)
 	RigidBodyComponent* rigidBody = rigidBodyMapper.get(e);
 	if (rigidBody->isInited())
 	{
-		checkForConstraintsToRemove(e, rigidBody);
+		//checkForConstraintsToRemove(e, rigidBody);
 		m_dynamicsWorldPtr->removeRigidBody(rigidBody->getRigidBody());
 	}
 };
@@ -96,7 +96,7 @@ void RigidBodySystem::added(artemis::Entity &e)
 		btRigidBody* rigidBodyInstance = new btRigidBody(rigidBodyCI);
 		rigidBodyInstance->setDamping(0.1f, 0.1f);
 		//
-		rigidBody->init(rigidBodyInstance);
+		rigidBody->init(rigidBodyInstance,m_dynamicsWorldPtr);
 		m_dynamicsWorldPtr->addRigidBody(rigidBody->getRigidBody());
 		// check if entity has constraints, if so, and if they're uninited, add to
 		// list for batch init (as they must have both this entity's and parent's rb in phys world.
@@ -139,18 +139,17 @@ void RigidBodySystem::checkForNewConstraints(artemis::Entity &e)
 	}
 }
 
-void RigidBodySystem::checkForConstraintsToRemove(artemis::Entity &e, RigidBodyComponent* p_rigidBody)
-{
-	// First check if we have the constraint (we are child)
-	ConstraintComponent* constraint = (ConstraintComponent*)e.getComponent<ConstraintComponent>();
-	// Otherwise, if this is the parent, fetch the stowaway ptr for this case:
-	if (constraint == NULL) constraint = p_rigidBody->getChildConstraint();
-	if (constraint != NULL && constraint->isInited() && !constraint->isRemoved())
-	{
-		m_dynamicsWorldPtr->removeConstraint(constraint->getConstraint());
-		constraint->setRemovedFlag();
-	}
-}
+// void RigidBodySystem::checkForConstraintsToRemove(artemis::Entity &e, RigidBodyComponent* p_rigidBody)
+// {
+// 	// First check if we have the constraint (we are child)
+// 	ConstraintComponent* constraint = (ConstraintComponent*)e.getComponent<ConstraintComponent>();
+// 	// Otherwise, if this is the parent, fetch the stowaway ptr for this case:
+// 	if (constraint == NULL) constraint = p_rigidBody->getChildConstraint();
+// 	if (constraint != NULL && constraint->isInited() && !constraint->isRemoved())
+// 	{
+// 		constraint->forceRemove(m_dynamicsWorldPtr);
+// 	}
+// }
 
 void RigidBodySystem::executeDeferredConstraintInits()
 {
@@ -213,7 +212,7 @@ void RigidBodySystem::setupConstraints(artemis::Entity *e)
 			// add constraint to world
 			m_dynamicsWorldPtr->addConstraint(pGen6DOF, !constraintdesc.m_collisionBetweenLinked);
 			constraint->init(pGen6DOF);
-			parentRigidBody->setChildConstraint(constraint);
+			parentRigidBody->addChildConstraint(constraint);
 		}
 	}
 }

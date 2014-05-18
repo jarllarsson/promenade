@@ -53,7 +53,7 @@ public:
 	virtual ~ConstraintComponent()
 	{
 		delete m_desc;
-		delete m_constraint;
+		SAFE_DELETE(m_constraint);
 	}
 
 
@@ -63,7 +63,7 @@ public:
 	void init(btGeneric6DofConstraint* p_constraint);
 
 	btGeneric6DofConstraint* getConstraint();
-	void setRemovedFlag() { m_removed = true; }
+	void forceRemove(btDiscreteDynamicsWorld* p_world);
 	bool isRemoved() { return m_removed; }
 
 	artemis::Entity* getParent();
@@ -99,4 +99,14 @@ artemis::Entity* ConstraintComponent::getParent()
 btGeneric6DofConstraint* ConstraintComponent::getConstraint()
 {
 	return m_constraint;
+}
+
+void ConstraintComponent::forceRemove( btDiscreteDynamicsWorld* p_world )
+{
+	if (!m_removed)
+	{
+		p_world->removeConstraint(m_constraint);
+		SAFE_DELETE(m_constraint);
+		m_removed = true;
+	}
 }

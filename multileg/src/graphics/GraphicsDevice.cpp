@@ -90,7 +90,7 @@ GraphicsDevice::~GraphicsDevice()
 
 void GraphicsDevice::clearRenderTargets()
 {
-	float clearColorRTV[4] = { 1.0f, m_width/5000.0f,  m_height/1200.0f, 1.0f };
+	float clearColorRTV[4] = { m_width / 5000.0f, m_width / 2000.0f, m_height / 1200.0f, 1.0f };
 	float clearColorBackBuffer[4] = { m_width/5000.0f, 1.0f,  m_height/1200.0f, 1.0f };
 
 	// clear gbuffer
