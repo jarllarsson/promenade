@@ -47,7 +47,7 @@ public:
 	}
 
 
-	void init(btRigidBody* p_rigidBody, btDiscreteDynamicsWorld* p_dynamicsWorldPtr);
+	void init(unsigned int p_uid, btRigidBody* p_rigidBody, btDiscreteDynamicsWorld* p_dynamicsWorldPtr);
 
 	float getMass();
 
@@ -68,22 +68,26 @@ public:
 
 	bool isInited();
 
+	unsigned int getUID();
+
 private:
 	btCollisionShape* m_collisionShape;
 	btRigidBody* m_rigidBody;
 	vector<ConstraintComponent*> m_childConstraints;
 	float m_mass;
 	btDiscreteDynamicsWorld* m_dynamicsWorldPtr;
+	unsigned int m_uid; ///< Unique id that can be used to retrieve this bodys entity from the rigidbodysystem
 	bool m_inited; ///< initialized into the bullet physics world
 };
 
 
 // Init called by system on start
-void RigidBodyComponent::init(btRigidBody* p_rigidBody, btDiscreteDynamicsWorld* p_dynamicsWorldPtr)
+void RigidBodyComponent::init(unsigned int p_uid, btRigidBody* p_rigidBody, btDiscreteDynamicsWorld* p_dynamicsWorldPtr)
 {
 	m_rigidBody = p_rigidBody;
 	m_dynamicsWorldPtr = p_dynamicsWorldPtr;
 	m_inited = true;
+	m_uid = p_uid;
 }
 
 bool RigidBodyComponent::isInited()
@@ -104,4 +108,9 @@ btCollisionShape* RigidBodyComponent::getCollisionShape()
 btRigidBody* RigidBodyComponent::getRigidBody()
 {
 	return m_rigidBody;
+}
+
+unsigned int RigidBodyComponent::getUID()
+{
+	return m_uid;
 }

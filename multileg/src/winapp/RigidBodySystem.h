@@ -28,6 +28,8 @@ private:
 	// Vector to store creation calls for constraints
 	// This is used so they can be inited in the correct order
 	std::vector<artemis::Entity*> m_constraintCreationsList;
+	// List for entities that have rigidbodies so they can be accessed by id
+	UniqueIndexList<artemis::Entity*> m_rigidBodyEntities;
 public:
 	RigidBodySystem(btDiscreteDynamicsWorld* p_dynamicsWorld) 
 	{
@@ -95,8 +97,10 @@ void RigidBodySystem::added(artemis::Entity &e)
 		btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
 		btRigidBody* rigidBodyInstance = new btRigidBody(rigidBodyCI);
 		rigidBodyInstance->setDamping(0.1f, 0.1f);
+		// Add rigidbody to list
+		unsigned int uid = m_rigidBodyEntities.add(&e);
 		//
-		rigidBody->init(rigidBodyInstance,m_dynamicsWorldPtr);
+		rigidBody->init(uid,rigidBodyInstance,m_dynamicsWorldPtr);
 		m_dynamicsWorldPtr->addRigidBody(rigidBody->getRigidBody());
 		// check if entity has constraints, if so, and if they're uninited, add to
 		// list for batch init (as they must have both this entity's and parent's rb in phys world.
