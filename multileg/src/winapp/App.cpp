@@ -283,7 +283,7 @@ void App::run()
 			render();
 
 			double time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
-			if (time>3.0)
+			if (time>19.0)
 			{
 				if (rb->isInited())
 				{
@@ -313,7 +313,7 @@ void App::run()
 
 			prevTimeStamp = currTimeStamp;
 
-			if (time>4.0) run = false;
+			if (time>20.0) run = false;
 
 			// Game Clock part of the loop
 			// ========================================================
