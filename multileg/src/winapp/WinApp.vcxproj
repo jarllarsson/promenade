@@ -153,6 +153,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="ConstraintComponent.h" />
+    <ClInclude Include="PhysicsWorldHandler.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="RigidBodySystem.h" />

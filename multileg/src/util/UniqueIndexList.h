@@ -50,7 +50,7 @@ unsigned int UniqueIndexList<T>::add(T p_valueRef)
 	else
 	{
 		m_list.push_back(p_valueRef);
-		index = m_list.size()-1;
+		index = (unsigned int)m_list.size()-1;
 	}
 	return index;
 }

@@ -6,3 +6,4 @@
 #include "MathHelp.h"
 #include "UniqueIndexList.h"
 #include "ResourceManager.h"
+#include "MeasurementBin.h"

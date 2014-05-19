@@ -205,6 +205,8 @@ public class Controller : MonoBehaviour, IOptimizable
 
     void FixedUpdate()
     {
+
+
         for (int i = 0; i < m_jointTorques.Length; i++)
         {
             Vector3 torque = m_jointTorques[i];

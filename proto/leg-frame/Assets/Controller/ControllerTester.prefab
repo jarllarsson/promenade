@@ -2179,6 +2179,17 @@ MonoBehaviour:
     m_dofListIdx: 0
     m_dof:
     - {x: 1, y: 0, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 0, y: 0, z: 1}
+  - length: 1
+    m_angle: {x: 0, y: 0, z: 0}
+    m_position: {x: 0, y: 0, z: 0}
+    m_endPoint: {x: 0, y: 0, z: 0}
+    m_dofListIdx: 0
+    m_dof:
+    - {x: 1, y: 0, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 0, y: 0, z: 1}
   - length: 1
     m_angle: {x: 0, y: 0, z: 0}
     m_position: {x: 0, y: 0, z: 0}
@@ -2193,13 +2204,8 @@ MonoBehaviour:
     m_dofListIdx: 0
     m_dof:
     - {x: 1, y: 0, z: 0}
-  - length: 1
-    m_angle: {x: 0, y: 0, z: 0}
-    m_position: {x: 0, y: 0, z: 0}
-    m_endPoint: {x: 0, y: 0, z: 0}
-    m_dofListIdx: 0
-    m_dof:
-    - {x: 1, y: 0, z: 0}
+    - {x: 0, y: 1, z: 0}
+    - {x: 0, y: 0, z: 1}
   - length: 1
     m_angle: {x: 0, y: 0, z: 0}
     m_position: {x: 0, y: 0, z: 0}
@@ -2540,8 +2546,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 0
-  m_AngularZMotion: 0
+  m_AngularYMotion: 1
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0
@@ -2995,8 +3001,8 @@ ConfigurableJoint:
   m_YMotion: 0
   m_ZMotion: 0
   m_AngularXMotion: 1
-  m_AngularYMotion: 0
-  m_AngularZMotion: 0
+  m_AngularYMotion: 1
+  m_AngularZMotion: 1
   m_LinearLimit:
     limit: 0
     bounciness: 0

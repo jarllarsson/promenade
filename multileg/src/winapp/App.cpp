@@ -10,6 +10,7 @@
 
 #include <Input.h>
 #include <Util.h>
+#include <MeasurementBin.h>
 
 #include <ValueClamp.h>
 #include "TempController.h"
@@ -25,6 +26,8 @@
 #include "PositionSystem.h"
 #include "RigidBodySystem.h"
 #include "RenderSystem.h"
+#include "PhysicsWorldHandler.h"
+
 
 
 using namespace std;
@@ -100,10 +103,12 @@ void App::run()
 	LARGE_INTEGER currTimeStamp = getTimeStamp();
 	LARGE_INTEGER prevTimeStamp = currTimeStamp;
 	// There's an inner loop in here where things happen once every TickMs. These variables are for that.
-	LARGE_INTEGER timeStartStamp = getTimeStamp();
-	double timeStart = (double)timeStartStamp.QuadPart * secondsPerCount;
+	LARGE_INTEGER gameClockTimeOffsetStamp = getTimeStamp();
+	double gameClockTimeOffset = (double)gameClockTimeOffsetStamp.QuadPart * secondsPerCount;
 	const unsigned int gameTickMs = 16;
 	double gameTickS = (double)gameTickMs / 1000.0;
+	// Absolute start
+	double timeStart = (double)getTimeStamp().QuadPart * secondsPerCount;
 
 
 
@@ -123,6 +128,7 @@ void App::run()
 	// ==================================
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 	dynamicsWorld->setGravity(btVector3(0, -9.82, 0));
+	PhysicsWorldHandler physicsWorldHandler(dynamicsWorld);
 
 
 
@@ -154,6 +160,16 @@ void App::run()
 			));
 		box.refresh();
 	}
+
+	artemis::Entity & box = entityManager->create();
+	glm::vec3 pos = glm::vec3(0.0f);
+	RigidBodyComponent* rb = new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f);
+	box.addComponent(rb);
+	box.addComponent(new RenderComponent());
+	box.addComponent(new TransformComponent(pos,
+		glm::quat(glm::vec3(TWOPI*0.05f, 0.0f, 0.0f))
+		));
+	box.refresh();
 
 	// Create a ground entity
 
@@ -192,6 +208,7 @@ void App::run()
 	axisZ.refresh();
 
 	// Linked boxes
+	if (false)
 	{
 		artemis::Entity & parentJoint = entityManager->create();
 		glm::vec3 pos = glm::vec3(glm::vec3(0.0f, 20.0f, 0.0f));
@@ -248,8 +265,8 @@ void App::run()
 
 
 
-
-
+	MeasurementBin<string> measurer;
+	measurer.activate();
 
 	// Message pump struct
 	MSG msg = {0};
@@ -265,33 +282,54 @@ void App::run()
 			// Start by rendering
 			render();
 
+			double time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
+			if (time>3.0)
+			{
+				if (rb->isInited())
+				{
+					btTransform btt;
+					rb->getRigidBody()->getMotionState()->getWorldTransform(btt);
+					measurer.saveMeasurement(string("x: ") + toString(btt.getOrigin().x()) + ",y: " + toString(btt.getOrigin().y()) + ",z: " + toString(btt.getOrigin().z()),
+						time);
+				}
+			}
+
 			// Physics handling part of the loop
 			// ========================================================
 			/* This, like the rendering, ticks every time around.
 			Bullet does the interpolation for us. */
 			currTimeStamp = getTimeStamp();
 			double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
+
+
+			//if (rb->isInited())
+			//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
+
 			// Tick the bullet world. Keep in mind that bullet takes seconds
 			dynamicsWorld->stepSimulation((btScalar)phys_dt, 10);
 			// ========================================================
 
+
+
 			prevTimeStamp = currTimeStamp;
 
+			if (time>4.0) run = false;
 
 			// Game Clock part of the loop
 			// ========================================================
-			double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - timeStart);
+			double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - gameClockTimeOffset);
 			// Game clock based updates
 			while (dt >= gameTickS)
 			{
 				dt -= gameTickS;
-				timeStart += gameTickS;
+				gameClockTimeOffset += gameTickS;
 				// Handle all input
 
 				{
 					processInput();
 					// Update logic
 					double interval = gameTickS;
+
 					handleContext(interval, phys_dt);
 					gameUpdate(interval);
 				}
@@ -300,6 +338,15 @@ void App::run()
 		}
 
 	}
+
+#ifdef _DEBUG
+	measurer.saveResults("../output/determinismTest_Debug");
+#else
+	measurer.saveResults("../output/determinismTest_Release");
+#endif
+
+
+
 	entityManager->removeAllEntities();
 
 }

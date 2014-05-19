@@ -7,6 +7,9 @@
     <Filter Include="Exception">
       <UniqueIdentifier>{b84128aa-380c-4e9e-a931-ff67ad1833ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Measurement">
+      <UniqueIdentifier>{302acab0-053d-43d2-9a82-7355a88c39f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugPrint.h">
@@ -21,6 +24,9 @@
     <ClInclude Include="ValueClamp.h" />
     <ClInclude Include="UniqueIndexList.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="MeasurementBin.h">
+      <Filter>Measurement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />

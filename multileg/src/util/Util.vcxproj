@@ -141,6 +141,7 @@
     <ClInclude Include="BaseException.h" />
     <ClInclude Include="DebugPrint.h" />
     <ClInclude Include="MathHelp.h" />
+    <ClInclude Include="MeasurementBin.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="UniqueIndexList.h" />

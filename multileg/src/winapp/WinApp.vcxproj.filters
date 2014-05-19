@@ -48,6 +48,9 @@
     <ClInclude Include="ConstraintComponent.h">
       <Filter>Entity System\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsWorldHandler.h">
+      <Filter>Entity System\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
