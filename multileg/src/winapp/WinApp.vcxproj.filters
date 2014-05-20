@@ -57,6 +57,9 @@
     <ClInclude Include="ControllerSystem.h">
       <Filter>Entity System\Locomotion</Filter>
     </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
+      <Filter>Entity System\Locomotion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
