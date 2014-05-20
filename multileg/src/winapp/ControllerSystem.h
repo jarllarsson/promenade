@@ -27,6 +27,7 @@ private:
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
 	std::vector<ControllerComponent*> m_controllers;
 	std::vector<glm::vec3> m_torques;
+	std::vector<btRigidBody*> m_rigidBodies;
 public:
 	ControllerSystem()
 	{
@@ -51,7 +52,7 @@ public:
 
 	void finish();
 
-	std::vector<glm::vec3>* getTorques();
+	void applyTorques();
 };
 
 void ControllerSystem::removed(artemis::Entity &e)
@@ -84,7 +85,14 @@ void ControllerSystem::finish()
 
 }
 
-std::vector<glm::vec3>* ControllerSystem::getTorques()
+void ControllerSystem::applyTorques()
 {
-	return &m_torques;
+	if (m_rigidBodies.size()==m_torques.size())
+	{
+		for (int i = 0; i < m_rigidBodies.size(); i++)
+		{
+			glm::vec3* t = &m_torques[i];
+			m_rigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z));
+		}
+	}
 }

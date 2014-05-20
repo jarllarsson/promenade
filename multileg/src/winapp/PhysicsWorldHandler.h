@@ -30,7 +30,6 @@ public:
 	{
 		// Character controller
 		m_controllerSystem->start((float)timeStep); // might want this in post tick instead? Have it here for now
-		m_controllerSystem->finish();
 		// Physics
 		btCollisionObjectArray objects = m_world->getCollisionObjectArray();
 		m_world->clearForces();
@@ -42,6 +41,9 @@ public:
 			rigidBody->applyGravity();
 			//rigidBody->applyForce(btVector3(-10., 0., 0.), btVector3(0., 0., 0.));
 		}
+		// Controller
+		m_controllerSystem->finish();
+		m_controllerSystem->applyTorques();
 		return;
 	}
 
