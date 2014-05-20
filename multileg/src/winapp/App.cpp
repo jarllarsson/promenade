@@ -282,6 +282,9 @@ void App::run()
 	// lets non-context systems quit the program
 	bool run=true;
 
+	// Dry run, so artemis have run before physics first step
+	gameUpdate(0.0f);
+
 	while (!m_context->closeRequested() && run)
 	{
 		if (!pumpMessage(msg))
@@ -320,7 +323,7 @@ void App::run()
 
 			prevTimeStamp = currTimeStamp;
 
-			if (time>20.0) run = false;
+			//if (time>20.0) run = false;
 
 			// Game Clock part of the loop
 			// ========================================================
@@ -534,6 +537,7 @@ void App::gameUpdate( double p_dt )
 	// Physics result gathering have to run first
 	m_rigidBodySystem->executeDeferredConstraintInits();
 	m_rigidBodySystem->process();
+	m_controllerSystem->buildCheck();
 	// Run all other systems, for which order doesn't matter
 	processSystemCollection(&m_orderIndependentSystems);
 	// Render system is processed last

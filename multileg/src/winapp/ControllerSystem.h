@@ -25,6 +25,7 @@ class ControllerSystem : public artemis::EntityProcessingSystem
 {
 private:
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
+	std::vector<ControllerComponent*> m_controllersToBuild;
 	std::vector<ControllerComponent*> m_controllers;
 	std::vector<glm::vec3> m_torques;
 	std::vector<btRigidBody*> m_rigidBodies;
@@ -53,6 +54,12 @@ public:
 	void finish();
 
 	void applyTorques();
+
+	// Build uninited controllers, this has to be called 
+	// after constraints & rb's have been inited by their systems
+	void buildCheck();
+private:
+
 };
 
 void ControllerSystem::removed(artemis::Entity &e)
@@ -63,7 +70,8 @@ void ControllerSystem::removed(artemis::Entity &e)
 void ControllerSystem::added(artemis::Entity &e)
 {
 	ControllerComponent* controller = controllerComponentMapper.get(e);
-	m_controllers.push_back(controller);
+
+	m_controllersToBuild.push_back(controller);
 }
 
 void ControllerSystem::processEntity(artemis::Entity &e)
@@ -95,4 +103,17 @@ void ControllerSystem::applyTorques()
 			m_rigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z));
 		}
 	}
+}
+
+void ControllerSystem::buildCheck()
+{
+	for (int i = 0; i < m_controllersToBuild.size(); i++)
+	{
+		ControllerComponent* controller=m_controllersToBuild[i];
+		// Build the controller
+
+		//
+		m_controllers.push_back(controller);
+	}
+	m_controllersToBuild.clear();
 }
