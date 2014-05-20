@@ -38,13 +38,16 @@ public:
 	}
 
 	virtual ~ControllerComponent();
-protected:
-private:
+
 	struct LegFrame
 	{
 		artemis::Entity* m_legFrameEntity;
 		artemis::Entity* m_upperLegEntity;
 	};
 	std::vector<LegFrame> m_legFrames;
+
+protected:
+private:
+
 
 };

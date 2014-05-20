@@ -59,7 +59,8 @@ public:
 	// after constraints & rb's have been inited by their systems
 	void buildCheck();
 private:
-
+	unsigned int addJoint(RigidBodyComponent* p_joint);
+	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 };
 
 void ControllerSystem::removed(artemis::Entity &e)
@@ -110,10 +111,63 @@ void ControllerSystem::buildCheck()
 	for (int i = 0; i < m_controllersToBuild.size(); i++)
 	{
 		ControllerComponent* controller=m_controllersToBuild[i];
-		// Build the controller
+		ControllerComponent::LegFrame* legFrame = &controller->m_legFrames[0];
+		// Build the controller (Temporary code)
+		// The below should be done for each leg (even the root)
+		// Create ROOT
+		RigidBodyComponent* root = (RigidBodyComponent*)legFrame->m_legFrameEntity->getComponent<RigidBodyComponent>();
+		unsigned int rootIdx = addJoint(root); 
+		glm::vec3 DOF;
+		for (int i = 0; i < 3;i++)
+		{
+			controller->jointIDXChain.push_back(rootIdx);
+			controller->legDOFChain.push_back(DOFAxisByVecCompId(i)); // root has 3DOF (for now, to not over-optimize, we add three vec3's)
+		}
+		// rest of leg
+		artemis::Entity* jointEntity = legFrame->m_upperLegEntity;
+		while (jointEntity != NULL)
+		{
+			// Get joint data
+			RigidBodyComponent* joint = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
+			ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
+			// Add the joint
+			unsigned int idx = addJoint(root);
+			// Get DOF on joint
+			const glm::vec3* lims = parentLink->getDesc()->m_angularDOF_LULimits;
+			for (int i = 0; i < 3; i++)
+			{
+				// check if upper limit is greater than lower limit, componentwise.
+				// If true, add as DOF
+				if (lims[0][i] < lims[1][i])
+				{
+					controller->jointIDXChain.push_back(idx);
+					controller->legDOFChain.push_back(DOFAxisByVecCompId(i));
+				}
+			}
+			// Get child joint for next iteration
+			ConstraintComponent* childLink = joint->getChildConstraint(0);
+			if (childLink != NULL)
+				jointEntity = childLink->getOwnerEntity();
+		}
 
 		//
 		m_controllers.push_back(controller);
 	}
 	m_controllersToBuild.clear();
+}
+
+unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_joint)
+{
+	m_rigidBodies.push_back(p_joint->getRigidBody());
+	return m_rigidBodies.size() - 1; // return idx of inserted
+}
+
+glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
+{
+	if (p_id == 0)
+		return glm::vec3(1.0f, 0.0f, 0.0f);
+	else if (p_id == 1)
+		return glm::vec3(0.0f, 1.0f, 0.0f);
+	else
+		return glm::vec3(0.0f, 0.0f, 1.0f);
 }

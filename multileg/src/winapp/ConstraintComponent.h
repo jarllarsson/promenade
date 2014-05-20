@@ -60,18 +60,20 @@ public:
 	const ConstraintDesc* getDesc() const;
 
 	bool isInited();
-	void init(btGeneric6DofConstraint* p_constraint);
+	void init(btGeneric6DofConstraint* p_constraint, artemis::Entity* p_ownerEntity);
 
 	btGeneric6DofConstraint* getConstraint();
 	void forceRemove(btDiscreteDynamicsWorld* p_world);
 	bool isRemoved() { return m_removed; }
 
 	artemis::Entity* getParent();
+	artemis::Entity* getOwnerEntity();
 private:
 	bool m_removed;
 	bool m_inited;
 	ConstraintDesc* m_desc;
 	artemis::Entity* m_parent;
+	artemis::Entity* m_owner; //< ie. the "owner"
 	btGeneric6DofConstraint* m_constraint;
 };
 
@@ -80,9 +82,10 @@ const ConstraintComponent::ConstraintDesc* ConstraintComponent::getDesc() const
 	return m_desc;
 }
 
-void ConstraintComponent::init(btGeneric6DofConstraint* p_constraint)
+void ConstraintComponent::init(btGeneric6DofConstraint* p_constraint, artemis::Entity* p_ownerEntity)
 {
 	m_constraint = p_constraint;
+	m_owner = p_ownerEntity;
 	m_inited = true;
 }
 
@@ -109,4 +112,9 @@ void ConstraintComponent::forceRemove( btDiscreteDynamicsWorld* p_world )
 		SAFE_DELETE(m_constraint);
 		m_removed = true;
 	}
+}
+
+artemis::Entity* ConstraintComponent::getOwnerEntity()
+{
+	return m_owner;
 }

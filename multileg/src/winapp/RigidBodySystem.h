@@ -215,7 +215,7 @@ void RigidBodySystem::setupConstraints(artemis::Entity *e)
 			pGen6DOF->setAngularUpperLimit(angularLimHigh);
 			// add constraint to world
 			m_dynamicsWorldPtr->addConstraint(pGen6DOF, !constraintdesc.m_collisionBetweenLinked);
-			constraint->init(pGen6DOF);
+			constraint->init(pGen6DOF,e);
 			parentRigidBody->addChildConstraint(constraint);
 		}
 	}
