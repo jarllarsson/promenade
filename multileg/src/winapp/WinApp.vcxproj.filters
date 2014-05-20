@@ -16,6 +16,9 @@
     <Filter Include="Entity System\Rendering">
       <UniqueIdentifier>{6c2284ad-8ba9-47c1-8569-b76a670d1d9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity System\Locomotion">
+      <UniqueIdentifier>{7d0ed79b-c89d-4b01-8ac3-c72ee684ef11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -50,6 +53,9 @@
     </ClInclude>
     <ClInclude Include="PhysicsWorldHandler.h">
       <Filter>Entity System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerSystem.h">
+      <Filter>Entity System\Locomotion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

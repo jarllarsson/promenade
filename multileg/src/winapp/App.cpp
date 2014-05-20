@@ -283,16 +283,16 @@ void App::run()
 			render();
 
 			double time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
-			if (time>19.0)
-			{
-				if (rb->isInited())
-				{
-					btTransform btt;
-					rb->getRigidBody()->getMotionState()->getWorldTransform(btt);
-					measurer.saveMeasurement(string("x: ") + toString(btt.getOrigin().x()) + ",y: " + toString(btt.getOrigin().y()) + ",z: " + toString(btt.getOrigin().z()),
-						time);
-				}
-			}
+			//if (time>19.0)
+			//{
+			//	if (rb->isInited())
+			//	{
+			//		btTransform btt;
+			//		rb->getRigidBody()->getMotionState()->getWorldTransform(btt);
+			//		measurer.saveMeasurement(string("x: ") + toString(btt.getOrigin().x()) + ",y: " + toString(btt.getOrigin().y()) + ",z: " + toString(btt.getOrigin().z()),
+			//			time);
+			//	}
+			//}
 
 			// Physics handling part of the loop
 			// ========================================================
@@ -339,11 +339,11 @@ void App::run()
 
 	}
 
-#ifdef _DEBUG
-	measurer.saveResults("../output/determinismTest_Debug");
-#else
-	measurer.saveResults("../output/determinismTest_Release");
-#endif
+	//#ifdef _DEBUG
+	//	measurer.saveResults("../output/determinismTest_Debug");
+	//#else
+	//	measurer.saveResults("../output/determinismTest_Release");
+	//#endif
 
 
 
