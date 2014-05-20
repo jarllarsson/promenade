@@ -17,6 +17,7 @@ class TempController;
 class Input;
 class RenderSystem;
 class RigidBodySystem;
+class ControllerSystem;
 
 using namespace std;
 
@@ -70,6 +71,7 @@ private:
 	// Order dependant systems
 	RigidBodySystem*		m_rigidBodySystem;
 	RenderSystem*			m_renderSystem;
+	ControllerSystem*		m_controllerSystem;
 
 	float m_timeScale;
 	bool m_timeScaleToggle;

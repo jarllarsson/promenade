@@ -26,6 +26,7 @@
 #include "PositionSystem.h"
 #include "RigidBodySystem.h"
 #include "RenderSystem.h"
+#include "ControllerSystem.h"
 #include "PhysicsWorldHandler.h"
 
 
@@ -128,7 +129,6 @@ void App::run()
 	// ==================================
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 	dynamicsWorld->setGravity(btVector3(0, -9.82, 0));
-	PhysicsWorldHandler physicsWorldHandler(dynamicsWorld);
 
 
 
@@ -139,7 +139,14 @@ void App::run()
 	//addGameLogic(movementsys);
 	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
 	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
+	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem());
 	sysManager->initializeAll();
+
+
+
+
+	// Combine Physics with our stuff!
+	PhysicsWorldHandler physicsWorldHandler(dynamicsWorld,m_controllerSystem);
 
 
 

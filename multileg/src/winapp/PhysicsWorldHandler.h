@@ -1,5 +1,6 @@
 #pragma once
 #include <btBulletDynamicsCommon.h>
+#include "ControllerSystem.h"
 
 // =======================================================================================
 //                                      PhysicsWorldHandler
@@ -18,13 +19,19 @@ static void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeS
 
 class PhysicsWorldHandler {
 public:
-	PhysicsWorldHandler(btDynamicsWorld* p_world)
+	PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSystem* p_controllerSystem)
 	{
 		m_world = p_world;
+		m_controllerSystem = p_controllerSystem;
 		m_world->setInternalTickCallback(physicsSimulationTickCallback, static_cast<void *>(this), true);
 	}
 
-	void myProcessCallback(btScalar timeStep) {
+	void myProcessCallback(btScalar timeStep) 
+	{
+		// Character controller
+		m_controllerSystem->start((float)timeStep); // might want this in post tick instead? Have it here for now
+		m_controllerSystem->finish();
+		// Physics
 		btCollisionObjectArray objects = m_world->getCollisionObjectArray();
 		m_world->clearForces();
 		for (int i = 0; i < objects.size(); i++) {
@@ -33,12 +40,16 @@ public:
 				continue;
 			}
 			rigidBody->applyGravity();
-			rigidBody->applyForce(btVector3(-10., 0., 0.), btVector3(0., 0., 0.));
+			//rigidBody->applyForce(btVector3(-10., 0., 0.), btVector3(0., 0., 0.));
 		}
 		return;
 	}
 
 protected:
+	// Might want to change this to generic list of a common base class
+	ControllerSystem* m_controllerSystem; // But right now, we only need it for the controllers
+	//
+	// Physics world
 	btDynamicsWorld* m_world;
 };
 
