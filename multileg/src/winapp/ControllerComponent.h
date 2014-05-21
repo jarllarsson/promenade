@@ -22,9 +22,9 @@ class ControllerComponent : public artemis::Component
 {
 public:
 	// Temporary
-	unsigned int legFrameIdx;
-	unsigned int leftHipIdx;
-	unsigned int legSegments;
+	//unsigned int legFrameIdx;
+	//unsigned int leftHipIdx;
+	//unsigned int legSegments;
 
 	std::vector<glm::vec3> legDOFChain;
 	std::vector<unsigned int> jointIDXChain;
@@ -37,7 +37,7 @@ public:
 		m_legFrames.push_back(legFrame);
 	}
 
-	virtual ~ControllerComponent();
+	virtual ~ControllerComponent() {}
 
 	struct LegFrame
 	{

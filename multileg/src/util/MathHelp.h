@@ -25,4 +25,7 @@ namespace MathHelp
 
 	void decomposeTRS(const glm::mat4& m, glm::vec3& scaling,
 		glm::mat4& rotation, glm::vec3& translation);
+
+	glm::vec3 transformDirection(const glm::mat4& m, glm::vec3& p_dir);
+	glm::vec3 transformPosition(const glm::mat4& m, glm::vec3& p_pos);
 };

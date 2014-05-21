@@ -87,3 +87,19 @@ void MathHelp::decomposeTRS(const glm::mat4& m, glm::vec3& scaling,
 	rotation[3][2] = 0.0;
 	rotation[3][3] = 1.0;
 }
+
+glm::vec3 MathHelp::transformDirection(const glm::mat4& m, glm::vec3& p_dir)
+{
+	glm::vec4 vec(p_dir.x, p_dir.y, p_dir.z, 0.0f);
+	vec = m*vec;
+	p_dir.x = vec.x; p_dir.y = vec.y; p_dir.z = vec.z;
+	return p_dir;
+}
+
+glm::vec3 MathHelp::transformPosition(const glm::mat4& m, glm::vec3& p_pos)
+{
+	glm::vec4 vec(p_pos.x, p_pos.y, p_pos.z, 1.0f);
+	vec = m*vec;
+	p_pos.x = vec.x; p_pos.y = vec.y; p_pos.z = vec.z;
+	return p_pos;
+}

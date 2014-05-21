@@ -66,8 +66,8 @@ App::App( HINSTANCE p_hInstance )
 	m_controller = new TempController(0.0f,10.0f,-50.0f,0.0f);
 	m_input = new Input();
 	m_input->doStartup(m_context->getWindowHandle());
-	m_timeScale = 1.0f;
-	m_timeScaleToggle = false;
+	m_timeScale = 0.0f;
+	m_timeScaleToggle = true;
 	m_timePauseStepToggle = false;
 	//
 	//for (int x = 0; x < 10; x++)
@@ -181,11 +181,11 @@ void App::run()
 	// Create a ground entity
 
 	artemis::Entity & ground = entityManager->create();
-	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(50.0f, 10.0f, 50.0f)), 0.0f));
+	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(100.0f, 10.0f, 100.0f)), 0.0f));
 	ground.addComponent(new RenderComponent());
 	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -20.0f, 0.0f), 
 		glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-		glm::vec3(100.0f, 20.0f, 100.0f)));
+		glm::vec3(200.0f, 20.0f, 200.0f)));
 	ground.refresh();
 
 
@@ -215,87 +215,94 @@ void App::run()
 	axisZ.refresh();
 
 	// Linked boxes
-	{
-		artemis::Entity & parentJoint = entityManager->create();
-		glm::vec3 pos = glm::vec3(glm::vec3(0.0f, 20.0f, 0.0f));
-		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-		parentJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 0.0f));
-		parentJoint.addComponent(new RenderComponent());
-		parentJoint.addComponent(new TransformComponent(pos,
-			glm::quat(glm::vec3(PI*0.1f, 0.0f, 0.0f)),
-			glm::vec3(2.0f, 4.0f, 2.0f)));
-		parentJoint.refresh();
-		//
-		artemis::Entity* prev = &parentJoint;
-		artemis::Entity* mid = NULL;
-		for (int i = 0; i < 50; i++)
-		{
-			artemis::Entity & childJoint = entityManager->create();
-			pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
-			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f));
-			childJoint.addComponent(new RenderComponent());
-			childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));
-			ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child
-				glm::vec3(0.0f, -2.0f, 0.0f), // parent
-				{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
-				false };
-			childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
-			childJoint.refresh();
-			prev = &childJoint;
-			if (i == 25)
-				mid = &childJoint;
-		}
-		//
-		prev = mid;
-		for (int i = 0; i < 25; i++)
-		{
-			artemis::Entity & childJoint = entityManager->create();
-			pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
-			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f));
-			childJoint.addComponent(new RenderComponent());
-			childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));
-			ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child
-				glm::vec3(0.0f, -2.0f, 0.0f), // parent
-				{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
-				false };
-			childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
-			childJoint.refresh();
-			prev = &childJoint;
-		}
-	}
+	//{
+	//	artemis::Entity & parentJoint = entityManager->create();
+	//	glm::vec3 pos = glm::vec3(glm::vec3(0.0f, 20.0f, 0.0f));
+	//	//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+	//	parentJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 0.0f));
+	//	parentJoint.addComponent(new RenderComponent());
+	//	parentJoint.addComponent(new TransformComponent(pos,
+	//		glm::quat(glm::vec3(PI*0.1f, 0.0f, 0.0f)),
+	//		glm::vec3(2.0f, 4.0f, 2.0f)));
+	//	parentJoint.refresh();
+	//	//
+	//	artemis::Entity* prev = &parentJoint;
+	//	artemis::Entity* mid = NULL;
+	//	for (int i = 0; i < 5; i++)
+	//	{
+	//		artemis::Entity & childJoint = entityManager->create();
+	//		pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
+	//		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+	//		childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f));
+	//		childJoint.addComponent(new RenderComponent());
+	//		childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));
+	//		ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child
+	//			glm::vec3(0.0f, -2.0f, 0.0f), // parent
+	//			{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
+	//			false };
+	//		childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
+	//		childJoint.refresh();
+	//		prev = &childJoint;
+	//		if (i == 25)
+	//			mid = &childJoint;
+	//	}
+	//	//
+	//	prev = mid;
+	//	for (int i = 0; i < 4; i++)
+	//	{
+	//		artemis::Entity & childJoint = entityManager->create();
+	//		pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
+	//		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+	//		childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f));
+	//		childJoint.addComponent(new RenderComponent());
+	//		childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));
+	//		ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child
+	//			glm::vec3(0.0f, -2.0f, 0.0f), // parent
+	//			{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
+	//			false };
+	//		childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
+	//		childJoint.refresh();
+	//		prev = &childJoint;
+	//	}
+	//}
 
 	// Test of controller
+	for (int x = 0; x < 4; x++)
 	{
-		artemis::Entity & parentJoint = entityManager->create();
-		glm::vec3 pos = glm::vec3(glm::vec3(0.0f, 10.0f, -10.0f));
+		artemis::Entity & legFrame = entityManager->create();
+		glm::vec3 pos = glm::vec3(glm::vec3(x*10.0f, 10.0f, 50.0f));
 		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-		parentJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 0.0f));
-		parentJoint.addComponent(new RenderComponent());
-		parentJoint.addComponent(new TransformComponent(pos,
+		legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 2.0f));
+		legFrame.addComponent(new RenderComponent());
+		legFrame.addComponent(new TransformComponent(pos,
 			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 			glm::vec3(2.0f, 4.0f, 2.0f)));
-		parentJoint.refresh();
+		legFrame.refresh();
 		//
-		artemis::Entity* prev = &parentJoint;
-		artemis::Entity* mid = NULL;
+		artemis::Entity* prev = &legFrame;
+		artemis::Entity* upperLegSegment = NULL;
 		for (int i = 0; i < 2; i++)
 		{
 			artemis::Entity & childJoint = entityManager->create();
-			pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
+			if (i == 0) upperLegSegment = &childJoint;
+			pos -= glm::vec3(glm::vec3(0.0f, 5.0f, 0.0f));
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f));
 			childJoint.addComponent(new RenderComponent());
 			childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));
 			ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child
 				glm::vec3(0.0f, -2.0f, 0.0f), // parent
-				{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f) },
+				{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
 				false };
 			childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
 			childJoint.refresh();
 			prev = &childJoint;
 		}
+		// Controller
+		artemis::Entity & controller = entityManager->create();
+		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+		controller.addComponent(new ControllerComponent(&legFrame, upperLegSegment));
+		controller.refresh();
 	}
 
 
@@ -310,7 +317,7 @@ void App::run()
 	bool run=true;
 
 	// Dry run, so artemis have run before physics first step
-	gameUpdate(0.0f);
+	//gameUpdate(0.0f);
 
 	while (!m_context->closeRequested() && run)
 	{
@@ -343,7 +350,7 @@ void App::run()
 			//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
 
 			// Tick the bullet world. Keep in mind that bullet takes seconds
-			dynamicsWorld->stepSimulation((btScalar)phys_dt, 10);
+			dynamicsWorld->stepSimulation((btScalar)1.0f/60.0f/*phys_dt*/, 10);
 			// ========================================================
 
 

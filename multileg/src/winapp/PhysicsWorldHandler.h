@@ -28,20 +28,21 @@ public:
 
 	void myProcessCallback(btScalar timeStep) 
 	{
-		// Character controller
+		//// Character controller
 		m_controllerSystem->start((float)timeStep); // might want this in post tick instead? Have it here for now
-		// Physics
-		btCollisionObjectArray objects = m_world->getCollisionObjectArray();
-		m_world->clearForces();
-		for (int i = 0; i < objects.size(); i++) {
-			btRigidBody *rigidBody = btRigidBody::upcast(objects[i]);
-			if (!rigidBody) {
-				continue;
-			}
-			rigidBody->applyGravity();
-			//rigidBody->applyForce(btVector3(-10., 0., 0.), btVector3(0., 0., 0.));
-		}
-		// Controller
+		//// Physics
+		//btCollisionObjectArray objects = m_world->getCollisionObjectArray();
+		//m_world->clearForces();
+		//for (int i = 0; i < objects.size(); i++) {
+		//	btRigidBody *rigidBody = btRigidBody::upcast(objects[i]);
+		//	if (!rigidBody) {
+		//		continue;
+		//	}
+		//	rigidBody->applyGravity();
+		//	//rigidBody->applyTorque(btVector3(0.0f, 0.0f, 0.0f));
+		//	//rigidBody->applyForce(btVector3(-10., 0., 0.), btVector3(0., 0., 0.));
+		//}
+		//// Controller
 		m_controllerSystem->finish();
 		m_controllerSystem->applyTorques();
 		return;

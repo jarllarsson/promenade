@@ -8,6 +8,8 @@
 #include "ControllerComponent.h"
 #include <ToString.h>
 #include <DebugPrint.h>
+#include <MathHelp.h>
+#include <ppl.h>
 // =======================================================================================
 //                                 ControllerSystem
 // =======================================================================================
@@ -21,6 +23,8 @@
 /// 20-5-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
+//#define MULTI
+
 class ControllerSystem : public artemis::EntityProcessingSystem
 {
 private:
@@ -29,6 +33,7 @@ private:
 	std::vector<ControllerComponent*> m_controllers;
 	std::vector<glm::vec3> m_torques;
 	std::vector<btRigidBody*> m_rigidBodies;
+	std::vector<glm::mat4> m_transforms;
 public:
 	ControllerSystem()
 	{
@@ -60,6 +65,7 @@ public:
 	void buildCheck();
 private:
 	unsigned int addJoint(RigidBodyComponent* p_joint);
+	void setTransformMatrixFromRigidBodyInList(unsigned int p_idx);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 };
 
@@ -82,10 +88,41 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 
 void ControllerSystem::start(float p_dt)
 {
-	DEBUGPRINT(( (std::string("\nController start DT=") + toString(p_dt) + "\n").c_str() ));
-	for (int i = 0; i < m_torques.size(); i++)
+	//DEBUGPRINT(( (std::string("\nController start DT=") + toString(p_dt) + "\n").c_str() ));
+
+	// Update all transforms
+	for (int i = 0; i < m_rigidBodies.size(); i++)
 	{
-		m_torques[i] = glm::vec3(1.0f, 0.0f, 0.0f);
+		setTransformMatrixFromRigidBodyInList(i);
+		m_torques[i] = glm::vec3(0.0f);
+	}
+
+	if (m_controllers.size()>0)
+	{
+		for (int n = 0; n < m_controllers.size();n++)
+		{
+			ControllerComponent* controller = m_controllers[n];
+
+			// Run controller code here
+#ifndef MULTI
+			for (int i = 0; i < controller->legDOFChain.size(); i++)
+			{
+				unsigned int tIdx = controller->jointIDXChain[i];
+				glm::vec3 torqueBase = controller->legDOFChain[i];
+				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_transforms[tIdx]);
+				m_torques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
+			}
+#else
+			//concurrency::combinable<glm::vec3> sumtorques;
+			concurrency::parallel_for(0, (int)controller->legDOFChain.size(), [&](int i) {
+				unsigned int tIdx = controller->jointIDXChain[i];
+				glm::vec3 torqueBase = controller->legDOFChain[i];
+				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_transforms[tIdx]);
+				m_torques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
+			});
+
+#endif
+		}
 	}
 }
 
@@ -118,10 +155,10 @@ void ControllerSystem::buildCheck()
 		RigidBodyComponent* root = (RigidBodyComponent*)legFrame->m_legFrameEntity->getComponent<RigidBodyComponent>();
 		unsigned int rootIdx = addJoint(root); 
 		glm::vec3 DOF;
-		for (int i = 0; i < 3;i++)
+		for (int n = 0; n < 3; n++)
 		{
 			controller->jointIDXChain.push_back(rootIdx);
-			controller->legDOFChain.push_back(DOFAxisByVecCompId(i)); // root has 3DOF (for now, to not over-optimize, we add three vec3's)
+			controller->legDOFChain.push_back(DOFAxisByVecCompId(n)); // root has 3DOF (for now, to not over-optimize, we add three vec3's)
 		}
 		// rest of leg
 		artemis::Entity* jointEntity = legFrame->m_upperLegEntity;
@@ -131,25 +168,26 @@ void ControllerSystem::buildCheck()
 			RigidBodyComponent* joint = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
 			ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
 			// Add the joint
-			unsigned int idx = addJoint(root);
+			unsigned int idx = addJoint(joint);
 			// Get DOF on joint
 			const glm::vec3* lims = parentLink->getDesc()->m_angularDOF_LULimits;
-			for (int i = 0; i < 3; i++)
+			for (int n = 0; n < 3; n++)
 			{
 				// check if upper limit is greater than lower limit, componentwise.
 				// If true, add as DOF
-				if (lims[0][i] < lims[1][i])
+				if (lims[0][n] < lims[1][n])
 				{
 					controller->jointIDXChain.push_back(idx);
-					controller->legDOFChain.push_back(DOFAxisByVecCompId(i));
+					controller->legDOFChain.push_back(DOFAxisByVecCompId(n));
 				}
 			}
 			// Get child joint for next iteration
 			ConstraintComponent* childLink = joint->getChildConstraint(0);
 			if (childLink != NULL)
 				jointEntity = childLink->getOwnerEntity();
+			else
+				jointEntity = NULL;
 		}
-
 		//
 		m_controllers.push_back(controller);
 	}
@@ -159,7 +197,11 @@ void ControllerSystem::buildCheck()
 unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_joint)
 {
 	m_rigidBodies.push_back(p_joint->getRigidBody());
-	return m_rigidBodies.size() - 1; // return idx of inserted
+	m_torques.resize(m_rigidBodies.size());
+	m_transforms.resize(m_rigidBodies.size());
+	unsigned int idx = m_rigidBodies.size() - 1;
+	setTransformMatrixFromRigidBodyInList(idx);
+	return idx; // return idx of inserted
 }
 
 glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
@@ -170,4 +212,22 @@ glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
 		return glm::vec3(0.0f, 1.0f, 0.0f);
 	else
 		return glm::vec3(0.0f, 0.0f, 1.0f);
+}
+
+void ControllerSystem::setTransformMatrixFromRigidBodyInList(unsigned int p_idx)
+{
+	if (p_idx<m_rigidBodies.size() && m_transforms.size()==m_rigidBodies.size())
+	{
+		btRigidBody* body = m_rigidBodies[p_idx];
+		if (body != NULL/* && body->isInWorld() && body->isActive()*/)
+		{
+			btMotionState* motionState = body->getMotionState();
+			btTransform physTransform;
+			motionState->getWorldTransform(physTransform);
+			// Get the transform from Bullet and into mat
+			glm::mat4 mat;
+			physTransform.getOpenGLMatrix(glm::value_ptr(mat));
+			m_transforms[p_idx] = mat;
+		}
+	}
 }

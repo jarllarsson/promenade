@@ -64,7 +64,7 @@ public:
 
 	ConstraintComponent* getChildConstraint(unsigned int p_idx=0)
 	{
-		if (m_childConstraints.size() > 0 && m_childConstraints.size()<=p_idx)
+		if (m_childConstraints.size() > 0 && m_childConstraints.size()>p_idx)
 			return m_childConstraints[p_idx];
 		else
 			return NULL;
