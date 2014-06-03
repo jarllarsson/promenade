@@ -26,8 +26,34 @@ public:
 	//unsigned int leftHipIdx;
 	//unsigned int legSegments;
 
-	std::vector<glm::vec3> legDOFChain;
-	std::vector<unsigned int> jointIDXChain;
+	struct Chain
+	{
+	public:
+		std::vector<glm::vec3> DOFChain;
+		std::vector<unsigned int> jointIDXChain;
+		unsigned int getSize()
+		{
+			return DOFChain.size();
+		}
+	};
+
+	// Chain constructs
+	// The "ordinary" chain of legs, from leg frame to foot
+	// Structure:
+	// [R][1][2][F]
+	Chain m_DOFChain;
+	// Each link will all its DOFs to the chain
+	// This will result in 0 to 3 vec3:s. (We're only using angles)
+
+	// The gravity compensation chain, from start to foot, for each link in the chain
+	// Structure construction:
+	// [R][1][2][F] +
+	//    [1][2][F] +
+	//       [2][F] +
+	//          [F] =
+	// Structure:
+	// [R][1][2][F][1][2][F][2][F][F]
+	Chain m_DOFChainGravityComp;
 
 	// Specify entry points on construction, during build
 	// the chains(lists) will be constructed by walking the pointer chain(double linked list)

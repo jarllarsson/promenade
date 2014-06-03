@@ -102,21 +102,21 @@ void ControllerSystem::start(float p_dt)
 		for (int n = 0; n < m_controllers.size();n++)
 		{
 			ControllerComponent* controller = m_controllers[n];
-
+			ControllerComponent::Chain* legChain = &controller->m_DOFChain;
 			// Run controller code here
 #ifndef MULTI
-			for (int i = 0; i < controller->legDOFChain.size(); i++)
+			for (int i = 0; i < legChain->getSize(); i++)
 			{
-				unsigned int tIdx = controller->jointIDXChain[i];
-				glm::vec3 torqueBase = controller->legDOFChain[i];
+				unsigned int tIdx = legChain->jointIDXChain[i];
+				glm::vec3 torqueBase = legChain->DOFChain[i];
 				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_transforms[tIdx]);
 				m_torques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
 			}
 #else
 			//concurrency::combinable<glm::vec3> sumtorques;
-			concurrency::parallel_for(0, (int)controller->legDOFChain.size(), [&](int i) {
-				unsigned int tIdx = controller->jointIDXChain[i];
-				glm::vec3 torqueBase = controller->legDOFChain[i];
+			concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
+				unsigned int tIdx = legChain->jointIDXChain[i];
+				glm::vec3 torqueBase = legChain->DOFChain[i];
 				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_transforms[tIdx]);
 				m_torques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
 			});
@@ -149,6 +149,7 @@ void ControllerSystem::buildCheck()
 	{
 		ControllerComponent* controller=m_controllersToBuild[i];
 		ControllerComponent::LegFrame* legFrame = &controller->m_legFrames[0];
+		ControllerComponent::Chain* legChain = &controller->m_DOFChain;
 		// Build the controller (Temporary code)
 		// The below should be done for each leg (even the root)
 		// Create ROOT
@@ -157,8 +158,8 @@ void ControllerSystem::buildCheck()
 		glm::vec3 DOF;
 		for (int n = 0; n < 3; n++)
 		{
-			controller->jointIDXChain.push_back(rootIdx);
-			controller->legDOFChain.push_back(DOFAxisByVecCompId(n)); // root has 3DOF (for now, to not over-optimize, we add three vec3's)
+			legChain->jointIDXChain.push_back(rootIdx);
+			legChain->DOFChain.push_back(DOFAxisByVecCompId(n)); // root has 3DOF (for now, to not over-optimize, we add three vec3's)
 		}
 		// rest of leg
 		artemis::Entity* jointEntity = legFrame->m_upperLegEntity;
@@ -171,14 +172,14 @@ void ControllerSystem::buildCheck()
 			unsigned int idx = addJoint(joint);
 			// Get DOF on joint
 			const glm::vec3* lims = parentLink->getDesc()->m_angularDOF_LULimits;
-			for (int n = 0; n < 3; n++)
+			for (int n = 0; n < 3; n++) // go through all DOFs and add if free
 			{
 				// check if upper limit is greater than lower limit, componentwise.
 				// If true, add as DOF
 				if (lims[0][n] < lims[1][n])
 				{
-					controller->jointIDXChain.push_back(idx);
-					controller->legDOFChain.push_back(DOFAxisByVecCompId(n));
+					legChain->jointIDXChain.push_back(idx);
+					legChain->DOFChain.push_back(DOFAxisByVecCompId(n));
 				}
 			}
 			// Get child joint for next iteration
