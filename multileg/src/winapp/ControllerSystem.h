@@ -2,14 +2,9 @@
 #include <Artemis.h>
 #include "TransformComponent.h"
 #include "RigidBodyComponent.h"
-#include <btBulletDynamicsCommon.h>
-#include "ConstraintComponent.h"
 #include <vector>
 #include "ControllerComponent.h"
-#include <ToString.h>
-#include <DebugPrint.h>
-#include <MathHelp.h>
-#include <ppl.h>
+
 // =======================================================================================
 //                                 ControllerSystem
 // =======================================================================================
@@ -46,13 +41,13 @@ public:
 		m_runTime = 0.0f;
 		//addComponentType<RigidBodyComponent>();
 		//m_dynamicsWorldPtr = p_dynamicsWorld;
-	};
+	}
 
 	virtual void initialize()
 	{
 		controllerComponentMapper.init(*world);
 		//rigidBodyMapper.init(*world);
-	};
+	}
 
 	virtual void removed(artemis::Entity &e);
 

@@ -1,5 +1,13 @@
 #include "ControllerSystem.h"
 
+#include <ppl.h>
+#include <ToString.h>
+#include <DebugPrint.h>
+#include <MathHelp.h>
+#include <btBulletDynamicsCommon.h>
+#include "ConstraintComponent.h"
+
+
 void ControllerSystem::removed(artemis::Entity &e)
 {
 
@@ -41,7 +49,7 @@ void ControllerSystem::update(float p_dt)
 			ControllerComponent::Chain* legChain = &controller->m_DOFChain;
 			// Run controller code here
 
-			for (int i = 0; i < legChain->getSize(); i++)
+			for (unsigned int i = 0; i < legChain->getSize(); i++)
 			{
 				unsigned int tIdx = legChain->jointIDXChain[i];
 				glm::vec3 torqueBase = legChain->DOFChain[i];
@@ -86,13 +94,13 @@ void ControllerSystem::buildCheck()
 	for (int i = 0; i < m_controllersToBuild.size(); i++)
 	{
 		ControllerComponent* controller = m_controllersToBuild[i];
-		ControllerComponent::LegFrame* legFrame = &controller->m_legFrames[0];
+		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
 		ControllerComponent::Chain* legChain = &controller->m_DOFChain;
 		// Build the controller (Temporary code)
 		// The below should be done for each leg (even the root)
 		// Create ROOT
-		RigidBodyComponent* rootRB = (RigidBodyComponent*)legFrame->m_legFrameEntity->getComponent<RigidBodyComponent>();
-		TransformComponent* rootTransform = (TransformComponent*)legFrame->m_legFrameEntity->getComponent<TransformComponent>();
+		RigidBodyComponent* rootRB = (RigidBodyComponent*)legFrameEntities->m_legFrameEntity->getComponent<RigidBodyComponent>();
+		TransformComponent* rootTransform = (TransformComponent*)legFrameEntities->m_legFrameEntity->getComponent<TransformComponent>();
 		unsigned int rootIdx = addJoint(rootRB, rootTransform);
 		glm::vec3 DOF;
 		for (int n = 0; n < 3; n++)
@@ -101,7 +109,7 @@ void ControllerSystem::buildCheck()
 			legChain->DOFChain.push_back(DOFAxisByVecCompId(n)); // root has 3DOF (for now, to not over-optimize, we add three vec3's)
 		}
 		// rest of leg
-		artemis::Entity* jointEntity = legFrame->m_upperLegEntity;
+		artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[0];
 		while (jointEntity != NULL)
 		{
 			// Get joint data
@@ -145,7 +153,7 @@ unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, Tr
 	// m_jointWorldTransforms.resize(m_jointRigidBodies.size());
 	// m_jointLengths.resize(m_jointRigidBodies.size());
 	m_jointWorldEndpoints.resize(m_jointRigidBodies.size());
-	unsigned int idx = m_jointRigidBodies.size() - 1;
+	unsigned int idx = (unsigned int)(m_jointRigidBodies.size() - 1);
 	saveJointWorldEndpoint(idx, matPosRot);
 	// saveJointMatrix(idx);
 	return idx; // return idx of inserted

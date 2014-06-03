@@ -22,6 +22,15 @@
     <Filter Include="Entity System\Locomotion\Gait">
       <UniqueIdentifier>{1a8f745d-7061-46b5-af79-f2c0a4b030d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity System\Transform">
+      <UniqueIdentifier>{08343042-1c8a-40d8-bea5-f141601856f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity System\Physics\Constraints">
+      <UniqueIdentifier>{2a8e59a7-f2fd-4a2f-bd98-ab0073a1b58a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity System\Physics\Rigidbodies">
+      <UniqueIdentifier>{4709f0b3-8829-48b9-8c31-879bb819cee1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -36,23 +45,11 @@
     <ClInclude Include="PositionSystem.h">
       <Filter>Entity System</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBodyComponent.h">
-      <Filter>Entity System\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="TransformComponent.h">
-      <Filter>Entity System</Filter>
-    </ClInclude>
-    <ClInclude Include="RigidBodySystem.h">
-      <Filter>Entity System\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="RenderComponent.h">
       <Filter>Entity System\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="RenderSystem.h">
       <Filter>Entity System\Rendering</Filter>
-    </ClInclude>
-    <ClInclude Include="ConstraintComponent.h">
-      <Filter>Entity System\Physics</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsWorldHandler.h">
       <Filter>Entity System\Physics</Filter>
@@ -65,6 +62,21 @@
     </ClInclude>
     <ClInclude Include="StepCycle.h">
       <Filter>Entity System\Locomotion\Gait</Filter>
+    </ClInclude>
+    <ClInclude Include="GaitPlayer.h">
+      <Filter>Entity System\Locomotion\Gait</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Entity System\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstraintComponent.h">
+      <Filter>Entity System\Physics\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodySystem.h">
+      <Filter>Entity System\Physics\Rigidbodies</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyComponent.h">
+      <Filter>Entity System\Physics\Rigidbodies</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -83,6 +95,18 @@
     </ClCompile>
     <ClCompile Include="StepCycle.cpp">
       <Filter>Entity System\Locomotion\Gait</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>Entity System\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstraintComponent.cpp">
+      <Filter>Entity System\Physics\Constraints</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyComponent.cpp">
+      <Filter>Entity System\Physics\Rigidbodies</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderComponent.cpp">
+      <Filter>Entity System\Rendering</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
