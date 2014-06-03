@@ -78,6 +78,7 @@ public:
 	const glm::vec3& getScale() { updateComponentsOnMatrixDirty(); return m_scale; }
 	const glm::mat4& getMatrix() const { return m_transform; }
 	const glm::mat4* getMatrixPtr() const { return &m_transform; }
+	const glm::mat4 getMatrixPosRot() const;
 
 	void updateMatrix();
 
@@ -205,4 +206,11 @@ bool TransformComponent::isTransformRenderDirty()
 void TransformComponent::unsetTransformRenderDirty()
 {
 	m_transformRenderDirty = false;
+}
+
+const glm::mat4 TransformComponent::getMatrixPosRot() const
+{
+	glm::mat4 translate = glm::translate(glm::mat4(1.0f), m_position);
+	glm::mat4 rotate = glm::mat4_cast(m_rotation);
+	return translate * rotate; // is the scale * rotate * translate
 }
