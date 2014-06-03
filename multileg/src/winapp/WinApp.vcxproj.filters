@@ -63,7 +63,7 @@
     <ClInclude Include="ControllerComponent.h">
       <Filter>Entity System\Locomotion</Filter>
     </ClInclude>
-    <ClInclude Include="GaitPlayer.h">
+    <ClInclude Include="StepCycle.h">
       <Filter>Entity System\Locomotion\Gait</Filter>
     </ClInclude>
   </ItemGroup>
@@ -81,7 +81,7 @@
     <ClCompile Include="ControllerSystem.cpp">
       <Filter>Entity System\Locomotion</Filter>
     </ClCompile>
-    <ClCompile Include="GaitPlayer.cpp">
+    <ClCompile Include="StepCycle.cpp">
       <Filter>Entity System\Locomotion\Gait</Filter>
     </ClCompile>
   </ItemGroup>

@@ -155,7 +155,7 @@
     <ClInclude Include="ConstraintComponent.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="ControllerSystem.h" />
-    <ClInclude Include="GaitPlayer.h" />
+    <ClInclude Include="StepCycle.h" />
     <ClInclude Include="PhysicsWorldHandler.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderSystem.h" />
@@ -169,7 +169,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ControllerSystem.cpp" />
-    <ClCompile Include="GaitPlayer.cpp" />
+    <ClCompile Include="StepCycle.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TempController.cpp" />
   </ItemGroup>

@@ -1,19 +1,21 @@
 #pragma once
 
 // =======================================================================================
-//                                      GaitPlayer
+//                                      StepCycle
 // =======================================================================================
 
 ///---------------------------------------------------------------------------------------
-/// \brief	Class that acts as an "animation player". It keeps track of the timeline in
-///			regards of the gait cycle speed.
+/// \brief	Class containing data pertaining to one step cycle. Also has accessibility
+///         methods for automatically wrap-access data.
+///			NOTE! Might be in need of optimization
 ///        
-/// # GaitPlayer
+/// # StepCycle
 /// 
 /// 3-6-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class GaitPlayer
+
+class StepCycle
 {
 public:
 	// Fraction of overall normalized time for which the 
@@ -24,7 +26,7 @@ public:
 	// foot begins its cycle.
 	float m_tuneStepTrigger;
 
-	GaitPlayer();
+	StepCycle();
 
 
 	// IOptimizable
@@ -62,6 +64,7 @@ public:
 		return minList;
 	}
 	*/
+
 
 
 	bool isInStance(float p_phi);

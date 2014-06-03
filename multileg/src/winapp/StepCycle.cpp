@@ -1,12 +1,12 @@
-#include "GaitPlayer.h"
+#include "StepCycle.h"
 
-GaitPlayer::GaitPlayer()
+StepCycle::StepCycle()
 {
 	m_tuneDutyFactor = 0.5f;
 	m_tuneStepTrigger = 0.0f;
 }
 
-bool GaitPlayer::isInStance(float p_phi)
+bool StepCycle::isInStance(float p_phi)
 {
 	// p_phi is always < 1
 	float maxt = m_tuneStepTrigger + m_tuneDutyFactor;
@@ -14,7 +14,7 @@ bool GaitPlayer::isInStance(float p_phi)
 		(maxt > 1.0f && ((p_phi >= m_tuneStepTrigger) || p_phi < maxt - 1.0f)); // if phase shifted out of bounds(>1), more than offset or less than len-1
 }
 
-float GaitPlayer::getSwingPhase(float p_phi)
+float StepCycle::getSwingPhase(float p_phi)
 {
 	// p_phi is always < 1
 	if (isInStance(p_phi)) return 0.0f;
@@ -40,7 +40,7 @@ float GaitPlayer::getSwingPhase(float p_phi)
 	return pos;
 }
 
-float GaitPlayer::getStancePhase(float p_phi)
+float StepCycle::getStancePhase(float p_phi)
 {
 	// p_t is always < 1
 	float maxt = m_tuneStepTrigger + m_tuneDutyFactor;
@@ -58,7 +58,7 @@ float GaitPlayer::getStancePhase(float p_phi)
 	return 0.0f;
 }
 
-void GaitPlayer::sanitize()
+void StepCycle::sanitize()
 {
 	if (m_tuneDutyFactor > 0.9999f)
 	{
