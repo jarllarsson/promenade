@@ -26,14 +26,14 @@ public:
 		m_matrixDirty = false;
 		m_transformRenderDirty = true;
 		m_position = glm::vec3(p_x,p_y,p_z);
-		m_rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f);
+		m_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 		m_scale = glm::vec3(1.0f);
 		updateMatrix();
 
 	};
 
 	TransformComponent(glm::vec3& p_position, 
-					   glm::quat& p_rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f),
+					   glm::quat& p_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f), // note, w first
 					   glm::vec3& p_scale  = glm::vec3(1.0f))
 	{
 		m_matrixDirty = false;
@@ -46,7 +46,7 @@ public:
 
 	TransformComponent(glm::vec3& p_position,
 					   glm::vec3& p_scale,
-					   glm::quat& p_rotation = glm::quat(0.0f, 0.0f, 0.0f, 1.0f))
+					   glm::quat& p_rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f)) // note, w first
 	{
 		m_matrixDirty = false;
 		m_transformRenderDirty = true;

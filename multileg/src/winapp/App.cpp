@@ -66,9 +66,11 @@ App::App( HINSTANCE p_hInstance )
 	m_controller = new TempController(0.0f,10.0f,-50.0f,0.0f);
 	m_input = new Input();
 	m_input->doStartup(m_context->getWindowHandle());
-	m_timeScale = 0.0f;
-	m_timeScaleToggle = true;
+	m_timeScale = 1.0f;
+	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
+	//
+	m_startPaused = true;
 	//
 	//for (int x = 0; x < 10; x++)
 	//for (int z = 0; z < 10; z++)
@@ -270,12 +272,12 @@ void App::run()
 	for (int x = 0; x < 4; x++)
 	{
 		artemis::Entity & legFrame = entityManager->create();
-		glm::vec3 pos = glm::vec3(glm::vec3(x*10.0f, 10.0f, 50.0f));
+		glm::vec3 pos = glm::vec3(glm::vec3(x*30.0f, 10.0f, 50.0f));
 		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 		legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 2.0f));
 		legFrame.addComponent(new RenderComponent());
 		legFrame.addComponent(new TransformComponent(pos,
-			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+			glm::quat(glm::vec3(90.0f, 0.0f, 0.0f)),
 			glm::vec3(2.0f, 4.0f, 2.0f)));
 		legFrame.refresh();
 		//
@@ -289,7 +291,9 @@ void App::run()
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f)); // note, h-lengths
 			childJoint.addComponent(new RenderComponent());
-			childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));					// note scale, so full lengths
+			childJoint.addComponent(new TransformComponent(pos,
+				/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
+				glm::vec3(1.0f, 4.0f, 1.0f)));					// note scale, so full lengths
 			ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child (this)
 				glm::vec3(0.0f, -2.0f, 0.0f),													  // parent
 				{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
@@ -350,7 +354,7 @@ void App::run()
 			//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
 
 			// Tick the bullet world. Keep in mind that bullet takes seconds
-			dynamicsWorld->stepSimulation((btScalar)1.0f/60.0f/*phys_dt*/, 10);
+			dynamicsWorld->stepSimulation((btScalar)/*1.0f/60.0f*/phys_dt, 10);
 			// ========================================================
 
 
@@ -524,7 +528,7 @@ void App::gameUpdate( double p_dt )
 
 	if (m_timePauseStepToggle && m_timeScale > 0.0f)
 		m_timeScale = 0.0f;
-	if (m_input->g_kb->isKeyDown(KC_RETURN))
+	if (m_input->g_kb->isKeyDown(KC_RETURN) || m_startPaused)
 	{
 		if (!m_timeScaleToggle)
 		{
@@ -533,6 +537,7 @@ void App::gameUpdate( double p_dt )
 			else
 				m_timeScale = 0.0f;
 			m_timeScaleToggle = true;
+			m_startPaused = false;
 		}
 	}
 	else

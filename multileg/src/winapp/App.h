@@ -76,6 +76,7 @@ private:
 	float m_timeScale;
 	bool m_timeScaleToggle;
 	bool m_timePauseStepToggle;
+	bool m_startPaused;
 
 	// Resource managers
 	//ResourceManager<btCollisionShape> m_collisionShapes;

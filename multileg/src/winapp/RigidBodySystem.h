@@ -186,7 +186,7 @@ void RigidBodySystem::setupConstraints(artemis::Entity *e)
 			glm::vec3 gchildAnchor = constraintdesc.m_localAnchor;
 			// put in btvectors
 			btVector3 parentAnchor(gparentAnchor.x, gparentAnchor.y, gparentAnchor.z);
-			btVector3 childanchor(gchildAnchor.x, gchildAnchor.y, gchildAnchor.z);
+			btVector3 childAnchor(gchildAnchor.x, gchildAnchor.y, gchildAnchor.z);
 			// Get limits
 			btVector3 angularLimLow(constraintdesc.m_angularDOF_LULimits[0].x, constraintdesc.m_angularDOF_LULimits[0].y, constraintdesc.m_angularDOF_LULimits[0].z);
 			btVector3 angularLimHigh(constraintdesc.m_angularDOF_LULimits[1].x, constraintdesc.m_angularDOF_LULimits[1].y, constraintdesc.m_angularDOF_LULimits[1].z);
@@ -198,10 +198,12 @@ void RigidBodySystem::setupConstraints(artemis::Entity *e)
 			// Y - second (allowed limits are (-PI/2 + epsilon, PI/2 - epsilon), where epsilon is a small positive number 
 			// Z - allowed limits are (-PI,PI);
 			btTransform frameInParent, frameInChild;
+			//frameInParent.setFromOpenGLMatrix(glm::value_ptr(parentTransform->getMatrixPosRot()));
 			frameInParent = btTransform::getIdentity();
 			frameInParent.setOrigin(parentAnchor);
+			//frameInChild.setFromOpenGLMatrix(glm::value_ptr(transform->getMatrixPosRot()));
 			frameInChild = btTransform::getIdentity();
-			frameInChild.setOrigin(childanchor);
+			frameInChild.setOrigin(childAnchor);
 			//
 			parentRigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
 			rigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
