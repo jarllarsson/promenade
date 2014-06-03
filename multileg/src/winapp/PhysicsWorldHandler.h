@@ -29,7 +29,7 @@ public:
 	void myProcessCallback(btScalar timeStep) 
 	{
 		//// Character controller
-		m_controllerSystem->start((float)timeStep); // might want this in post tick instead? Have it here for now
+		m_controllerSystem->update((float)timeStep); // might want this in post tick instead? Have it here for now
 		//// Physics
 		//btCollisionObjectArray objects = m_world->getCollisionObjectArray();
 		//m_world->clearForces();

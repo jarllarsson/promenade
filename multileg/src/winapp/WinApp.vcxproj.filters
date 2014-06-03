@@ -19,6 +19,9 @@
     <Filter Include="Entity System\Locomotion">
       <UniqueIdentifier>{7d0ed79b-c89d-4b01-8ac3-c72ee684ef11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity System\Locomotion\Gait">
+      <UniqueIdentifier>{1a8f745d-7061-46b5-af79-f2c0a4b030d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -60,6 +63,9 @@
     <ClInclude Include="ControllerComponent.h">
       <Filter>Entity System\Locomotion</Filter>
     </ClInclude>
+    <ClInclude Include="GaitPlayer.h">
+      <Filter>Entity System\Locomotion\Gait</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -72,5 +78,11 @@
       <Filter>TempLogic</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ControllerSystem.cpp">
+      <Filter>Entity System\Locomotion</Filter>
+    </ClCompile>
+    <ClCompile Include="GaitPlayer.cpp">
+      <Filter>Entity System\Locomotion\Gait</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

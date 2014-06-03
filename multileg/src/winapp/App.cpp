@@ -277,7 +277,7 @@ void App::run()
 		legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 2.0f));
 		legFrame.addComponent(new RenderComponent());
 		legFrame.addComponent(new TransformComponent(pos,
-			glm::quat(glm::vec3(90.0f, 0.0f, 0.0f)),
+			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 			glm::vec3(2.0f, 4.0f, 2.0f)));
 		legFrame.refresh();
 		//
