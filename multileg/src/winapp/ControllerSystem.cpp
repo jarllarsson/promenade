@@ -95,6 +95,7 @@ void ControllerSystem::buildCheck()
 	{
 		ControllerComponent* controller = m_controllersToBuild[i];
 		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
+		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
 		ControllerComponent::Chain* legChain = &controller->m_DOFChain;
 		// Build the controller (Temporary code)
 		// The below should be done for each leg (even the root)
@@ -102,6 +103,7 @@ void ControllerSystem::buildCheck()
 		RigidBodyComponent* rootRB = (RigidBodyComponent*)legFrameEntities->m_legFrameEntity->getComponent<RigidBodyComponent>();
 		TransformComponent* rootTransform = (TransformComponent*)legFrameEntities->m_legFrameEntity->getComponent<TransformComponent>();
 		unsigned int rootIdx = addJoint(rootRB, rootTransform);
+		legFrame->m_legFrameJointId = rootIdx; // store idx to root for leg frame
 		glm::vec3 DOF;
 		for (int n = 0; n < 3; n++)
 		{
@@ -200,11 +202,13 @@ void ControllerSystem::saveJointWorldEndpoint(unsigned int p_idx, glm::mat4& p_w
 void ControllerSystem::controllerUpdate(int p_controllerId, float p_dt)
 {
 	float dt = p_dt;
+	ControllerComponent* controller = m_controllers[p_controllerId];
 	// m_currentVelocity = transform.position - m_oldPos;
 	//calcHeadAcceleration();
 
 	// Advance the player
 	//m_player.updatePhase(dt);
+	controller->m_player.updatePhase(dt);
 
 	// Update desired velocity
 	//updateDesiredVelocity(dt);

@@ -106,6 +106,7 @@ public:
 	struct LegFrame
 	{
 		std::vector<StepCycle> m_stepCycles;
+		unsigned int m_legFrameJointId;
 	};
 
 	// Construction description struct for leg frames
