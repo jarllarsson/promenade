@@ -103,3 +103,8 @@ glm::vec3 MathHelp::transformPosition(const glm::mat4& m, glm::vec3& p_pos)
 	p_pos.x = vec.x; p_pos.y = vec.y; p_pos.z = vec.z;
 	return p_pos;
 }
+
+glm::vec3 MathHelp::toVec3(const glm::vec4& p_v)
+{
+	return glm::vec3(p_v.x, p_v.y, p_v.z);
+}

@@ -141,6 +141,7 @@ void ControllerSystem::buildCheck()
 		}
 		//
 		m_controllers.push_back(controller);
+		initControllerVelocityStat(m_controllers.size() - 1);
 	}
 	m_controllersToBuild.clear();
 }
@@ -223,5 +224,19 @@ void ControllerSystem::controllerUpdate(int p_controllerId, float p_dt)
 	//debugColorLegs();
 
 	//m_oldPos = transform.position;
+}
+
+void ControllerSystem::initControllerVelocityStat(unsigned int p_idx)
+{
+	ControllerComponent* controller = m_controllers[p_idx];
+	unsigned int legFrameJointId = controller->getLegFrame(0)->m_legFrameJointId;
+	glm::vec3 pos = MathHelp::toVec3(m_jointWorldTransforms[legFrameJointId] * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	VelocityStat vstat{ pos, glm::vec3(0.0f), glm::vec3(0.0f) };
+	m_controllerVelocityStats.push_back(vstat);
+}
+
+void ControllerSystem::updateCurrentVelocity(int p_controllerId)
+{
+
 }
 

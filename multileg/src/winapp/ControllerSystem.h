@@ -25,9 +25,18 @@
 class ControllerSystem : public artemis::EntityProcessingSystem
 {
 private:
+	struct VelocityStat
+	{
+		glm::vec3 m_oldPos;
+		glm::vec3 m_currentVelocity;
+		glm::vec3 m_desiredVelocity;
+	};
+
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
+	// Controller run-time data
 	std::vector<ControllerComponent*> m_controllersToBuild;
 	std::vector<ControllerComponent*> m_controllers;
+	std::vector<VelocityStat>		  m_controllerVelocityStats;
 	// Joint run-time data
 	std::vector<glm::vec3>		m_jointTorques;
 	std::vector<btRigidBody*>	m_jointRigidBodies;
@@ -67,11 +76,13 @@ public:
 private:
 	// Control logic functions
 	void controllerUpdate(int p_controllerId, float p_dt);
+	void updateCurrentVelocity(int p_controllerId);
 
 	// Helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
 	void saveJointMatrix(unsigned int p_rigidBodyIdx);
 	void saveJointWorldEndpoint(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
+	void initControllerVelocityStat(unsigned int p_idx);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 
 	// global variables

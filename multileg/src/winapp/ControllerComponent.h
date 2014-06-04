@@ -38,9 +38,10 @@ public:
 	};
 
 
-	// Playback data and handler
+	// Playback specific data and handlers
 	// ==============================================================================
 	GaitPlayer m_player;
+	glm::vec3 m_goalVelocity;
 
 
 	// Chain constructs
@@ -65,6 +66,9 @@ public:
 	Chain m_DOFChainGravityComp;
 
 	// ==============================================================================
+
+
+
 
 
 	// Constructor and Destructor
