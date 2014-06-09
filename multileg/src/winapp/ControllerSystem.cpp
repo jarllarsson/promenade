@@ -162,15 +162,6 @@ unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, Tr
 	return idx; // return idx of inserted
 }
 
-glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
-{
-	if (p_id == 0)
-		return glm::vec3(1.0f, 0.0f, 0.0f);
-	else if (p_id == 1)
-		return glm::vec3(0.0f, 1.0f, 0.0f);
-	else
-		return glm::vec3(0.0f, 0.0f, 1.0f);
-}
 
 void ControllerSystem::saveJointMatrix(unsigned int p_rigidBodyIdx)
 {
@@ -212,7 +203,7 @@ void ControllerSystem::controllerUpdate(int p_controllerId, float p_dt)
 	controller->m_player.updatePhase(dt);
 
 	// Update desired velocity
-	//updateDesiredVelocity(dt);
+	updateVelocityStats(p_controllerId, p_dt);
 
 	// update feet positions
 	//updateFeet();
@@ -225,18 +216,72 @@ void ControllerSystem::controllerUpdate(int p_controllerId, float p_dt)
 
 	//m_oldPos = transform.position;
 }
+void ControllerSystem::updateVelocityStats(int p_controllerId, float p_dt)
+{
+	glm::vec3 pos = getControllerPosition(p_controllerId);
+	// Update the current velocity
+	glm::vec3 currentV = pos - m_controllerVelocityStats[p_controllerId].m_oldPos;
+	m_controllerVelocityStats[p_controllerId].m_currentVelocity = currentV;
+	// Store this position
+	m_controllerVelocityStats[p_controllerId].m_oldPos = pos;
+	// Calculate the desired velocity needed in order to reach the goal
+	// velocity from the current velocity
+	// Function for deciding the current desired velocity in order
+	// to reach the goal velocity
+	glm::vec3 goalV = m_controllerVelocityStats[p_controllerId].m_goalVelocity;
+	glm::vec3 desiredV = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
+	float goalSqrMag = glm::sqrLength(goalV);
+	float currentSqrMag = glm::sqrLength(currentV);
+	float stepSz = 0.5f * p_dt;
+	// Note the material doesn't mention taking dt into 
+	// account for the step size, they might be running fixed timestep
+	// Here the dt received is the time since we last ran the control logic
+	//
+	// If the goal is faster
+	if (goalSqrMag > currentSqrMag)
+	{
+		// Take steps no bigger than 0.5m/s
+		if (goalSqrMag >= currentSqrMag + stepSz)
+			desiredV = goalV;
+		else
+			desiredV += glm::normalize(currentV) * stepSz;
+	}
+	else // if the goal is slower
+	{
+		// Take steps no smaller than 0.5
+		if (goalSqrMag <= currentSqrMag - stepSz)
+			desiredV = goalV;
+		else
+			desiredV -= glm::normalize(currentV) * stepSz;
+	}
+	m_controllerVelocityStats[p_controllerId].m_desiredVelocity = desiredV;
+}
+
 
 void ControllerSystem::initControllerVelocityStat(unsigned int p_idx)
 {
-	ControllerComponent* controller = m_controllers[p_idx];
-	unsigned int legFrameJointId = controller->getLegFrame(0)->m_legFrameJointId;
-	glm::vec3 pos = MathHelp::toVec3(m_jointWorldTransforms[legFrameJointId] * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	glm::vec3 pos = getControllerPosition(p_idx);
 	VelocityStat vstat{ pos, glm::vec3(0.0f), glm::vec3(0.0f) };
 	m_controllerVelocityStats.push_back(vstat);
 }
 
-void ControllerSystem::updateCurrentVelocity(int p_controllerId)
+glm::vec3 ControllerSystem::getControllerPosition(unsigned int p_controllerId)
 {
+	ControllerComponent* controller = m_controllers[p_controllerId];
+	unsigned int legFrameJointId = controller->getLegFrame(0)->m_legFrameJointId;
+	glm::vec3 pos = MathHelp::toVec3(m_jointWorldTransforms[legFrameJointId] * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	return pos;
+}
 
+
+
+glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
+{
+	if (p_id == 0)
+		return glm::vec3(1.0f, 0.0f, 0.0f);
+	else if (p_id == 1)
+		return glm::vec3(0.0f, 1.0f, 0.0f);
+	else
+		return glm::vec3(0.0f, 0.0f, 1.0f);
 }
 

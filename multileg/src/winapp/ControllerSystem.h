@@ -30,6 +30,7 @@ private:
 		glm::vec3 m_oldPos;
 		glm::vec3 m_currentVelocity;
 		glm::vec3 m_desiredVelocity;
+		glm::vec3 m_goalVelocity;
 	};
 
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
@@ -76,13 +77,14 @@ public:
 private:
 	// Control logic functions
 	void controllerUpdate(int p_controllerId, float p_dt);
-	void updateCurrentVelocity(int p_controllerId);
+	void updateVelocityStats(int p_controllerId, float p_dt);
 
 	// Helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
 	void saveJointMatrix(unsigned int p_rigidBodyIdx);
 	void saveJointWorldEndpoint(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
 	void initControllerVelocityStat(unsigned int p_idx);
+	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 
 	// global variables

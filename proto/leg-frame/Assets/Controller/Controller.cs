@@ -526,7 +526,7 @@ public class Controller : MonoBehaviour, IOptimizable
     void updateDesiredVelocity(float p_dt)
     {
         float goalSqrMag=m_goalVelocity.sqrMagnitude;
-        float currentSqrMag=m_goalVelocity.sqrMagnitude;
+        float currentSqrMag=m_currentVelocity.sqrMagnitude;
         float stepSz = 0.5f * p_dt;
         // Note the material doesn't mention taking dt into 
         // account for the step size, they might be running fixed timestep
