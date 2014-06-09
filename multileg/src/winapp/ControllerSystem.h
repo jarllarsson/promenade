@@ -78,6 +78,8 @@ private:
 	// Control logic functions
 	void controllerUpdate(int p_controllerId, float p_dt);
 	void updateVelocityStats(int p_controllerId, float p_dt);
+	void updateFeet(int p_controllerId);
+	void updateTorques(int p_controllerId, float p_dt);
 
 	// Helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);

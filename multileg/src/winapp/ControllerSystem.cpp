@@ -220,10 +220,10 @@ void ControllerSystem::controllerUpdate(int p_controllerId, float p_dt)
 	updateVelocityStats(p_controllerId, p_dt);
 
 	// update feet positions
-	//updateFeet();
+	updateFeet(p_controllerId);
 
 	// Recalculate all torques for this frame
-	//updateTorques(dt);
+	updateTorques(p_controllerId, dt);
 
 	// Debug color of legs when in stance
 	//debugColorLegs();
@@ -297,5 +297,36 @@ glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
 		return glm::vec3(0.0f, 1.0f, 0.0f);
 	else
 		return glm::vec3(0.0f, 0.0f, 1.0f);
+}
+
+void ControllerSystem::updateFeet( int p_controllerId )
+{
+	//for (int i = 0; i < m_legFrames.Length; i++)
+	//{
+	//	m_legFrames[i].updateReferenceFeetPositions(m_player.m_gaitPhase, m_time, m_goalVelocity);
+	//	m_legFrames[i].updateFeet(m_player.m_gaitPhase, m_currentVelocity, m_desiredVelocity);
+	//	//m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase);
+	//}
+}
+
+void ControllerSystem::updateTorques(int p_controllerId, float p_dt)
+{
+	//float phi = m_player.m_gaitPhase;
+	//// Get the two variants of torque
+	//Vector3[] tPD = computePDTorques(phi);
+	//Vector3[] tCGVF = computeCGVFTorques(phi, p_dt);
+	//Vector3[] tVF = computeVFTorques(phi, p_dt);
+	//// Sum them
+	//for (int i = 0; i < m_jointTorques.Length; i++)
+	//{
+	//	m_jointTorques[i] = tPD[i] + tVF[i] + tCGVF[i];
+	//}
+	//
+	//// Apply them to the leg frames, also
+	//// feed back corrections for hip joints
+	//for (int i = 0; i < m_legFrames.Length; i++)
+	//{
+	//	m_jointTorques = m_legFrames[i].applyNetLegFrameTorque(m_jointTorques, phi);
+	//}
 }
 

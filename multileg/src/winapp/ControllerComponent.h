@@ -95,6 +95,30 @@ public:
 		m_legFrames.push_back(legFrame);
 	}
 
+	ControllerComponent(artemis::Entity* p_legFrame, std::vector<artemis::Entity*>& p_hipJoints)
+	{
+		// for each inputted leg-frame entity...
+
+		// Set up the entity-based leg frame representation
+		// This is simply a struct of pointers to the artemis equivalents of
+		// what the controller system will work with as joints and decomposed DOF-chains
+		LegFrameEntityConstruct legFrameEntityConstruct;
+		legFrameEntityConstruct.m_legFrameEntity = p_legFrame;
+		// Add all legs to it
+		for (int i = 0; i < p_hipJoints.size();i++)
+		{
+			legFrameEntityConstruct.m_upperLegEntities.push_back(p_hipJoints[i]);
+
+		}			
+		// add to our list of constructs
+		m_legFrameEntityConstructs.push_back(legFrameEntityConstruct);
+		// Create the leg frame data struct as well
+		// Allocate it according to number of leg entities that was inputted
+		LegFrame legFrame;
+		legFrame.m_stepCycles.resize(legFrameEntityConstruct.m_upperLegEntities.size());
+		m_legFrames.push_back(legFrame);
+	}
+
 	virtual ~ControllerComponent() {}
 
 

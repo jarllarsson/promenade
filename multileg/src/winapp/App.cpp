@@ -70,7 +70,7 @@ App::App( HINSTANCE p_hInstance )
 	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
 	//
-	m_startPaused = false;
+	m_startPaused = true;
 	//
 	//for (int x = 0; x < 10; x++)
 	//for (int z = 0; z < 10; z++)
@@ -271,43 +271,76 @@ void App::run()
 	//}
 
 	// Test of controller
-	for (int x = 0; x < 4; x++)
+	float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
+	for (int x = 0; x < 4; x++) // number of characters
 	{
 		artemis::Entity & legFrame = entityManager->create();
-		glm::vec3 pos = glm::vec3(glm::vec3(x*30.0f, 10.0f, 50.0f));
+		glm::vec3 pos = glm::vec3(x*30.0f, 10.0f, 50.0f);
 		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-		legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 2.0f));
+		glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, 2.0f);
+		legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f));
 		legFrame.addComponent(new RenderComponent());
 		legFrame.addComponent(new TransformComponent(pos,
 			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-			glm::vec3(2.0f, 4.0f, 2.0f)));
+			lfSize));
 		legFrame.refresh();
 		//
-		artemis::Entity* prev = &legFrame;
-		artemis::Entity* upperLegSegment = NULL;
-		for (int i = 0; i < 2; i++)
-		{
-			artemis::Entity & childJoint = entityManager->create();
-			if (i == 0) upperLegSegment = &childJoint;
-			pos -= glm::vec3(glm::vec3(0.0f, 5.0f, 0.0f));
-			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f)); // note, h-lengths
-			childJoint.addComponent(new RenderComponent());
-			childJoint.addComponent(new TransformComponent(pos,
-				/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
-				glm::vec3(1.0f, 4.0f, 1.0f)));					// note scale, so full lengths
-			ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child (this)
-				glm::vec3(0.0f, -2.0f, 0.0f),													  // parent
-				{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
-				false };
-			childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
-			childJoint.refresh();
-			prev = &childJoint;
+		vector<artemis::Entity*> hipJoints;
+		// Number of leg frames per character
+		for (int n = 0; n < 2; n++) // number of legs per frame
+		{		
+			artemis::Entity* prev = &legFrame;
+			artemis::Entity* upperLegSegment = NULL;
+			float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
+			glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
+			glm::vec3 boxSize=glm::vec3(1.0f, 4.0f, 1.0f);
+			for (int i = 0; i < 3; i++) // number of segments per leg
+			{
+				artemis::Entity & childJoint = entityManager->create();
+				float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
+				float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
+				glm::vec3 parentSz = boxSize;
+				boxSize = glm::vec3(1.0f, 4.0f, 1.0f); // set new size for current box
+				// segment specific constraint params
+				glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
+				glm::vec3 upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+				if (i == 0) // if hip joint
+				{
+					upperLegSegment = &childJoint;
+					jointXOffsetFromParent = currentHipJointCoronalOffset;
+				}
+				else if (i == 1) // if knee
+				{
+					lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+				}
+				else if (i == 2) // if foot
+				{
+					jointZOffsetInChild = 1.0f;
+					boxSize = glm::vec3(1.3f, 1.0f, 2.0f);
+					lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+					upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+				}
+				legpos -= glm::vec3(glm::vec3(0.0f, parentSz.y*1.1f, jointZOffsetInChild));
+				//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+				childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f)); // note, h-lengths
+				childJoint.addComponent(new RenderComponent());
+				childJoint.addComponent(new TransformComponent(legpos,
+					/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
+					boxSize));					// note scale, so full lengths
+				ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, jointZOffsetInChild),	  // child (this)
+					glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
+					{ lowerAngleLim, upperAngleLim },
+					false };
+				childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
+				childJoint.refresh();
+				prev = &childJoint;
+			}
+			hipJoints.push_back(upperLegSegment);
 		}
 		// Controller
 		artemis::Entity & controller = entityManager->create();
 		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-		controller.addComponent(new ControllerComponent(&legFrame, upperLegSegment));
+		controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
 		controller.refresh();
 	}
 
@@ -354,7 +387,7 @@ void App::run()
 
 			prevTimeStamp = currTimeStamp;
 
-			if (time>10.0) run = false;
+			//if (time>10.0) run = false;
 
 			// Game Clock part of the loop
 			// ========================================================
@@ -379,7 +412,7 @@ void App::run()
 		}
 
 	}
-
+	/*
 #ifndef MULTI
 	#ifdef _DEBUG
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
@@ -393,7 +426,7 @@ void App::run()
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_MTCPU");
 	#endif
 #endif
-
+	*/
 
 	entityManager->removeAllEntities();
 
