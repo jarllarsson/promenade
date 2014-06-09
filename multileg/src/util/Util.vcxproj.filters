@@ -31,5 +31,8 @@
   <ItemGroup>
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="MathHelp.cpp" />
+    <ClCompile Include="MeasurementBin.cpp">
+      <Filter>Measurement</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

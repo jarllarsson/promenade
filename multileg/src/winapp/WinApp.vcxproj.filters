@@ -108,5 +108,8 @@
     <ClCompile Include="RenderComponent.cpp">
       <Filter>Entity System\Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="RigidBodySystem.cpp">
+      <Filter>Entity System\Physics\Rigidbodies</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

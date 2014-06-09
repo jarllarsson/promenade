@@ -36,19 +36,19 @@ void ControllerSystem::update(float p_dt)
 		saveJointMatrix(i);
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
-
+	int controllerCount = m_controllers.size();
 	if (m_controllers.size()>0)
 	{
 		// Start with making the controllers parallel only.
 		// They still write to a global torque list, but without collisions.
 #ifndef MULTI
 		// Single threaded implementation
-		for (int n = 0; n < m_controllers.size(); n++)
+		for (int n = 0; n < controllerCount; n++)
 		{
 			ControllerComponent* controller = m_controllers[n];
 			ControllerComponent::Chain* legChain = &controller->m_DOFChain;
 			// Run controller code here
-
+			controllerUpdate(n, p_dt);
 			for (unsigned int i = 0; i < legChain->getSize(); i++)
 			{
 				unsigned int tIdx = legChain->jointIDXChain[i];
@@ -60,12 +60,26 @@ void ControllerSystem::update(float p_dt)
 #else
 		// Multi threaded CPU implementation
 		//concurrency::combinable<glm::vec3> sumtorques;
-		concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
+		concurrency::parallel_for(0, controllerCount, [&](int n) {
+			ControllerComponent* controller = m_controllers[n];
+			ControllerComponent::Chain* legChain = &controller->m_DOFChain;
+			// Run controller code here
+			controllerUpdate(n, p_dt);
+			for (unsigned int i = 0; i < legChain->getSize(); i++)
+			{
+				unsigned int tIdx = legChain->jointIDXChain[i];
+				glm::vec3 torqueBase = legChain->DOFChain[i];
+				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
+				m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
+			}
+		});
+		/*concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
 			unsigned int tIdx = legChain->jointIDXChain[i];
 			glm::vec3 torqueBase = legChain->DOFChain[i];
 			glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
-			m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
+			m_jointTorques[tIdx] += torqueBase*13.0f;
 		});
+	*/
 
 #endif
 

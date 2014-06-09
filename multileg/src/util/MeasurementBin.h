@@ -29,6 +29,7 @@ public:
 	bool saveResults(const string& p_fileName);
 	void saveMeasurement(T p_measurement);
 	void saveMeasurement(T p_measurement, float p_timeStamp);
+	void saveMeasurementRelTStamp(T p_measurement, float p_deltaTimeStamp);
 	bool isActive();
 private:
 	vector<T> m_measurements;
@@ -54,19 +55,6 @@ float MeasurementBin<T>::calculateMean()
 	return 0.0f;
 }
 
-template<>
-float MeasurementBin<float>::calculateMean()
-{
-	double accumulate = 0.0;
-	unsigned int count = (unsigned int)m_measurements.size();
-	for (unsigned int i = 0; i < count; i++)
-	{
-		accumulate += (double)m_measurements[i];
-	}
-	m_mean = accumulate / (double)count;
-	return (float)m_mean;
-}
-
 template<class T>
 float MeasurementBin<T>::calculateSTD()
 {
@@ -75,21 +63,10 @@ float MeasurementBin<T>::calculateSTD()
 
 
 template<>
-float MeasurementBin<float>::calculateSTD()
-{
-	float mean = calculateMean();
-	unsigned int count = (unsigned int)m_measurements.size();
-	double squaredDistsToMean = 0.0;
-	for (unsigned int i = 0; i < count; i++)
-	{
-		double dist = (double)m_measurements[i] - (double)mean;
-		squaredDistsToMean += dist*dist;
-	}
-	double standardDeviation = sqrt(squaredDistsToMean / (double)count);
-	m_std = standardDeviation;
-	return (float)standardDeviation;
-}
+float MeasurementBin<float>::calculateMean();
 
+template<>
+float MeasurementBin<float>::calculateSTD();
 
 template<class T>
 bool MeasurementBin<T>::saveResults(const string& p_fileName)
@@ -182,4 +159,16 @@ template<class T>
 bool MeasurementBin<T>::isActive()
 {
 	return m_active;
+}
+
+template<class T>
+void MeasurementBin<T>::saveMeasurementRelTStamp(T p_measurement, float p_deltaTimeStamp)
+{
+	if (m_active)
+	{
+		float oldTimeStamp = 0.0f;
+		if (m_timestamps.size() > 0) oldTimeStamp = m_timestamps.back();
+		m_measurements.push_back(p_measurement);
+		m_timestamps.push_back(p_deltaTimeStamp+oldTimeStamp);
+	}
 }

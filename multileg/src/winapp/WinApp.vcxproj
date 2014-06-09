@@ -173,6 +173,7 @@
     <ClCompile Include="ControllerSystem.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
+    <ClCompile Include="RigidBodySystem.cpp" />
     <ClCompile Include="StepCycle.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TempController.cpp" />

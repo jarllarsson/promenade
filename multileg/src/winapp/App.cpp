@@ -70,7 +70,7 @@ App::App( HINSTANCE p_hInstance )
 	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
 	//
-	m_startPaused = true;
+	m_startPaused = false;
 	//
 	//for (int x = 0; x < 10; x++)
 	//for (int z = 0; z < 10; z++)
@@ -132,14 +132,16 @@ void App::run()
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 	dynamicsWorld->setGravity(btVector3(0, -9.82, 0));
 
-
+	// Measurements
+	MeasurementBin<string> rigidBodyStateDbgRecorder;
+	// measurer.activate();
 
 	// Artemis
 	// Create and initialize systems
 	artemis::SystemManager * sysManager = m_world.getSystemManager();
 	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 	//addGameLogic(movementsys);
-	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
+	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
 	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem());
 	sysManager->initializeAll();
@@ -157,28 +159,28 @@ void App::run()
 	artemis::EntityManager * entityManager = m_world.getEntityManager();
 
 	// Create a box entity
-	for (int i = 0; i < 100;i++)
-	{
-		artemis::Entity & box = entityManager->create();
-		glm::vec3 pos = glm::vec3(20.0f*sin(i*0.1f), 10.0f + i*4.0f, 20.0f*cos(i*0.1f));
-			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-		box.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f));
-		box.addComponent(new RenderComponent());
-		box.addComponent(new TransformComponent(pos,
-			glm::quat(glm::vec3(TWOPI*0.05f, 0.0f, 0.0f))
-			));
-		box.refresh();
-	}
-
-	artemis::Entity & box = entityManager->create();
-	glm::vec3 pos = glm::vec3(0.0f);
-	RigidBodyComponent* rb = new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f);
-	box.addComponent(rb);
-	box.addComponent(new RenderComponent());
-	box.addComponent(new TransformComponent(pos,
-		glm::quat(glm::vec3(TWOPI*0.05f, 0.0f, 0.0f))
-		));
-	box.refresh();
+	//for (int i = 0; i < 100;i++)
+	//{
+	//	artemis::Entity & box = entityManager->create();
+	//	glm::vec3 pos = glm::vec3(20.0f*sin(i*0.1f), 10.0f + i*4.0f, 20.0f*cos(i*0.1f));
+	//		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+	//	box.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f));
+	//	box.addComponent(new RenderComponent());
+	//	box.addComponent(new TransformComponent(pos,
+	//		glm::quat(glm::vec3(TWOPI*0.05f, 0.0f, 0.0f))
+	//		));
+	//	box.refresh();
+	//}
+	//
+	//artemis::Entity & box = entityManager->create();
+	//glm::vec3 pos = glm::vec3(0.0f);
+	//RigidBodyComponent* rb = new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f);
+	//box.addComponent(rb);
+	//box.addComponent(new RenderComponent());
+	//box.addComponent(new TransformComponent(pos,
+	//	glm::quat(glm::vec3(TWOPI*0.05f, 0.0f, 0.0f))
+	//	));
+	//box.refresh();
 
 	// Create a ground entity
 
@@ -310,9 +312,6 @@ void App::run()
 	}
 
 
-	MeasurementBin<string> measurer;
-	measurer.activate();
-
 	// Message pump struct
 	MSG msg = {0};
 
@@ -331,16 +330,10 @@ void App::run()
 			render();
 
 			double time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
-			//if (time>19.0)
-			//{
-			//	if (rb->isInited())
-			//	{
-			//		btTransform btt;
-			//		rb->getRigidBody()->getMotionState()->getWorldTransform(btt);
-			//		measurer.saveMeasurement(string("x: ") + toString(btt.getOrigin().x()) + ",y: " + toString(btt.getOrigin().y()) + ",z: " + toString(btt.getOrigin().z()),
-			//			time);
-			//	}
-			//}
+			if (time > 5.0)
+			{
+				rigidBodyStateDbgRecorder.activate();
+			}
 
 			// Physics handling part of the loop
 			// ========================================================
@@ -361,7 +354,7 @@ void App::run()
 
 			prevTimeStamp = currTimeStamp;
 
-			//if (time>20.0) run = false;
+			if (time>10.0) run = false;
 
 			// Game Clock part of the loop
 			// ========================================================
@@ -387,12 +380,19 @@ void App::run()
 
 	}
 
-	//#ifdef _DEBUG
-	//	measurer.saveResults("../output/determinismTest_Debug");
-	//#else
-	//	measurer.saveResults("../output/determinismTest_Release");
-	//#endif
-
+#ifndef MULTI
+	#ifdef _DEBUG
+		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
+	#else
+		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_STCPU");
+	#endif
+#else
+	#ifdef _DEBUG
+		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_MTCPU");
+	#else
+		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_MTCPU");
+	#endif
+#endif
 
 
 	entityManager->removeAllEntities();
@@ -558,62 +558,18 @@ void App::gameUpdate( double p_dt )
 	}
 
 
-	//for (unsigned int i = 1; i < m_instances->getElementCount();i++)
-	//{
-	//	glm::mat4* firstTransform = m_instances->readElementPtrAt(i);
-	//	*firstTransform = glm::transpose(*firstTransform);
-	//	*firstTransform *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin(i)+cos(i), 0.0f)*0.1f*(float)p_dt);
-	//	*firstTransform = glm::transpose(*firstTransform);
-	//	//m_instances->writeElementAt(i, firstTransform);
-	//	//m_instances[0].accessBuffer = firstTransform;
-	//	int x = 0;
-	//}
-	//m_instances->update();
-
 	// Update entity systems
 	m_world.loopStart();
 	m_world.setDelta(game_dt);
 	// Physics result gathering have to run first
 	m_rigidBodySystem->executeDeferredConstraintInits();
 	m_rigidBodySystem->process();
+	m_rigidBodySystem->lateUpdate();
 	m_controllerSystem->buildCheck();
 	// Run all other systems, for which order doesn't matter
 	processSystemCollection(&m_orderIndependentSystems);
 	// Render system is processed last
 	m_renderSystem->process();
-
-
-	// Run the devices
-	// ---------------------------------------------------------------------------------------------
-
-	//int v[11] = {'G', 'd', 'k', 'k', 'n', 31, 'v', 'n', 'q', 'k', 'c'};
-	//
-	//// Serial (CPU)
-	//
-	//
-	//// PPL (CPU)
-	//int pplRes[11];
-	//concurrency::parallel_for(0, 11, [&](int n) {
-	//	pplRes[n]=v[n]+1;
-	//});
-	//for(unsigned int i = 0; i < 11; i++) 
-	//	std::cout << static_cast<char>(pplRes[i]); 
-	//
-	//// C++AMP (GPU)
-	//concurrency::array_view<int> av(11, v); 
-	//concurrency::parallel_for_each(av.extent, [=](concurrency::index<1> idx) restrict(amp) 
-	//{ 
-	//	av[idx] += 1; 
-	//});
-	//
-	//
-	//// Print C++AMP
-	//for (unsigned int i = 0; i < 11; i++)
-	//{
-	//	char ch = static_cast<char>(av[i]);
-	//	DEBUGPRINT(( toString(ch).c_str() ));
-	//}
-	//DEBUGPRINT((string("\n").c_str()));
 }
 
 
