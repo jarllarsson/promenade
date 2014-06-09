@@ -141,7 +141,7 @@ void App::run()
 	artemis::SystemManager * sysManager = m_world.getSystemManager();
 	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 	//addGameLogic(movementsys);
-	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
+	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld/*, &rigidBodyStateDbgRecorder*/));
 	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem());
 	sysManager->initializeAll();
@@ -185,11 +185,11 @@ void App::run()
 	// Create a ground entity
 
 	artemis::Entity & ground = entityManager->create();
-	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(100.0f, 10.0f, 100.0f)), 0.0f));
+	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f));
 	ground.addComponent(new RenderComponent());
 	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -20.0f, 0.0f), 
 		glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-		glm::vec3(200.0f, 20.0f, 200.0f)));
+		glm::vec3(800.0f, 20.0f, 800.0f)));
 	ground.refresh();
 
 
