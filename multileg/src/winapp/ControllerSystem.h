@@ -20,7 +20,7 @@
 /// 20-5-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-//#define MULTI
+#define MULTI
 
 class ControllerSystem : public artemis::EntityProcessingSystem
 {

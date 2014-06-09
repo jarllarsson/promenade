@@ -1,0 +1,71 @@
+x64
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Test_Debug is a Catch v1.0 b27 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Shortening of vec4 to vec3
+-------------------------------------------------------------------------------
+c:\projects\exjobb\multileg\src\test\Other.h(7)
+...............................................................................
+
+c:\projects\exjobb\multileg\src\test\Other.h(8): 
+PASSED:
+  REQUIRE( MathHelp::toVec3(glm::vec4(1.4f, 3.4f, 5.5f, 1.0f)) == glm::vec3(1.4f, 3.4f, 5.5f) )
+with expansion:
+  {?} == {?}
+
+c:\projects\exjobb\multileg\src\test\Other.h(9): 
+PASSED:
+  REQUIRE( MathHelp::toVec3(glm::vec4(-4000.0f, 0.1f, 1.0f, 0.0f)) == glm::vec3(-4000.0f, 0.1f, 1.0f) )
+with expansion:
+  {?} == {?}
+
+c:\projects\exjobb\multileg\src\test\Other.h(10): 
+PASSED:
+  REQUIRE( MathHelp::toVec3(glm::vec4(1000.0f, 0.768768f, 200.2f, 1.0f)) == glm::vec3(1000.0f, 0.768768f, 200.2f) )
+with expansion:
+  {?} == {?}
+
+c:\projects\exjobb\multileg\src\test\Other.h(11): 
+PASSED:
+  REQUIRE( MathHelp::toVec3(glm::vec4(0.0f, 3.4f, 5.5f, 0.0f)) == glm::vec3(0.0f, 3.4f, 5.5f) )
+with expansion:
+  {?} == {?}
+
+-------------------------------------------------------------------------------
+Factorials are computed
+-------------------------------------------------------------------------------
+main.cpp(21)
+...............................................................................
+
+main.cpp(22): 
+PASSED:
+  REQUIRE( Factorial(1) == 1 )
+with expansion:
+  1 == 1
+
+main.cpp(23): 
+PASSED:
+  REQUIRE( Factorial(2) == 2 )
+with expansion:
+  2 == 2
+
+main.cpp(24): 
+PASSED:
+  REQUIRE( Factorial(3) == 6 )
+with expansion:
+  6 == 6
+
+main.cpp(25): 
+PASSED:
+  REQUIRE( Factorial(10) == 3628800 )
+with expansion:
+  0x375f00 == 3628800
+
+===============================================================================
+All tests passed (8 assertions in 2 test cases)
+
+x86
+Press any key to continue . . . 

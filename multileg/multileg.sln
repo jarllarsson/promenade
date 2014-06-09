@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinApp", "src\Winapp\WinApp.vcxproj", "{9023A245-3A51-49B1-8C30-D330A84C86CE}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -40,6 +40,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BulletPhysicsTest", "src\Bu
 		{4340769A-7060-4048-A435-FE71D94CAA85} = {4340769A-7060-4048-A435-FE71D94CAA85}
 		{C90682F8-A3D4-4B84-973A-70E2774DF42D} = {C90682F8-A3D4-4B84-973A-70E2774DF42D}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "src\Test\Test.vcxproj", "{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -159,6 +161,18 @@ Global
 		{54DAD478-3085-4323-BBB8-8F6CA5438008}.Release|Win32.Build.0 = Release|Win32
 		{54DAD478-3085-4323-BBB8-8F6CA5438008}.Release|x64.ActiveCfg = Release|x64
 		{54DAD478-3085-4323-BBB8-8F6CA5438008}.Release|x64.Build.0 = Release|x64
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Debug|Win32.Build.0 = Debug|Win32
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Debug|x64.ActiveCfg = Debug|x64
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Debug|x64.Build.0 = Debug|x64
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Release|Win32.ActiveCfg = Release|Win32
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Release|Win32.Build.0 = Release|Win32
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Release|x64.ActiveCfg = Release|x64
+		{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

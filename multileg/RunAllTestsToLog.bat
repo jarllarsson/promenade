@@ -1,0 +1,1 @@
+RunAllTests.bat >> _TestResults.log

@@ -70,3 +70,4 @@ bin/x64/*.txt
 
 *.psess
 *.vspx
+*.lastcodeanalysissucceeded
