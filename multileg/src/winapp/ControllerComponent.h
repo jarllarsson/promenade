@@ -75,26 +75,6 @@ public:
 	// ==============================================================================
 	// Specify entry points on construction, during build
 	// the chains(lists) will be constructed by walking the pointer chain(double linked list)
-	ControllerComponent(artemis::Entity* p_legFrame, artemis::Entity* p_upperLeg)
-	{		
-		// for each inputted leg-frame entity...
-
-		// Set up the entity-based leg frame representation
-		// This is simply a struct of pointers to the artemis equivalents of
-		// what the controller system will work with as joints and decomposed DOF-chains
-		LegFrameEntityConstruct legFrameEntityConstruct;
-		legFrameEntityConstruct.m_legFrameEntity=p_legFrame;
-		// Add all legs to it
-		legFrameEntityConstruct.m_upperLegEntities.push_back(p_upperLeg);
-		// add to our list of constructs
-		m_legFrameEntityConstructs.push_back(legFrameEntityConstruct);
-		// Create the leg frame data struct as well
-		// Allocate it according to number of leg entities that was inputted
-		LegFrame legFrame;
-		legFrame.m_stepCycles.resize(legFrameEntityConstruct.m_upperLegEntities.size());
-		m_legFrames.push_back(legFrame);
-	}
-
 	ControllerComponent(artemis::Entity* p_legFrame, std::vector<artemis::Entity*>& p_hipJoints)
 	{
 		// for each inputted leg-frame entity...
@@ -108,7 +88,6 @@ public:
 		for (int i = 0; i < p_hipJoints.size();i++)
 		{
 			legFrameEntityConstruct.m_upperLegEntities.push_back(p_hipJoints[i]);
-
 		}			
 		// add to our list of constructs
 		m_legFrameEntityConstructs.push_back(legFrameEntityConstruct);
@@ -151,6 +130,11 @@ public:
 	LegFrameEntityConstruct* getLegFrameEntityConstruct(unsigned int p_idx) {return &m_legFrameEntityConstructs[p_idx];}
 	// ==============================================================================
 
+	// Torque list access and handling
+	const unsigned int getTorqueListOffset() const { return m_torqueListOffset; }
+	const unsigned int getTorqueListChunkSize() const { return m_torqueListChunkSize; }
+	void setTorqueListProperties(unsigned int p_offset, unsigned int p_size) { m_torqueListOffset = p_offset; m_torqueListChunkSize = p_size; }
+
 protected:
 private:
 	// Leg frame lists
@@ -158,4 +142,9 @@ private:
 	std::vector<LegFrame> m_legFrames;
 	std::vector<LegFrameEntityConstruct> m_legFrameEntityConstructs;
 
+	// Torque list nav
+	unsigned int m_torqueListOffset;
+	unsigned int m_torqueListChunkSize;
 };
+
+

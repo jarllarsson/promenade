@@ -70,7 +70,7 @@ void ControllerSystem::update(float p_dt)
 				unsigned int tIdx = legChain->jointIDXChain[i];
 				glm::vec3 torqueBase = legChain->DOFChain[i];
 				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
-				m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
+				//m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
 			}
 		});
 		/*concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
@@ -111,6 +111,9 @@ void ControllerSystem::buildCheck()
 		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
 		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
 		ControllerComponent::Chain* legChain = &controller->m_DOFChain;
+		// start by storing the current torque list size as offset, this'll be where we'll begin this
+		// controller's chunk of the torque list
+		unsigned int torqueListOffset = m_jointTorques.size();
 		// Build the controller (Temporary code)
 		// The below should be done for each leg (even the root)
 		// Create ROOT
@@ -125,35 +128,41 @@ void ControllerSystem::buildCheck()
 			legChain->DOFChain.push_back(DOFAxisByVecCompId(n)); // root has 3DOF (for now, to not over-optimize, we add three vec3's)
 		}
 		// rest of leg
-		artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[0];
-		while (jointEntity != NULL)
+		for (int x = 0; x < legFrameEntities->m_upperLegEntities.size(); x++)
 		{
-			// Get joint data
-			TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
-			RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
-			ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
-			// Add the joint
-			unsigned int idx = addJoint(jointRB, jointTransform);
-			// Get DOF on joint
-			const glm::vec3* lims = parentLink->getDesc()->m_angularDOF_LULimits;
-			for (int n = 0; n < 3; n++) // go through all DOFs and add if free
+			artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
+			while (jointEntity != NULL)
 			{
-				// check if upper limit is greater than lower limit, component-wise.
-				// If true, add as DOF
-				if (lims[0][n] < lims[1][n])
+				// Get joint data
+				TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
+				RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
+				ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
+				// Add the joint
+				unsigned int idx = addJoint(jointRB, jointTransform);
+				// Get DOF on joint
+				const glm::vec3* lims = parentLink->getDesc()->m_angularDOF_LULimits;
+				for (int n = 0; n < 3; n++) // go through all DOFs and add if free
 				{
-					legChain->jointIDXChain.push_back(idx);
-					legChain->DOFChain.push_back(DOFAxisByVecCompId(n));
+					// check if upper limit is greater than lower limit, component-wise.
+					// If true, add as DOF
+					if (lims[0][n] < lims[1][n])
+					{
+						legChain->jointIDXChain.push_back(idx);
+						legChain->DOFChain.push_back(DOFAxisByVecCompId(n));
+					}
 				}
+				// Get child joint for next iteration
+				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
+				if (childLink != NULL)
+					jointEntity = childLink->getOwnerEntity();
+				else
+					jointEntity = NULL;
 			}
-			// Get child joint for next iteration
-			ConstraintComponent* childLink = jointRB->getChildConstraint(0);
-			if (childLink != NULL)
-				jointEntity = childLink->getOwnerEntity();
-			else
-				jointEntity = NULL;
 		}
-		//
+		// Calculate number of torques axes in list, store
+		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
+		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
+		// Add
 		m_controllers.push_back(controller);
 		initControllerVelocityStat(m_controllers.size() - 1);
 	}
@@ -217,22 +226,22 @@ void ControllerSystem::controllerUpdate(int p_controllerId, float p_dt)
 	controller->m_player.updatePhase(dt);
 
 	// Update desired velocity
-	updateVelocityStats(p_controllerId, p_dt);
+	updateVelocityStats(p_controllerId, controller, p_dt);
 
 	// update feet positions
-	updateFeet(p_controllerId);
+	updateFeet(p_controllerId, controller);
 
 	// Recalculate all torques for this frame
-	updateTorques(p_controllerId, dt);
+	updateTorques(p_controllerId, controller, dt);
 
 	// Debug color of legs when in stance
 	//debugColorLegs();
 
 	//m_oldPos = transform.position;
 }
-void ControllerSystem::updateVelocityStats(int p_controllerId, float p_dt)
+void ControllerSystem::updateVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
-	glm::vec3 pos = getControllerPosition(p_controllerId);
+	glm::vec3 pos = getControllerPosition(p_controller);
 	// Update the current velocity
 	glm::vec3 currentV = pos - m_controllerVelocityStats[p_controllerId].m_oldPos;
 	m_controllerVelocityStats[p_controllerId].m_currentVelocity = currentV;
@@ -282,12 +291,15 @@ void ControllerSystem::initControllerVelocityStat(unsigned int p_idx)
 glm::vec3 ControllerSystem::getControllerPosition(unsigned int p_controllerId)
 {
 	ControllerComponent* controller = m_controllers[p_controllerId];
-	unsigned int legFrameJointId = controller->getLegFrame(0)->m_legFrameJointId;
+	return getControllerPosition(controller);
+}
+
+glm::vec3 ControllerSystem::getControllerPosition(ControllerComponent* p_controller)
+{
+	unsigned int legFrameJointId = p_controller->getLegFrame(0)->m_legFrameJointId;
 	glm::vec3 pos = MathHelp::toVec3(m_jointWorldTransforms[legFrameJointId] * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 	return pos;
 }
-
-
 
 glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
 {
@@ -299,7 +311,7 @@ glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
 		return glm::vec3(0.0f, 0.0f, 1.0f);
 }
 
-void ControllerSystem::updateFeet( int p_controllerId )
+void ControllerSystem::updateFeet( int p_controllerId, ControllerComponent* p_controller )
 {
 	//for (int i = 0; i < m_legFrames.Length; i++)
 	//{
@@ -309,19 +321,19 @@ void ControllerSystem::updateFeet( int p_controllerId )
 	//}
 }
 
-void ControllerSystem::updateTorques(int p_controllerId, float p_dt)
+void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
-	//float phi = m_player.m_gaitPhase;
-	//// Get the two variants of torque
+	float phi = p_controller->m_player.getPhase();
+	//// Get the three variants of torque
 	//Vector3[] tPD = computePDTorques(phi);
 	//Vector3[] tCGVF = computeCGVFTorques(phi, p_dt);
 	//Vector3[] tVF = computeVFTorques(phi, p_dt);
-	//// Sum them
+	////// Sum them
 	//for (int i = 0; i < m_jointTorques.Length; i++)
 	//{
-	//	m_jointTorques[i] = tPD[i] + tVF[i] + tCGVF[i];
+	//	m_jointTorques[i] = /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
 	//}
-	//
+	////
 	//// Apply them to the leg frames, also
 	//// feed back corrections for hip joints
 	//for (int i = 0; i < m_legFrames.Length; i++)

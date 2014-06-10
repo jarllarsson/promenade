@@ -77,9 +77,9 @@ public:
 private:
 	// Control logic functions
 	void controllerUpdate(int p_controllerId, float p_dt);
-	void updateVelocityStats(int p_controllerId, float p_dt);
-	void updateFeet(int p_controllerId);
-	void updateTorques(int p_controllerId, float p_dt);
+	void updateVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt);
+	void updateFeet(int p_controllerId, ControllerComponent* p_controller);
+	void updateTorques(int p_controllerId, ControllerComponent* p_controller, float p_dt);
 
 	// Helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
@@ -87,6 +87,7 @@ private:
 	void saveJointWorldEndpoint(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
 	void initControllerVelocityStat(unsigned int p_idx);
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
+	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 
 	// global variables
