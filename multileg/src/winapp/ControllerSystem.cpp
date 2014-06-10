@@ -152,7 +152,7 @@ void ControllerSystem::buildCheck()
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
 		// Add
 		m_controllers.push_back(controller);
-		initControllerVelocityStat(m_controllers.size() - 1);
+		initControllerLocationAndVelocityStat(m_controllers.size() - 1);
 	}
 	m_controllersToBuild.clear();
 }
@@ -228,7 +228,7 @@ void ControllerSystem::controllerUpdate(int p_controllerId, float p_dt)
 	controller->m_player.updatePhase(dt);
 
 	// Update desired velocity
-	updateVelocityStats(p_controllerId, controller, p_dt);
+	updateLocationAndVelocityStats(p_controllerId, controller, p_dt);
 
 	// update feet positions
 	updateFeet(p_controllerId, controller);
@@ -241,7 +241,7 @@ void ControllerSystem::controllerUpdate(int p_controllerId, float p_dt)
 
 	//m_oldPos = transform.position;
 }
-void ControllerSystem::updateVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt)
+void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
 	glm::vec3 pos = getControllerPosition(p_controller);
 	// Update the current velocity
@@ -280,15 +280,22 @@ void ControllerSystem::updateVelocityStats(int p_controllerId, ControllerCompone
 			desiredV -= glm::normalize(currentV) * stepSz;
 	}
 	m_controllerVelocityStats[p_controllerId].m_desiredVelocity = desiredV;
+	// Location
+	m_controllerLocationStats[p_controllerId].m_worldPos = pos;
+	m_controllerLocationStats[p_controllerId].m_currentGroundPos = glm::vec3(pos.x, 0.0f, pos.z); // substitute this later with raycast to ground
 }
 
 
-void ControllerSystem::initControllerVelocityStat(unsigned int p_idx)
+
+void ControllerSystem::initControllerLocationAndVelocityStat(unsigned int p_idx)
 {
 	glm::vec3 pos = getControllerPosition(p_idx);
 	VelocityStat vstat{ pos, glm::vec3(0.0f), glm::vec3(0.0f) };
-	m_controllerVelocityStats.push_back(vstat);
+	m_controllerVelocityStats.push_back(vstat);	
+	LocationStat lstat{ pos, glm::vec3(pos.x,0.0f,pos.z) }; // In future, use raycast for ground pos
+	m_controllerLocationStats.push_back(lstat);
 }
+
 
 glm::vec3 ControllerSystem::getControllerPosition(unsigned int p_controllerId)
 {
@@ -336,7 +343,7 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	std::vector<glm::vec3> tVF(torqueCount);
 	//
 	//computePDTorques(&tPD, phi);
-	computeVFTorques(&tVF, p_controller, phi, p_dt);
+	computeVFTorques(&tVF, p_controller, p_controllerId, phi, p_dt);
 	//computeCGVFTorques(&tCGVF, phi, p_dt);
 	////// Sum them
 	for (int i = 0; i < torqueCount; i++)
@@ -352,14 +359,58 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	}
 }
 
-void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, float p_phi, float p_dt)
+void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, 
+										 VelocityStat& p_velocityStats)
+{
+	unsigned int legCount=p_lf->m_legs.size(), 
+				 stanceLegs = 0;
+	bool* legInStance = new bool[legCount];
+	// First we need to count the stance legs
+	for (int i = 0; i < legCount; i++)
+	{
+		legInStance[i] = false;
+		if (isInControlledStance(p_lf,i, p_phi))
+		{
+			stanceLegs++; legInStance[i] = true;
+		}
+	}
+	// 
+	// Declare stance forces here as they should only be 
+	// calculated once per leg frame, then reused
+	glm::vec3 fv, fh; bool stanceForcesCalculated = false;
+	// Run again and calculate forces
+	for (int i = 0; i < legCount; i++)
+	{
+		ControllerComponent::Leg* leg = &p_lf->m_legs[i];
+		// Swing force
+		if (!legInStance[i])
+		{
+			glm::vec3 fsw = calculateFsw(p_lf, i, p_phi, p_dt);
+			leg->m_DOFChain.vf = calculateSwingLegVF(fsw); // Store force
+		}
+		else
+			// Stance force
+		{
+			if (!stanceForcesCalculated)
+			{
+				fv = calculateFv(p_lf, m_controllerVelocityStats[p_controllerIdx]);
+				fh = calculateFh(p_lf, m_controllerLocationStats[p_controllerIdx], p_phi, p_dt, glm::vec3(0.0f,1.0f,0.0));
+				stanceForcesCalculated=true;
+			}	
+			glm::vec3 fd = calculateFd(p_lf, i);
+			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
+		}
+	}
+}
+
+void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, float p_phi, float p_dt)
 {
 	if (m_useVFTorque)
 	{
 		for (int i = 0; i < p_controller->getLegFrameCount(); i++)
 		{
 			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
-			lf.calculateNetLegVF(p_phi, p_dt, m_currentVelocity, m_desiredVelocity);
+			calculateLegFrameNetLegVF(i, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
 			// Calculate torques using each leg chain
 			for (int n = 0; n < LegFrame.c_legCount; n++)
 			{
@@ -448,5 +499,76 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			}
 		}
 	}
+}
+
+bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi)
+{
+	// Check if in stance and also read as stance if the 
+	// foot is really touching the ground while in end of swing
+	StepCycle* stepCycle = &p_lf->m_stepCycles[p_legIdx];
+	bool stance = stepCycle->isInStance(p_phi);
+	if (!stance)
+	{
+		bool isTouchingGround = m_feet[p_legIdx].isFootStrike();
+		if (isTouchingGround)
+		{
+			float swing = stepCycle->getSwingPhase(p_phi);
+			if (swing > 0.8f) // late swing as mentioned by coros et al
+			{
+				stance = true;
+			}
+		}
+	}
+	return stance;
+}
+
+glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, float p_dt)
+{
+	float swing = p_lf->m_stepCycles[p_legIdx].getSwingPhase(p_phi);
+	float Kft = m_tunePropGainFootTrackingKft.getValAt(swing);
+	m_FootTrackingSpringDamper.m_Kp = Kft;
+	glm::vec3 diff = m_feet[p_legId].transform.position - m_footStrikePlacement[p_legId];
+	float error = glm::length(diff);
+	return -glm::normalize(diff) * m_FootTrackingSpringDamper.drive(error, p_dt);
+}
+
+glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats)
+{
+	return p_lf->m_tuneVelocityRegulatorKv*(p_velocityStats.m_desiredVelocity - p_velocityStats.m_currentVelocity);
+}
+
+glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up)
+{
+	float hLF = p_lf->m_tuneLFHeightTraj.getValAt(p_phi);
+	glm::vec3 currentHeight = p_locationStat.m_worldPos - p_locationStat.m_currentGroundPos;
+	// the current height y only works for up=0,1,0
+	// so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
+	// but for now, a float is OK
+	return p_up * p_lf->m_heightForceCalc.drive(hLF - currentHeight.y, p_dt); // PD
+}
+
+glm::vec3 ControllerSystem::calculateFd(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
+{
+	Vector3 FD = Vector3.zero;
+	Vector3 footPos = transform.position - m_feet[p_legId].transform.position/*-transform.position)*/;
+	footPos = transform.InverseTransformDirection(footPos);
+
+	float FDx = m_tuneFD[p_legId, Dx].x;
+	float FDz = m_tuneFD[p_legId, Dz].z;
+	//Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
+	FD = new Vector3(FDx, 0.0f, FDz);
+	return FD;
+}
+
+glm::vec3 ControllerSystem::calculateSwingLegVF(const glm::vec3& p_fsw)
+{
+	return p_fsw; // Right now, this force is equivalent to fsw
+}
+
+glm::vec3 ControllerSystem::calculateStanceLegVF(unsigned int p_stanceLegCount,
+	const glm::vec3& p_fv, const glm::vec3& p_fh, const glm::vec3& p_fd)
+{
+	float n = (float)p_stanceLegCount;
+	return -p_fd - (p_fh / n) - (p_fv / n); // note fd should be stance fd
 }
 

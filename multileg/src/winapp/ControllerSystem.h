@@ -26,6 +26,7 @@
 class ControllerSystem : public artemis::EntityProcessingSystem
 {
 private:
+	// Used to control and read velocity specifics per controller
 	struct VelocityStat
 	{
 		glm::vec3 m_oldPos;
@@ -34,11 +35,19 @@ private:
 		glm::vec3 m_goalVelocity;
 	};
 
+	// Used to store and read location specifics per controller
+	struct LocationStat
+	{
+		glm::vec3 m_worldPos;
+		glm::vec3 m_currentGroundPos;
+	};
+
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
 	// Controller run-time data
 	std::vector<ControllerComponent*> m_controllersToBuild;
 	std::vector<ControllerComponent*> m_controllers;
 	std::vector<VelocityStat>		  m_controllerVelocityStats;
+	std::vector<LocationStat>		  m_controllerLocationStats;
 	// Joint run-time data
 	std::vector<glm::vec3>		m_jointTorques;
 	std::vector<btRigidBody*>	m_jointRigidBodies;
@@ -81,22 +90,32 @@ public:
 private:
 	// Control logic functions
 	void controllerUpdate(int p_controllerId, float p_dt);
-	void updateVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt);
+	void updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt);
 	void updateFeet(int p_controllerId, ControllerComponent* p_controller);
 	void updateTorques(int p_controllerId, ControllerComponent* p_controller, float p_dt);
 
 	// Leg frame logic functions
-	void calculateNetLegVF(float p_phi, float p_dt, VelocityStat& p_velocityStats);
+	void calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, VelocityStat& p_velocityStats);
+
+	// Leg logic functions
+	bool isInControlledStance(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi);
+	glm::vec3 calculateFsw(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, float p_dt);
+	glm::vec3 calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats);
+	glm::vec3 calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up);
+	glm::vec3 calculateFd(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
+	glm::vec3 calculateSwingLegVF(const glm::vec3& p_fsw);
+	glm::vec3 calculateStanceLegVF(unsigned int p_stanceLegCount,
+		const glm::vec3& p_fv, const glm::vec3& p_fh, const glm::vec3& p_fd);
 
 	// Helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
 	void saveJointMatrix(unsigned int p_rigidBodyIdx);
 	void saveJointWorldEndpoint(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
-	void initControllerVelocityStat(unsigned int p_idx);
+	void initControllerLocationAndVelocityStat(unsigned int p_idx);
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
-	void computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, float p_phi, float p_dt);
+	void computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, float p_phi, float p_dt);
 	// global variables
 	float m_runTime;
 	bool m_useVFTorque;
