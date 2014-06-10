@@ -46,7 +46,7 @@ void ControllerSystem::update(float p_dt)
 		for (int n = 0; n < controllerCount; n++)
 		{
 			ControllerComponent* controller = m_controllers[n];
-			ControllerComponent::Chain* legChain = &controller->m_DOFChain;
+			ControllerComponent::VFChain* legChain = &controller->m_DOFChain;
 			// Run controller code here
 			controllerUpdate(n, p_dt);
 			for (unsigned int i = 0; i < legChain->getSize(); i++)
@@ -62,7 +62,7 @@ void ControllerSystem::update(float p_dt)
 		//concurrency::combinable<glm::vec3> sumtorques;
 		concurrency::parallel_for(0, controllerCount, [&](int n) {
 			ControllerComponent* controller = m_controllers[n];
-			ControllerComponent::Chain* legChain = &controller->m_DOFChain;
+			ControllerComponent::VFChain* legChain = &controller->m_DOFChain;
 			// Run controller code here
 			controllerUpdate(n, p_dt);
 			for (unsigned int i = 0; i < legChain->getSize(); i++)
@@ -110,7 +110,6 @@ void ControllerSystem::buildCheck()
 		ControllerComponent* controller = m_controllersToBuild[i];
 		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
 		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
-		ControllerComponent::Chain* legChain = &controller->m_DOFChain;
 		// start by storing the current torque list size as offset, this'll be where we'll begin this
 		// controller's chunk of the torque list
 		unsigned int torqueListOffset = m_jointTorques.size();
@@ -121,15 +120,14 @@ void ControllerSystem::buildCheck()
 		TransformComponent* rootTransform = (TransformComponent*)legFrameEntities->m_legFrameEntity->getComponent<TransformComponent>();
 		unsigned int rootIdx = addJoint(rootRB, rootTransform);
 		legFrame->m_legFrameJointId = rootIdx; // store idx to root for leg frame
-		glm::vec3 DOF;
-		for (int n = 0; n < 3; n++)
+		// prepare legs			
+		legFrame->m_legs.resize(legFrameEntities->m_upperLegEntities.size()); // Allocate the number of specified legs
+		unsigned int legCount = legFrame->m_legs.size();
+		for (int x = 0; x < legCount; x++)
 		{
-			legChain->jointIDXChain.push_back(rootIdx);
-			legChain->DOFChain.push_back(DOFAxisByVecCompId(n)); // root has 3DOF (for now, to not over-optimize, we add three vec3's)
-		}
-		// rest of leg
-		for (int x = 0; x < legFrameEntities->m_upperLegEntities.size(); x++)
-		{
+			// start by adding the already existing root id (needed in all leg chains)
+			addJointToChain(&legFrame->m_legs[x], rootIdx);
+			// Traverse the segment structure for the leg to get the rest
 			artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
 			while (jointEntity != NULL)
 			{
@@ -139,18 +137,8 @@ void ControllerSystem::buildCheck()
 				ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
 				// Add the joint
 				unsigned int idx = addJoint(jointRB, jointTransform);
-				// Get DOF on joint
-				const glm::vec3* lims = parentLink->getDesc()->m_angularDOF_LULimits;
-				for (int n = 0; n < 3; n++) // go through all DOFs and add if free
-				{
-					// check if upper limit is greater than lower limit, component-wise.
-					// If true, add as DOF
-					if (lims[0][n] < lims[1][n])
-					{
-						legChain->jointIDXChain.push_back(idx);
-						legChain->DOFChain.push_back(DOFAxisByVecCompId(n));
-					}
-				}
+				// Get DOF on joint to chain
+				addJointToChain(&legFrame->m_legs[x], idx, parentLink->getDesc()->m_angularDOF_LULimits);
 				// Get child joint for next iteration
 				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
 				if (childLink != NULL)
@@ -167,6 +155,20 @@ void ControllerSystem::buildCheck()
 		initControllerVelocityStat(m_controllers.size() - 1);
 	}
 	m_controllersToBuild.clear();
+}
+
+void ControllerSystem::addJointToChain(ControllerComponent::Leg* p_leg, unsigned int p_idx, const glm::vec3* p_angularLims)
+{
+	ControllerComponent::VFChain* legChain = &p_leg->m_DOFChain;
+	// root has 3DOF (for now, to not over-optimize, we add three vec3's)
+	for (int n = 0; n < 3; n++)
+	{
+		if (p_angularLims == NULL || (p_angularLims[0][n] < p_angularLims[1][n]))
+		{
+			legChain->jointIDXChain.push_back(p_idx);
+			legChain->DOFChain.push_back(DOFAxisByVecCompId(n));
+		}
+	}
 }
 
 unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform)
@@ -334,7 +336,7 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	std::vector<glm::vec3> tVF(torqueCount);
 	//
 	//computePDTorques(&tPD, phi);
-	computeVFTorques(&tVF, phi, p_dt);
+	computeVFTorques(&tVF, p_controller, phi, p_dt);
 	//computeCGVFTorques(&tCGVF, phi, p_dt);
 	////// Sum them
 	for (int i = 0; i < torqueCount; i++)
@@ -350,13 +352,13 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	}
 }
 
-void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_tVF, float p_phi, float p_dt)
+void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, float p_phi, float p_dt)
 {
 	if (m_useVFTorque)
 	{
-		for (int i = 0; i < m_legFrames.Length; i++)
+		for (int i = 0; i < p_controller->getLegFrameCount(); i++)
 		{
-			LegFrame lf = m_legFrames[i];
+			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 			lf.calculateNetLegVF(p_phi, p_dt, m_currentVelocity, m_desiredVelocity);
 			// Calculate torques using each leg chain
 			for (int n = 0; n < LegFrame.c_legCount; n++)

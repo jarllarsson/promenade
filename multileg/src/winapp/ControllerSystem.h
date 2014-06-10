@@ -22,6 +22,7 @@
 
 #define MULTI
 
+
 class ControllerSystem : public artemis::EntityProcessingSystem
 {
 private:
@@ -74,12 +75,18 @@ public:
 	// Build uninited controllers, this has to be called 
 	// after constraints & rb's have been inited by their systems
 	void buildCheck();
+
+	void addJointToChain(ControllerComponent::Leg* p_leg, unsigned int p_idx, const glm::vec3* p_angularLims=NULL);
+
 private:
 	// Control logic functions
 	void controllerUpdate(int p_controllerId, float p_dt);
 	void updateVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt);
 	void updateFeet(int p_controllerId, ControllerComponent* p_controller);
 	void updateTorques(int p_controllerId, ControllerComponent* p_controller, float p_dt);
+
+	// Leg frame logic functions
+	void calculateNetLegVF(float p_phi, float p_dt, VelocityStat& p_velocityStats);
 
 	// Helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
@@ -89,7 +96,10 @@ private:
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
-	void computeVFTorques(std::vector<glm::vec3>* p_tVF, float p_phi, float p_dt);
+	void computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, float p_phi, float p_dt);
 	// global variables
 	float m_runTime;
+	bool m_useVFTorque;
+	bool m_useCGVFTorque;
+	bool m_usePDTorque;
 };

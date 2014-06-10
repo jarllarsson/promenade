@@ -23,50 +23,13 @@
 class ControllerComponent : public artemis::Component
 {
 public:
-	// Internal data types
-	// ==============================================================================
-	struct Chain
-	{
-	public:
-		std::vector<glm::vec3> DOFChain;
-		std::vector<unsigned int> jointIDXChain;
-		// VF vector here maybe?
-		unsigned int getSize()
-		{
-			return (unsigned int)DOFChain.size();
-		}
-	};
+
 
 
 	// Playback specific data and handlers
 	// ==============================================================================
 	GaitPlayer m_player;
 	glm::vec3 m_goalVelocity;
-
-
-	// Chain constructs
-	// ==============================================================================
-	// Each link will all its DOFs to the chain
-	// This will result in 0 to 3 vec3:s. (We're only using angles)
-	// ==============================================================================
-
-	// The "ordinary" chain of legs, from leg frame to foot
-	// Structure:
-	// [R][1][2][F]
-	Chain m_DOFChain;
-
-	// The gravity compensation chain, from start to foot, for each link in the chain
-	// Structure construction:
-	// [R][1][2][F] +
-	//    [1][2][F] +
-	//       [2][F] +
-	//          [F] =
-	// Structure:
-	// [R][1][2][F][1][2][F][2][F][F]
-	Chain m_DOFChainGravityComp;
-
-	// ==============================================================================
-
 
 
 
@@ -99,7 +62,52 @@ public:
 	}
 
 	virtual ~ControllerComponent() {}
+	
 
+
+	// Internal data types
+	// ==============================================================================
+	// Virtual force chain
+	struct VFChain
+	{
+	public:
+		std::vector<glm::vec3> DOFChain;
+		std::vector<unsigned int> jointIDXChain;
+		// VF vector here maybe?
+		glm::vec3 vf;
+		unsigned int getSize()
+		{
+			return (unsigned int)DOFChain.size();
+		}
+	};
+
+	// Leg
+	// Contains information for per-leg actions
+	struct Leg
+	{
+		// Chain constructs
+		// ==============================================================================
+		// Each link will all its DOFs to the chain
+		// This will result in 0 to 3 vec3:s. (We're only using angles)
+		// ==============================================================================
+
+		// The "ordinary" chain of legs, from leg frame to foot
+		// Structure:
+		// [R][1][2][F]
+		VFChain m_DOFChain;
+
+		// The gravity compensation chain, from start to foot, for each link in the chain
+		// Structure construction:
+		// [R][1][2][F] +
+		//    [1][2][F] +
+		//       [2][F] +
+		//          [F] =
+		// Structure:
+		// [R][1][2][F][1][2][F][2][F][F]
+		VFChain m_DOFChainGravityComp;
+
+		// ==============================================================================
+	};
 
 	// Leg frame
 	// ==============================================================================
@@ -114,7 +122,7 @@ public:
 	{
 		std::vector<StepCycle> m_stepCycles;
 		unsigned int m_legFrameJointId;
-
+		std::vector<Leg> m_legs;
 	};
 
 	// Construction description struct for leg frames
