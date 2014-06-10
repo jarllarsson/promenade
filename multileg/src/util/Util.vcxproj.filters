@@ -10,6 +10,9 @@
     <Filter Include="Measurement">
       <UniqueIdentifier>{302acab0-053d-43d2-9a82-7355a88c39f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{bdb67dff-f98b-4d60-839e-2ba678c0adae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugPrint.h">
@@ -18,7 +21,6 @@
     <ClInclude Include="BaseException.h">
       <Filter>Exception</Filter>
     </ClInclude>
-    <ClInclude Include="MathHelp.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="ValueClamp.h" />
@@ -27,12 +29,23 @@
     <ClInclude Include="MeasurementBin.h">
       <Filter>Measurement</Filter>
     </ClInclude>
+    <ClInclude Include="CMatrix.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="MathHelp.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />
-    <ClCompile Include="MathHelp.cpp" />
     <ClCompile Include="MeasurementBin.cpp">
       <Filter>Measurement</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelp.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="CMatrix.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaseException.h" />
+    <ClInclude Include="CMatrix.h" />
     <ClInclude Include="DebugPrint.h" />
     <ClInclude Include="MathHelp.h" />
     <ClInclude Include="MeasurementBin.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="ValueClamp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CMatrix.cpp" />
     <ClCompile Include="MathHelp.cpp" />
     <ClCompile Include="MeasurementBin.cpp" />
     <ClCompile Include="Util.cpp" />
