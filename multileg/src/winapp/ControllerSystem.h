@@ -89,7 +89,7 @@ private:
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
-
+	void computeVFTorques(std::vector<glm::vec3>* p_tVF, float p_phi, float p_dt);
 	// global variables
 	float m_runTime;
 };

@@ -324,21 +324,127 @@ void ControllerSystem::updateFeet( int p_controllerId, ControllerComponent* p_co
 void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
 	float phi = p_controller->m_player.getPhase();
+	unsigned int torqueCount = p_controller->getTorqueListChunkSize();
+	unsigned int torqueIdxOffset = p_controller->getTorqueListOffset();
 	//// Get the three variants of torque
 	//Vector3[] tPD = computePDTorques(phi);
 	//Vector3[] tCGVF = computeCGVFTorques(phi, p_dt);
-	//Vector3[] tVF = computeVFTorques(phi, p_dt);
+	std::vector<glm::vec3> tPD(torqueCount);
+	std::vector<glm::vec3> tCGVF(torqueCount);
+	std::vector<glm::vec3> tVF(torqueCount);
+	//
+	//computePDTorques(&tPD, phi);
+	computeVFTorques(&tVF, phi, p_dt);
+	//computeCGVFTorques(&tCGVF, phi, p_dt);
 	////// Sum them
-	//for (int i = 0; i < m_jointTorques.Length; i++)
-	//{
-	//	m_jointTorques[i] = /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
-	//}
-	////
-	//// Apply them to the leg frames, also
-	//// feed back corrections for hip joints
-	//for (int i = 0; i < m_legFrames.Length; i++)
-	//{
-	//	m_jointTorques = m_legFrames[i].applyNetLegFrameTorque(m_jointTorques, phi);
-	//}
+	for (int i = 0; i < torqueCount; i++)
+	{
+		m_jointTorques[torqueIdxOffset+i] = /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
+	}
+	//
+	// Apply them to the leg frames, also
+	// feed back corrections for hip joints
+	for (int i = 0; i < p_controller->getLegFrameCount(); i++)
+	{
+		//applyNetLegFrameTorque(p_controllerId, p_controller, i, &m_jointTorques, torqueIdxOffset, torqueCount, phi);
+	}
+}
+
+void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_tVF, float p_phi, float p_dt)
+{
+	if (m_useVFTorque)
+	{
+		for (int i = 0; i < m_legFrames.Length; i++)
+		{
+			LegFrame lf = m_legFrames[i];
+			lf.calculateNetLegVF(p_phi, p_dt, m_currentVelocity, m_desiredVelocity);
+			// Calculate torques using each leg chain
+			for (int n = 0; n < LegFrame.c_legCount; n++)
+			{
+				//  get the joints
+				int legFrameRoot = lf.m_id;
+				//legFrameRoot = -1;
+				int legRoot = lf.m_neighbourJointIds[n];
+				int legSegmentCount = LegFrame.c_legSegments; // hardcoded now
+				// Use joint ids to get dof ids
+				// Start in chain
+				int legFrameRootDofId = -1; // if we have separate root as base link
+				if (legFrameRoot != -1) legFrameRootDofId = m_chain[legFrameRoot].m_dofListIdx;
+				// otherwise, use first in chain as base link
+				int legRootDofId = m_chain[legRoot].m_dofListIdx;
+				// end in chain
+				int lastDofIdx = legRoot + legSegmentCount - 1;
+				int legDofEnd = m_chain[lastDofIdx].m_dofListIdx + m_chain[lastDofIdx].m_dof.Length;
+				//
+				// get force for the leg
+				Vector3 VF = lf.m_netLegBaseVirtualForces[n];
+				// Calculate torques for each joint
+				// Start by updating joint information based on their gameobjects
+				Vector3 end = transform.localPosition;
+				//Debug.Log("legroot "+legRoot+" legseg "+legSegmentCount);
+				int jointstart = legRoot;
+				if (legFrameRoot != -1) jointstart = legFrameRoot;
+				for (int x = jointstart; x < legRoot + legSegmentCount; x++)
+				{
+					if (legFrameRoot != -1 && x < legRoot && x != legFrameRoot)
+						x = legRoot;
+					Joint current = m_chain[x];
+					GameObject currentObj = m_chainObjs[x];
+					//Debug.Log("joint pos: " + currentObj.transform.localPosition);
+					// Update Joint
+					current.length = currentObj.transform.localScale.y;
+					current.m_position = currentObj.transform.position /*- (-currentObj.transform.up) * current.length * 0.5f*/;
+					current.m_endPoint = currentObj.transform.position + (-currentObj.transform.up) * current.length/* * 0.5f*/;
+					//m_chain[i] = current;
+					//Debug.DrawLine(current.m_position, current.m_endPoint, Color.red);
+					//Debug.Log(x+" joint pos: " + current.m_position + " = " + m_chain[x].m_position);
+					end = current.m_endPoint;
+				}
+				//foreach(Joint j in m_chain)
+				//    Debug.Log("joint pos CC: " + j.m_position);
+
+				//CMatrix J = Jacobian.calculateJacobian(m_chain, m_chain.Count, end, Vector3.forward);
+				CMatrix J = Jacobian.calculateJacobian(m_chain,     // Joints (Joint script)
+					m_chainObjs, // Gameobjects in chain
+					m_dofs,      // Degrees Of Freedom (Per joint)
+					m_dofJointId,// Joint id per DOF 
+					end + VF,    // Target position
+					legRootDofId,// Starting link id in chain (start offset)
+					legDofEnd,  // End of chain of link (ie. size)
+					legFrameRootDofId); // As we use the leg frame as base, we supply it separately (it will be actual root now)
+				CMatrix Jt = CMatrix.Transpose(J);
+
+				//Debug.DrawLine(end, end + VF, Color.magenta, 0.3f);
+				int jIdx = 0;
+				int extra = 0;
+				int start = legRootDofId;
+				if (legFrameRootDofId >= 0)
+				{
+					start = legFrameRootDofId;
+					extra = m_chain[legFrameRoot].m_dof.Length;
+				}
+
+
+				for (int g = start; g < legDofEnd; g++)
+				{
+					if (extra > 0)
+						extra--;
+					else if (g < legRootDofId)
+						g = legRootDofId;
+
+					// store torque
+					int x = m_dofJointId[g];
+					Vector3 addT = m_dofs[g] * Vector3.Dot(new Vector3(Jt[jIdx, 0], Jt[jIdx, 1], Jt[jIdx, 2]), VF);
+					newTorques[x] += addT;
+					jIdx++;
+					//Vector3 drawTorque = new Vector3(0.0f, 0.0f, -addT.x);
+					//Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + drawTorque*0.1f, Color.cyan);
+
+				}
+				// Come to think of it, the jacobian and torque could be calculated in the same
+				// kernel as it lessens write to global memory and the need to fetch joint matrices several time (transform above)
+			}
+		}
+	}
 }
 
