@@ -1,1 +1,1 @@
-RunAllTests.bat >> _TestResults.log
+RunAllTestsDisplay.bat >> _TestResults.log

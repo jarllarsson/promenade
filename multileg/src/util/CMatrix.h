@@ -22,6 +22,8 @@ public:
 
 	CMatrix();
 
+	CMatrix(const CMatrix& p_copy);
+
 	CMatrix(unsigned int p_rows, unsigned int p_cols);
 
 	~CMatrix();
@@ -34,11 +36,14 @@ public:
 
 	static CMatrix transpose(const CMatrix& p_m);
 
-	static CMatrix operator *(const CMatrix& p_ma, const CMatrix& p_mb);
+	CMatrix operator *(const CMatrix& p_ma) const;
 
-	static CMatrix operator *(float p_s, const CMatrix& p_m);
+	CMatrix operator *(float p_s) const;
+
+	bool operator == (const CMatrix& p_mb) const;
 
 	static float dot(const CMatrix& p_ma, const CMatrix& p_mb);
 private:
 	void init();
+	void init(const CMatrix& p_copy);
 };

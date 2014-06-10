@@ -4,6 +4,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Other.h" />
+    <ClInclude Include="CMatrixTest.h" />
   </ItemGroup>
 </Project>

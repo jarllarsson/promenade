@@ -22,7 +22,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Other.h" />
+    <ClInclude Include="CMatrixTest.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{DAD11C48-386F-413D-A13A-BA7AB6C52A5C}</ProjectGuid>

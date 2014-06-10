@@ -1,7 +1,8 @@
-#pragma once
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
-#include "Other.h"
+#include <MathHelp.h>
+#include "CMatrixTest.h"
+
 // =======================================================================================
 //                                      Unit Tests
 // =======================================================================================
@@ -13,15 +14,13 @@
 /// 
 /// 9-6-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
+// 
 
-unsigned int Factorial(unsigned int number) {
-	return number <= 1 ? number : Factorial(number - 1)*number;
-}
 
-TEST_CASE("Factorials are computed", "[factorial]") {
-	REQUIRE(Factorial(1) == 1);
-	REQUIRE(Factorial(2) == 2);
-	REQUIRE(Factorial(3) == 6);
-	REQUIRE(Factorial(10) == 3628800);
+TEST_CASE("Shortening of vec4 to vec3", "[vec3]") {
+	REQUIRE(MathHelp::toVec3(glm::vec4(1.4f, 3.4f, 5.5f, 1.0f)) == glm::vec3(1.4f, 3.4f, 5.5f));
+	REQUIRE(MathHelp::toVec3(glm::vec4(-4000.0f, 0.1f, 1.0f, 0.0f)) == glm::vec3(-4000.0f, 0.1f, 1.0f));
+	REQUIRE(MathHelp::toVec3(glm::vec4(1000.0f, 0.768768f, 200.2f, 1.0f)) == glm::vec3(1000.0f, 0.768768f, 200.2f));
+	REQUIRE(MathHelp::toVec3(glm::vec4(0.0f, 3.4f, 5.5f, 0.0f)) == glm::vec3(0.0f, 3.4f, 5.5f));
 }
 
