@@ -31,6 +31,9 @@
     <Filter Include="Entity System\Physics\Rigidbodies">
       <UniqueIdentifier>{4709f0b3-8829-48b9-8c31-879bb819cee1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity System\Locomotion\Math">
+      <UniqueIdentifier>{f3413dc3-6f95-474a-96cd-94fa125bd592}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -78,6 +81,9 @@
     <ClInclude Include="RigidBodyComponent.h">
       <Filter>Entity System\Physics\Rigidbodies</Filter>
     </ClInclude>
+    <ClInclude Include="JacobianHelper.h">
+      <Filter>Entity System\Locomotion\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -110,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="RigidBodySystem.cpp">
       <Filter>Entity System\Physics\Rigidbodies</Filter>
+    </ClCompile>
+    <ClCompile Include="JacobianHelper.cpp">
+      <Filter>Entity System\Locomotion\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

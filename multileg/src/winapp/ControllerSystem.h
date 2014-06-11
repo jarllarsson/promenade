@@ -53,7 +53,8 @@ private:
 	std::vector<btRigidBody*>	m_jointRigidBodies;
 	std::vector<glm::mat4>		m_jointWorldTransforms;
 	std::vector<float>			m_jointLengths;
-	std::vector<glm::vec4>		m_jointWorldEndpoints;
+	std::vector<glm::vec4>		m_jointWorldInnerEndpoints;
+	std::vector<glm::vec4>		m_jointWorldOuterEndpoints;
 public:
 	ControllerSystem()
 	{
@@ -110,7 +111,7 @@ private:
 	// Helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
 	void saveJointMatrix(unsigned int p_rigidBodyIdx);
-	void saveJointWorldEndpoint(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
+	void saveJointWorldEndpoints(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
 	void initControllerLocationAndVelocityStat(unsigned int p_idx);
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);

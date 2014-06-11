@@ -7,6 +7,7 @@
 #include "ConstraintComponent.h"
 #include "GaitPlayer.h"
 #include "StepCycle.h"
+#include <vector>
 // =======================================================================================
 //                                      ControllerComponent
 // =======================================================================================
@@ -75,7 +76,7 @@ public:
 		std::vector<unsigned int> jointIDXChain;
 		// VF vector here maybe?
 		glm::vec3 vf;
-		unsigned int getSize()
+		unsigned int getSize() const
 		{
 			return (unsigned int)DOFChain.size();
 		}

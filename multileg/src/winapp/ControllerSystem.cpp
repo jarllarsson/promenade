@@ -183,9 +183,10 @@ unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, Tr
 	m_jointLengths.push_back(p_jointTransform->getScale().y);
 	// m_jointWorldTransforms.resize(m_jointRigidBodies.size());
 	// m_jointLengths.resize(m_jointRigidBodies.size());
-	m_jointWorldEndpoints.resize(m_jointRigidBodies.size());
+	m_jointWorldOuterEndpoints.resize(m_jointRigidBodies.size());
+	m_jointWorldInnerEndpoints.resize(m_jointRigidBodies.size());
 	unsigned int idx = (unsigned int)(m_jointRigidBodies.size() - 1);
-	saveJointWorldEndpoint(idx, matPosRot);
+	saveJointWorldEndpoints(idx, matPosRot);
 	// saveJointMatrix(idx);
 	return idx; // return idx of inserted
 }
@@ -206,15 +207,19 @@ void ControllerSystem::saveJointMatrix(unsigned int p_rigidBodyIdx)
 			glm::mat4 mat;
 			physTransform.getOpenGLMatrix(glm::value_ptr(mat));
 			m_jointWorldTransforms[idx] = mat; // note, use same index for transform list
-			saveJointWorldEndpoint(idx, mat);
+			saveJointWorldEndpoints(idx, mat);
 		}
 	}
 }
 
 
-void ControllerSystem::saveJointWorldEndpoint(unsigned int p_idx, glm::mat4& p_worldMatPosRot)
+void ControllerSystem::saveJointWorldEndpoints(unsigned int p_idx, glm::mat4& p_worldMatPosRot)
 {
-	m_jointWorldEndpoints[p_idx] = glm::vec4(0.0f, m_jointLengths[p_idx], 0.0f, 1.0f)*p_worldMatPosRot;
+	// Store information on the joint's end points.
+	// The outer is the one closest to a child joint.
+	m_jointWorldOuterEndpoints[p_idx] = glm::vec4(0.0f, -m_jointLengths[p_idx]*0.5f, 0.0f, 1.0f)*p_worldMatPosRot;
+	// The inner is the one closest to the parent joint.
+	m_jointWorldInnerEndpoints[p_idx] = glm::vec4(0.0f, m_jointLengths[p_idx]*0.5f, 0.0f, 1.0f)*p_worldMatPosRot;
 }
 
 
