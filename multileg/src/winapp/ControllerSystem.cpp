@@ -90,14 +90,14 @@ void ControllerSystem::finish()
 
 }
 
-void ControllerSystem::applyTorques()
+void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
 		for (int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
-			m_jointRigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z));
+			m_jointRigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z)/**p_dt*/);
 		}
 	}
 }
@@ -355,7 +355,8 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	////// Sum them
 	for (int i = 0; i < torqueCount; i++)
 	{
-		m_jointTorques[torqueIdxOffset+i] = /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
+		m_jointTorques[torqueIdxOffset + i] = glm::vec3(0.0f, 200.0f, 0.0f);
+			//+= /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
 	}
 	//
 	// Apply them to the leg frames, also
@@ -408,7 +409,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(1000.0f, 2000.0f, 1000.0f)*p_dt;
+		leg->m_DOFChain.vf = glm::vec3(0.0f, 10.0f, 0.0f);
 	}
 }
 

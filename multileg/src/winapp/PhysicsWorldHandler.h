@@ -44,7 +44,7 @@ public:
 		//}
 		//// Controller
 		m_controllerSystem->finish();
-		m_controllerSystem->applyTorques();
+		m_controllerSystem->applyTorques((float)timeStep);
 		return;
 	}
 

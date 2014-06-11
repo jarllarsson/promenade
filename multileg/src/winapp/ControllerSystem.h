@@ -83,7 +83,7 @@ public:
 
 	void finish();
 
-	void applyTorques();
+	void applyTorques(float p_dt);
 
 	// Build uninited controllers, this has to be called 
 	// after constraints & rb's have been inited by their systems

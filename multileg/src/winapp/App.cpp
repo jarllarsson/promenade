@@ -29,7 +29,7 @@
 #include "ControllerSystem.h"
 #include "PhysicsWorldHandler.h"
 
-//#define MEASURE_RBODIES
+#define MEASURE_RBODIES
 
 using namespace std;
 
@@ -155,7 +155,8 @@ void App::run()
 	// Create a ground entity
 
 	artemis::Entity & ground = entityManager->create();
-	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f));
+	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f,
+		CollisionLayer::COL_GROUND,CollisionLayer::COL_CHARACTER));
 	ground.addComponent(new RenderComponent());
 	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -20.0f, 0.0f), 
 		glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
@@ -194,10 +195,11 @@ void App::run()
 	for (int x = 0; x < 4; x++) // number of characters
 	{
 		artemis::Entity & legFrame = entityManager->create();
-		glm::vec3 pos = glm::vec3(x*30.0f, 10.0f, 50.0f);
+		glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 10.0f, 50.0f);
 		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 		glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, 2.0f);
-		legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f));
+		legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f,
+			CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
 		legFrame.addComponent(new RenderComponent());
 		legFrame.addComponent(new TransformComponent(pos,
 			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
@@ -241,7 +243,8 @@ void App::run()
 				}
 				legpos -= glm::vec3(glm::vec3(0.0f, parentSz.y*1.1f, jointZOffsetInChild));
 				//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-				childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f)); // note, h-lengths
+				childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f, // note, h-lengths
+					CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
 				childJoint.addComponent(new RenderComponent());
 				childJoint.addComponent(new TransformComponent(legpos,
 					/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
