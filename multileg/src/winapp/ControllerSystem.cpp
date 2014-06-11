@@ -6,6 +6,7 @@
 #include <MathHelp.h>
 #include <btBulletDynamicsCommon.h>
 #include "ConstraintComponent.h"
+#include "JacobianHelper.h"
 
 
 void ControllerSystem::removed(artemis::Entity &e)
@@ -46,32 +47,30 @@ void ControllerSystem::update(float p_dt)
 		for (int n = 0; n < controllerCount; n++)
 		{
 			ControllerComponent* controller = m_controllers[n];
-			ControllerComponent::VFChain* legChain = &controller->m_DOFChain;
 			// Run controller code here
 			controllerUpdate(n, p_dt);
-			for (unsigned int i = 0; i < legChain->getSize(); i++)
-			{
-				unsigned int tIdx = legChain->jointIDXChain[i];
-				glm::vec3 torqueBase = legChain->DOFChain[i];
-				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
-				m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
-			}
+			//for (unsigned int i = 0; i < legChain->getSize(); i++)
+			//{
+			//	unsigned int tIdx = legChain->jointIDXChain[i];
+			//	glm::vec3 torqueBase = legChain->DOFChain[i];
+			//	glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
+			//	m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
+			//}
 		}
 #else
 		// Multi threaded CPU implementation
 		//concurrency::combinable<glm::vec3> sumtorques;
 		concurrency::parallel_for(0, controllerCount, [&](int n) {
 			ControllerComponent* controller = m_controllers[n];
-			ControllerComponent::VFChain* legChain = &controller->m_DOFChain;
 			// Run controller code here
 			controllerUpdate(n, p_dt);
-			for (unsigned int i = 0; i < legChain->getSize(); i++)
-			{
-				unsigned int tIdx = legChain->jointIDXChain[i];
-				glm::vec3 torqueBase = legChain->DOFChain[i];
-				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
-				//m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
-			}
+			//for (unsigned int i = 0; i < legChain->getSize(); i++)
+			//{
+			//	unsigned int tIdx = legChain->jointIDXChain[i];
+			//	glm::vec3 torqueBase = legChain->DOFChain[i];
+			//	glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
+			//	//m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
+			//}
 		});
 		/*concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
 			unsigned int tIdx = legChain->jointIDXChain[i];
@@ -408,6 +407,8 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			glm::vec3 fd(calculateFd(p_lf, i));
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
+		// Debug test
+		leg->m_DOFChain.vf = glm::vec3(0.0f, 100.0f, 0.0f)*p_dt;
 	}
 }
 
@@ -419,94 +420,33 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 		{
 			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 			calculateLegFrameNetLegVF(i, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
-			// Begin calculating jacobians for each leg in leg frame
+			// Begin calculating Jacobian transpose for each leg in leg frame
 			unsigned int legCount = lf->m_legs.size();
 			// Calculate torques using each leg chain
 			for (int n = 0; n < legCount; n++)
 			{
-				//  get the joints
-				//int legFrameRoot = lf.m_id;
-				////legFrameRoot = -1;
-				//int legRoot = lf.m_neighbourJointIds[n];
-				//int legSegmentCount = LegFrame.c_legSegments; // hardcoded now
-				//// Use joint ids to get dof ids
-				//// Start in chain
-				//int legFrameRootDofId = -1; // if we have separate root as base link
-				//if (legFrameRoot != -1) legFrameRootDofId = m_chain[legFrameRoot].m_dofListIdx;
-				//// otherwise, use first in chain as base link
-				//int legRootDofId = m_chain[legRoot].m_dofListIdx;
-				//// end in chain
-				//int lastDofIdx = legRoot + legSegmentCount - 1;
-				//int legDofEnd = m_chain[lastDofIdx].m_dofListIdx + m_chain[lastDofIdx].m_dof.Length;
-				//
 				ControllerComponent::Leg* leg = &lf->m_legs[n];
+				ControllerComponent::VFChain* chain = &leg->m_DOFChain;
 				// get force for the leg
-				glm::vec3 vf = leg->m_DOFChain.vf;
-				// Calculate torques for each joint
-				// Start by updating joint information based on their gameobjects
+				glm::vec3 vf = chain->vf;
+				// Get the end effector position
+				// We're using the COM of the foot
 				glm::vec3 end = MathHelp::getMatrixTranslation(m_jointWorldTransforms[lf->m_feetJointId[n]]);
-				//Debug.Log("legroot "+legRoot+" legseg "+legSegmentCount);
-				//int jointstart = legRoot;
-				//if (legFrameRoot != -1) jointstart = legFrameRoot;
-				//for (int x = jointstart; x < legRoot + legSegmentCount; x++)
-				//{
-				//	if (legFrameRoot != -1 && x < legRoot && x != legFrameRoot)
-				//		x = legRoot;
-				//	Joint current = m_chain[x];
-				//	GameObject currentObj = m_chainObjs[x];
-				//	//Debug.Log("joint pos: " + currentObj.transform.localPosition);
-				//	// Update Joint
-				//	current.length = currentObj.transform.localScale.y;
-				//	current.m_position = currentObj.transform.position /*- (-currentObj.transform.up) * current.length * 0.5f*/;
-				//	current.m_endPoint = currentObj.transform.position + (-currentObj.transform.up) * current.length/* * 0.5f*/;
-				//	//m_chain[i] = current;
-				//	//Debug.DrawLine(current.m_position, current.m_endPoint, Color.red);
-				//	//Debug.Log(x+" joint pos: " + current.m_position + " = " + m_chain[x].m_position);
-				//	end = current.m_endPoint;
-				//}
-				//foreach(Joint j in m_chain)
-				//    Debug.Log("joint pos CC: " + j.m_position);
-
-				//CMatrix J = Jacobian.calculateJacobian(m_chain, m_chain.Count, end, Vector3.forward);
-				CMatrix J = Jacobian.calculateJacobian(m_chain,     // Joints (Joint script)
-					m_chainObjs, // Gameobjects in chain
-					m_dofs,      // Degrees Of Freedom (Per joint)
-					m_dofJointId,// Joint id per DOF 
-					end + VF,    // Target position
-					legRootDofId,// Starting link id in chain (start offset)
-					legDofEnd,  // End of chain of link (ie. size)
-					legFrameRootDofId); // As we use the leg frame as base, we supply it separately (it will be actual root now)
-				CMatrix Jt = CMatrix.Transpose(J);
-
-				//Debug.DrawLine(end, end + VF, Color.magenta, 0.3f);
-				int jIdx = 0;
-				int extra = 0;
-				int start = legRootDofId;
-				if (legFrameRootDofId >= 0)
+				// Calculate the matrices
+				CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,						// Chain of DOFs to solve for
+																	 end+vf,						// Our end effector goal position
+																	 &m_jointWorldInnerEndpoints,	// All joint rotational axes
+																	 &m_jointWorldTransforms);		// All joint world transformations
+				CMatrix Jt = CMatrix::transpose(J);
+				// Use matrix to calculate and store torque
+				for (int i = 0; i < chain->getSize(); i++)
 				{
-					start = legFrameRootDofId;
-					extra = m_chain[legFrameRoot].m_dof.Length;
-				}
-
-
-				for (int g = start; g < legDofEnd; g++)
-				{
-					if (extra > 0)
-						extra--;
-					else if (g < legRootDofId)
-						g = legRootDofId;
-
 					// store torque
-					int x = m_dofJointId[g];
-					Vector3 addT = m_dofs[g] * Vector3.Dot(new Vector3(Jt[jIdx, 0], Jt[jIdx, 1], Jt[jIdx, 2]), VF);
-					newTorques[x] += addT;
-					jIdx++;
-					//Vector3 drawTorque = new Vector3(0.0f, 0.0f, -addT.x);
-					//Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + drawTorque*0.1f, Color.cyan);
-
+					unsigned int jointIdx = leg->m_DOFChain.jointIDXChain[i];
+					glm::vec3 addT = (chain->DOFChain)[i] * glm::dot(glm::vec3(Jt(i, 0), Jt(i, 1), Jt(i, 2)), vf);
+					(*p_outTVF)[i] += addT; // Here we could write to the global list instead directly maybe as an optimization
+											// Do it like this for now, for the sake of readability and debugging.
 				}
-				// Come to think of it, the jacobian and torque could be calculated in the same
-				// kernel as it lessens write to global memory and the need to fetch joint matrices several time (transform above)
 			}
 		}
 	}
@@ -518,44 +458,47 @@ bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf,
 	// foot is really touching the ground while in end of swing
 	StepCycle* stepCycle = &p_lf->m_stepCycles[p_legIdx];
 	bool stance = stepCycle->isInStance(p_phi);
-	if (!stance)
-	{
-		bool isTouchingGround = m_feet[p_legIdx].isFootStrike();
-		if (isTouchingGround)
-		{
-			float swing = stepCycle->getSwingPhase(p_phi);
-			if (swing > 0.8f) // late swing as mentioned by coros et al
-			{
-				stance = true;
-			}
-		}
-	}
+	// !!!! if (!stance)
+	// !!!! {
+	// !!!! 	bool isTouchingGround = m_feet[p_legIdx].isFootStrike();
+	// !!!! 	if (isTouchingGround)
+	// !!!! 	{
+	// !!!! 		float swing = stepCycle->getSwingPhase(p_phi);
+	// !!!! 		if (swing > 0.8f) // late swing as mentioned by coros et al
+	// !!!! 		{
+	// !!!! 			stance = true;
+	// !!!! 		}
+	// !!!! 	}
+	// !!!! }
 	return stance;
 }
 
 glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, float p_dt)
 {
-	float swing = p_lf->m_stepCycles[p_legIdx].getSwingPhase(p_phi);
-	float Kft = m_tunePropGainFootTrackingKft.getValAt(swing);
-	m_FootTrackingSpringDamper.m_Kp = Kft;
-	glm::vec3 diff = m_feet[p_legId].transform.position - m_footStrikePlacement[p_legId];
-	float error = glm::length(diff);
-	return -glm::normalize(diff) * m_FootTrackingSpringDamper.drive(error, p_dt);
+	// !!!! float swing = p_lf->m_stepCycles[p_legIdx].getSwingPhase(p_phi);
+	// !!!! float Kft = m_tunePropGainFootTrackingKft.getValAt(swing);
+	// !!!! m_FootTrackingSpringDamper.m_Kp = Kft;
+	// !!!! glm::vec3 diff = m_feet[p_legId].transform.position - m_footStrikePlacement[p_legId];
+	// !!!! float error = glm::length(diff);
+	// !!!! return -glm::normalize(diff) * m_FootTrackingSpringDamper.drive(error, p_dt);
+	return glm::vec3(0.0f);
 }
 
 glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats)
 {
-	return p_lf->m_tuneVelocityRegulatorKv*(p_velocityStats.m_desiredVelocity - p_velocityStats.m_currentVelocity);
+	// !!!! return p_lf->m_tuneVelocityRegulatorKv*(p_velocityStats.m_desiredVelocity - p_velocityStats.m_currentVelocity);
+	return glm::vec3(0.0f);
 }
 
 glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up)
 {
-	float hLF = p_lf->m_tuneLFHeightTraj.getValAt(p_phi);
-	glm::vec3 currentHeight = p_locationStat.m_worldPos - p_locationStat.m_currentGroundPos;
-	// the current height y only works for up=0,1,0
-	// so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
-	// but for now, a float is OK
-	return p_up * p_lf->m_heightForceCalc.drive(hLF - currentHeight.y, p_dt); // PD
+	// !!!! float hLF = p_lf->m_tuneLFHeightTraj.getValAt(p_phi);
+	// !!!! glm::vec3 currentHeight = p_locationStat.m_worldPos - p_locationStat.m_currentGroundPos;
+	// !!!! // the current height y only works for up=0,1,0
+	// !!!! // so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
+	// !!!! // but for now, a float is OK
+	// !!!! return p_up * p_lf->m_heightForceCalc.drive(hLF - currentHeight.y, p_dt); // PD
+	return glm::vec3(0.0f);
 }
 
 glm::vec3 ControllerSystem::calculateFd(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)

@@ -17,7 +17,7 @@
 namespace JacobianHelper
 {
 	CMatrix calculateVFChainJacobian(const ControllerComponent::VFChain& p_chain, 
-		const glm::vec3& p_currentChainEndpointPos, 
+		const glm::vec3& p_currentChainEndpointGoalPos, 
 		const std::vector<glm::vec4>* p_jointWorldAxes,
 		const std::vector<glm::mat4>* p_jointWorldTransforms);
 };
