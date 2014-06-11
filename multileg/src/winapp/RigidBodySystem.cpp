@@ -41,7 +41,7 @@ void RigidBodySystem::added(artemis::Entity &e)
 		unsigned int uid = m_rigidBodyEntities.add(&e);
 		//
 		rigidBody->init(uid, rigidBodyInstance, m_dynamicsWorldPtr);
-		m_dynamicsWorldPtr->addRigidBody(rigidBody->getRigidBody());
+		m_dynamicsWorldPtr->addRigidBody(rigidBody->getRigidBody(),rigidBody->m_collisionLayerType,rigidBody->m_collidesWithLayer);
 		// check if entity has constraints, if so, and if they're uninited, add to
 		// list for batch init (as they must have both this entity's and parent's rb in phys world.
 		checkForNewConstraints(e);

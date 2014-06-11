@@ -2,6 +2,7 @@
 #include <catch.hpp>
 #include <MathHelp.h>
 #include "CMatrixTest.h"
+#include "JacobianVFChainTest.h"
 
 // =======================================================================================
 //                                      Unit Tests

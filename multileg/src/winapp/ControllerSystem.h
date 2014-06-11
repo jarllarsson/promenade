@@ -20,7 +20,7 @@
 /// 20-5-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-#define MULTI
+//#define MULTI
 
 
 class ControllerSystem : public artemis::EntityProcessingSystem
@@ -62,6 +62,9 @@ public:
 		m_runTime = 0.0f;
 		//addComponentType<RigidBodyComponent>();
 		//m_dynamicsWorldPtr = p_dynamicsWorld;
+		m_useVFTorque = true;
+		m_useCGVFTorque = true;
+		m_usePDTorque = true;
 	}
 
 	virtual void initialize()

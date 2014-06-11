@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="App.h" />
+    <ClInclude Include="CollisionLayer.h" />
     <ClInclude Include="ConstraintComponent.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="ControllerSystem.h" />

@@ -29,7 +29,7 @@
 #include "ControllerSystem.h"
 #include "PhysicsWorldHandler.h"
 
-
+//#define MEASURE_RBODIES
 
 using namespace std;
 
@@ -70,18 +70,8 @@ App::App( HINSTANCE p_hInstance )
 	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
 	//
-	m_startPaused = true;
+	m_startPaused = false;
 	//
-	//for (int x = 0; x < 10; x++)
-	//for (int z = 0; z < 10; z++)
-	//{
-	//	glm::mat4 scaleMat = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f, 1.0f, 20.0f));
-	//	glm::mat4 transMat = glm::translate(scaleMat, 
-	//		glm::vec3((float)x*5.0f -50.0f, 0.0f, (float)z*5.0f - 50.0f));
-	//	transMat = glm::transpose(transMat);
-	//	m_instanceOrigins.push_back(transMat);
-	//}
-	//m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)&m_instanceOrigins[0], (unsigned int)m_instanceOrigins.size());
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 }
 
@@ -141,7 +131,11 @@ void App::run()
 	artemis::SystemManager * sysManager = m_world.getSystemManager();
 	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 	//addGameLogic(movementsys);
-	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld/*, &rigidBodyStateDbgRecorder*/));
+#ifdef MEASURE_RBODIES
+	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
+#else
+	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
+#endif
 	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem());
 	sysManager->initializeAll();
@@ -157,30 +151,6 @@ void App::run()
 
 	// Entity manager fetch
 	artemis::EntityManager * entityManager = m_world.getEntityManager();
-
-	// Create a box entity
-	//for (int i = 0; i < 100;i++)
-	//{
-	//	artemis::Entity & box = entityManager->create();
-	//	glm::vec3 pos = glm::vec3(20.0f*sin(i*0.1f), 10.0f + i*4.0f, 20.0f*cos(i*0.1f));
-	//		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-	//	box.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f));
-	//	box.addComponent(new RenderComponent());
-	//	box.addComponent(new TransformComponent(pos,
-	//		glm::quat(glm::vec3(TWOPI*0.05f, 0.0f, 0.0f))
-	//		));
-	//	box.refresh();
-	//}
-	//
-	//artemis::Entity & box = entityManager->create();
-	//glm::vec3 pos = glm::vec3(0.0f);
-	//RigidBodyComponent* rb = new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 0.5f, 0.5f)), 1.0f);
-	//box.addComponent(rb);
-	//box.addComponent(new RenderComponent());
-	//box.addComponent(new TransformComponent(pos,
-	//	glm::quat(glm::vec3(TWOPI*0.05f, 0.0f, 0.0f))
-	//	));
-	//box.refresh();
 
 	// Create a ground entity
 
@@ -218,57 +188,6 @@ void App::run()
 		glm::vec3(1.0f, 2.0f, 10.0f)));
 	axisZ.refresh();
 
-	// Linked boxes
-	//{
-	//	artemis::Entity & parentJoint = entityManager->create();
-	//	glm::vec3 pos = glm::vec3(glm::vec3(0.0f, 20.0f, 0.0f));
-	//	//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-	//	parentJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(1.0f, 2.0f, 1.0f)), 0.0f));
-	//	parentJoint.addComponent(new RenderComponent());
-	//	parentJoint.addComponent(new TransformComponent(pos,
-	//		glm::quat(glm::vec3(PI*0.1f, 0.0f, 0.0f)),
-	//		glm::vec3(2.0f, 4.0f, 2.0f)));
-	//	parentJoint.refresh();
-	//	//
-	//	artemis::Entity* prev = &parentJoint;
-	//	artemis::Entity* mid = NULL;
-	//	for (int i = 0; i < 5; i++)
-	//	{
-	//		artemis::Entity & childJoint = entityManager->create();
-	//		pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
-	//		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-	//		childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f));
-	//		childJoint.addComponent(new RenderComponent());
-	//		childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));
-	//		ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child
-	//			glm::vec3(0.0f, -2.0f, 0.0f), // parent
-	//			{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
-	//			false };
-	//		childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
-	//		childJoint.refresh();
-	//		prev = &childJoint;
-	//		if (i == 25)
-	//			mid = &childJoint;
-	//	}
-	//	//
-	//	prev = mid;
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		artemis::Entity & childJoint = entityManager->create();
-	//		pos = glm::vec3(glm::vec3(0.0f, 0.0f, 20.0f));
-	//		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-	//		childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(0.5f, 2.0f, 0.5f)), 1.0f));
-	//		childJoint.addComponent(new RenderComponent());
-	//		childJoint.addComponent(new TransformComponent(pos, glm::vec3(1.0f, 4.0f, 1.0f)));
-	//		ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 2.0f, 0.0f),	  // child
-	//			glm::vec3(0.0f, -2.0f, 0.0f), // parent
-	//			{ glm::vec3(-HALFPI, 0.0f, 0.0f), glm::vec3(HALFPI, 0.0f, 0.0f) },
-	//			false };
-	//		childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
-	//		childJoint.refresh();
-	//		prev = &childJoint;
-	//	}
-	//}
 
 	// Test of controller
 	float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
@@ -363,10 +282,13 @@ void App::run()
 			render();
 
 			double time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
+
+#ifdef MEASURE_RBODIES
 			if (time > 5.0)
 			{
 				rigidBodyStateDbgRecorder.activate();
 			}
+#endif
 
 			// Physics handling part of the loop
 			// ========================================================
@@ -387,7 +309,9 @@ void App::run()
 
 			prevTimeStamp = currTimeStamp;
 
-			//if (time>10.0) run = false;
+#ifdef MEASURE_RBODIES
+			if (time>10.0) run = false;
+#endif
 
 			// Game Clock part of the loop
 			// ========================================================
@@ -412,7 +336,8 @@ void App::run()
 		}
 
 	}
-	/*
+	
+#ifdef MEASURE_RBODIES
 #ifndef MULTI
 	#ifdef _DEBUG
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
@@ -426,7 +351,8 @@ void App::run()
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_MTCPU");
 	#endif
 #endif
-	*/
+#endif
+	
 
 	entityManager->removeAllEntities();
 

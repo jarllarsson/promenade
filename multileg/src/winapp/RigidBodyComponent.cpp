@@ -2,7 +2,9 @@
 
 
 RigidBodyComponent::RigidBodyComponent(btCollisionShape* p_collisionShape /*= NULL*/,
-	float p_mass /*= 1.0f*/)
+	float p_mass /*= 1.0f*/, 
+	CollisionLayer::CollisionLayerType p_collisionLayerType/* = CollisionLayer::CollisionLayerType::COL_DEFAULT*/,
+	short int p_collidesWithLayer/* = CollisionLayer::CollisionLayerType::COL_DEFAULT*/)
 {
 	if (p_collisionShape == NULL)
 	{
@@ -15,6 +17,8 @@ RigidBodyComponent::RigidBodyComponent(btCollisionShape* p_collisionShape /*= NU
 	m_rigidBody = NULL;
 	m_mass = p_mass;
 	m_inited = false;
+	m_collisionLayerType = p_collisionLayerType;
+	m_collidesWithLayer = p_collidesWithLayer;
 }
 
 RigidBodyComponent::~RigidBodyComponent()

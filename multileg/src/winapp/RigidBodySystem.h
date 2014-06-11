@@ -8,6 +8,7 @@
 #include <vector>
 #include <MeasurementBin.h>
 #include <UniqueIndexList.h>
+#include <Util.h>
 
 // =======================================================================================
 //                                      RigidBodySystem
@@ -33,6 +34,8 @@ private:
 	// List for entities that have rigidbodies so they can be accessed by id
 	UniqueIndexList<artemis::Entity*> m_rigidBodyEntities;
 public:
+
+
 	RigidBodySystem(btDiscreteDynamicsWorld* p_dynamicsWorld, MeasurementBin<string>* p_stateDbgRecorder=NULL) 
 	{
 		addComponentType<TransformComponent>();

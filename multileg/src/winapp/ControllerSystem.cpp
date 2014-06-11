@@ -216,9 +216,9 @@ void ControllerSystem::saveJointWorldEndpoints(unsigned int p_idx, glm::mat4& p_
 {
 	// Store information on the joint's end points.
 	// The outer is the one closest to a child joint.
-	m_jointWorldOuterEndpoints[p_idx] = glm::vec4(0.0f, -m_jointLengths[p_idx]*0.5f, 0.0f, 1.0f)*p_worldMatPosRot;
+	m_jointWorldOuterEndpoints[p_idx] = p_worldMatPosRot*glm::vec4(0.0f, -m_jointLengths[p_idx]*0.5f, 0.0f, 1.0f);
 	// The inner is the one closest to the parent joint.
-	m_jointWorldInnerEndpoints[p_idx] = glm::vec4(0.0f, m_jointLengths[p_idx]*0.5f, 0.0f, 1.0f)*p_worldMatPosRot;
+	m_jointWorldInnerEndpoints[p_idx] = p_worldMatPosRot*glm::vec4(0.0f, m_jointLengths[p_idx]*0.5f, 0.0f, 1.0f);
 }
 
 
@@ -408,7 +408,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(0.0f, 100.0f, 0.0f)*p_dt;
+		leg->m_DOFChain.vf = glm::vec3(1000.0f, 2000.0f, 1000.0f)*p_dt;
 	}
 }
 
@@ -443,7 +443,8 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				{
 					// store torque
 					unsigned int jointIdx = leg->m_DOFChain.jointIDXChain[i];
-					glm::vec3 addT = (chain->DOFChain)[i] * glm::dot(glm::vec3(Jt(i, 0), Jt(i, 1), Jt(i, 2)), vf);
+					glm::vec3 JVec(Jt(i, 0), Jt(i, 1), Jt(i, 2));
+					glm::vec3 addT = (chain->DOFChain)[i] * glm::dot(JVec, vf);
 					(*p_outTVF)[i] += addT; // Here we could write to the global list instead directly maybe as an optimization
 											// Do it like this for now, for the sake of readability and debugging.
 				}

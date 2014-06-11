@@ -6,6 +6,7 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include "ConstraintComponent.h"
 #include <vector>
+#include "CollisionLayer.h"
 
 // =======================================================================================
 //                                RigidBodyComponent
@@ -23,7 +24,9 @@ class RigidBodyComponent : public artemis::Component
 {
 public:
 
-	RigidBodyComponent(btCollisionShape* p_collisionShape = NULL, float p_mass = 1.0f);
+	RigidBodyComponent(btCollisionShape* p_collisionShape = NULL, float p_mass = 1.0f, 
+		CollisionLayer::CollisionLayerType p_collisionLayerType=CollisionLayer::CollisionLayerType::COL_DEFAULT,
+		short int p_collidesWithLayer=CollisionLayer::CollisionLayerType::COL_DEFAULT);
 
 	virtual ~RigidBodyComponent();
 
@@ -43,8 +46,10 @@ public:
 	void addChildConstraint(ConstraintComponent* p_constraint);
 
 	bool isInited();
-
+	CollisionLayer::CollisionLayerType m_collisionLayerType;
+	short int m_collidesWithLayer;
 private:
+
 	btCollisionShape* m_collisionShape;
 	btRigidBody* m_rigidBody;
 	std::vector<ConstraintComponent*> m_childConstraints;
