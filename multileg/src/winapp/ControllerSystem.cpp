@@ -143,8 +143,11 @@ void ControllerSystem::buildCheck()
 				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
 				if (childLink != NULL)
 					jointEntity = childLink->getOwnerEntity();
-				else
+				else // we are at the foot, so trigger termination add foot id to the leg frame
+				{
+					legFrame->m_feetJointId.push_back(idx);
 					jointEntity = NULL;
+				}
 			}
 		}
 		// Calculate number of torques axes in list, store
@@ -306,7 +309,7 @@ glm::vec3 ControllerSystem::getControllerPosition(unsigned int p_controllerId)
 glm::vec3 ControllerSystem::getControllerPosition(ControllerComponent* p_controller)
 {
 	unsigned int legFrameJointId = p_controller->getLegFrame(0)->m_legFrameJointId;
-	glm::vec3 pos = MathHelp::toVec3(m_jointWorldTransforms[legFrameJointId] * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	glm::vec3 pos(MathHelp::getMatrixTranslation(m_jointWorldTransforms[legFrameJointId]));
 	return pos;
 }
 
@@ -385,7 +388,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		// Swing force
 		if (!legInStance[i])
 		{
-			glm::vec3 fsw = calculateFsw(p_lf, i, p_phi, p_dt);
+			glm::vec3 fsw(calculateFsw(p_lf, i, p_phi, p_dt));
 			leg->m_DOFChain.vf = calculateSwingLegVF(fsw); // Store force
 		}
 		else
@@ -394,10 +397,10 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			if (!stanceForcesCalculated)
 			{
 				fv = calculateFv(p_lf, m_controllerVelocityStats[p_controllerIdx]);
-				fh = calculateFh(p_lf, m_controllerLocationStats[p_controllerIdx], p_phi, p_dt, glm::vec3(0.0f,1.0f,0.0));
+				fh = calculateFh(p_lf, m_controllerLocationStats[p_controllerIdx], p_phi, p_dt, glm::vec3(0.0f, 1.0f, 0.0));
 				stanceForcesCalculated=true;
 			}	
-			glm::vec3 fd = calculateFd(p_lf, i);
+			glm::vec3 fd(calculateFd(p_lf, i));
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
 	}
@@ -411,48 +414,51 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 		{
 			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 			calculateLegFrameNetLegVF(i, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
+			// Begin calculating jacobians for each leg in leg frame
+			unsigned int legCount = lf->m_legs.size();
 			// Calculate torques using each leg chain
-			for (int n = 0; n < LegFrame.c_legCount; n++)
+			for (int n = 0; n < legCount; n++)
 			{
 				//  get the joints
-				int legFrameRoot = lf.m_id;
-				//legFrameRoot = -1;
-				int legRoot = lf.m_neighbourJointIds[n];
-				int legSegmentCount = LegFrame.c_legSegments; // hardcoded now
-				// Use joint ids to get dof ids
-				// Start in chain
-				int legFrameRootDofId = -1; // if we have separate root as base link
-				if (legFrameRoot != -1) legFrameRootDofId = m_chain[legFrameRoot].m_dofListIdx;
-				// otherwise, use first in chain as base link
-				int legRootDofId = m_chain[legRoot].m_dofListIdx;
-				// end in chain
-				int lastDofIdx = legRoot + legSegmentCount - 1;
-				int legDofEnd = m_chain[lastDofIdx].m_dofListIdx + m_chain[lastDofIdx].m_dof.Length;
+				//int legFrameRoot = lf.m_id;
+				////legFrameRoot = -1;
+				//int legRoot = lf.m_neighbourJointIds[n];
+				//int legSegmentCount = LegFrame.c_legSegments; // hardcoded now
+				//// Use joint ids to get dof ids
+				//// Start in chain
+				//int legFrameRootDofId = -1; // if we have separate root as base link
+				//if (legFrameRoot != -1) legFrameRootDofId = m_chain[legFrameRoot].m_dofListIdx;
+				//// otherwise, use first in chain as base link
+				//int legRootDofId = m_chain[legRoot].m_dofListIdx;
+				//// end in chain
+				//int lastDofIdx = legRoot + legSegmentCount - 1;
+				//int legDofEnd = m_chain[lastDofIdx].m_dofListIdx + m_chain[lastDofIdx].m_dof.Length;
 				//
+				ControllerComponent::Leg* leg = &lf->m_legs[n];
 				// get force for the leg
-				Vector3 VF = lf.m_netLegBaseVirtualForces[n];
+				glm::vec3 vf = leg->m_DOFChain.vf;
 				// Calculate torques for each joint
 				// Start by updating joint information based on their gameobjects
-				Vector3 end = transform.localPosition;
+				glm::vec3 end = MathHelp::getMatrixTranslation(m_jointWorldTransforms[lf->m_feetJointId[n]]);
 				//Debug.Log("legroot "+legRoot+" legseg "+legSegmentCount);
-				int jointstart = legRoot;
-				if (legFrameRoot != -1) jointstart = legFrameRoot;
-				for (int x = jointstart; x < legRoot + legSegmentCount; x++)
-				{
-					if (legFrameRoot != -1 && x < legRoot && x != legFrameRoot)
-						x = legRoot;
-					Joint current = m_chain[x];
-					GameObject currentObj = m_chainObjs[x];
-					//Debug.Log("joint pos: " + currentObj.transform.localPosition);
-					// Update Joint
-					current.length = currentObj.transform.localScale.y;
-					current.m_position = currentObj.transform.position /*- (-currentObj.transform.up) * current.length * 0.5f*/;
-					current.m_endPoint = currentObj.transform.position + (-currentObj.transform.up) * current.length/* * 0.5f*/;
-					//m_chain[i] = current;
-					//Debug.DrawLine(current.m_position, current.m_endPoint, Color.red);
-					//Debug.Log(x+" joint pos: " + current.m_position + " = " + m_chain[x].m_position);
-					end = current.m_endPoint;
-				}
+				//int jointstart = legRoot;
+				//if (legFrameRoot != -1) jointstart = legFrameRoot;
+				//for (int x = jointstart; x < legRoot + legSegmentCount; x++)
+				//{
+				//	if (legFrameRoot != -1 && x < legRoot && x != legFrameRoot)
+				//		x = legRoot;
+				//	Joint current = m_chain[x];
+				//	GameObject currentObj = m_chainObjs[x];
+				//	//Debug.Log("joint pos: " + currentObj.transform.localPosition);
+				//	// Update Joint
+				//	current.length = currentObj.transform.localScale.y;
+				//	current.m_position = currentObj.transform.position /*- (-currentObj.transform.up) * current.length * 0.5f*/;
+				//	current.m_endPoint = currentObj.transform.position + (-currentObj.transform.up) * current.length/* * 0.5f*/;
+				//	//m_chain[i] = current;
+				//	//Debug.DrawLine(current.m_position, current.m_endPoint, Color.red);
+				//	//Debug.Log(x+" joint pos: " + current.m_position + " = " + m_chain[x].m_position);
+				//	end = current.m_endPoint;
+				//}
 				//foreach(Joint j in m_chain)
 				//    Debug.Log("joint pos CC: " + j.m_position);
 
@@ -549,14 +555,15 @@ glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, con
 
 glm::vec3 ControllerSystem::calculateFd(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
-	Vector3 FD = Vector3.zero;
-	Vector3 footPos = transform.position - m_feet[p_legId].transform.position/*-transform.position)*/;
-	footPos = transform.InverseTransformDirection(footPos);
-
-	float FDx = m_tuneFD[p_legId, Dx].x;
-	float FDz = m_tuneFD[p_legId, Dz].z;
-	//Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
-	FD = new Vector3(FDx, 0.0f, FDz);
+	glm::vec3 FD;
+	// Check van de panne's answer before implementing this
+	// glm::vec3 footPos = transform.position - m_feet[p_legId].transform.position/*-transform.position)*/;
+	// footPos = transform.InverseTransformDirection(footPos);
+	// 
+	// float FDx = m_tuneFD[p_legId, Dx].x;
+	// float FDz = m_tuneFD[p_legId, Dz].z;
+	// //Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
+	// FD = new Vector3(FDx, 0.0f, FDz);
 	return FD;
 }
 

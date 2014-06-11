@@ -31,5 +31,6 @@ namespace MathHelp
 	glm::vec3 transformPosition(const glm::mat4& m, glm::vec3& p_pos);
 
 	glm::vec3 toVec3(const glm::vec4& p_v);
+	glm::vec3 getMatrixTranslation(const glm::mat4& m);
 
 };

@@ -108,3 +108,8 @@ glm::vec3 MathHelp::toVec3(const glm::vec4& p_v)
 {
 	return glm::vec3(p_v.x, p_v.y, p_v.z);
 }
+
+glm::vec3 MathHelp::getMatrixTranslation(const glm::mat4& m)
+{
+	return MathHelp::toVec3(m * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+}
