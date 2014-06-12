@@ -34,10 +34,10 @@ void ControllerSystem::update(float p_dt)
 	// Update all transforms
 	for (int i = 0; i < m_jointRigidBodies.size(); i++)
 	{
-		//saveJointMatrix(i);    !IMPORTANT! WHERE TO PUT THIS FOR DETERMINISTIC RUNS???????
+		saveJointMatrix(i);    //!IMPORTANT! WHERE TO PUT THIS FOR DETERMINISTIC RUNS???????
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
-	int controllerCount = m_controllers.size();
+	int controllerCount = (int)m_controllers.size();
 	if (m_controllers.size()>0)
 	{
 		// Start with making the controllers parallel only.
@@ -111,7 +111,7 @@ void ControllerSystem::buildCheck()
 		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
 		// start by storing the current torque list size as offset, this'll be where we'll begin this
 		// controller's chunk of the torque list
-		unsigned int torqueListOffset = m_jointTorques.size();
+		unsigned int torqueListOffset = (unsigned int)m_jointTorques.size();
 		// Build the controller (Temporary code)
 		// The below should be done for each leg (even the root)
 		// Create ROOT
@@ -121,8 +121,8 @@ void ControllerSystem::buildCheck()
 		legFrame->m_legFrameJointId = rootIdx; // store idx to root for leg frame
 		// prepare legs			
 		legFrame->m_legs.resize(legFrameEntities->m_upperLegEntities.size()); // Allocate the number of specified legs
-		unsigned int legCount = legFrame->m_legs.size();
-		for (int x = 0; x < legCount; x++)
+		unsigned int legCount = (unsigned int)legFrame->m_legs.size();
+		for (unsigned int x = 0; x < legCount; x++)
 		{
 			// start by adding the already existing root id (needed in all leg chains)
 			addJointToChain(&legFrame->m_legs[x], rootIdx);
@@ -154,7 +154,7 @@ void ControllerSystem::buildCheck()
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
 		// Add
 		m_controllers.push_back(controller);
-		initControllerLocationAndVelocityStat(m_controllers.size() - 1);
+		initControllerLocationAndVelocityStat((int)m_controllers.size() - 1);
 	}
 	m_controllersToBuild.clear();
 }
@@ -349,7 +349,7 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	std::vector<glm::vec3> tPD(torqueCount);
 	std::vector<glm::vec3> tCGVF(torqueCount);
 	std::vector<glm::vec3> tVF(torqueCount);
-	for (int i = 0; i < torqueCount; i++)
+	for (unsigned int i = 0; i < torqueCount; i++)
 	{
 		tPD[i] = glm::vec3(0.0f); tCGVF[i] = glm::vec3(0.0f); tVF[i] = glm::vec3(0.0f);
 	}
@@ -358,7 +358,7 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	computeVFTorques(&tVF, p_controller, p_controllerId, phi, p_dt);
 	//computeCGVFTorques(&tCGVF, phi, p_dt);
 	////// Sum them
-	for (int i = 0; i < torqueCount; i++)
+	for (unsigned int i = 0; i < torqueCount; i++)
 	{
 		m_jointTorques[torqueIdxOffset + i] = /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
 			//= glm::vec3(0.0f, 200.0f, 0.0f);
@@ -367,7 +367,7 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	//
 	// Apply them to the leg frames, also
 	// feed back corrections for hip joints
-	for (int i = 0; i < p_controller->getLegFrameCount(); i++)
+	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
 		//applyNetLegFrameTorque(p_controllerId, p_controller, i, &m_jointTorques, torqueIdxOffset, torqueCount, phi);
 	}
@@ -376,11 +376,11 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, 
 										 VelocityStat& p_velocityStats)
 {
-	unsigned int legCount=p_lf->m_legs.size(), 
+	unsigned int legCount = (unsigned int)p_lf->m_legs.size(),
 				 stanceLegs = 0;
 	bool* legInStance = new bool[legCount];
 	// First we need to count the stance legs
-	for (int i = 0; i < legCount; i++)
+	for (unsigned int i = 0; i < legCount; i++)
 	{
 		legInStance[i] = false;
 		if (isInControlledStance(p_lf,i, p_phi))
@@ -393,7 +393,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 	// calculated once per leg frame, then reused
 	glm::vec3 fv(0.0f), fh(0.0f); bool stanceForcesCalculated = false;
 	// Run again and calculate forces
-	for (int i = 0; i < legCount; i++)
+	for (unsigned int i = 0; i < legCount; i++)
 	{
 		ControllerComponent::Leg* leg = &p_lf->m_legs[i];
 		// Swing force
@@ -415,7 +415,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(0.0f, 100.0f*sin(m_runTime*4.0f), 0.0f);
+		leg->m_DOFChain.vf = glm::vec3(0.0f, 10.0f*sin(m_runTime*4.0f), 0.0f);
 	}
 }
 
@@ -423,14 +423,14 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 {
 	if (m_useVFTorque)
 	{
-		for (int i = 0; i < p_controller->getLegFrameCount(); i++)
+		for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 		{
 			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 			calculateLegFrameNetLegVF(i, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
 			// Begin calculating Jacobian transpose for each leg in leg frame
-			unsigned int legCount = lf->m_legs.size();
+			unsigned int legCount = (unsigned )lf->m_legs.size();
 			// Calculate torques using each leg chain
-			for (int n = 0; n < legCount; n++)
+			for (unsigned int n = 0; n < legCount; n++)
 			{
 				ControllerComponent::Leg* leg = &lf->m_legs[n];
 				ControllerComponent::VFChain* chain = &leg->m_DOFChain;
@@ -445,22 +445,36 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 																	 &m_jointWorldInnerEndpoints,	// All joint rotational axes
 																	 &m_jointWorldTransforms);		// All joint world transformations
 				CMatrix Jt = CMatrix::transpose(J);
+
+				glm::vec3 sum(0.0f);
+				for (int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
+				{
+					sum += MathHelp::getMatrixTranslation(m_jointWorldTransforms[g]);
+				}
+				float ssum = sum.x + sum.y + sum.z;
+				
 				// Use matrix to calculate and store torque
-				for (int i = 0; i < chain->getSize(); i++)
+				for (unsigned int m = 0; m < chain->getSize(); m++)
 				{
 					// store torque
-					unsigned int jointIdx = leg->m_DOFChain.jointIDXChain[i];
-					glm::vec3 JVec(Jt(i, 0), Jt(i, 1), Jt(i, 2));
-					glm::vec3 addT = (chain->DOFChain)[i] * glm::dot(JVec, vf);
-
+					unsigned int jointIdx = leg->m_DOFChain.jointIDXChain[m];
+					glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
+					glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
+					glm::vec3 addT = (chain->DOFChain)[m] * glm::dot(JVec, vf);
+					//DEBUGPRINT(((string("\nJx") + toString(Jt(m, 0)) + string(" Jy ") + toString(Jt(m, 2)) + string(" Jz ") + toString(Jt(m, 3))).c_str()));
+					float ssum = JVec.x + JVec.y + JVec.z;
+					//DEBUGPRINT(((string("\n") + toString(m) +string(" SUM: ") + toString(ssum)).c_str()));
 					// Problem med determinism i release
 					// JVec är ej deterministisk
 					//   JVecs inputs:
 					//   end är ok
 					//   vf är ok
+					//   DOF chain är ok
+					//    m_jointWorldInnerEndpoints är ok
+					//   m_jointWorldTransforms är ok
+					// Jt(m, 1) är inte ok (de andra verkar vara ok)
 
-					(*p_outTVF)[i] += end;
-						//addT; // Here we could write to the global list instead directly maybe as an optimization
+					(*p_outTVF)[m] += addT; // Here we could write to the global list instead directly maybe as an optimization
 											// Do it like this for now, for the sake of readability and debugging.
 				}
 			}

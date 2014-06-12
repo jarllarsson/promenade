@@ -42,8 +42,11 @@ public:
 
 	bool operator == (const CMatrix& p_mb) const;
 
+	CMatrix& operator = (const CMatrix& p_mb);
+
 	static float dot(const CMatrix& p_ma, const CMatrix& p_mb);
 private:
+	void clear();
 	void init();
 	void init(const CMatrix& p_copy);
 };

@@ -120,7 +120,7 @@ void App::run()
 	// Create the physics world
 	// ==================================
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0, -9.82, 0));
+	dynamicsWorld->setGravity(btVector3(0, -9.82f, 0));
 
 	// Measurements
 	MeasurementBin<string> rigidBodyStateDbgRecorder;

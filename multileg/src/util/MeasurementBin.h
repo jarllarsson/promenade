@@ -112,8 +112,9 @@ bool MeasurementBin<T>::saveResults(const string& p_fileName)
 
 		}
 		outFile.close();
+		return true;
 	}
-
+	return false;
 }
 
 template<class T>

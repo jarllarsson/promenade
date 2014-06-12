@@ -11,17 +11,18 @@ CMatrix JacobianHelper::calculateVFChainJacobian(const ControllerComponent::VFCh
 	unsigned int dofCount = p_chain.getSize();
 	// Prepare Jacobian matrix
 	CMatrix J(3, dofCount); // 3 is position in xyz
-	for (int i = 0; i < dofCount; i++) // this is then the "thread pool"
+	for (unsigned int i = 0; i < dofCount; i++) // this is then the "thread pool"
 	{
 		// Fetch the id for the joint from the list
 		unsigned int jointIdx = p_chain.jointIDXChain[i];
 		// Start calculating the jacobian for the current DOF
 		glm::vec3 jointAxisPos = MathHelp::toVec3((*p_jointWorldAxes)[jointIdx]);
+		glm::vec3 dir = p_currentChainEndpointGoalPos - jointAxisPos;
 		//Debug.Log(linkPos.ToString());
 		const glm::vec3* dof = &p_chain.DOFChain[i];
 		// Solve for given axis
 		glm::vec3 rotAxis = MathHelp::transformDirection((*p_jointWorldTransforms)[jointIdx], *dof);
-		glm::vec3 dirTarget = glm::cross(rotAxis, p_currentChainEndpointGoalPos - jointAxisPos);
+		glm::vec3 dirTarget = glm::cross(rotAxis, dir);
 		// Add result to matrix
 		J(0, i) = dirTarget.x;
 		J(1, i) = dirTarget.y;
