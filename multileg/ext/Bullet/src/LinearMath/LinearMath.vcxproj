@@ -134,6 +134,7 @@
     <IntDir>$(SolutionDir)ext\Bullet\obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <OutDir>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\</OutDir>

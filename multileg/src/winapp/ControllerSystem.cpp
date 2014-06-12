@@ -162,6 +162,7 @@ void ControllerSystem::buildCheck()
 void ControllerSystem::addJointToChain(ControllerComponent::Leg* p_leg, unsigned int p_idx, const glm::vec3* p_angularLims)
 {
 	ControllerComponent::VFChain* legChain = &p_leg->m_DOFChain;
+	legChain->vf = glm::vec3(0.0f);
 	// root has 3DOF (for now, to not over-optimize, we add three vec3's)
 	for (int n = 0; n < 3; n++)
 	{
@@ -176,7 +177,7 @@ void ControllerSystem::addJointToChain(ControllerComponent::Leg* p_leg, unsigned
 unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform)
 {
 	m_jointRigidBodies.push_back(p_jointRigidBody->getRigidBody());
-	m_jointTorques.resize(m_jointRigidBodies.size());
+	m_jointTorques.push_back(glm::vec3(0.0f));
 	glm::mat4 matPosRot = p_jointTransform->getMatrixPosRot();
 	m_jointWorldTransforms.push_back(matPosRot);
 	m_jointLengths.push_back(p_jointTransform->getScale().y);
@@ -203,7 +204,7 @@ void ControllerSystem::saveJointMatrix(unsigned int p_rigidBodyIdx)
 			btTransform physTransform;
 			motionState->getWorldTransform(physTransform);
 			// Get the transform from Bullet and into mat
-			glm::mat4 mat;
+			glm::mat4 mat(0.0f);
 			physTransform.getOpenGLMatrix(glm::value_ptr(mat));
 			m_jointWorldTransforms[idx] = mat; // note, use same index for transform list
 			saveJointWorldEndpoints(idx, mat);
@@ -348,6 +349,10 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	std::vector<glm::vec3> tPD(torqueCount);
 	std::vector<glm::vec3> tCGVF(torqueCount);
 	std::vector<glm::vec3> tVF(torqueCount);
+	for (int i = 0; i < torqueCount; i++)
+	{
+		tPD[i] = glm::vec3(0.0f); tCGVF[i] = glm::vec3(0.0f); tVF[i] = glm::vec3(0.0f);
+	}
 	//
 	//computePDTorques(&tPD, phi);
 	computeVFTorques(&tVF, p_controller, p_controllerId, phi, p_dt);
@@ -386,7 +391,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 	// 
 	// Declare stance forces here as they should only be 
 	// calculated once per leg frame, then reused
-	glm::vec3 fv, fh; bool stanceForcesCalculated = false;
+	glm::vec3 fv(0.0f), fh(0.0f); bool stanceForcesCalculated = false;
 	// Run again and calculate forces
 	for (int i = 0; i < legCount; i++)
 	{
@@ -410,7 +415,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(30.0f, 40.0f, 0.0f);
+		leg->m_DOFChain.vf = glm::vec3(0.0f, 100.0f*sin(m_runTime*4.0f), 0.0f);
 	}
 }
 
@@ -447,7 +452,14 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 					unsigned int jointIdx = leg->m_DOFChain.jointIDXChain[i];
 					glm::vec3 JVec(Jt(i, 0), Jt(i, 1), Jt(i, 2));
 					glm::vec3 addT = (chain->DOFChain)[i] * glm::dot(JVec, vf);
-					(*p_outTVF)[i] += addT;
+
+					// Problem med determinism i release
+					// JVec är ej deterministisk
+					//   JVecs inputs:
+					//   end är ok
+					//   vf är ok
+
+					(*p_outTVF)[i] += end;
 						//addT; // Here we could write to the global list instead directly maybe as an optimization
 											// Do it like this for now, for the sake of readability and debugging.
 				}

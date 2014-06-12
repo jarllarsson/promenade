@@ -10,7 +10,7 @@ CMatrix JacobianHelper::calculateVFChainJacobian(const ControllerComponent::VFCh
 	// we need to account for that extra joint
 	unsigned int dofCount = p_chain.getSize();
 	// Prepare Jacobian matrix
-	CMatrix J = CMatrix(3, dofCount); // 3 is position in xyz
+	CMatrix J(3, dofCount); // 3 is position in xyz
 	for (int i = 0; i < dofCount; i++) // this is then the "thread pool"
 	{
 		// Fetch the id for the joint from the list

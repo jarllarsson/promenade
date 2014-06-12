@@ -94,6 +94,7 @@
     <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)ext\Visual Leak Detector\include\;$(IncludePath)</IncludePath>
     <LibraryWPath>$(LibraryWPath)</LibraryWPath>
     <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>

@@ -36,7 +36,7 @@ using namespace std;
 class App
 {
 public:
-	App(HINSTANCE p_hInstance);
+	App(HINSTANCE p_hInstance, unsigned int p_width=1280, unsigned int p_height=1024);
 	virtual ~App();
 
 	void run();
@@ -48,7 +48,7 @@ protected:
 	LARGE_INTEGER getFrequency();
 
 	void processInput();
-	void handleContext(double p_dt, double p_physDt);
+	void handleContext(double p_dt, double p_physDt, unsigned int p_physSteps);
 	void gameUpdate(double p_dt);
 
 	void addOrderIndependentSystem(artemis::EntityProcessingSystem* p_system);

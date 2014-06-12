@@ -92,6 +92,7 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\CATCH;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <CodeAnalysisRuleSet>NativeMinimumRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>

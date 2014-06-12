@@ -24,10 +24,12 @@ public:
 		m_world = p_world;
 		m_controllerSystem = p_controllerSystem;
 		m_world->setInternalTickCallback(physicsSimulationTickCallback, static_cast<void *>(this), true);
+		m_internalStepCounter = 0;
 	}
 
 	void myProcessCallback(btScalar timeStep) 
 	{
+		m_internalStepCounter++;
 		//// Character controller
 		m_controllerSystem->update((float)timeStep); // might want this in post tick instead? Have it here for now
 		//// Physics
@@ -47,13 +49,17 @@ public:
 		m_controllerSystem->applyTorques((float)timeStep);
 		return;
 	}
-
+	unsigned int getNumberOfInternalSteps()
+	{
+		return m_internalStepCounter;
+	}
 protected:
 	// Might want to change this to generic list of a common base class
 	ControllerSystem* m_controllerSystem; // But right now, we only need it for the controllers
 	//
 	// Physics world
 	btDynamicsWorld* m_world;
+	unsigned int m_internalStepCounter;
 };
 
 void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeStep) {

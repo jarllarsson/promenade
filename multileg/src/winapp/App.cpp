@@ -36,10 +36,10 @@ using namespace std;
 
 const double App::DTCAP=0.5;
 
-App::App( HINSTANCE p_hInstance )
+App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_height/*=1024*/ )
 {
-	int width=1280,
-		height=1024;
+	int width=p_width,
+		height=p_height;
 	bool windowMode=true;
 	// Context
 	try
@@ -192,7 +192,7 @@ void App::run()
 
 	// Test of controller
 	float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
-	for (int x = 0; x < 4; x++) // number of characters
+	for (int x = 0; x < 1; x++) // number of characters
 	{
 		artemis::Entity & legFrame = entityManager->create();
 		glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 10.0f, 50.0f);
@@ -276,15 +276,17 @@ void App::run()
 
 	// Dry run, so artemis have run before physics first step
 	//gameUpdate(0.0f);
-
+	unsigned int oldSteps=physicsWorldHandler.getNumberOfInternalSteps();
+	double time = 0.0;
 	while (!m_context->closeRequested() && run)
 	{
 		if (!pumpMessage(msg))
 		{
+
 			// Start by rendering
 			render();
 
-			double time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
+			time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
 
 #ifdef MEASURE_RBODIES
 			if (time > 5.0)
@@ -305,15 +307,15 @@ void App::run()
 			//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
 
 			// Tick the bullet world. Keep in mind that bullet takes seconds
-			dynamicsWorld->stepSimulation((btScalar)/*1.0f/60.0f*/phys_dt, 10);
+			dynamicsWorld->stepSimulation((btScalar)/*1.0f/60.0f*/phys_dt/*, 10*/);
 			// ========================================================
 
-
-
+			unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
+			
 			prevTimeStamp = currTimeStamp;
 
 #ifdef MEASURE_RBODIES
-			if (time>10.0) run = false;
+			if (steps>=600) run = false;
 #endif
 
 			// Game Clock part of the loop
@@ -325,22 +327,22 @@ void App::run()
 				dt -= gameTickS;
 				gameClockTimeOffset += gameTickS;
 				// Handle all input
+				processInput();
+				// Update logic
+				double interval = gameTickS;
 
-				{
-					processInput();
-					// Update logic
-					double interval = gameTickS;
-
-					handleContext(interval, phys_dt);
-					gameUpdate(interval);
-				}
+				handleContext(interval, phys_dt, steps-oldSteps);
+				gameUpdate(interval);
 			}
 			// ========================================================
+			oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		}
 
 	}
 	
 #ifdef MEASURE_RBODIES
+	rigidBodyStateDbgRecorder.saveMeasurement("Time: "+toString(time));
+	rigidBodyStateDbgRecorder.saveMeasurement("Steps: "+toString(physicsWorldHandler.getNumberOfInternalSteps()));
 #ifndef MULTI
 	#ifdef _DEBUG
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
@@ -457,7 +459,7 @@ void App::processInput()
 	m_input->run();
 }
 
-void App::handleContext(double p_dt, double p_physDt)
+void App::handleContext(double p_dt, double p_physDt, unsigned int p_physSteps)
 {
 	// apply resizing on graphics device if it has been triggered by the context
 	if (m_context->isSizeDirty())
@@ -471,7 +473,7 @@ void App::handleContext(double p_dt, double p_physDt)
 	{
 		float fps = (1.0f / (float)(p_dt*1000.0f))*1000.0f;
 		float pfps = 1.0f / (float)p_physDt;
-		m_context->updateTitle((" | Game FPS: " + toString(fps) + " | Phys FPS: " + toString(pfps)).c_str());
+		m_context->updateTitle((" | Game FPS: " + toString(fps) + " | Phys steps/frame: " + toString(p_physSteps) + " | Phys FPS: " + toString(pfps)).c_str());
 		m_fpsUpdateTick = 0.3f;
 	}
 }
