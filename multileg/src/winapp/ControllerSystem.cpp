@@ -34,7 +34,7 @@ void ControllerSystem::update(float p_dt)
 	// Update all transforms
 	for (int i = 0; i < m_jointRigidBodies.size(); i++)
 	{
-		saveJointMatrix(i);
+		//saveJointMatrix(i);
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
 	int controllerCount = m_controllers.size();
@@ -355,8 +355,9 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	////// Sum them
 	for (int i = 0; i < torqueCount; i++)
 	{
-		m_jointTorques[torqueIdxOffset + i] = glm::vec3(0.0f, 200.0f, 0.0f);
-			//+= /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
+		m_jointTorques[torqueIdxOffset + i] = /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
+			//= glm::vec3(0.0f, 200.0f, 0.0f);
+			//+
 	}
 	//
 	// Apply them to the leg frames, also
@@ -409,7 +410,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(0.0f, 10.0f, 0.0f);
+		leg->m_DOFChain.vf = glm::vec3(30.0f, 40.0f, 0.0f);
 	}
 }
 
@@ -446,7 +447,8 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 					unsigned int jointIdx = leg->m_DOFChain.jointIDXChain[i];
 					glm::vec3 JVec(Jt(i, 0), Jt(i, 1), Jt(i, 2));
 					glm::vec3 addT = (chain->DOFChain)[i] * glm::dot(JVec, vf);
-					(*p_outTVF)[i] += addT; // Here we could write to the global list instead directly maybe as an optimization
+					(*p_outTVF)[i] += addT;
+						//addT; // Here we could write to the global list instead directly maybe as an optimization
 											// Do it like this for now, for the sake of readability and debugging.
 				}
 			}

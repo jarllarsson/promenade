@@ -37,6 +37,7 @@ void RigidBodySystem::added(artemis::Entity &e)
 		btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
 		btRigidBody* rigidBodyInstance = new btRigidBody(rigidBodyCI);
 		rigidBodyInstance->setDamping(0.1f, 0.1f);
+		rigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
 		// Add rigidbody to list
 		unsigned int uid = m_rigidBodyEntities.add(&e);
 		//
