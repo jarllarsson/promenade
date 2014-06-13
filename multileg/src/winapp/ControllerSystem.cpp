@@ -34,7 +34,7 @@ void ControllerSystem::update(float p_dt)
 	// Update all transforms
 	for (int i = 0; i < m_jointRigidBodies.size(); i++)
 	{
-		saveJointMatrix(i);    //!IMPORTANT! WHERE TO PUT THIS FOR DETERMINISTIC RUNS???????
+		//saveJointMatrix(i);    //!IMPORTANT! WHERE TO PUT THIS FOR DETERMINISTIC RUNS???????
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
 	int controllerCount = (int)m_controllers.size();

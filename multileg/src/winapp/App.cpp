@@ -29,7 +29,7 @@
 #include "ControllerSystem.h"
 #include "PhysicsWorldHandler.h"
 
-#define MEASURE_RBODIES
+//#define MEASURE_RBODIES
 
 using namespace std;
 
@@ -126,6 +126,7 @@ void App::run()
 	MeasurementBin<string> rigidBodyStateDbgRecorder;
 	// measurer.activate();
 
+	
 	// Artemis
 	// Create and initialize systems
 	artemis::SystemManager * sysManager = m_world.getSystemManager();
@@ -141,7 +142,7 @@ void App::run()
 	sysManager->initializeAll();
 
 
-
+	
 
 	// Combine Physics with our stuff!
 	PhysicsWorldHandler physicsWorldHandler(dynamicsWorld,m_controllerSystem);
@@ -190,177 +191,185 @@ void App::run()
 	axisZ.refresh();
 
 
-	// Test of controller
-	float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
-	for (int x = 0; x < 1; x++) // number of characters
-	{
-		artemis::Entity & legFrame = entityManager->create();
-		glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 10.0f, 50.0f);
-		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-		glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, 2.0f);
-		legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f,
-			CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
-		legFrame.addComponent(new RenderComponent());
-		legFrame.addComponent(new TransformComponent(pos,
-			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-			lfSize));
-		legFrame.refresh();
-		//
-		vector<artemis::Entity*> hipJoints;
-		// Number of leg frames per character
-		for (int n = 0; n < 2; n++) // number of legs per frame
-		{		
-			artemis::Entity* prev = &legFrame;
-			artemis::Entity* upperLegSegment = NULL;
-			float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
-			glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
-			glm::vec3 boxSize=glm::vec3(1.0f, 4.0f, 1.0f);
-			for (int i = 0; i < 3; i++) // number of segments per leg
-			{
-				artemis::Entity & childJoint = entityManager->create();
-				float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
-				float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
-				glm::vec3 parentSz = boxSize;
-				boxSize = glm::vec3(1.0f, 4.0f, 1.0f); // set new size for current box
-				// segment specific constraint params
-				glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
-				glm::vec3 upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
-				if (i == 0) // if hip joint
-				{
-					upperLegSegment = &childJoint;
-					jointXOffsetFromParent = currentHipJointCoronalOffset;
-				}
-				else if (i == 1) // if knee
-				{
-					lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-				}
-				else if (i == 2) // if foot
-				{
-					jointZOffsetInChild = 1.0f;
-					boxSize = glm::vec3(1.3f, 1.0f, 2.0f);
-					lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-					upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-				}
-				legpos -= glm::vec3(glm::vec3(0.0f, parentSz.y*1.1f, jointZOffsetInChild));
-				//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-				childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f, // note, h-lengths
-					CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
-				childJoint.addComponent(new RenderComponent());
-				childJoint.addComponent(new TransformComponent(legpos,
-					/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
-					boxSize));					// note scale, so full lengths
-				ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, jointZOffsetInChild),	  // child (this)
-					glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
-					{ lowerAngleLim, upperAngleLim },
-					false };
-				childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
-				childJoint.refresh();
-				prev = &childJoint;
-			}
-			hipJoints.push_back(upperLegSegment);
-		}
-		// Controller
-		artemis::Entity & controller = entityManager->create();
-		//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-		controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
-		controller.refresh();
-	}
-
-
-	// Message pump struct
-	MSG msg = {0};
-
-	// secondary run variable
-	// lets non-context systems quit the program
-	bool run=true;
-
-	// Dry run, so artemis have run before physics first step
-	//gameUpdate(0.0f);
-	unsigned int oldSteps=physicsWorldHandler.getNumberOfInternalSteps();
-	double time = 0.0;
-	while (!m_context->closeRequested() && run)
-	{
-		if (!pumpMessage(msg))
+		// Test of controller
+		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
+		for (int x = 0; x < 1; x++) // number of characters
 		{
+			artemis::Entity & legFrame = entityManager->create();
+			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 10.0f, 50.0f);
+			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, 2.0f);
+			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f,
+				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
+			legFrame.addComponent(new RenderComponent());
+			legFrame.addComponent(new TransformComponent(pos,
+				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+				lfSize));
+			legFrame.refresh();
+			//
+			vector<artemis::Entity*> hipJoints;
+			// Number of leg frames per character
+			for (int n = 0; n < 2; n++) // number of legs per frame
+			{
+				artemis::Entity* prev = &legFrame;
+				artemis::Entity* upperLegSegment = NULL;
+				float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
+				glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
+				glm::vec3 boxSize = glm::vec3(1.0f, 4.0f, 1.0f);
+				for (int i = 0; i < 3; i++) // number of segments per leg
+				{
+					artemis::Entity & childJoint = entityManager->create();
+					float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
+					float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
+					glm::vec3 parentSz = boxSize;
+					boxSize = glm::vec3(1.0f, 4.0f, 1.0f); // set new size for current box
+					// segment specific constraint params
+					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
+					glm::vec3 upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+					if (i == 0) // if hip joint
+					{
+						upperLegSegment = &childJoint;
+						jointXOffsetFromParent = currentHipJointCoronalOffset;
+					}
+					else if (i == 1) // if knee
+					{
+						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+					}
+					else if (i == 2) // if foot
+					{
+						jointZOffsetInChild = 1.0f;
+						boxSize = glm::vec3(1.3f, 1.0f, 2.0f);
+						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+					}
+					legpos -= glm::vec3(glm::vec3(0.0f, parentSz.y*1.1f, jointZOffsetInChild));
+					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+					childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f, // note, h-lengths
+						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
+					childJoint.addComponent(new RenderComponent());
+					childJoint.addComponent(new TransformComponent(legpos,
+						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
+						boxSize));					// note scale, so full lengths
+					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, jointZOffsetInChild),	  // child (this)
+						glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
+						{ lowerAngleLim, upperAngleLim },
+						false };
+					childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
+					childJoint.refresh();
+					prev = &childJoint;
+				}
+				hipJoints.push_back(upperLegSegment);
+			}
+			// Controller
+			artemis::Entity & controller = entityManager->create();
+			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+			controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
+			controller.refresh();
+		}
 
-			// Start by rendering
-			render();
 
-			time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
+
+		// Message pump struct
+		MSG msg = { 0 };
+
+		// secondary run variable
+		// lets non-context systems quit the program
+		bool run = true;
+
+		// Dry run, so artemis have run before physics first step
+		//gameUpdate(0.0f);
+		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
+		double time = 0.0;
+
+		while (!m_context->closeRequested() && run)
+		{
+			if (!pumpMessage(msg))
+			{
+
+				// Start by rendering
+				render();
+
+				time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
 
 #ifdef MEASURE_RBODIES
-			if (time > 5.0)
-			{
-				rigidBodyStateDbgRecorder.activate();
+				if (time > 5.0)
+				{
+					rigidBodyStateDbgRecorder.activate();
 			}
 #endif
+				
+					// Physics handling part of the loop
+					// ========================================================
+					/* This, like the rendering, ticks every time around.
+					Bullet does the interpolation for us. */
+					currTimeStamp = getTimeStamp();
+					double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
 
-			// Physics handling part of the loop
-			// ========================================================
-			/* This, like the rendering, ticks every time around.
-			Bullet does the interpolation for us. */
-			currTimeStamp = getTimeStamp();
-			double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
 
+					//if (rb->isInited())
+					//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
 
-			//if (rb->isInited())
-			//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
+					// Tick the bullet world. Keep in mind that bullet takes seconds
+					dynamicsWorld->stepSimulation((btScalar)/*1.0f/60.0f*/phys_dt/*, 10*/);
+					// ========================================================
 
-			// Tick the bullet world. Keep in mind that bullet takes seconds
-			dynamicsWorld->stepSimulation((btScalar)/*1.0f/60.0f*/phys_dt/*, 10*/);
-			// ========================================================
+					unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
 
-			unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
-			
-			prevTimeStamp = currTimeStamp;
+					prevTimeStamp = currTimeStamp;
 
 #ifdef MEASURE_RBODIES
-			if (steps>=600) run = false;
+					if (steps >= 600) run = false;
 #endif
+				
+				// Game Clock part of the loop
+				// ========================================================
+				double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - gameClockTimeOffset);
+				// Game clock based updates
+				while (dt >= gameTickS)
+				{
+					dt -= gameTickS;
+					gameClockTimeOffset += gameTickS;
+					// Handle all input
+					processInput();
+					// Update logic
+					double interval = gameTickS;
 
-			// Game Clock part of the loop
-			// ========================================================
-			double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - gameClockTimeOffset);
-			// Game clock based updates
-			while (dt >= gameTickS)
-			{
-				dt -= gameTickS;
-				gameClockTimeOffset += gameTickS;
-				// Handle all input
-				processInput();
-				// Update logic
-				double interval = gameTickS;
-
-				handleContext(interval, phys_dt, steps-oldSteps);
-				gameUpdate(interval);
-			}
-			// ========================================================
-			oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
+					//handleContext(interval, phys_dt, steps - oldSteps);
+					gameUpdate(interval);
+				}
+				// ========================================================
+				oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		}
 
 	}
-	
+
+
 #ifdef MEASURE_RBODIES
-	rigidBodyStateDbgRecorder.saveMeasurement("Time: "+toString(time));
-	rigidBodyStateDbgRecorder.saveMeasurement("Steps: "+toString(physicsWorldHandler.getNumberOfInternalSteps()));
+		rigidBodyStateDbgRecorder.saveMeasurement("Time: "+toString(time));
+		rigidBodyStateDbgRecorder.saveMeasurement("Steps: "+toString(physicsWorldHandler.getNumberOfInternalSteps()));
 #ifndef MULTI
-	#ifdef _DEBUG
+#ifdef _DEBUG
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
-	#else
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_STCPU");
-	#endif
 #else
-	#ifdef _DEBUG
+		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_STCPU");
+#endif
+#else
+#ifdef _DEBUG
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_MTCPU");
-	#else
+#else
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_MTCPU");
-	#endif
 #endif
 #endif
-	
+#endif
 
+
+	// Clean up
 	entityManager->removeAllEntities();
-
+	delete broadphase;
+	delete collisionConfiguration;
+	delete dispatcher;
+	delete solver;
+	delete dynamicsWorld;
 }
 
 
@@ -482,6 +491,8 @@ void App::gameUpdate( double p_dt )
 {
 	float dt = (float)p_dt;
 	float game_dt = m_timeScale*(float)p_dt;
+	/*
+
 	// temp controller update code
 	updateController(dt);
 	m_controller->setFovFromAngle(52.0f, m_graphicsDevice->getAspectRatio());
@@ -520,20 +531,20 @@ void App::gameUpdate( double p_dt )
 	{
 		m_timePauseStepToggle = false;
 	}
-
-
+	
+*/
 	// Update entity systems
 	m_world.loopStart();
-	m_world.setDelta(game_dt);
+	//m_world.setDelta(game_dt);
 	// Physics result gathering have to run first
-	m_rigidBodySystem->executeDeferredConstraintInits();
+	/*m_rigidBodySystem->executeDeferredConstraintInits();
 	m_rigidBodySystem->process();
 	m_rigidBodySystem->lateUpdate();
 	m_controllerSystem->buildCheck();
 	// Run all other systems, for which order doesn't matter
 	processSystemCollection(&m_orderIndependentSystems);
 	// Render system is processed last
-	m_renderSystem->process();
+	m_renderSystem->process();*/
 }
 
 

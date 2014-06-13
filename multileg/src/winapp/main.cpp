@@ -35,7 +35,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR pCmdLin
 	SetThreadAffinityMask(GetCurrentThread(), 1);
 
 	
-	App myApp(hInstance,1024,900);
+	App myApp(hInstance,300,300);
 	myApp.run();
 
 	return 0;

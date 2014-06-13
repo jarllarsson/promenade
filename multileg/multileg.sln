@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinApp", "src\Winapp\WinApp.vcxproj", "{9023A245-3A51-49B1-8C30-D330A84C86CE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinApp", "src\winapp\WinApp.vcxproj", "{9023A245-3A51-49B1-8C30-D330A84C86CE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{64117418-9313-4D31-90B5-C193DE4DFF83} = {64117418-9313-4D31-90B5-C193DE4DFF83}
 		{8E92D159-065A-4E64-BC5F-459D378D871A} = {8E92D159-065A-4E64-BC5F-459D378D871A}
@@ -14,14 +14,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinApp", "src\Winapp\WinApp
 		{C90682F8-A3D4-4B84-973A-70E2774DF42D} = {C90682F8-A3D4-4B84-973A-70E2774DF42D}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Util", "src\Util\Util.vcxproj", "{64117418-9313-4D31-90B5-C193DE4DFF83}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Util", "src\util\Util.vcxproj", "{64117418-9313-4D31-90B5-C193DE4DFF83}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "src\Graphics\Graphics.vcxproj", "{51C90BF7-3675-4F5C-A531-03A10F2EAC86}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphics", "src\graphics\Graphics.vcxproj", "{51C90BF7-3675-4F5C-A531-03A10F2EAC86}"
 	ProjectSection(ProjectDependencies) = postProject
 		{64117418-9313-4D31-90B5-C193DE4DFF83} = {64117418-9313-4D31-90B5-C193DE4DFF83}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Context", "src\Context\Context.vcxproj", "{2E132FDB-336E-451A-8AC7-62A4CEFE6513}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Context", "src\context\Context.vcxproj", "{2E132FDB-336E-451A-8AC7-62A4CEFE6513}"
 	ProjectSection(ProjectDependencies) = postProject
 		{64117418-9313-4D31-90B5-C193DE4DFF83} = {64117418-9313-4D31-90B5-C193DE4DFF83}
 	EndProjectSection
@@ -189,5 +189,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
