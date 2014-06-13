@@ -9,6 +9,13 @@
 #include "JacobianHelper.h"
 
 
+ControllerSystem::~ControllerSystem()
+{
+
+}
+
+
+
 void ControllerSystem::removed(artemis::Entity &e)
 {
 
@@ -106,12 +113,14 @@ void ControllerSystem::buildCheck()
 {
 	for (int i = 0; i < m_controllersToBuild.size(); i++)
 	{
+
 		ControllerComponent* controller = m_controllersToBuild[i];
 		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
 		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
 		// start by storing the current torque list size as offset, this'll be where we'll begin this
 		// controller's chunk of the torque list
 		unsigned int torqueListOffset = (unsigned int)m_jointTorques.size();
+
 		// Build the controller (Temporary code)
 		// The below should be done for each leg (even the root)
 		// Create ROOT
@@ -147,8 +156,10 @@ void ControllerSystem::buildCheck()
 					legFrame->m_feetJointId.push_back(idx);
 					jointEntity = NULL;
 				}
+				jointEntity = NULL;
 			}
 		}
+
 		// Calculate number of torques axes in list, store
 		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);

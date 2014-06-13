@@ -67,6 +67,8 @@ public:
 		m_usePDTorque = true;
 	}
 
+	virtual ~ControllerSystem();
+
 	virtual void initialize()
 	{
 		controllerComponentMapper.init(*world);

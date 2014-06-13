@@ -334,7 +334,7 @@ void App::run()
 					// Update logic
 					double interval = gameTickS;
 
-					//handleContext(interval, phys_dt, steps - oldSteps);
+					handleContext(interval, phys_dt, steps - oldSteps);
 					gameUpdate(interval);
 				}
 				// ========================================================
@@ -491,7 +491,7 @@ void App::gameUpdate( double p_dt )
 {
 	float dt = (float)p_dt;
 	float game_dt = m_timeScale*(float)p_dt;
-	/*
+
 
 	// temp controller update code
 	updateController(dt);
@@ -532,19 +532,19 @@ void App::gameUpdate( double p_dt )
 		m_timePauseStepToggle = false;
 	}
 	
-*/
+
 	// Update entity systems
 	m_world.loopStart();
-	//m_world.setDelta(game_dt);
+	m_world.setDelta(game_dt);
 	// Physics result gathering have to run first
-	/*m_rigidBodySystem->executeDeferredConstraintInits();
+	m_rigidBodySystem->executeDeferredConstraintInits();
 	m_rigidBodySystem->process();
 	m_rigidBodySystem->lateUpdate();
-	m_controllerSystem->buildCheck();
-	// Run all other systems, for which order doesn't matter
-	processSystemCollection(&m_orderIndependentSystems);
-	// Render system is processed last
-	m_renderSystem->process();*/
+	m_controllerSystem->buildCheck(); // leaks
+	// // Run all other systems, for which order doesn't matter
+	// processSystemCollection(&m_orderIndependentSystems);
+	// // Render system is processed last
+	// m_renderSystem->process();
 }
 
 
