@@ -37,11 +37,12 @@ void ControllerSystem::update(float p_dt)
 {
 	//DEBUGPRINT(( (std::string("\nController start DT=") + toString(p_dt) + "\n").c_str() ));
 	m_runTime += p_dt;
+	m_steps++;
 
 	// Update all transforms
 	for (int i = 0; i < m_jointRigidBodies.size(); i++)
 	{
-		//saveJointMatrix(i);    //!IMPORTANT! WHERE TO PUT THIS FOR DETERMINISTIC RUNS???????
+		saveJointMatrix(i);    //!IMPORTANT! WHERE TO PUT THIS FOR DETERMINISTIC RUNS???????
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
 	int controllerCount = (int)m_controllers.size();
@@ -425,7 +426,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(0.0f, 10.0f*sin(m_runTime*4.0f), 0.0f);
+		leg->m_DOFChain.vf = glm::vec3(0.0f, 10.0f*sin((float)m_steps*0.2f), 0.0f);
 	}
 
 	delete[] legInStance;
@@ -475,7 +476,7 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 					glm::vec3 addT = (chain->DOFChain)[m] * glm::dot(JVec, vf);
 					//DEBUGPRINT(((string("\nJx") + toString(Jt(m, 0)) + string(" Jy ") + toString(Jt(m, 2)) + string(" Jz ") + toString(Jt(m, 3))).c_str()));
 					float ssum = JVec.x + JVec.y + JVec.z;
-					//DEBUGPRINT(((string("\n") + toString(m) +string(" SUM: ") + toString(ssum)).c_str()));
+					DEBUGPRINT(((string("\n") + toString(m) +string(" SUM: ") + toString(ssum)).c_str()));
 					// Problem med determinism i release
 					// JVec är ej deterministisk
 					//   JVecs inputs:

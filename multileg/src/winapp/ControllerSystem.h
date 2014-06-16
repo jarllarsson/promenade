@@ -60,6 +60,7 @@ public:
 	{
 		addComponentType<ControllerComponent>();
 		m_runTime = 0.0f;
+		m_steps = 0;
 		//addComponentType<RigidBodyComponent>();
 		//m_dynamicsWorldPtr = p_dynamicsWorld;
 		m_useVFTorque = true;
@@ -124,6 +125,7 @@ private:
 	void computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, float p_phi, float p_dt);
 	// global variables
 	float m_runTime;
+	int m_steps;
 	bool m_useVFTorque;
 	bool m_useCGVFTorque;
 	bool m_usePDTorque;
