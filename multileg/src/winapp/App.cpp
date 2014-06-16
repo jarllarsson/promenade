@@ -542,9 +542,9 @@ void App::gameUpdate( double p_dt )
 	m_rigidBodySystem->lateUpdate();
 	m_controllerSystem->buildCheck(); // leaks
 	// // Run all other systems, for which order doesn't matter
-	// processSystemCollection(&m_orderIndependentSystems);
+	processSystemCollection(&m_orderIndependentSystems);
 	// // Render system is processed last
-	// m_renderSystem->process();
+	m_renderSystem->process();
 }
 
 

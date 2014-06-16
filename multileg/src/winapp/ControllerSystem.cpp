@@ -156,7 +156,6 @@ void ControllerSystem::buildCheck()
 					legFrame->m_feetJointId.push_back(idx);
 					jointEntity = NULL;
 				}
-				jointEntity = NULL;
 			}
 		}
 
@@ -428,6 +427,8 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		// Debug test
 		leg->m_DOFChain.vf = glm::vec3(0.0f, 10.0f*sin(m_runTime*4.0f), 0.0f);
 	}
+
+	delete[] legInStance;
 }
 
 void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, float p_phi, float p_dt)

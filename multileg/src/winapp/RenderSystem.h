@@ -94,6 +94,7 @@ public:
 		newInstances[backIdxNew] = glm::transpose(transform->getMatrix());
 		// recreate the buffer
 		m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)newInstances, newArraySize);
+		delete[] newInstances;
 		//DEBUGPRINT(( (string("add renderobj (ilist sz[") + toString(arraySize) + "] -> [" + toString(newArraySize)+"])\n").c_str() ));
 		renderStats->setInstanceIdx(backIdxNew);
 		//
