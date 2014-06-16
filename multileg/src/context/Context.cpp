@@ -14,6 +14,7 @@ Context::Context( HINSTANCE p_hInstance, const string& p_title,
 
 	// Register class
 	WNDCLASSEX wcex;
+	ZeroMemory(&wcex, sizeof(WNDCLASSEX));
 	wcex.cbSize = sizeof(WNDCLASSEX); 
 	wcex.style          = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc    = WndProc; // Callback function

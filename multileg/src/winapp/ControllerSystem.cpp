@@ -91,6 +91,10 @@ void ControllerSystem::update(float p_dt)
 #endif
 
 	}
+	else
+	{
+		DEBUGPRINT(("\nNO CONTROLLERS YET\n"));
+	}
 }
 
 void ControllerSystem::finish()
@@ -213,7 +217,8 @@ void ControllerSystem::saveJointMatrix(unsigned int p_rigidBodyIdx)
 		{
 			btMotionState* motionState = body->getMotionState();
 			btTransform physTransform;
-			motionState->getWorldTransform(physTransform);
+			//motionState->getWorldTransform(physTransform);
+			physTransform = body->getWorldTransform();
 			// Get the transform from Bullet and into mat
 			glm::mat4 mat(0.0f);
 			physTransform.getOpenGLMatrix(glm::value_ptr(mat));
@@ -459,12 +464,12 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 																	 &m_jointWorldTransforms);		// All joint world transformations
 				CMatrix Jt = CMatrix::transpose(J);
 
-				glm::vec3 sum(0.0f);
+				glm::mat4 sum(0.0f);
 				for (int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
 				{
-					sum += MathHelp::getMatrixTranslation(m_jointWorldTransforms[g]);
+					sum += m_jointWorldTransforms[g];
 				}
-				float ssum = sum.x + sum.y + sum.z;
+				DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
 				
 				// Use matrix to calculate and store torque
 				for (unsigned int m = 0; m < chain->getSize(); m++)
@@ -484,7 +489,7 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 					//   vf är ok
 					//   DOF chain är ok
 					//    m_jointWorldInnerEndpoints är ok
-					//   m_jointWorldTransforms är ok
+					//   m_jointWorldTransforms är inte ok vid uppdatering av den (bara i debug eller utan uppdatering)
 					// Jt(m, 1) är inte ok (de andra verkar vara ok)
 
 					(*p_outTVF)[m] += addT; // Here we could write to the global list instead directly maybe as an optimization
