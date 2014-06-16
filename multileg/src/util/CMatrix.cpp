@@ -29,7 +29,7 @@ CMatrix::~CMatrix()
 
 
 
-float& CMatrix::operator() (unsigned int p_row, unsigned int p_column) const
+double& CMatrix::operator() (unsigned int p_row, unsigned int p_column) const
 {
 	return m[p_row][p_column];
 }
@@ -73,7 +73,7 @@ CMatrix CMatrix::operator *(const CMatrix& p_mb) const
 	return mul(*this, p_mb);
 }
 
-CMatrix CMatrix::operator *(float p_s) const
+CMatrix CMatrix::operator *(double p_s) const
 {
 	CMatrix res(m_rows, m_cols);
 	for (unsigned int i = 0; i < m_rows; i++)
@@ -98,15 +98,15 @@ bool CMatrix::operator==(const CMatrix& p_mb) const
 	return true;
 }
 
-float CMatrix::dot(const CMatrix& p_ma, const CMatrix& p_mb)
+double CMatrix::dot(const CMatrix& p_ma, const CMatrix& p_mb)
 {
 	if (p_ma.m_rows != p_mb.m_rows ||
 		p_ma.m_cols != p_mb.m_cols)
 	{
 		throw std::exception("Input matrices not of same size in CMatrix::dot");
-		return -1.0f;
+		return -1.0;
 	};
-	float sum = 0.0f;
+	double sum = 0.0;
 	for (unsigned int i = 0; i < p_ma.m_rows; i++)
 	for (unsigned int j = 0; j < p_mb.m_cols; j++)
 	{
@@ -117,21 +117,21 @@ float CMatrix::dot(const CMatrix& p_ma, const CMatrix& p_mb)
 
 void CMatrix::init()
 {
-	m = new float*[m_rows];
+	m = new double*[m_rows];
 	for (unsigned int i = 0; i < m_rows; i++)
 	{
-		m[i] = new float[m_cols];
+		m[i] = new double[m_cols];
 		for (unsigned int j = 0; j < m_cols; j++)
-			m[i][j] = 0.0f;
+			m[i][j] = 0.0;
 	}
 }
 
 void CMatrix::init(const CMatrix& p_copy)
 {
-	m = new float*[m_rows];
+	m = new double*[m_rows];
 	for (unsigned int i = 0; i < m_rows; i++)
 	{
-		m[i] = new float[m_cols];
+		m[i] = new double[m_cols];
 		for (unsigned int j = 0; j < m_cols; j++)
 			m[i][j] = p_copy(i,j);
 	}

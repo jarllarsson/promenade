@@ -152,7 +152,6 @@ void App::run()
 	artemis::EntityManager * entityManager = m_world.getEntityManager();
 
 	// Create a ground entity
-
 	artemis::Entity & ground = entityManager->create();
 	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f,
 		CollisionLayer::COL_GROUND,CollisionLayer::COL_CHARACTER));
@@ -161,7 +160,6 @@ void App::run()
 		glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 		glm::vec3(800.0f, 20.0f, 800.0f)));
 	ground.refresh();
-
 
 	// Create axes
 	artemis::Entity & axisC = entityManager->create();
@@ -277,11 +275,13 @@ void App::run()
 		// lets non-context systems quit the program
 		bool run = true;
 
+		double fixedStep = 1.0 / 60.0;
+
 		// Dry run, so artemis have run before physics first step
 		gameUpdate(0.0f);
+		dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
 		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		double time = 0.0;
-		double fixedStep = 1.0 / 60.0;
 
 		while (!m_context->closeRequested() && run)
 		{
@@ -306,7 +306,8 @@ void App::run()
 				//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
-				dynamicsWorld->stepSimulation((btScalar)fixedStep/*phys_dt*//*, 10*/, 1, fixedStep);
+				//dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
+				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)fixedStep);
 				// ========================================================
 
 				unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
@@ -317,7 +318,7 @@ void App::run()
 				if (steps >= 600) run = false;
 #endif
 				DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
-				if (steps >= 600) run = false;
+				if (steps >= 100) run = false;
 				// Game Clock part of the loop
 				// ========================================================
 				double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - gameClockTimeOffset);
@@ -334,6 +335,7 @@ void App::run()
 					handleContext(interval, phys_dt, steps - oldSteps);
 					gameUpdate(interval);
 				}
+				
 				// ========================================================
 				oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 			}
@@ -537,8 +539,9 @@ void App::gameUpdate( double p_dt )
 	// Physics result gathering have to run first
 	m_rigidBodySystem->executeDeferredConstraintInits();
 	m_rigidBodySystem->process();
+	m_controllerSystem->process();
 	m_rigidBodySystem->lateUpdate();
-	m_controllerSystem->buildCheck(); // leaks
+	m_controllerSystem->buildCheck();
 	// // Run all other systems, for which order doesn't matter
 	processSystemCollection(&m_orderIndependentSystems);
 	// // Render system is processed last

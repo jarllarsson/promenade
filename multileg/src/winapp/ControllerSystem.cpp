@@ -109,7 +109,7 @@ void ControllerSystem::applyTorques( float p_dt )
 		for (int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
-			m_jointRigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z)/**p_dt*/);
+			m_jointRigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z));
 		}
 	}
 }
@@ -413,6 +413,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 	{
 		ControllerComponent::Leg* leg = &p_lf->m_legs[i];
 		// Swing force
+		/*
 		if (!legInStance[i])
 		{
 			glm::vec3 fsw(calculateFsw(p_lf, i, p_phi, p_dt));
@@ -430,8 +431,9 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			glm::vec3 fd(calculateFd(p_lf, i));
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
+		*/
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(0.0f, 10.0f*sin((float)m_steps*0.2f), 0.0f);
+		leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f/**sin((float)m_steps*0.2f)*/, 0.0f);
 	}
 
 	delete[] legInStance;
@@ -469,7 +471,8 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				{
 					sum += m_jointWorldTransforms[g];
 				}
-				DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
+				//DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
+				DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
 				
 				// Use matrix to calculate and store torque
 				for (unsigned int m = 0; m < chain->getSize(); m++)
