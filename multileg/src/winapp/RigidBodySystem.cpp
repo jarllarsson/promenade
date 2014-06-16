@@ -65,7 +65,7 @@ void RigidBodySystem::processEntity(artemis::Entity &e)
 			motionState->getWorldTransform(physTransform);
 			// update the transform component
 			// Get the transform from Bullet and into mat
-			glm::mat4 mat;
+			glm::mat4 mat(0.0f);
 			// first we need to keep scale as bullet doesn't
 			glm::vec3 scale = transform->getScale();
 			physTransform.getOpenGLMatrix(glm::value_ptr(mat));

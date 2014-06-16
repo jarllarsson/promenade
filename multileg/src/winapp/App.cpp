@@ -265,6 +265,9 @@ void App::run()
 			controller.refresh();
 		}
 
+#ifdef MEASURE_RBODIES
+		rigidBodyStateDbgRecorder.activate();
+#endif
 
 
 		// Message pump struct
@@ -275,9 +278,10 @@ void App::run()
 		bool run = true;
 
 		// Dry run, so artemis have run before physics first step
-		//gameUpdate(0.0f);
+		gameUpdate(0.0f);
 		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		double time = 0.0;
+		double fixedStep = 1.0 / 60.0;
 
 		while (!m_context->closeRequested() && run)
 		{
@@ -289,36 +293,31 @@ void App::run()
 
 				time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
 
-#ifdef MEASURE_RBODIES
-				if (time > 5.0)
-				{
-					rigidBodyStateDbgRecorder.activate();
-			}
-#endif
-				
-					// Physics handling part of the loop
-					// ========================================================
-					/* This, like the rendering, ticks every time around.
-					Bullet does the interpolation for us. */
-					currTimeStamp = getTimeStamp();
-					double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
+
+				// Physics handling part of the loop
+				// ========================================================
+				/* This, like the rendering, ticks every time around.
+				Bullet does the interpolation for us. */
+				currTimeStamp = getTimeStamp();
+				double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
 
 
-					//if (rb->isInited())
-					//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
+				//if (rb->isInited())
+				//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
 
-					// Tick the bullet world. Keep in mind that bullet takes seconds
-					dynamicsWorld->stepSimulation((btScalar)1.0f/60.0f/*phys_dt*//*, 10*/);
-					// ========================================================
+				// Tick the bullet world. Keep in mind that bullet takes seconds
+				dynamicsWorld->stepSimulation((btScalar)fixedStep/*phys_dt*//*, 10*/, 1, fixedStep);
+				// ========================================================
 
-					unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
+				unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
 
-					prevTimeStamp = currTimeStamp;
+				prevTimeStamp = currTimeStamp;
 
 #ifdef MEASURE_RBODIES
-					if (steps >= 600) run = false;
+				if (steps >= 600) run = false;
 #endif
-					if (steps >= 600) run = false;
+				DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
+				if (steps >= 600) run = false;
 				// Game Clock part of the loop
 				// ========================================================
 				double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - gameClockTimeOffset);
@@ -337,10 +336,11 @@ void App::run()
 				}
 				// ========================================================
 				oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
+			}
+
 		}
 
-	}
-
+		DEBUGPRINT(("\n\nSTOPPING APPLICATION\n\n"));
 
 #ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.saveMeasurement("Time: "+ToString(time));
