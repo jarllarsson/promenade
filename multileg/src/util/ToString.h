@@ -13,16 +13,39 @@
 ///---------------------------------------------------------------------------------------
 
 #define Stringify(x) #x
-
+#include <glm\gtc\type_ptr.hpp>
+#include <string>
 #include <sstream>
-using namespace std;
+#include <vector>
 
-template <class T>
-std::string toString (const T& val)
+template <typename T>
+std::string ToString(const T& val)
 {
 	// Convert input value to string
 	// using stringstream
-	stringstream strStream;
+	std::stringstream strStream;
 	strStream << val;
 	return strStream.str();
 }
+
+template <>
+std::string ToString<glm::vec3>(const glm::vec3& val);
+
+template <>
+std::string ToString<glm::vec4>(const glm::vec4& val);
+
+template <>
+std::string ToString<glm::mat4>(const glm::mat4& val);
+
+
+template <typename T>
+std::string ToString(const std::vector<T>& val)
+{
+	std::string liststr = "\nlist=";
+	for (unsigned int f = 0; f < (unsigned int)val.size(); f++)
+		liststr += std::string("\n[") + ToString(f) + std::string("] = ") + ToString(val[f]);
+	return liststr;
+}
+
+
+

@@ -39,7 +39,7 @@ private:
 	void compileMessage(const string &p_msg,const string &p_file,const string &p_func,int p_line)
 	{
 		m_name="\n\n"+m_name+": ";
-		m_msg = m_name+"\n"+p_msg+" [ "+p_file+" : "+p_func+" ("+toString(p_line)+") ]\n\n";
+		m_msg = m_name+"\n"+p_msg+" [ "+p_file+" : "+p_func+" ("+ToString(p_line)+") ]\n\n";
 	}
 
 };

@@ -41,7 +41,7 @@ private:
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS,
 			NULL, p_hresult, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&errTxt, 0, NULL);
 		if (errTxt!=NULL)
-			msg+="("+toString(errTxt)+")";
+			msg+="("+ToString(errTxt)+")";
 		else
 			msg+="(Unknown HRESULT error)";
 		return msg;
@@ -53,7 +53,7 @@ private:
 		char msg[10000];
 		char* bfrPtr = (char*)p_errorBlob->GetBufferPointer();
 		strcpy_s(msg, sizeof(msg), bfrPtr);
-		smsg+="("+toString(msg)+")";
+		smsg+="("+ToString(msg)+")";
 		return smsg;
 	}
 

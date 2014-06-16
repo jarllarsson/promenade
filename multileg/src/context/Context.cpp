@@ -1,5 +1,6 @@
 #include "Context.h"
 #include "ContextException.h"
+#include <algorithm> 
 
 Context* Context::m_instance=NULL;
 

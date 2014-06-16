@@ -476,7 +476,7 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 					glm::vec3 addT = (chain->DOFChain)[m] * glm::dot(JVec, vf);
 					//DEBUGPRINT(((string("\nJx") + toString(Jt(m, 0)) + string(" Jy ") + toString(Jt(m, 2)) + string(" Jz ") + toString(Jt(m, 3))).c_str()));
 					float ssum = JVec.x + JVec.y + JVec.z;
-					DEBUGPRINT(((string("\n") + toString(m) +string(" SUM: ") + toString(ssum)).c_str()));
+					DEBUGPRINT(( (std::string("\n") + ToString(m) +std::string(" SUM: ") + ToString(ssum)).c_str() ));
 					// Problem med determinism i release
 					// JVec är ej deterministisk
 					//   JVecs inputs:

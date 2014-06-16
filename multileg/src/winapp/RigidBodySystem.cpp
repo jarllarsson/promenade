@@ -75,7 +75,7 @@ void RigidBodySystem::processEntity(artemis::Entity &e)
 			if (m_stateDbgRecorder != NULL && m_stateDbgRecorder->isActive())
 			{
 				btTransform* btt = &physTransform;
-				m_stateString += string("\n,") +toString(e.getUniqueId())+string(" x: ") + toString(btt->getOrigin().x()) + ",y: " + toString(btt->getOrigin().y()) + ",z: " + toString(btt->getOrigin().z());
+				m_stateString += string("\n,") +ToString(e.getUniqueId())+string(" x: ") + ToString(btt->getOrigin().x()) + ",y: " + ToString(btt->getOrigin().y()) + ",z: " + ToString(btt->getOrigin().z());
 			}
 		}
 	}

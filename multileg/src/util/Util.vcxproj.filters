@@ -47,5 +47,6 @@
     <ClCompile Include="CMatrix.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="ToString.cpp" />
   </ItemGroup>
 </Project>

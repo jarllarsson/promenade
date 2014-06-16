@@ -103,8 +103,6 @@ void App::run()
 	// Absolute start
 	double timeStart = (double)getTimeStamp().QuadPart * secondsPerCount;
 
-
-
 	// Bullet physics initialization
 	// Broadphase object
 	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
@@ -345,8 +343,8 @@ void App::run()
 
 
 #ifdef MEASURE_RBODIES
-		rigidBodyStateDbgRecorder.saveMeasurement("Time: "+toString(time));
-		rigidBodyStateDbgRecorder.saveMeasurement("Steps: "+toString(physicsWorldHandler.getNumberOfInternalSteps()));
+		rigidBodyStateDbgRecorder.saveMeasurement("Time: "+ToString(time));
+		rigidBodyStateDbgRecorder.saveMeasurement("Steps: "+ToString(physicsWorldHandler.getNumberOfInternalSteps()));
 #ifndef MULTI
 #ifdef _DEBUG
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
@@ -482,7 +480,7 @@ void App::handleContext(double p_dt, double p_physDt, unsigned int p_physSteps)
 	{
 		float fps = (1.0f / (float)(p_dt*1000.0f))*1000.0f;
 		float pfps = 1.0f / (float)p_physDt;
-		m_context->updateTitle((" | Game FPS: " + toString(fps) + " | Phys steps/frame: " + toString(p_physSteps) + " | Phys FPS: " + toString(pfps)).c_str());
+		m_context->updateTitle((" | Game FPS: " + ToString(fps) + " | Phys steps/frame: " + ToString(p_physSteps) + " | Phys FPS: " + ToString(pfps)).c_str());
 		m_fpsUpdateTick = 0.3f;
 	}
 }
