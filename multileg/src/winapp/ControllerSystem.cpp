@@ -35,14 +35,14 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 
 void ControllerSystem::update(float p_dt)
 {
-	//DEBUGPRINT(( (std::string("\nController start DT=") + toString(p_dt) + "\n").c_str() ));
+	DEBUGPRINT(( (std::string("\nDT=") + ToString(p_dt) + "\n").c_str() ));
 	m_runTime += p_dt;
 	m_steps++;
 
 	// Update all transforms
 	for (int i = 0; i < m_jointRigidBodies.size(); i++)
 	{
-		saveJointMatrix(i);    //!IMPORTANT! WHERE TO PUT THIS FOR DETERMINISTIC RUNS???????
+		saveJointMatrix(i);
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
 	int controllerCount = (int)m_controllers.size();
@@ -221,7 +221,7 @@ void ControllerSystem::saveJointMatrix(unsigned int p_rigidBodyIdx)
 			physTransform = body->getWorldTransform();
 			// Get the transform from Bullet and into mat
 			glm::mat4 mat(0.0f);
-			physTransform.getOpenGLMatrix(glm::value_ptr(mat));
+			physTransform.getOpenGLMatrix(glm::value_ptr<glm::mediump_float>(mat));
 			m_jointWorldTransforms[idx] = mat; // note, use same index for transform list
 			saveJointWorldEndpoints(idx, mat);
 		}
@@ -370,9 +370,9 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 		tPD[i] = glm::vec3(0.0f); tCGVF[i] = glm::vec3(0.0f); tVF[i] = glm::vec3(0.0f);
 	}
 	//
-	//computePDTorques(&tPD, phi);
+	//computePDTorques(&tPD, phi); TODO
 	computeVFTorques(&tVF, p_controller, p_controllerId, phi, p_dt);
-	//computeCGVFTorques(&tCGVF, phi, p_dt);
+	//computeCGVFTorques(&tCGVF, phi, p_dt); TODO
 	////// Sum them
 	for (unsigned int i = 0; i < torqueCount; i++)
 	{
@@ -433,7 +433,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		}
 		*/
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f/**sin((float)m_steps*0.2f)*/, 0.0f);
+		leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f*sin((float)m_steps*0.2f), 0.0f);
 	}
 
 	delete[] legInStance;
@@ -471,9 +471,10 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				{
 					sum += m_jointWorldTransforms[g];
 				}
-				//DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
+				DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
 				DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
-				
+				DEBUGPRINT(((std::string("\n") + std::string(" VF: ") + ToString(vf)).c_str()));
+
 				// Use matrix to calculate and store torque
 				for (unsigned int m = 0; m < chain->getSize(); m++)
 				{
@@ -483,8 +484,10 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 					glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
 					glm::vec3 addT = (chain->DOFChain)[m] * glm::dot(JVec, vf);
 					//DEBUGPRINT(((string("\nJx") + toString(Jt(m, 0)) + string(" Jy ") + toString(Jt(m, 2)) + string(" Jz ") + toString(Jt(m, 3))).c_str()));
-					float ssum = JVec.x + JVec.y + JVec.z;
-					DEBUGPRINT(( (std::string("\n") + ToString(m) +std::string(" SUM: ") + ToString(ssum)).c_str() ));
+					float ssum = JjVec.x + JjVec.y + JjVec.z;
+					DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
+					ssum = JVec.x + JVec.y + JVec.z;
+					DEBUGPRINT(( (std::string("\n") + ToString(m) +std::string(" Jt sum: ") + ToString(ssum)).c_str() ));
 					// Problem med determinism i release
 					// JVec är ej deterministisk
 					//   JVecs inputs:

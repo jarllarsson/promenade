@@ -96,6 +96,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PreprocessorDefinitions>GLM_PRECISION_MEDIUMP_FLOAT;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -109,6 +110,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PreprocessorDefinitions>GLM_PRECISION_MEDIUMP_FLOAT;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -124,6 +126,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PreprocessorDefinitions>GLM_PRECISION_MEDIUMP_FLOAT;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -140,6 +143,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <PreprocessorDefinitions>GLM_PRECISION_MEDIUMP_FLOAT;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -158,6 +162,7 @@
     <ClInclude Include="ControllerSystem.h" />
     <ClInclude Include="GaitPlayer.h" />
     <ClInclude Include="JacobianHelper.h" />
+    <ClInclude Include="PieceWiseLinear.h" />
     <ClInclude Include="StepCycle.h" />
     <ClInclude Include="PhysicsWorldHandler.h" />
     <ClInclude Include="RenderComponent.h" />
@@ -174,6 +179,7 @@
     <ClCompile Include="ConstraintComponent.cpp" />
     <ClCompile Include="ControllerSystem.cpp" />
     <ClCompile Include="JacobianHelper.cpp" />
+    <ClCompile Include="PieceWiseLinear.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />
     <ClCompile Include="RigidBodySystem.cpp" />

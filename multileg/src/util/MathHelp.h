@@ -34,4 +34,6 @@ namespace MathHelp
 	glm::vec3 toVec3(const glm::vec4& p_v);
 	glm::vec3 getMatrixTranslation(const glm::mat4& m);
 
+	float flerp(float p_a, float p_b, float p_t);
+	double dlerp(double p_a, double p_b, double p_t);
 };

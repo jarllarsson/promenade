@@ -111,3 +111,13 @@ glm::vec3 MathHelp::getMatrixTranslation(const glm::mat4& m)
 {
 	return MathHelp::toVec3(m * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
+
+float MathHelp::flerp(float p_a, float p_b, float p_t)
+{
+	return p_b*p_t + p_a*(1.0f-p_t);
+}
+
+double MathHelp::dlerp(double p_a, double p_b, double p_t)
+{
+	return p_b*p_t + p_a*(1.0-p_t);
+}

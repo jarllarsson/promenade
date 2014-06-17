@@ -47,7 +47,7 @@ CMatrix CMatrix::mul(const CMatrix& p_ma, const CMatrix& p_mb)
 	for (unsigned int i = 0; i < res.m_rows; i++)
 	for (unsigned int j = 0; j < res.m_cols; j++)
 	{
-		float s = 0.0f;
+		double s = 0.0f;
 		for (unsigned int x = 0; x < y; x++)
 		{
 			s += p_ma(i, x) * p_mb(x, j);
