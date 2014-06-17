@@ -162,6 +162,8 @@
     <ClInclude Include="ControllerSystem.h" />
     <ClInclude Include="GaitPlayer.h" />
     <ClInclude Include="JacobianHelper.h" />
+    <ClInclude Include="PD.h" />
+    <ClInclude Include="PID.h" />
     <ClInclude Include="PieceWiseLinear.h" />
     <ClInclude Include="StepCycle.h" />
     <ClInclude Include="PhysicsWorldHandler.h" />

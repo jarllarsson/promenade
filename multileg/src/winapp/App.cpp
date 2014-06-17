@@ -306,8 +306,8 @@ void App::run()
 				//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
-				dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
-				//dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
+				//dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
+				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
 				// ========================================================
 
 				unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
@@ -318,7 +318,7 @@ void App::run()
 				if (steps >= 600) run = false;
 #endif
 				DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
-				if (steps >= 10) run = false;
+				if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
 				double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - gameClockTimeOffset);

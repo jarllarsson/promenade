@@ -34,7 +34,7 @@
     <Filter Include="Entity System\Locomotion\Math">
       <UniqueIdentifier>{f3413dc3-6f95-474a-96cd-94fa125bd592}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entity System\Locomotion\Data structs">
+    <Filter Include="Entity System\Locomotion\Data functions">
       <UniqueIdentifier>{3097fec4-a8ed-4b80-89e3-0289dacd56db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -91,7 +91,13 @@
       <Filter>Entity System\Physics\Rigidbodies</Filter>
     </ClInclude>
     <ClInclude Include="PieceWiseLinear.h">
-      <Filter>Entity System\Locomotion\Data structs</Filter>
+      <Filter>Entity System\Locomotion\Data functions</Filter>
+    </ClInclude>
+    <ClInclude Include="PD.h">
+      <Filter>Entity System\Locomotion\Data functions</Filter>
+    </ClInclude>
+    <ClInclude Include="PID.h">
+      <Filter>Entity System\Locomotion\Data functions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +136,7 @@
       <Filter>Entity System\Locomotion\Math</Filter>
     </ClCompile>
     <ClCompile Include="PieceWiseLinear.cpp">
-      <Filter>Entity System\Locomotion\Data structs</Filter>
+      <Filter>Entity System\Locomotion\Data functions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

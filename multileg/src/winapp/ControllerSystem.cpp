@@ -433,7 +433,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		}
 		*/
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f*sin((float)m_steps*0.2f), 0.0f);
+		leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f*sin((float)m_runTime*0.2f), 0.0f);
 	}
 
 	delete[] legInStance;
