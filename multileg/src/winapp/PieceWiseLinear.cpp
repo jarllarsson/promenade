@@ -1,4 +1,5 @@
 #include "PieceWiseLinear.h"
+#include <MathHelp.h>
 
 PieceWiseLinear::PieceWiseLinear()
 {
@@ -7,7 +8,8 @@ PieceWiseLinear::PieceWiseLinear()
 
 PieceWiseLinear::PieceWiseLinear(InitType p_initFunction)
 {
-
+	init();
+	reset(p_initFunction);
 }
 
 PieceWiseLinear::~PieceWiseLinear()
@@ -49,9 +51,51 @@ float PieceWiseLinear::lerpGet(float p_phi) const
 	int hiIdx = ((int)(scaledPhi)+1) % (signedSz);
 	// get amount of interpolation by subtracting the base from current
 	float lin = p_phi * (float)(signedSz - 1) - (float)lowIdx;
-	//Debug.Log(realTime + ": " + lowIdx + "->" + hiIdx + " [t" + lin + "]");
-	//Debug.Log(hi);
-	float val = 0.0f;
-	val = (m_tuneDataPoints[lowIdx], m_tuneDataPoints[hiIdx], lin);
+	float val = MathHelp::flerp(m_dataPoints[lowIdx], m_dataPoints[hiIdx], lin);
 	return val;
+}
+
+void PieceWiseLinear::reset(InitType p_initFunction/*=InitType::FLAT*/, float p_scale/*=1.0f*/)
+{
+	for (unsigned int i = 0; i < getSize(); i++)
+	{
+		float t = getNormalizedIdx(i);
+		switch (p_initFunction)
+		{
+		case InitType::SIN:
+			m_dataPoints[i] = p_scale*sin(t * 2.0f * PI);
+			break;
+		case InitType::COS:
+			m_dataPoints[i] = p_scale * cos(t * 2.0f * PI);
+			break;
+		case InitType::COS_INV_NORM:
+			m_dataPoints[i] = p_scale * ((cos(t * 2.0f * PI) - 1.0f) * -0.5f);
+			break;
+		case InitType::COS_INV_NORM_PADDED:
+			m_dataPoints[i] = p_scale * ((cos(t * 2.0f * PI) - 1.0f) * -0.5f);
+			if (i > getSize() - 3 && i >= 0) m_dataPoints[i] = 0.0f;
+			break;
+		case InitType::HALF_SIN:
+			m_dataPoints[i] = p_scale * sin(t * PI);
+			break;
+		case InitType::FLAT:
+			m_dataPoints[i] = 0.0f;
+			break;
+		case InitType::HALF:
+			m_dataPoints[i] = p_scale * 0.5f;
+			break;
+		case InitType::FULL:
+			m_dataPoints[i] = p_scale * 1.0f;
+			break;
+		case InitType::LIN_INC:
+			m_dataPoints[i] = p_scale * t;
+			break;
+		case InitType::LIN_DEC:
+			m_dataPoints[i] = p_scale * (1.0f - t);
+			break;
+		default:
+			m_dataPoints[i] = p_scale * 0.5f;
+			break;
+		}
+	}
 }

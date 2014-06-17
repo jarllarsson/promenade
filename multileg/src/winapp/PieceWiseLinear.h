@@ -23,9 +23,10 @@ public:
 		COS_INV_NORM, // inverted and normalized cos
 		COS_INV_NORM_PADDED, // same as above but with padding at end
 		HALF_SIN,      // half sine
-		FLAT,        // flat zero
+		FLAT,        // flat 0
+		HALF,		// flat 0.5
+		FULL,		// flat 1
 		LIN_INC,    // Linear increase
-		RND,
 		LIN_DEC
 	};
 
@@ -34,6 +35,7 @@ public:
 	PieceWiseLinear(InitType p_initFunction);
 	~PieceWiseLinear();
 
+	void reset(InitType p_initFunction=InitType::FLAT, float p_scale=1.0f);
 	unsigned int getSize() const;
 	float getNormalizedIdx(unsigned int p_idx) const;
 	float lerpGet(float p_phi) const;
