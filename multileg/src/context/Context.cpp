@@ -112,48 +112,80 @@ bool Context::isSizeDirty()
 	return isDirty;
 }
 
+void Context::addSubProcess(IContextProcessable* p_proc)
+{
+	m_processors.push_back(p_proc);
+}
+
+bool Context::runSubProcesses(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	for (unsigned int i = 0; i < m_processors.size(); i++)
+	{
+		if (m_processors[i]!=NULL &&
+			m_processors[i]->processEvent(hWnd, message, wParam, lParam))
+			return true; // was processed
+	}
+	return false; // none processed
+}
+
+void Context::removeSubProcessEntry(const IContextProcessable* p_proc)
+{
+	for (unsigned int i = 0; i < m_processors.size(); i++)
+	{
+		if (m_processors[i] == p_proc)
+			m_processors[i] = NULL;
+	}
+}
+
 
 LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	PAINTSTRUCT ps;
 	HDC hdc;
 
-	switch (message) 
+	// First check all sub processes
+	Context* context = Context::getInstance();
+	bool doProcessEvent = !(context != NULL && context->runSubProcesses(hWnd, message, wParam, lParam));
+	// If context hasn't been created or no sub processes existed or used the event, doProcessEvent will be true
+
+	if (doProcessEvent)
 	{
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
-		break;
-
-	case WM_DESTROY:
-		PostQuitMessage(0);
+		switch (message)
 		{
-			Context* context = Context::getInstance();
-			if (context)
-				context->close();
-		}
-		break;
-
-	case WM_SIZE:
-		{
-			Context* context = Context::getInstance();
-			if (context)
-				context->resize(LOWORD(lParam),HIWORD(lParam),false);
-		}
-		break;
-
-	case WM_KEYDOWN:
-		switch(wParam)
-		{
-		case VK_ESCAPE:
-			PostQuitMessage(0);
-			Context::getInstance()->close();
+		case WM_PAINT:
+			hdc = BeginPaint(hWnd, &ps);
+			EndPaint(hWnd, &ps);
 			break;
-		}
-		break;
 
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			{
+				if (context!=NULL)
+					context->close();
+			}
+			break;
+
+		case WM_SIZE:
+		{
+			if (context != NULL)
+				context->resize(LOWORD(lParam), HIWORD(lParam), false);
+		}
+			break;
+
+		case WM_KEYDOWN:
+			switch (wParam)
+			{
+			case VK_ESCAPE:
+				PostQuitMessage(0);
+				if (context != NULL)
+					context->close();
+				break;
+			}
+			break;
+
+		default:
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
 	}
 
 	return 0;

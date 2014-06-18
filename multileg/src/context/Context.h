@@ -3,6 +3,8 @@
 #include <windows.h>
 #include <string>
 #include <utility>
+#include "IContextProcessable.h"
+#include <vector>
 
 using namespace std;
 
@@ -69,6 +71,24 @@ public:
 	bool isSizeDirty();
 
 	pair<int,int> getSize();
+
+	///-----------------------------------------------------------------------------------
+	/// Add sub processor that needs to subscribe to windows events
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void addSubProcess(IContextProcessable* p_proc);
+
+	///-----------------------------------------------------------------------------------
+	/// Remove matching sub processor
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	void removeSubProcessEntry(const IContextProcessable* p_proc);
+
+	///-----------------------------------------------------------------------------------
+	/// Executes all sub processes that need window events
+	/// \return void
+	///-----------------------------------------------------------------------------------
+	bool runSubProcesses(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 protected:
 private:
 	bool m_closeFlag;
@@ -79,4 +99,6 @@ private:
 	HINSTANCE	m_hInstance;
 	HWND		m_hWnd;
 	static Context* m_instance;
+	//
+	std::vector<IContextProcessable*> m_processors;
 };

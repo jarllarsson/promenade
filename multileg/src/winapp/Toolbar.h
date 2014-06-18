@@ -4,6 +4,7 @@
 #include <vector>
 #include <AntTweakBar.h>
 #include <ColorPalettes.h>
+#include <IContextProcessable.h>
 
 // =======================================================================================
 //                                      Toolbar
@@ -17,7 +18,7 @@
 /// 18-6-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class Toolbar
+class Toolbar : public IContextProcessable
 {
 public:
 	class Bar
@@ -65,7 +66,7 @@ public:
 
 	void init();
 
-	int process(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	virtual bool processEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	void setWindowSize(int p_width, int p_height);
 	void draw();
 

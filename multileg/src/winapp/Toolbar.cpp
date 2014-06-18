@@ -3,7 +3,7 @@
 #include <ToString.h>
 
 
-Toolbar::Toolbar(void* p_device)
+Toolbar::Toolbar(void* p_device) : IContextProcessable()
 {
 	TwInit(TW_DIRECT3D11, p_device);
 
@@ -29,10 +29,11 @@ void Toolbar::init()
 	defineBarParams(CHARACTER, dawnBringer32Pal[DB32COL_CONCRETE], " position= '0 160' size='200 400' ");
 }
 
-int Toolbar::process(HWND wnd, UINT msg, WPARAM wParam, LPARAM lParam)
+bool Toolbar::processEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (TwEventWin(wnd, msg, wParam, lParam)) // send event message to AntTweakBar
-		return 0; // event has been handled by AntTweakBar
+	if (TwEventWin(hWnd, message, wParam, lParam)) // send event message to AntTweakBar
+		return true; // event has been handled by AntTweakBar
+	return false;
 }
 
 

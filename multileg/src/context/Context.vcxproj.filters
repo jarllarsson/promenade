@@ -10,6 +10,7 @@
       <Filter>Exception</Filter>
     </ClInclude>
     <ClInclude Include="Context.h" />
+    <ClInclude Include="IContextProcessable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Context.cpp" />

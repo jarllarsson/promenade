@@ -40,7 +40,7 @@ void ControllerSystem::update(float p_dt)
 	m_steps++;
 
 	// Update all transforms
-	for (int i = 0; i < m_jointRigidBodies.size(); i++)
+	for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 	{
 		saveJointMatrix(i);
 		m_jointTorques[i] = glm::vec3(0.0f);
@@ -106,7 +106,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		for (int i = 0; i < m_jointRigidBodies.size(); i++)
+		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
 			m_jointRigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z));
@@ -116,7 +116,7 @@ void ControllerSystem::applyTorques( float p_dt )
 
 void ControllerSystem::buildCheck()
 {
-	for (int i = 0; i < m_controllersToBuild.size(); i++)
+	for (unsigned int i = 0; i < m_controllersToBuild.size(); i++)
 	{
 
 		ControllerComponent* controller = m_controllersToBuild[i];
@@ -467,7 +467,7 @@ void ControllerSystem::computeVFTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				CMatrix Jt = CMatrix::transpose(J);
 
 				glm::mat4 sum(0.0f);
-				for (int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
+				for (unsigned int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
 				{
 					sum += m_jointWorldTransforms[g];
 				}

@@ -64,6 +64,7 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 
 	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
 	m_toolBar->setWindowSize(p_width, p_height);
+	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
 
 	m_fpsUpdateTick=0.0f;
 	m_controller = new TempController(0.0f,10.0f,-50.0f,0.0f);
@@ -80,7 +81,10 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 
 App::~App()
 {	
-	//SAFE_DELETE(m_kernelDevice);
+	// UNSUBSCRIPTIONS
+	m_context->removeSubProcessEntry(m_toolBar);
+	// DELETES
+	SAFE_DELETE(m_toolBar);
 	SAFE_DELETE(m_graphicsDevice);
 	SAFE_DELETE(m_context);
 	SAFE_DELETE(m_input);
@@ -476,6 +480,7 @@ void App::handleContext(double p_dt, double p_physDt, unsigned int p_physSteps)
 	// apply resizing on graphics device if it has been triggered by the context
 	if (m_context->isSizeDirty())
 	{
+		m_toolBar->setWindowSize(0, 0);
 		pair<int, int> sz = m_context->getSize();
 		int width = sz.first, height = sz.second;
 		m_graphicsDevice->updateResolution(width,height);
