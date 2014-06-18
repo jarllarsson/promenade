@@ -2,7 +2,7 @@
 
 StepCycle::StepCycle()
 {
-	m_tuneDutyFactor = 0.5f;
+	m_tuneDutyFactor = 0.62f;
 	m_tuneStepTrigger = 0.0f;
 }
 

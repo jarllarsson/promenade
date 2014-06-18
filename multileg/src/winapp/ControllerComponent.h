@@ -59,6 +59,7 @@ public:
 		// Allocate it according to number of leg entities that was inputted
 		LegFrame legFrame;
 		legFrame.m_stepCycles.resize(legFrameEntityConstruct.m_upperLegEntities.size());
+		legFrame.m_stepCycles[1].m_tuneStepTrigger = 0.5f;
 		m_legFrames.push_back(legFrame);
 	}
 
