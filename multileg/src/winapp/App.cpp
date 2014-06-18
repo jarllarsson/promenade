@@ -28,6 +28,7 @@
 #include "RenderSystem.h"
 #include "ControllerSystem.h"
 #include "PhysicsWorldHandler.h"
+#include "Toolbar.h"
 
 //#define MEASURE_RBODIES
 
@@ -61,6 +62,8 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 		DEBUGWARNING((e.what()));
 	}
 
+	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
+	m_toolBar->setWindowSize(p_width, p_height);
 
 	m_fpsUpdateTick=0.0f;
 	m_controller = new TempController(0.0f,10.0f,-50.0f,0.0f);
@@ -474,7 +477,9 @@ void App::handleContext(double p_dt, double p_physDt, unsigned int p_physSteps)
 	if (m_context->isSizeDirty())
 	{
 		pair<int, int> sz = m_context->getSize();
-		m_graphicsDevice->updateResolution(sz.first, sz.second);
+		int width = sz.first, height = sz.second;
+		m_graphicsDevice->updateResolution(width,height);
+		m_toolBar->setWindowSize(width, height);
 	}
 	// Print fps in window head border
 	m_fpsUpdateTick -= (float)p_dt;
@@ -556,6 +561,8 @@ void App::render()
 	// Run passes
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_renderSystem->getInstances());
+	// Debug
+	m_toolBar->draw();
 	// Flip!
 	m_graphicsDevice->flipBackBuffer();										
 }

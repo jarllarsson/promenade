@@ -35,6 +35,10 @@
     <ClInclude Include="MathHelp.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPalettes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />
@@ -48,5 +52,8 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="ToString.cpp" />
+    <ClCompile Include="Random.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

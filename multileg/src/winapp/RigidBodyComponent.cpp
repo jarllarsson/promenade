@@ -23,7 +23,7 @@ RigidBodyComponent::RigidBodyComponent(btCollisionShape* p_collisionShape /*= NU
 
 RigidBodyComponent::~RigidBodyComponent()
 {
-	for (int i = 0; i < m_childConstraints.size(); i++)
+	for (unsigned int i = 0; i < m_childConstraints.size(); i++)
 		if (m_childConstraints[i] != NULL) m_childConstraints[i]->forceRemove(m_dynamicsWorldPtr);
 	delete m_collisionShape;
 	if (m_rigidBody!=NULL) delete m_rigidBody->getMotionState();

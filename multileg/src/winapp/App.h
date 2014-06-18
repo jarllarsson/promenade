@@ -18,6 +18,7 @@ class Input;
 class RenderSystem;
 class RigidBodySystem;
 class ControllerSystem;
+class Toolbar;
 
 using namespace std;
 
@@ -64,6 +65,7 @@ private:
 	void updateController(float p_dt);
 	TempController*			m_controller;
 	Input*					m_input;
+	Toolbar*				m_toolBar;
 
 	// Entity system handling
 	artemis::World			m_world;

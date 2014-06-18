@@ -25,7 +25,7 @@ unsigned int PieceWiseLinear::getSize() const
 void PieceWiseLinear::init()
 {
 	m_dataPoints = new float[c_size];
-	for (int i = 0; i < getSize(); i++)
+	for (unsigned int i = 0; i < getSize(); i++)
 	{
 		m_dataPoints[i] = 0.0f;
 	}
@@ -63,20 +63,20 @@ void PieceWiseLinear::reset(InitType p_initFunction/*=InitType::FLAT*/, float p_
 		switch (p_initFunction)
 		{
 		case InitType::SIN:
-			m_dataPoints[i] = p_scale*sin(t * 2.0f * PI);
+			m_dataPoints[i] = p_scale*sin(t * 2.0f * (float)PI);
 			break;
 		case InitType::COS:
-			m_dataPoints[i] = p_scale * cos(t * 2.0f * PI);
+			m_dataPoints[i] = p_scale * cos(t * 2.0f * (float)PI);
 			break;
 		case InitType::COS_INV_NORM:
-			m_dataPoints[i] = p_scale * ((cos(t * 2.0f * PI) - 1.0f) * -0.5f);
+			m_dataPoints[i] = p_scale * ((cos(t * 2.0f * (float)PI) - 1.0f) * -0.5f);
 			break;
 		case InitType::COS_INV_NORM_PADDED:
-			m_dataPoints[i] = p_scale * ((cos(t * 2.0f * PI) - 1.0f) * -0.5f);
+			m_dataPoints[i] = p_scale * ((cos(t * 2.0f * (float)PI) - 1.0f) * -0.5f);
 			if (i > getSize() - 3 && i >= 0) m_dataPoints[i] = 0.0f;
 			break;
 		case InitType::HALF_SIN:
-			m_dataPoints[i] = p_scale * sin(t * PI);
+			m_dataPoints[i] = p_scale * sin(t * (float)PI);
 			break;
 		case InitType::FLAT:
 			m_dataPoints[i] = 0.0f;

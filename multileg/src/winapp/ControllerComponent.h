@@ -49,7 +49,7 @@ public:
 		LegFrameEntityConstruct legFrameEntityConstruct;
 		legFrameEntityConstruct.m_legFrameEntity = p_legFrame;
 		// Add all legs to it
-		for (int i = 0; i < p_hipJoints.size();i++)
+		for (unsigned wint i = 0; i < p_hipJoints.size();i++)
 		{
 			legFrameEntityConstruct.m_upperLegEntities.push_back(p_hipJoints[i]);
 		}			

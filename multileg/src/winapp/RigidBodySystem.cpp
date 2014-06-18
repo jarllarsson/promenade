@@ -104,7 +104,7 @@ void RigidBodySystem::checkForNewConstraints(artemis::Entity &e)
 
 void RigidBodySystem::executeDeferredConstraintInits()
 {
-	for (int i = 0; i < m_constraintCreationsList.size(); i++)
+	for (unsigned int i = 0; i < m_constraintCreationsList.size(); i++)
 	{
 		setupConstraints(m_constraintCreationsList[i]);
 	}
