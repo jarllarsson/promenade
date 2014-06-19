@@ -16,28 +16,27 @@
 class MaterialComponent : public artemis::Component
 {
 public:
-	MaterialComponent() { setColorRGB({ 1, 1, 1 }); }
-	MaterialComponent(const Color4f& p_color) { setColorRGBA(p_color); }
-	MaterialComponent(const Color3f& p_color) { setColorRGB(p_color); }
+	MaterialComponent();
+	MaterialComponent(const Color4f& p_color);
+	MaterialComponent(const Color3f& p_color);
 	~MaterialComponent() {}
 
-	void setColorRGB(const Color3f& p_color)
-	{
-		setColorRGBA(toColor4f(p_color));
-	}
-	void setColorRGBA(const Color4f& p_color)
-	{
-		m_color = p_color;
-		m_dirty = true;
-	}
-	const Color4f& getColorRGBA() { return m_color; }
-	const Color3f& getColorRGB() { return toColor3f(m_color); }
+	void setColorRGB(const Color3f& p_color);
+	void setColorRGBA(const Color4f& p_color);
 
-	bool isMaterialRenderDirty() { return m_dirty; }
-	void unsetMaterialRenderDirty() { m_dirty = false; }
+	const Color4f& getColorRGBA();
+	const Color3f& getColorRGB();
+
+	bool isMaterialRenderDirty();
+	void unsetMaterialRenderDirty();
+
+	void highLight();
+	void unsetHighLight();
 
 protected:
 private:
+	void init();
 	bool m_dirty;
+	bool m_highLightFac;
 	Color4f m_color;
 };

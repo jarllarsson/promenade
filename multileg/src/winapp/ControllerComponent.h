@@ -8,6 +8,8 @@
 #include "GaitPlayer.h"
 #include "StepCycle.h"
 #include <vector>
+#include "PieceWiseLinear.h"
+#include "PDn.h"
 // =======================================================================================
 //                                      ControllerComponent
 // =======================================================================================
@@ -33,7 +35,7 @@ public:
 	glm::vec3 m_goalVelocity;
 
 
-
+	enum Orientation{ YAW = 0, PITCH = 1, ROLL = 2 };
 
 	// Constructor and Destructor
 	// ==============================================================================
@@ -41,6 +43,7 @@ public:
 	// the chains(lists) will be constructed by walking the pointer chain(double linked list)
 	ControllerComponent(artemis::Entity* p_legFrame, std::vector<artemis::Entity*>& p_hipJoints)
 	{
+		m_buildComplete = false;
 		// for each inputted leg-frame entity...
 
 		// Set up the entity-based leg frame representation
@@ -122,12 +125,43 @@ public:
 	// Run-time leg frame structure
 	struct LegFrame
 	{
-		std::vector<StepCycle> m_stepCycles;
-		unsigned int m_legFrameJointId;
-		unsigned int m_spineJointId;
-		std::vector<Leg> m_legs;
-		std::vector<unsigned int> m_feetJointId;
-		std::vector<unsigned int> m_hipJointId;
+		//LegFrame()
+		//{
+		//	m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::COS_INV_NORM);
+		//}
+
+		// Structure ids
+		unsigned int m_legFrameJointId;				// per leg frame
+		int m_spineJointId;				// per leg frame
+		std::vector<unsigned int> m_feetJointId;	// per leg
+		std::vector<unsigned int> m_hipJointId;		// per leg	
+		// Playback data
+		std::vector<StepCycle> m_stepCycles;			// per leg	
+		PieceWiseLinear		   m_orientationLFTraj[3];	// per leg frame
+		PDn					   m_desiredLFTorquePD;		// per leg frame
+		// Structure
+		std::vector<Leg> m_legs;					// per leg
+		// =============================================================
+		// Access methods
+		// =============================================================
+		// Retrieves the current orientation quaternion from the
+		// trajectory function at time phi.
+		glm::quat getCurrentDesiredOrientation(float p_phi)
+		{
+			float yaw = m_orientationLFTraj[(unsigned int)Orientation::YAW].lerpGet(p_phi);
+			float pitch = m_orientationLFTraj[(unsigned int)Orientation::PITCH].lerpGet(p_phi);
+			float roll = m_orientationLFTraj[(unsigned int)Orientation::ROLL].lerpGet(p_phi);
+			return glm::quat(glm::vec3(pitch, yaw, roll));
+		}
+
+		// Drives the PD-controller and retrieves the 3-axis torque
+		// vector that will be used as the desired torque for which the
+		// stance legs tries to accomplish.
+		glm::vec3 getOrientationPDTorque(const glm::quat& p_currentOrientation, const glm::quat& p_desiredOrientation, float p_dt)
+		{
+			glm::vec3 torque = m_desiredLFTorquePD.drive(p_currentOrientation, p_desiredOrientation, p_dt);
+			return torque;
+		}
 	};
 
 	// Construction description struct for leg frames
@@ -142,6 +176,8 @@ public:
 	const unsigned int getLegFrameCount() const {return (unsigned int)m_legFrames.size();}
 	LegFrame* getLegFrame(unsigned int p_idx)								{return &m_legFrames[p_idx];}
 	LegFrameEntityConstruct* getLegFrameEntityConstruct(unsigned int p_idx) {return &m_legFrameEntityConstructs[p_idx];}
+	void setToBuildComplete() { m_buildComplete = true; }
+	bool isBuildComplete() { return m_buildComplete; }
 	// ==============================================================================
 
 	// Torque list access and handling
@@ -151,6 +187,8 @@ public:
 
 protected:
 private:
+	bool m_buildComplete;
+
 	// Leg frame lists
 	// ==============================================================================
 	std::vector<LegFrame> m_legFrames;

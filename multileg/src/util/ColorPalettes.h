@@ -3,11 +3,21 @@
 struct Color3f
 {
 	float r, g, b;
+	Color3f operator* (float x) const
+	{
+		Color3f ncol{ r * x, g * x, b * x};
+		return ncol;
+	}
 };
 
 struct Color4f
 {
 	float r, g, b, a;
+	Color4f operator* (float x) const
+	{
+		Color4f ncol{ r * x, g * x, b * x, a * x };		
+		return ncol;
+	}
 };
 
 Color4f toColor4f(const Color3f& p_col);

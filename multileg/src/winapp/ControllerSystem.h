@@ -56,6 +56,8 @@ private:
 	std::vector<float>			m_jointLengths;
 	std::vector<glm::vec4>		m_jointWorldInnerEndpoints;
 	std::vector<glm::vec4>		m_jointWorldOuterEndpoints;
+	// Other joint run time data, for debugging
+	std::vector<artemis::Entity*>	m_dbgJointEntities;
 public:
 	ControllerSystem()
 	{
@@ -124,7 +126,7 @@ private:
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 	void computeVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, float p_phi, float p_dt);
-	void applyNetLegFrameTorque(int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, std::vector<glm::vec3>* m_jointTorques, unsigned int p_torqueIdxOffset, unsigned int p_torqueCount, float p_phi);
+	void applyNetLegFrameTorque(int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
 	// global variables
 	float m_runTime;
 	int m_steps;

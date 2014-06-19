@@ -138,6 +138,7 @@ public:
 				if (materialIsDirty)
 				{
 					writeInstanceDat->m_color = material->getColorRGBA();
+					material->unsetHighLight();
 				}
 				//DEBUGPRINT(((string("render instance ") + toString(instanceIdx) + "\n").c_str()));
 				transform->unsetTransformRenderDirty();

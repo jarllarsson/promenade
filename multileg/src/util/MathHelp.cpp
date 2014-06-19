@@ -117,6 +117,12 @@ glm::vec3 MathHelp::getMatrixTranslation(const glm::mat4& m)
 	return MathHelp::toVec3(m * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
+
+glm::quat MathHelp::getMatrixRotation(const glm::mat4& m)
+{
+	return glm::quat(m);
+}
+
 float MathHelp::flerp(float p_a, float p_b, float p_t)
 {
 	return p_b*p_t + p_a*(1.0f-p_t);
@@ -151,3 +157,4 @@ void MathHelp::quatToAngleAxis(const glm::quat& p_quat, float& p_outAngle, glm::
 		p_outAxis.z = (float)((double)q1.z / s);
 	}
 }
+

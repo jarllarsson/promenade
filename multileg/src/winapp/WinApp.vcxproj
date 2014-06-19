@@ -186,6 +186,7 @@
     <ClCompile Include="ConstraintComponent.cpp" />
     <ClCompile Include="ControllerSystem.cpp" />
     <ClCompile Include="JacobianHelper.cpp" />
+    <ClCompile Include="MaterialComponent.cpp" />
     <ClCompile Include="PieceWiseLinear.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />

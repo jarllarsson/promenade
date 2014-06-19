@@ -22,10 +22,12 @@ public:
 	{
 		m_Kp = 1.0f;
 		m_Kd = 0.1f;
+		initErrorArrays();
 	}
 	PDn(float p_Kp, float p_Kd)
 	{
 		setK(p_Kp, p_Kd);
+		initErrorArrays();
 	}
 	~PDn()
 	{
