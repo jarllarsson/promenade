@@ -33,21 +33,25 @@ public:
 
 	PieceWiseLinear();
 	PieceWiseLinear(InitType p_initFunction);
+	PieceWiseLinear(const PieceWiseLinear& p_copy);
+	PieceWiseLinear& operator = (const PieceWiseLinear& p_rhs);
 	~PieceWiseLinear();
 
 	void reset(InitType p_initFunction=InitType::FLAT, float p_scale=1.0f);
 	unsigned int getSize() const;
 	float getNormalizedIdx(unsigned int p_idx) const;
 	float lerpGet(float p_phi) const;
+	float get(unsigned int p_idx) const;
 
 protected:
+	// The data
+	float* m_dataPoints;
 private:
 	void init();
+	void init(const PieceWiseLinear& p_copy);
 	void clear();
 
 	// Number of data points, locked for now
 	static const unsigned int c_size = 4;
 
-	// The data
-	float* m_dataPoints;
 };

@@ -12,6 +12,21 @@ PieceWiseLinear::PieceWiseLinear(InitType p_initFunction)
 	reset(p_initFunction);
 }
 
+PieceWiseLinear::PieceWiseLinear(const PieceWiseLinear& p_copy)
+{
+	init(p_copy);
+}
+
+PieceWiseLinear& PieceWiseLinear::operator=(const PieceWiseLinear& p_rhs)
+{
+	if (this != &p_rhs) 
+	{
+		clear();
+		init(p_rhs);
+	}
+	return *this;
+}
+
 PieceWiseLinear::~PieceWiseLinear()
 {
 	clear();
@@ -28,6 +43,15 @@ void PieceWiseLinear::init()
 	for (unsigned int i = 0; i < getSize(); i++)
 	{
 		m_dataPoints[i] = 0.0f;
+	}
+}
+
+void PieceWiseLinear::init(const PieceWiseLinear& p_copy)
+{
+	m_dataPoints = new float[c_size];
+	for (unsigned int i = 0; i < getSize(); i++)
+	{
+		m_dataPoints[i] = p_copy.get(i);
 	}
 }
 
@@ -98,4 +122,9 @@ void PieceWiseLinear::reset(InitType p_initFunction/*=InitType::FLAT*/, float p_
 			break;
 		}
 	}
+}
+
+float PieceWiseLinear::get(unsigned int p_idx) const
+{
+	return m_dataPoints[p_idx];
 }

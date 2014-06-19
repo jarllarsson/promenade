@@ -31,8 +31,7 @@ public:
 	}
 	~PDn()
 	{
-		delete[] m_P;
-		delete[] m_D;
+
 	}
 
 	float getKp() { return m_Kp; }
@@ -105,13 +104,15 @@ public:
 protected:
 	void initErrorArrays()
 	{
-		m_P = new float[3];
-		m_D = new float[3];
+		for (int i = 0; i < 3; i++)
+		{
+			m_P[i] = 0.0f; m_D[i] = 0.0f;
+		}
 	}
 private:
 	float m_Kp; // Proportional coefficient
 	float m_Kd; // Derivative coefficient
 
-	float* m_P;  // Proportional error (Current error)
-	float* m_D;  // Derivative error   (How fast the P error is changing)
+	float m_P[3];  // Proportional error (Current error)
+	float m_D[3];  // Derivative error   (How fast the P error is changing)
 };
