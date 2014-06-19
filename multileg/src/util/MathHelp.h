@@ -39,5 +39,5 @@ namespace MathHelp
 	float flerp(float p_a, float p_b, float p_t);
 	double dlerp(double p_a, double p_b, double p_t);
 
-	void quatToAngleAxis(const glm::quat& p_quat, glm::vec3& p_outAxis, float& p_outAngle);
+	void quatToAngleAxis(const glm::quat& p_quat, float& p_outAngle, glm::vec3& p_outAxis);
 };

@@ -1,6 +1,7 @@
 #pragma once
 #include <glm\gtc\type_ptr.hpp>
 #include <algorithm>
+#include <MathHelp.h>
 // =======================================================================================
 //                                      PDn
 // =======================================================================================
@@ -47,20 +48,31 @@ public:
 	// Drive the controller and get new value
 	// p_error This is the current error
 	// p_dt this is the step size
-	float* drive(float* p_error, float p_dt)
+	float drive(float p_error, unsigned int p_id, float p_dt)
 	{
-		float* res = p_error;
-		for (int i = 0; i < c_size; i++)
-		{
-			float oldError = m_P[i];
-			m_P[i] = p_error[i]; // store current error
-			//m_I[i] += m_P[i] * p_dt;  // accumulate error velocity to integral term
-			m_D[i] = (m_P[i] - oldError) / std::max(0.001f, p_dt); // calculate speed of error change
-			// return weighted sum
-			res[i] = m_Kp * m_P[i]/* + m_Ki * m_I[i]*/ + m_Kd * m_D[i];
-		}
+		float oldError = m_P[p_id];
+		m_P[p_id] = p_error; // store current error
+		m_D[p_id] = (m_P[p_id] - oldError) / p_dt; // calculate speed of error change
+		// return weighted sum
+		return m_Kp * m_P[p_id] + m_Kd * m_D[p_id];
+	}
+
+	glm::vec2 drive(const glm::vec2& p_error, float p_dt)
+	{
+		glm::vec2 res( p_error.x, p_error.y );
+		for (unsigned int i = 0; i < 2;i++)
+			res[i] = drive(res[i],i, p_dt);
 		return res;
 	}
+
+	glm::vec3 drive(const glm::vec3& p_error, float p_dt)
+	{
+		glm::vec3 res(p_error.x, p_error.y, p_error.z);
+		for (unsigned int i = 0; i < 3; i++)
+			res[i] = drive(res[i], i, p_dt);
+		return res;
+	}
+
 
 	glm::vec3 drive(const glm::quat& p_current, const glm::quat& p_goal, float p_dt)
 	{
@@ -81,33 +93,11 @@ public:
 		{
 			float a=0.0f;
 			glm::vec3 dir;
-			glm::q
-			error.ToAngleAxis(out a, out dir);
+			MathHelp::quatToAngleAxis(error, a, dir);
 			// Get torque
-			m_vec = drive(a * dir, Time.deltaTime);
+			result = drive(a * dir, p_dt);
 		}
-		return m_vec; // Note, these are 3 PIDs
-	}
-
-	glm::vec2 drive(Vector2 p_error, float p_dt)
-	{
-		float[] res = { p_error.x, p_error.y };
-		res = drive(res, p_dt);
-		return new Vector2(res[0], res[1]);
-	}
-
-	glm::vec3 drive(Vector3 p_error, float p_dt)
-	{
-		float[] res = { p_error.x, p_error.y, p_error.z };
-		res = drive(res, p_dt);
-		return new Vector3(res[0], res[1], res[2]);
-	}
-
-	glm::vec4 drive(Vector4 p_error, float p_dt)
-	{
-		float[] res = { p_error.x, p_error.y, p_error.z, p_error.w };
-		res = drive(res, p_dt);
-		return new Vector4(res[0], res[1], res[2], res[3]);
+		return result; // Note, these are 3 PIDs
 	}
 
 protected:

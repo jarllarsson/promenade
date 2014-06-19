@@ -131,7 +131,7 @@ double MathHelp::dlerp(double p_a, double p_b, double p_t)
 // Using the solution provided in:
 // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
 //
-void MathHelp::quatToAngleAxis(const glm::quat& p_quat, glm::vec3& p_outAxis, float& p_outAngle)
+void MathHelp::quatToAngleAxis(const glm::quat& p_quat, float& p_outAngle, glm::vec3& p_outAxis)
 {
 	glm::quat q1 = p_quat;
 	if (p_quat.w > 1) q1=glm::normalize(p_quat); // if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
