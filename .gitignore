@@ -67,6 +67,8 @@ bin/x64/*.txt
 /proto/Jacobian-test/Jacobian-test.sln
 /proto/greedy-optimization/greedy-optimization-csharp.sln
 /proto/greedy-optimization/greedy-optimization.sln
+/proto/altPD/altPD-csharp.sln
+/proto/altPD/altPD.sln
 
 *.psess
 *.vspx
