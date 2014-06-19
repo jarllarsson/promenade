@@ -126,3 +126,28 @@ double MathHelp::dlerp(double p_a, double p_b, double p_t)
 {
 	return p_b*p_t + p_a*(1.0-p_t);
 }
+
+// Extract axis and angle from a quaternion.
+// Using the solution provided in:
+// http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToAngle/index.htm
+//
+void MathHelp::quatToAngleAxis(const glm::quat& p_quat, glm::vec3& p_outAxis, float& p_outAngle)
+{
+	glm::quat q1 = p_quat;
+	if (p_quat.w > 1) q1=glm::normalize(p_quat); // if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
+	p_outAngle = 2.0f * acos(q1.w);
+	double s = sqrt(1.0 - (double)q1.w * (double)q1.w); // assuming quaternion normalised then w is less than 1, so term always positive.
+	if (s < 0.001)
+	{ // test to avoid divide by zero, s is always positive due to sqrt
+		// if s close to zero then direction of axis not important
+		p_outAxis.x = q1.x; // if it is important that axis is normalised then replace with x=1; y=z=0;
+		p_outAxis.y = q1.y;
+		p_outAxis.z = q1.z;
+	}
+	else
+	{
+		p_outAxis.x = (float)((double)q1.x / s); // normalise axis
+		p_outAxis.y = (float)((double)q1.y / s);
+		p_outAxis.z = (float)((double)q1.z / s);
+	}
+}
