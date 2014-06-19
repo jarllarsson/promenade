@@ -114,6 +114,9 @@
     <ClInclude Include="MaterialComponent.h">
       <Filter>Entity System\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="PDn.h">
+      <Filter>Entity System\Locomotion\Data functions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">

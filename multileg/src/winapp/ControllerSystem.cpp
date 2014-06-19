@@ -392,7 +392,7 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	// feed back corrections for hip joints
 	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
-		//applyNetLegFrameTorque(p_controllerId, p_controller, i, &m_jointTorques, torqueIdxOffset, torqueCount, phi);
+		applyNetLegFrameTorque(p_controllerId, p_controller, i, &m_jointTorques, torqueIdxOffset, torqueCount, phi);
 	}
 }
 
@@ -420,7 +420,6 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 	{
 		ControllerComponent::Leg* leg = &p_lf->m_legs[i];
 		// Swing force
-		/*
 		if (!legInStance[i])
 		{
 			glm::vec3 fsw(calculateFsw(p_lf, i, p_phi, p_dt));
@@ -438,9 +437,8 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			glm::vec3 fd(calculateFd(p_lf, i));
 			leg->m_DOFChain.vf = calculateStanceLegVF(stanceLegs,fv,fh,fd); // Store force
 		}
-		*/
 		// Debug test
-		leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f*sin((float)m_runTime*0.2f), 0.0f);
+		//leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f*sin((float)m_runTime*0.2f), 0.0f);
 	}
 
 	delete[] legInStance;
