@@ -136,8 +136,15 @@ void ControllerSystem::buildCheck()
 		// prepare legs			
 		legFrame->m_legs.resize(legFrameEntities->m_upperLegEntities.size()); // Allocate the number of specified legs
 		unsigned int legCount = (unsigned int)legFrame->m_legs.size();
+		// Add debug tracking for leg frame
+		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
+		//
 		for (unsigned int x = 0; x < legCount; x++)
 		{
+			// Add debug tracking for leg
+			std::string sideName = (std::string(x == 0 ? "Left" : "Right") + "Leg");
+			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
+			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
 			// start by adding the already existing root id (needed in all leg chains)
 			addJointToChain(&legFrame->m_legs[x], rootIdx);
 			// Traverse the segment structure for the leg to get the rest

@@ -39,6 +39,7 @@ public:
 	
 	enum BarType
 	{
+		PLAYER,
 		PERFORMANCE,
 		CHARACTER
 	};
@@ -71,23 +72,23 @@ public:
 	void draw();
 
 	void addReadOnlyVariable(BarType p_barType, const char* p_name, VarType p_type,
-		const void *p_var, const char* p_misc);
+		const void *p_var, const char* p_misc="");
 
-	void addWriteVariable(BarType p_barType, const char* p_name, VarType p_type, void *p_var,
-		const char* p_misc);
+	void addReadWriteVariable(BarType p_barType, const char* p_name, VarType p_type, void *p_var,
+		const char* p_misc = "");
 
-	void addSeparator(BarType p_barType, const char* p_name, VarType p_type,
-		const char* p_misc);
+	void addSeparator(BarType p_barType, const char* p_name,
+		const char* p_misc = "");
 
 	void addButton(BarType p_barType, const char* p_name, TwButtonCallback p_callback, void *p_inputData,
-		const char* p_misc);
+		const char* p_misc = "");
 
-	void addLabel(BarType p_barType, const char* p_name, const char* p_label);
+	void addLabel(BarType p_barType, const char* p_name, const char* p_misc="");
 
 	void defineBarParams(BarType p_type, const char* p_params);
 	void defineBarParams(BarType p_type, float p_min, float p_max, float p_stepSz, const char* p_params);
 	void defineBarParams(BarType p_type, int p_min, int p_max, const char* p_params);
-	void defineBarParams(BarType p_type, const Color3& p_color, const char* p_params);
+	void defineBarParams(BarType p_type, const Color3f& p_color, const char* p_params);
 
 	TwBar* getBar(BarType p_type);
 
@@ -95,3 +96,5 @@ protected:
 private:
 	std::vector<Bar> m_bars;
 };
+
+void TW_CALL boolButton(void* p_bool);

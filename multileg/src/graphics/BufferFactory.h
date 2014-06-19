@@ -52,6 +52,7 @@ public:
 
 	Buffer<Mat4CBuffer>* createMat4CBuffer();
 	Buffer<glm::mat4>* createMat4InstanceBuffer( void* p_instanceList, unsigned int p_numberOfElements);
+	Buffer<InstanceDataTransformColor>* createTransformColorInstanceBuffer(void* p_instanceList, unsigned int p_numberOfElements);
 protected:
 private:
 	ID3D11Device* m_device;

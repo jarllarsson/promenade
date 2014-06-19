@@ -107,7 +107,7 @@ glm::vec3 MathHelp::toVec3(const glm::vec4& p_v)
 	return glm::vec3(p_v.x, p_v.y, p_v.z);
 }
 
-glm::vec3 MathHelp::toVec3(const Color3& p_col)
+glm::vec3 MathHelp::toVec3(const Color3f& p_col)
 {
 	return glm::vec3(p_col.r, p_col.g, p_col.b);
 }

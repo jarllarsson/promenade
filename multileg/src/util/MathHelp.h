@@ -33,7 +33,7 @@ namespace MathHelp
 	glm::vec3 transformPosition(const glm::mat4& m, const glm::vec3& p_pos);
 
 	glm::vec3 toVec3(const glm::vec4& p_v);
-	glm::vec3 toVec3(const Color3& p_col);
+	glm::vec3 toVec3(const Color3f& p_col);
 	glm::vec3 getMatrixTranslation(const glm::mat4& m);
 
 	float flerp(float p_a, float p_b, float p_t);

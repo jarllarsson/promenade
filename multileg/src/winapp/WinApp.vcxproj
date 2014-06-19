@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AdvancedEntitySystem.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="CollisionLayer.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="ControllerSystem.h" />
     <ClInclude Include="GaitPlayer.h" />
     <ClInclude Include="JacobianHelper.h" />
+    <ClInclude Include="MaterialComponent.h" />
     <ClInclude Include="PD.h" />
     <ClInclude Include="PID.h" />
     <ClInclude Include="PieceWiseLinear.h" />
@@ -177,6 +179,7 @@
     <ClInclude Include="TempController.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AdvancedEntitySystem.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ConstraintComponent.cpp" />

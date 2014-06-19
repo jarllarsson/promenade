@@ -4,6 +4,7 @@
 #include "RigidBodyComponent.h"
 #include <vector>
 #include "ControllerComponent.h"
+#include "AdvancedEntitySystem.h"
 
 // =======================================================================================
 //                                 ControllerSystem
@@ -23,7 +24,7 @@
 //#define MULTI
 
 
-class ControllerSystem : public artemis::EntityProcessingSystem
+class ControllerSystem : public AdvancedEntitySystem
 {
 private:
 	// Used to control and read velocity specifics per controller

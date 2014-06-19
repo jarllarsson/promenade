@@ -66,6 +66,29 @@ Buffer<glm::mat4>* BufferFactory::createMat4InstanceBuffer( void* p_instanceList
 	return instanceBuffer;
 }
 
+
+Buffer<InstanceDataTransformColor>* BufferFactory::createTransformColorInstanceBuffer(void* p_instanceList, 
+																					  unsigned int p_numberOfElements)
+{
+	Buffer<InstanceDataTransformColor>* instanceBuffer;
+
+	// Create description for buffer
+	BufferConfig::BUFFER_INIT_DESC bufferDesc;
+	ZeroMemory((void*)&bufferDesc, sizeof(bufferDesc));
+	bufferDesc.ElementSize = sizeof(InstanceDataTransformColor);
+	bufferDesc.Usage = BufferConfig::BUFFER_CPU_WRITE_DISCARD;
+	bufferDesc.NumElements = p_numberOfElements;
+	bufferDesc.Type = BufferConfig::VERTEX_BUFFER;
+	bufferDesc.Slot = BufferConfig::SLOT0;
+	bufferDesc.arraySize = p_numberOfElements;
+
+	// Create buffer from config and data
+	instanceBuffer = new Buffer<InstanceDataTransformColor>(m_device, m_deviceContext,
+		(InstanceDataTransformColor*)p_instanceList, bufferDesc);
+
+	return instanceBuffer;
+}
+
 Buffer<PVertex>* BufferFactory::createFullScreenQuadBuffer()
 {
 	PVertex mesh[]= {
@@ -228,3 +251,5 @@ Buffer<PVertex>* BufferFactory::createLineBox( float p_halfSizeLength/*=1.0f*/ )
 
 	return lineboxBuffer;
 }
+
+

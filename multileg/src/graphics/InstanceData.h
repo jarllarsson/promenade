@@ -1,5 +1,6 @@
 #pragma once
-
+#include <ColorPalettes.h>
+#include <glm\gtc\type_ptr.hpp>
 // =======================================================================================
 //                                      InstanceData
 // =======================================================================================
@@ -12,8 +13,16 @@
 /// 24-3-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-struct InstanceData
+struct InstanceDataTransform
 {
 public:
-	float m[16];
+	glm::mat4 m_transform;
+};
+
+
+struct InstanceDataTransformColor
+{
+public:
+	glm::mat4 m_transform;
+	Color4f	  m_color;
 };

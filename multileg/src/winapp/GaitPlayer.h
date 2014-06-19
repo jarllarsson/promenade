@@ -73,6 +73,11 @@ public:
 		return m_gaitPhase;
 	}
 
+	const float* getPhasePointer()
+	{
+		return &m_gaitPhase;
+	}
+
 private:
 	// Current gait phase
 	float m_gaitPhase; // phi

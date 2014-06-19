@@ -6,6 +6,7 @@
 #include <Util.h>
 #include "TransformComponent.h"
 #include "RenderComponent.h"
+#include "MaterialComponent.h"
 
 
 
@@ -29,7 +30,7 @@ private:
 	GraphicsDevice* m_graphicsDevice;
 
 	// Real resource handler ref here later:
-	Buffer<glm::mat4>* m_instances;
+	Buffer<InstanceDataTransformColor>* m_instances;
 
 	// render stats
 	bool m_instancesUpdated;
@@ -63,20 +64,24 @@ public:
 
 	virtual void added(artemis::Entity &e)
 	{
+		// Non-optional
 		RenderComponent* renderStats = renderMapper.get(e);
 		TransformComponent* transform = transformMapper.get(e);
+
+		// Optionals
+		MaterialComponent* material = (MaterialComponent*)e.getComponent<MaterialComponent>();
 		// warning quick and dirty
 		// If new entity added with rendercomponent
 		// resize instance array, ie. destroy it create new with new size, add new value
 		unsigned int arraySize = 0;
 		unsigned int newArraySize = 1;
-		glm::mat4* newInstances = NULL;
+		InstanceDataTransformColor* newInstances = NULL;
 		if (m_instances != NULL)
 		{		
-			glm::mat4* instances = m_instances->accessBufferArr;	
+			InstanceDataTransformColor* instances = m_instances->accessBufferArr;
 			arraySize = m_instances->getArraySize();
 			newArraySize = arraySize + 1;
-			newInstances = new glm::mat4[newArraySize]; // resize
+			newInstances = new InstanceDataTransformColor[newArraySize]; // resize
 			// Copy over old data
 			for (unsigned int i = 0; i < arraySize; i++)
 			{
@@ -87,13 +92,17 @@ public:
 		}
 		else
 		{
-			newInstances = new glm::mat4[newArraySize];
+			newInstances = new InstanceDataTransformColor[newArraySize];
 		}
-		// add the matrix		
+		// add the instance data		
 		unsigned int backIdxNew = arraySize; // when we resize
-		newInstances[backIdxNew] = glm::transpose(transform->getMatrix());
+		newInstances[backIdxNew].m_transform = glm::transpose(transform->getMatrix());
+		if (material!=NULL)
+			newInstances[backIdxNew].m_color = material->getColorRGBA();
+		else
+			newInstances[backIdxNew].m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		// recreate the buffer
-		m_instances = m_graphicsDevice->getBufferFactoryRef()->createMat4InstanceBuffer((void*)newInstances, newArraySize);
+		m_instances = m_graphicsDevice->getBufferFactoryRef()->createTransformColorInstanceBuffer((void*)newInstances, newArraySize);
 		delete[] newInstances;
 		//DEBUGPRINT(( (string("add renderobj (ilist sz[") + toString(arraySize) + "] -> [" + toString(newArraySize)+"])\n").c_str() ));
 		renderStats->setInstanceIdx(backIdxNew);
@@ -104,9 +113,14 @@ public:
 	// update instance list based on transform
 	virtual void processEntity(artemis::Entity &e)
 	{
+		// Non-optional
 		RenderComponent* renderStats = renderMapper.get(e);
 		TransformComponent* transform = transformMapper.get(e);
-		if (transform->isTransformRenderDirty())
+		// Optionals
+		MaterialComponent* material = (MaterialComponent*)e.getComponent<MaterialComponent>();
+		bool materialIsDirty = (material != NULL && material->isMaterialRenderDirty());
+		if (transform->isTransformRenderDirty() ||
+			materialIsDirty)
 		{
 			// Update transform of object to instance list buffer
 			// gpu write to buffer is deferred for when all changes have been made
@@ -114,11 +128,16 @@ public:
 			int instanceIdx = renderStats->getInstanceIdx();
 			if (instanceIdx>-1)
 			{
-				glm::mat4* writeMat = m_instances->readElementPtrAt((unsigned int)instanceIdx);
+				InstanceDataTransformColor* writeInstanceDat = m_instances->readElementPtrAt((unsigned int)instanceIdx);
 				const glm::mat4* readMat = transform->getMatrixPtr();
-				if (writeMat != NULL)
+				if (writeInstanceDat != NULL)
 				{
-					*writeMat = glm::transpose(*readMat);
+					writeInstanceDat->m_transform = glm::transpose(*readMat);
+				}
+				// Optionals
+				if (materialIsDirty)
+				{
+					writeInstanceDat->m_color = material->getColorRGBA();
 				}
 				//DEBUGPRINT(((string("render instance ") + toString(instanceIdx) + "\n").c_str()));
 				transform->unsetTransformRenderDirty();
@@ -136,7 +155,7 @@ public:
 		}
 	};
 
-	Buffer<glm::mat4>* getInstances()
+	Buffer<InstanceDataTransformColor>* getInstanceBuffer()
 	{
 		return m_instances;
 	}

@@ -29,6 +29,7 @@
 #include "ControllerSystem.h"
 #include "PhysicsWorldHandler.h"
 #include "Toolbar.h"
+#include "AdvancedEntitySystem.h"
 
 //#define MEASURE_RBODIES
 
@@ -73,10 +74,16 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_timeScale = 1.0f;
 	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
+	m_time = 0.0;
 	//
-	m_startPaused = false;
+	m_triggerPause = false;
 	//
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
+
+	// Global toolbar vars
+	m_toolBar->addReadOnlyVariable(Toolbar::PLAYER, "Real time", Toolbar::DOUBLE, &m_time);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Physics time scale", Toolbar::FLOAT, &m_timeScale);
+	m_toolBar->addButton(Toolbar::PLAYER, "> ||", boolButton,(void*)&m_triggerPause);
 }
 
 App::~App()
@@ -135,6 +142,7 @@ void App::run()
 	// Artemis
 	// Create and initialize systems
 	artemis::SystemManager * sysManager = m_world.getSystemManager();
+	AdvancedEntitySystem::registerDebugToolbar(m_toolBar);
 	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 	//addGameLogic(movementsys);
 #ifdef MEASURE_RBODIES
@@ -209,11 +217,18 @@ void App::run()
 				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 				lfSize));
 			legFrame.refresh();
+			string legFrameName = "LegFrame";
+			/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
+			m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
 			//
 			vector<artemis::Entity*> hipJoints;
 			// Number of leg frames per character
 			for (int n = 0; n < 2; n++) // number of legs per frame
 			{
+				string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
+				m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
+				m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/"+sideName+" opened=false").c_str());
+				//m_toolBar->addLabel(Toolbar::CHARACTER, sideName.c_str(),"");
 				artemis::Entity* prev = &legFrame;
 				artemis::Entity* upperLegSegment = NULL;
 				float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
@@ -229,23 +244,29 @@ void App::run()
 					// segment specific constraint params
 					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 					glm::vec3 upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+					string partName;
 					if (i == 0) // if hip joint
 					{
+						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 					}
 					else if (i == 1) // if knee
 					{
-						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						partName = " lower";
+						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 					}
 					else if (i == 2) // if foot
 					{
+						partName = " foot";
 						jointZOffsetInChild = 1.0f;
 						boxSize = glm::vec3(1.3f, 1.0f, 2.0f);
 						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 					}
-					legpos -= glm::vec3(glm::vec3(0.0f, parentSz.y*1.1f, jointZOffsetInChild));
+					string dbgGrp = (" group='" + sideName + "'");
+					m_toolBar->addLabel(Toolbar::CHARACTER, (sideName[0]+partName).c_str(), dbgGrp.c_str());
+					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*1.1f, jointZOffsetInChild));
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 					childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f, // note, h-lengths
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
@@ -253,7 +274,10 @@ void App::run()
 					childJoint.addComponent(new TransformComponent(legpos,
 						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
 						boxSize));					// note scale, so full lengths
-					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, jointZOffsetInChild),	  // child (this)
+					MaterialComponent* mat = new MaterialComponent(colarr[n*3+i]);
+					childJoint.addComponent(mat);
+					m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (sideName[0] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
+					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, -jointZOffsetInChild),	  // child (this)
 						glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
 						{ lowerAngleLim, upperAngleLim },
 						false };
@@ -288,7 +312,7 @@ void App::run()
 		gameUpdate(0.0f);
 		dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
 		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
-		double time = 0.0;
+		m_time = 0.0;
 
 		while (!m_context->closeRequested() && run)
 		{
@@ -298,7 +322,7 @@ void App::run()
 				// Start by rendering
 				render();
 
-				time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
+				m_time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
 
 
 				// Physics handling part of the loop
@@ -325,7 +349,7 @@ void App::run()
 				if (steps >= 600) run = false;
 #endif
 				DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
-				if (steps >= 1000) run = false;
+				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
 				double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - gameClockTimeOffset);
@@ -513,7 +537,7 @@ void App::gameUpdate( double p_dt )
 
 	if (m_timePauseStepToggle && m_timeScale > 0.0f)
 		m_timeScale = 0.0f;
-	if (m_input->g_kb->isKeyDown(KC_RETURN) || m_startPaused)
+	if (m_input->g_kb->isKeyDown(KC_RETURN) || m_triggerPause)
 	{
 		if (!m_timeScaleToggle)
 		{
@@ -522,7 +546,7 @@ void App::gameUpdate( double p_dt )
 			else
 				m_timeScale = 0.0f;
 			m_timeScaleToggle = true;
-			m_startPaused = false;
+			m_triggerPause = false;
 		}
 	}
 	else
@@ -531,7 +555,7 @@ void App::gameUpdate( double p_dt )
 	}
 	if (m_input->g_kb->isKeyDown(KC_NUMPAD6))
 	{
-		if (m_timeScale < 1.0f && !m_timePauseStepToggle)
+		if (m_timeScale == 0.0f && !m_timePauseStepToggle)
 		{
 			m_timePauseStepToggle = true;
 			m_timeScale = 1.0f;
@@ -541,6 +565,11 @@ void App::gameUpdate( double p_dt )
 	{
 		m_timePauseStepToggle = false;
 	}
+	// If triggered from elsewhere
+	/*if (m_timeScaleToggle && m_timeScale != 0.0f)
+		m_timeScale = 0.0f;
+	if (!m_timeScaleToggle && m_timeScale == 0.0f)
+		m_timeScale = 1.0f;*/
 	
 
 	// Update entity systems
@@ -565,7 +594,7 @@ void App::render()
 	m_graphicsDevice->clearRenderTargets();
 	// Run passes
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
-	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_renderSystem->getInstances());
+	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_renderSystem->getInstanceBuffer());
 	// Debug
 	m_toolBar->draw();
 	// Flip!

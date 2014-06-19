@@ -9,6 +9,7 @@
 #include <MeasurementBin.h>
 #include <UniqueIndexList.h>
 #include <Util.h>
+#include "AdvancedEntitySystem.h"
 
 // =======================================================================================
 //                                      RigidBodySystem
@@ -22,7 +23,7 @@
 /// 15-5-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class RigidBodySystem : public artemis::EntityProcessingSystem
+class RigidBodySystem : public AdvancedEntitySystem
 {
 private:
 	artemis::ComponentMapper<TransformComponent> transformMapper;

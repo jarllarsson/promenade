@@ -157,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CMatrix.cpp" />
+    <ClCompile Include="ColorPalettes.cpp" />
     <ClCompile Include="MathHelp.cpp" />
     <ClCompile Include="MeasurementBin.cpp" />
     <ClCompile Include="Random.cpp" />

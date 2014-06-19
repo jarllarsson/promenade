@@ -55,5 +55,6 @@
     <ClCompile Include="Random.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="ColorPalettes.cpp" />
   </ItemGroup>
 </Project>

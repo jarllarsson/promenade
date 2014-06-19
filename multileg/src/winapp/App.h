@@ -75,10 +75,11 @@ private:
 	RenderSystem*			m_renderSystem;
 	ControllerSystem*		m_controllerSystem;
 
+	double m_time;
 	float m_timeScale;
 	bool m_timeScaleToggle;
 	bool m_timePauseStepToggle;
-	bool m_startPaused;
+	bool m_triggerPause;
 
 	// Resource managers
 	//ResourceManager<btCollisionShape> m_collisionShapes;
