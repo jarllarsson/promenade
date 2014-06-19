@@ -124,8 +124,10 @@ public:
 	{
 		std::vector<StepCycle> m_stepCycles;
 		unsigned int m_legFrameJointId;
+		unsigned int m_spineJointId;
 		std::vector<Leg> m_legs;
 		std::vector<unsigned int> m_feetJointId;
+		std::vector<unsigned int> m_hipJointId;
 	};
 
 	// Construction description struct for leg frames

@@ -138,6 +138,9 @@ void ControllerSystem::buildCheck()
 		unsigned int legCount = (unsigned int)legFrame->m_legs.size();
 		// Add debug tracking for leg frame
 		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
+		// when and if we have a spine, add it here and store its id to leg frame
+		// Might have to do this after all leg frames instead, due to the link being at different ends of spine
+		legFrame->m_spineJointId = -1; // -1 means it doesn't exist
 		//
 		for (unsigned int x = 0; x < legCount; x++)
 		{
@@ -149,6 +152,7 @@ void ControllerSystem::buildCheck()
 			addJointToChain(&legFrame->m_legs[x], rootIdx);
 			// Traverse the segment structure for the leg to get the rest
 			artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
+			unsigned int jointsAddedForLeg = 0;
 			while (jointEntity != NULL)
 			{
 				// Get joint data
@@ -161,6 +165,9 @@ void ControllerSystem::buildCheck()
 				addJointToChain(&legFrame->m_legs[x], idx, parentLink->getDesc()->m_angularDOF_LULimits);
 				// Get child joint for next iteration
 				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
+				// Add hip joint if first
+				if (jointsAddedForLeg == 0) legFrame->m_hipJointId.push_back(idx);
+				// find out what to do next time
 				if (childLink != NULL)
 					jointEntity = childLink->getOwnerEntity();
 				else // we are at the foot, so trigger termination add foot id to the leg frame
@@ -168,6 +175,7 @@ void ControllerSystem::buildCheck()
 					legFrame->m_feetJointId.push_back(idx);
 					jointEntity = NULL;
 				}
+				jointsAddedForLeg++;
 			}
 		}
 
@@ -586,3 +594,67 @@ glm::vec3 ControllerSystem::calculateStanceLegVF(unsigned int p_stanceLegCount,
 	return -p_fd - (p_fh / n) - (p_fv / n); // note fd should be stance fd
 }
 
+
+void ControllerSystem::applyNetLegFrameTorque(int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, 
+											  std::vector<glm::vec3>* m_jointTorques, unsigned int p_torqueIdxOffset, unsigned int p_torqueCount, float p_phi)
+{
+	// Preparations, get ahold of all legs in stance,
+	// all legs in swing. And get ahold of their and the 
+	// closest spine's torques.
+	ControllerComponent::LegFrame* lf = p_controller->getLegFrame(p_legFrameIdx);
+	unsigned int legCount = (unsigned int)lf->m_legs.size();	
+	unsigned int lfJointIdx = lf->m_legFrameJointId - p_torqueIdxOffset;
+	glm::vec3 tstance(0.0f), tswing(0.0f), tspine(0.0f);
+	unsigned int stanceCount = 0;
+	unsigned int* stanceLegOffsettedIdxBuf = new unsigned int[legCount];
+	for (unsigned int i = 0; i < legCount; i++)
+	{
+		unsigned int jointId = lf->m_hipJointId[i] - p_torqueIdxOffset; // Note the offset!
+		if (isInControlledStance(lf, i, p_phi))
+		{
+			tstance += (*m_jointTorques)[jointId];
+			stanceLegOffsettedIdxBuf[stanceCount] = jointId;
+			stanceCount++;
+		}
+		else
+			tswing += (*m_jointTorques)[jointId];
+	}
+
+	// Spine if it exists
+	int spineIdx = (int)lf->m_spineJointId - (int)p_torqueIdxOffset;
+	if (spineIdx >= 0)
+		tspine = (*m_jointTorques)[(unsigned int)spineIdx];
+
+	// 1. Calculate current torque for leg frame:
+	// tLF = tstance + tswing + tspine.
+	// Here the desired torque is feedbacked through the
+	// stance legs (see 3) as their current torque
+	// is the product of previous desired torque combined
+	// with current real-world scenarios.
+	glm::vec3 tLF = tstance + tswing + tspine;
+	(*m_jointTorques)[lfJointIdx] = tLF;
+
+	// 2. Calculate a desired torque, tdLF, using the previous current
+	// torque, tLF, and a PD-controller driving towards the 
+	// desired orientation, omegaLF.
+	glm::quat omegaLF = lf->getCurrentDesiredOrientation(p_phi);
+	glm::vec3 tdLF = lf->getOrientationPDTorque(omegaLF);
+	// test code
+	//rigidbody.AddTorque(tdLF);
+
+	// 3. Now loop through all legs in stance (N) and
+	// modify their torques in the vector according
+	// to tstancei = (tdLF-tswing-tspine)/N
+	// This is to try to make the stance legs compensate
+	// for current errors in order to make the leg frame
+	// reach its desired torque.
+	int N = stanceCount;
+	for (int i = 0; i < N; i++)
+	{
+		unsigned int idx = stanceLegOffsettedIdxBuf[i];
+		(*m_jointTorques)[idx] = (tdLF - tswing - tspine) / (float)N;
+	}
+	delete[] stanceLegOffsettedIdxBuf;
+	// The vector reference to the torques, now contains the new LF torque
+	// as well as any corrected stance-leg torques.
+}
