@@ -125,10 +125,11 @@ public:
 	// Run-time leg frame structure
 	struct LegFrame
 	{
-		//LegFrame()
-		//{
-		//	m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::COS_INV_NORM);
-		//}
+		LegFrame()
+		{
+			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
+			m_desiredLFTorquePD.setK(30.0f, 20.25f);
+		}
 
 		// Structure ids
 		unsigned int m_legFrameJointId;				// per leg frame
@@ -151,7 +152,7 @@ public:
 			float yaw = m_orientationLFTraj[(unsigned int)Orientation::YAW].lerpGet(p_phi);
 			float pitch = m_orientationLFTraj[(unsigned int)Orientation::PITCH].lerpGet(p_phi);
 			float roll = m_orientationLFTraj[(unsigned int)Orientation::ROLL].lerpGet(p_phi);
-			return glm::quat(glm::vec3(pitch, yaw, roll));
+			return glm::quat(glm::vec3(pitch, yaw, roll)); // radians
 		}
 
 		// Drives the PD-controller and retrieves the 3-axis torque

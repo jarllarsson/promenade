@@ -207,7 +207,7 @@ void App::run()
 		for (int x = 0; x < 1; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
-			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 10.0f, 50.0f);
+			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 4.0f, 50.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, 2.0f);
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f,
@@ -250,6 +250,8 @@ void App::run()
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
+						//lowerAngleLim = glm::vec3(1, 1, 1);
+						//upperAngleLim = glm::vec3(0,0,0);
 					}
 					else if (i == 1) // if knee
 					{
@@ -261,8 +263,8 @@ void App::run()
 						partName = " foot";
 						jointZOffsetInChild = 1.0f;
 						boxSize = glm::vec3(1.3f, 1.0f, 2.0f);
-						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
+						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 					}
 					string dbgGrp = (" group='" + sideName + "'");
 					m_toolBar->addLabel(Toolbar::CHARACTER, (sideName[0]+partName).c_str(), dbgGrp.c_str());

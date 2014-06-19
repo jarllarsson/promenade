@@ -16,10 +16,10 @@
 /// 24-4-2013 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 #define PI 3.141592653589793238462643383279502884197169399375105820
-#define HALFPI 0.5*PI
-#define TWOPI 2.0*PI
-#define TORAD PI/180
-#define TODEG 180/PI
+#define HALFPI (0.5*PI)
+#define TWOPI (2.0*PI)
+#define TORAD (PI/180.0)
+#define TODEG (180.0/PI)
 #define PIOVER180 TORAD
 
 namespace MathHelp

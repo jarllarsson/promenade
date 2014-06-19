@@ -36,12 +36,12 @@ public:
 
 	float getKp() { return m_Kp; }
 	float getKd() { return m_Kd; }
-	float setK(float p_Kp, float p_Kd)
+	void setK(float p_Kp, float p_Kd)
 	{
 		m_Kp = p_Kp; m_Kd = p_Kd;
 	}
-	float setKp(float p_Kp) { m_Kp = p_Kp; }
-	float setKd(float p_Kd) { m_Kd = p_Kd; }
+	void setKp(float p_Kp) { m_Kp = p_Kp; }
+	void setKd(float p_Kd) { m_Kd = p_Kd; }
 
 	glm::vec3 getP() { return glm::vec3(m_P[0], m_P[1], m_P[2]); }
 	glm::vec3 getD() { return glm::vec3(m_D[0], m_D[1], m_D[2]); }

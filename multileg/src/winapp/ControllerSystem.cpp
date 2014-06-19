@@ -131,9 +131,12 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
+		float tLim = 100.0f; // 100Nm
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
+			if (glm::length(*t)>tLim) 
+				*t = glm::normalize(*t)*tLim;
 			m_jointRigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z));
 		}
 	}
