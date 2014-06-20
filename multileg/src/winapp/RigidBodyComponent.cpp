@@ -3,8 +3,8 @@
 
 RigidBodyComponent::RigidBodyComponent(btCollisionShape* p_collisionShape /*= NULL*/,
 	float p_mass /*= 1.0f*/, 
-	CollisionLayer::CollisionLayerType p_collisionLayerType/* = CollisionLayer::CollisionLayerType::COL_DEFAULT*/,
-	short int p_collidesWithLayer/* = CollisionLayer::CollisionLayerType::COL_DEFAULT*/)
+	short int p_collisionLayerType/*=CollisionLayer::CollisionLayerType::COL_DEFAULT*/,
+	short int p_collidesWithLayer/*=CollisionLayer::CollisionLayerType::COL_DEFAULT*/)
 {
 	if (p_collisionShape == NULL)
 	{

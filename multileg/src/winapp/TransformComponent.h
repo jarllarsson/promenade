@@ -55,6 +55,13 @@ public:
 	const glm::mat4* getMatrixPtr() const { return &m_transform; }
 	const glm::mat4 getMatrixPosRot() const;
 
+	glm::vec3 getForward() const;
+	glm::vec3 getUp() const;
+	glm::vec3 getRight() const;
+	glm::vec3 getDown() const;
+	glm::vec3 getLeft() const;
+	glm::vec3 getBackward() const;
+
 	void updateMatrix();
 
 	bool isTransformRenderDirty();

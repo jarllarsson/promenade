@@ -21,7 +21,7 @@ public:
 
 	static void registerDebugToolbar(Toolbar* p_toolbar){ m_toolbar = p_toolbar; }
 
-
+	virtual void fixedUpdate(float p_dt) {}
 protected:
 	static Toolbar* dbgToolbar() { return m_toolbar; }
 

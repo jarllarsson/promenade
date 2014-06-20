@@ -58,7 +58,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 	}
 }
 
-void ControllerSystem::update(float p_dt)
+void ControllerSystem::fixedUpdate(float p_dt)
 {
 	DEBUGPRINT(( (std::string("\nDT=") + ToString(p_dt) + "\n").c_str() ));
 	m_runTime += p_dt;

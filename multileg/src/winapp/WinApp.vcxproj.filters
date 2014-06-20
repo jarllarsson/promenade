@@ -117,6 +117,12 @@
     <ClInclude Include="PDn.h">
       <Filter>Entity System\Locomotion\Data functions</Filter>
     </ClInclude>
+    <ClInclude Include="ConstantForceComponent.h">
+      <Filter>Entity System\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantForceSystem.h">
+      <Filter>Entity System\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">

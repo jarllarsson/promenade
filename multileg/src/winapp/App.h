@@ -80,6 +80,7 @@ private:
 	bool m_timeScaleToggle;
 	bool m_timePauseStepToggle;
 	bool m_triggerPause;
+	bool m_gravityStat, m_oldGravityStat;
 
 	// Resource managers
 	//ResourceManager<btCollisionShape> m_collisionShapes;

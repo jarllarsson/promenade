@@ -31,7 +31,7 @@ public:
 	{
 		m_internalStepCounter++;
 		//// Character controller
-		m_controllerSystem->update((float)timeStep); // might want this in post tick instead? Have it here for now
+		m_controllerSystem->fixedUpdate((float)timeStep); // might want this in post tick instead? Have it here for now
 		//// Physics
 		//btCollisionObjectArray objects = m_world->getCollisionObjectArray();
 		//m_world->clearForces();
@@ -47,15 +47,34 @@ public:
 		//// Controller
 		m_controllerSystem->finish();
 		m_controllerSystem->applyTorques((float)timeStep);
+		// Other systems
+		processSystemCollection((float)timeStep);
 		return;
 	}
 	unsigned int getNumberOfInternalSteps()
 	{
 		return m_internalStepCounter;
 	}
+
+	void addOrderIndependentSystem(AdvancedEntitySystem* p_system)
+	{
+		m_orderIndependentSystems.push_back(p_system);
+	}
+
+	void processSystemCollection(float p_dt)
+	{
+		unsigned int count = (unsigned int)m_orderIndependentSystems.size();
+		for (unsigned int i = 0; i < count; i++)
+		{
+			AdvancedEntitySystem* system = m_orderIndependentSystems[i];
+			system->fixedUpdate(p_dt);
+		}
+	}
 protected:
 	// Might want to change this to generic list of a common base class
 	ControllerSystem* m_controllerSystem; // But right now, we only need it for the controllers
+
+	vector<AdvancedEntitySystem*> m_orderIndependentSystems;
 	//
 	// Physics world
 	btDynamicsWorld* m_world;

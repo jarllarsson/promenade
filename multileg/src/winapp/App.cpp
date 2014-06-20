@@ -11,6 +11,7 @@
 #include <Input.h>
 #include <Util.h>
 #include <MeasurementBin.h>
+#include <MathHelp.h>
 
 #include <ValueClamp.h>
 #include "TempController.h"
@@ -30,6 +31,9 @@
 #include "PhysicsWorldHandler.h"
 #include "Toolbar.h"
 #include "AdvancedEntitySystem.h"
+#include "ConstantForceComponent.h"
+#include "ConstantForceSystem.h"
+
 
 //#define MEASURE_RBODIES
 
@@ -79,11 +83,14 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_triggerPause = false;
 	//
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
+	m_gravityStat = true;
+	m_oldGravityStat = true;
 
 	// Global toolbar vars
 	m_toolBar->addReadOnlyVariable(Toolbar::PLAYER, "Real time", Toolbar::DOUBLE, &m_time);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Physics time scale", Toolbar::FLOAT, &m_timeScale);
 	m_toolBar->addButton(Toolbar::PLAYER, "> ||", boolButton,(void*)&m_triggerPause);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Gravity", Toolbar::BOOL, &m_gravityStat);
 }
 
 App::~App()
@@ -150,16 +157,18 @@ void App::run()
 #else
 	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
 #endif
+	ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
 	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem());
 	sysManager->initializeAll();
 
 
-	
+	// Order independent
+	// addOrderIndependentSystem(cforceSystem);
 
 	// Combine Physics with our stuff!
 	PhysicsWorldHandler physicsWorldHandler(dynamicsWorld,m_controllerSystem);
-
+	physicsWorldHandler.addOrderIndependentSystem(cforceSystem);
 
 
 
@@ -169,7 +178,7 @@ void App::run()
 	// Create a ground entity
 	artemis::Entity & ground = entityManager->create();
 	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f,
-		CollisionLayer::COL_GROUND,CollisionLayer::COL_CHARACTER));
+		CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT,CollisionLayer::COL_CHARACTER | CollisionLayer::COL_DEFAULT));
 	ground.addComponent(new RenderComponent());
 	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -20.0f, 0.0f), 
 		glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
@@ -211,7 +220,7 @@ void App::run()
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, 2.0f);
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f,
-				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
+				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 			legFrame.addComponent(new RenderComponent());
 			legFrame.addComponent(new TransformComponent(pos,
 				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
@@ -271,7 +280,7 @@ void App::run()
 					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*1.1f, jointZOffsetInChild));
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 					childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f, // note, h-lengths
-						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND));
+						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 					childJoint.addComponent(new RenderComponent());
 					childJoint.addComponent(new TransformComponent(legpos,
 						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
@@ -315,6 +324,7 @@ void App::run()
 		dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
 		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		m_time = 0.0;
+		bool shooting = false;
 
 		while (!m_context->closeRequested() && run)
 		{
@@ -326,7 +336,6 @@ void App::run()
 
 				m_time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
 
-
 				// Physics handling part of the loop
 				// ========================================================
 				/* This, like the rendering, ticks every time around.
@@ -335,8 +344,13 @@ void App::run()
 				double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
 
 
-				//if (rb->isInited())
-				//	rb->getRigidBody()->applyForce(btVector3(0.0f, 20.0f, 0.0f), btVector3(0.0f, 0.0f, 0.0f));
+				if (m_gravityStat != m_oldGravityStat)
+				{
+					if (m_gravityStat)
+						dynamicsWorld->setGravity(btVector3(0, -9.82f, 0));
+					else
+						dynamicsWorld->setGravity(btVector3(0, 0.0f, 0));
+				}
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
 				//dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
@@ -365,14 +379,41 @@ void App::run()
 					// Update logic
 					double interval = gameTickS;
 
+
+					// shoot (temp code)
+					if (m_input->g_kb->isKeyDown(KC_X))
+					{
+						if (!shooting)
+						{
+							shooting = true;
+							artemis::Entity & proj = entityManager->create();
+							glm::vec3 pos = MathHelp::toVec3(m_controller->getPos());
+							glm::vec3 bfSize = glm::vec3(1.0f, 1.0f, 1.0f);
+							RigidBodyComponent* btrb = new RigidBodyComponent(new btBoxShape(btVector3(bfSize.x, bfSize.y, bfSize.z)*0.5f), 0.1f,
+								CollisionLayer::COL_DEFAULT, CollisionLayer::COL_DEFAULT | CollisionLayer::COL_CHARACTER);
+							proj.addComponent(btrb);
+							proj.addComponent(new RenderComponent());
+							proj.addComponent(new TransformComponent(pos,
+								glm::inverse(glm::quat(m_controller->getRotationMatrix())),
+								bfSize));
+							proj.addComponent(new ConstantForceComponent(MathHelp::transformDirection(glm::inverse(m_controller->getRotationMatrix()),glm::vec3(0, 0, 10.0f)), 1.0f));
+							proj.refresh();
+						}
+					}
+					else
+						shooting = false;
+
+
+
+
 					handleContext(interval, phys_dt, steps - oldSteps);
 					gameUpdate(interval);
 				}
 				
 				// ========================================================
 				oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
-			}
-
+				m_oldGravityStat=m_gravityStat;
+			}	
 		}
 
 		DEBUGPRINT(("\n\nSTOPPING APPLICATION\n\n"));

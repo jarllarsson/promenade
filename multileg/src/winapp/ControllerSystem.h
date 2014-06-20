@@ -85,7 +85,7 @@ public:
 
 	virtual void processEntity(artemis::Entity &e);
 
-	void update(float p_dt);
+	virtual void fixedUpdate(float p_dt);
 
 	void finish();
 

@@ -157,3 +157,33 @@ const glm::mat4 TransformComponent::getMatrixPosRot() const
 	glm::mat4 rotate = glm::mat4_cast(m_rotation);
 	return translate * rotate; // is the scale * rotate * translate
 }
+
+glm::vec3 TransformComponent::getForward() const
+{
+	return MathHelp::transformDirection(getMatrixPosRot(), glm::vec3(0.0f, 0.0f, 1.0f));
+}
+
+glm::vec3 TransformComponent::getUp() const
+{
+	return MathHelp::transformDirection(getMatrixPosRot(), glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+glm::vec3 TransformComponent::getRight() const
+{
+	return MathHelp::transformDirection(getMatrixPosRot(), glm::vec3(1.0f, 0.0f, 0.0f));
+}
+
+glm::vec3 TransformComponent::getDown() const
+{
+	return MathHelp::transformDirection(getMatrixPosRot(), glm::vec3(0.0f, -1.0f, 0.0f));
+}
+
+glm::vec3 TransformComponent::getLeft() const
+{
+	return MathHelp::transformDirection(getMatrixPosRot(), glm::vec3(-1.0f, 0.0f, 0.0f));
+}
+
+glm::vec3 TransformComponent::getBackward() const
+{
+	return MathHelp::transformDirection(getMatrixPosRot(), glm::vec3(0.0f, 0.0f, -1.0f));
+}
