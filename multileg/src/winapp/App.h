@@ -45,8 +45,7 @@ protected:
 	Context* m_context;
 	GraphicsDevice* m_graphicsDevice;
 
-	LARGE_INTEGER getTimeStamp();
-	LARGE_INTEGER getFrequency();
+
 
 	void processInput();
 	void handleContext(double p_dt, double p_physDt, unsigned int p_physSteps);

@@ -5,6 +5,7 @@
 #include <vector>
 #include "ControllerComponent.h"
 #include "AdvancedEntitySystem.h"
+#include <MeasurementBin.h>
 
 // =======================================================================================
 //                                 ControllerSystem
@@ -59,7 +60,7 @@ private:
 	// Other joint run time data, for debugging
 	std::vector<artemis::Entity*>	m_dbgJointEntities;
 public:
-	ControllerSystem()
+	ControllerSystem(MeasurementBin<float>* p_perfMeasurer=NULL)
 	{
 		addComponentType<ControllerComponent>();
 		m_runTime = 0.0f;
@@ -69,6 +70,7 @@ public:
 		m_useVFTorque = true;
 		m_useCGVFTorque = true;
 		m_usePDTorque = true;
+		m_perfRecorder = p_perfMeasurer;
 	}
 
 	virtual ~ControllerSystem();
@@ -133,4 +135,7 @@ private:
 	bool m_useVFTorque;
 	bool m_useCGVFTorque;
 	bool m_usePDTorque;
+
+	// Dbg
+	MeasurementBin<float>* m_perfRecorder;
 };

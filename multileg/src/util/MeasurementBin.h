@@ -29,6 +29,7 @@ public:
 	bool saveResults(const string& p_fileName);
 	void saveMeasurement(T p_measurement);
 	void saveMeasurement(T p_measurement, float p_timeStamp);
+	void saveMeasurement(T p_measurement, int p_timeStamp);
 	void saveMeasurementRelTStamp(T p_measurement, float p_deltaTimeStamp);
 	bool isActive();
 private:
@@ -142,6 +143,17 @@ void MeasurementBin<T>::saveMeasurement(T p_measurement, float p_timeStamp)
 	{
 		m_measurements.push_back(p_measurement);
 		m_timestamps.push_back(p_timeStamp);
+	}
+
+}
+
+template<class T>
+void MeasurementBin<T>::saveMeasurement(T p_measurement, int p_timeStamp)
+{
+	if (m_active)
+	{
+		m_measurements.push_back(p_measurement);
+		m_timestamps.push_back((float)p_timeStamp);
 	}
 
 }

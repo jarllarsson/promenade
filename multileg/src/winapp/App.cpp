@@ -33,6 +33,7 @@
 #include "AdvancedEntitySystem.h"
 #include "ConstantForceComponent.h"
 #include "ConstantForceSystem.h"
+#include "Time.h"
 
 
 //#define MEASURE_RBODIES
@@ -111,18 +112,18 @@ App::~App()
 void App::run()
 {
 	// Set up windows timer
-	LARGE_INTEGER countsPerSec = getFrequency();
-	double secondsPerCount = 1.0 / (double)countsPerSec.QuadPart;
+	LARGE_INTEGER ticksPerSec = Time::getTicksPerSecond();
+	double secondsPerTick = 1.0 / (double)ticksPerSec.QuadPart;
 	// The physics clock is just used to run the physics and runs asynchronously with the gameclock
-	LARGE_INTEGER currTimeStamp = getTimeStamp();
+	LARGE_INTEGER currTimeStamp = Time::getTimeStamp();
 	LARGE_INTEGER prevTimeStamp = currTimeStamp;
 	// There's an inner loop in here where things happen once every TickMs. These variables are for that.
-	LARGE_INTEGER gameClockTimeOffsetStamp = getTimeStamp();
-	double gameClockTimeOffset = (double)gameClockTimeOffsetStamp.QuadPart * secondsPerCount;
+	LARGE_INTEGER gameClockTimeOffsetStamp = Time::getTimeStamp();
+	double gameClockTimeOffset = (double)gameClockTimeOffsetStamp.QuadPart * secondsPerTick;
 	const unsigned int gameTickMs = 16;
 	double gameTickS = (double)gameTickMs / 1000.0;
 	// Absolute start
-	double timeStart = (double)getTimeStamp().QuadPart * secondsPerCount;
+	double timeStart = (double)Time::getTimeStamp().QuadPart * secondsPerTick;
 
 	// Bullet physics initialization
 	// Broadphase object
@@ -143,7 +144,9 @@ void App::run()
 
 	// Measurements
 	MeasurementBin<string> rigidBodyStateDbgRecorder;
-	// measurer.activate();
+	MeasurementBin<float> controllerPerfRecorder;
+	//
+	controllerPerfRecorder.activate();
 
 	
 	// Artemis
@@ -159,7 +162,7 @@ void App::run()
 #endif
 	ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
 	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
-	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem());
+	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
 	sysManager->initializeAll();
 
 
@@ -334,14 +337,14 @@ void App::run()
 				// Start by rendering
 				render();
 
-				m_time = (double)getTimeStamp().QuadPart*secondsPerCount - timeStart;
+				m_time = (double)Time::getTimeStamp().QuadPart*secondsPerTick - timeStart;
 
 				// Physics handling part of the loop
 				// ========================================================
 				/* This, like the rendering, ticks every time around.
 				Bullet does the interpolation for us. */
-				currTimeStamp = getTimeStamp();
-				double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerCount;
+				currTimeStamp = Time::getTimeStamp();
+				double phys_dt = (double)m_timeScale*(double)(currTimeStamp.QuadPart - prevTimeStamp.QuadPart) * secondsPerTick;
 
 
 				if (m_gravityStat != m_oldGravityStat)
@@ -368,7 +371,7 @@ void App::run()
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
-				double dt = ((double)getTimeStamp().QuadPart*secondsPerCount - gameClockTimeOffset);
+				double dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
 				// Game clock based updates
 				while (dt >= gameTickS)
 				{
@@ -435,6 +438,22 @@ void App::run()
 #endif
 #endif
 #endif
+		///////////////////////////////////
+
+		controllerPerfRecorder.finishRound();
+#ifndef MULTI
+#ifdef _DEBUG
+		controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_STCPU");
+#else
+		controllerPerfRecorder.saveResults("../output/controllerPerf_Release_STCPU");
+#endif
+#else
+#ifdef _DEBUG
+		controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_MTCPU");
+#else
+		controllerPerfRecorder.saveResults("../output/controllerPerf_Release_MTCPU");
+#endif
+#endif
 
 
 	// Clean up
@@ -447,19 +466,7 @@ void App::run()
 }
 
 
-LARGE_INTEGER App::getTimeStamp()
-{
-	LARGE_INTEGER stamp;
-	QueryPerformanceCounter(&stamp);
-	return stamp;
-}
 
-LARGE_INTEGER App::getFrequency()
-{
-	LARGE_INTEGER freq;
-	QueryPerformanceFrequency(&freq);
-	return freq;
-}
 
 void App::updateController(float p_dt)
 {

@@ -123,6 +123,9 @@
     <ClInclude Include="ConstantForceSystem.h">
       <Filter>Entity System\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>App</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -168,6 +171,9 @@
     <ClCompile Include="AdvancedEntitySystem.cpp" />
     <ClCompile Include="MaterialComponent.cpp">
       <Filter>Entity System\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>App</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

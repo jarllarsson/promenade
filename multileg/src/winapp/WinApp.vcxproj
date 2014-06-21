@@ -175,6 +175,7 @@
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="RenderSystem.h" />
     <ClInclude Include="RigidBodySystem.h" />
+    <ClInclude Include="Time.h" />
     <ClInclude Include="Toolbar.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="PositionSystem.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="StepCycle.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TempController.cpp" />
+    <ClCompile Include="Time.cpp" />
     <ClCompile Include="Toolbar.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
   </ItemGroup>

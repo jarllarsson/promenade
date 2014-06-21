@@ -8,6 +8,7 @@
 #include "ConstraintComponent.h"
 #include "JacobianHelper.h"
 #include "MaterialComponent.h"
+#include "Time.h"
 
 
 ControllerSystem::~ControllerSystem()
@@ -63,6 +64,9 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	DEBUGPRINT(( (std::string("\nDT=") + ToString(p_dt) + "\n").c_str() ));
 	m_runTime += p_dt;
 	m_steps++;
+
+	double startTiming = Time::getTimeMs();
+
 
 	// Update all transforms
 	for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
@@ -120,6 +124,9 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	{
 		DEBUGPRINT(("\nNO CONTROLLERS YET\n"));
 	}
+
+	if (m_perfRecorder != NULL)
+		m_perfRecorder->saveMeasurement(Time::getTimeMs() - startTiming,m_steps);
 }
 
 void ControllerSystem::finish()
