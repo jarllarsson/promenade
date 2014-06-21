@@ -40,6 +40,14 @@ public:
 	{
 		m_Kp = p_Kp; m_Kd = p_Kd;
 	}
+	void setKp_KdEQTwoSqrtKp(float p_Kp)
+	{
+		m_Kp = p_Kp; m_Kd = 2.0f*sqrt(m_Kp);
+	}
+	void setKp_KdEQTenPrcntKp(float p_Kp)
+	{
+		m_Kp = p_Kp; m_Kd = 0.1f*m_Kp;
+	}
 	void setKp(float p_Kp) { m_Kp = p_Kp; }
 	void setKd(float p_Kd) { m_Kd = p_Kd; }
 

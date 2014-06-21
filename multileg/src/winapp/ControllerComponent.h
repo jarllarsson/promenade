@@ -128,7 +128,7 @@ public:
 		LegFrame()
 		{
 			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
-			m_desiredLFTorquePD.setK(30.0f, 20.25f);
+			m_desiredLFTorquePD.setKp_KdEQTwoSqrtKp(30.0f);
 		}
 
 		// Structure ids

@@ -96,8 +96,10 @@ public:
 	// Build uninited controllers, this has to be called 
 	// after constraints & rb's have been inited by their systems
 	void buildCheck();
-
-	void addJointToChain(ControllerComponent::Leg* p_leg, unsigned int p_idx, const glm::vec3* p_angularLims=NULL);
+	// Add a joint's all DOFs to chain
+	void addJointToChain(ControllerComponent::VFChain* p_legChain, unsigned int p_idx, const glm::vec3* p_angularLims = NULL);
+	// Add chain DOFs to list again, from Joint-offset ( this functions skips the appropriate number of DOFs)
+	void repeatAppendChainPart(ControllerComponent::VFChain* p_legChain, unsigned int p_localJointOffset, unsigned int p_jointCount, unsigned int p_originalChainSize);
 
 private:
 	// Control logic functions

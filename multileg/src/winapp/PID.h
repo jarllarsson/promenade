@@ -1,5 +1,5 @@
 #pragma once
-
+#include <algorithm>
 // =======================================================================================
 //                                      PID
 // =======================================================================================
@@ -32,6 +32,14 @@ public:
 	float getKd() {return m_Kd;}
 	float setK(float p_Kp, float p_Ki, float p_Kd) 
 	{ m_Kp = p_Kp; m_Ki = p_Ki; m_Kd = p_Kd; }
+	void setKp_KdEQTwoSqrtKp(float p_Kp)
+	{
+		m_Kp = p_Kp; m_Kd = 2.0f*sqrt(m_Kp);
+	}
+	void setKp_KdEQTenPrcntKp(float p_Kp)
+	{
+		m_Kp = p_Kp; m_Kd = 0.1f*m_Kp;
+	}
 	float setKp(float p_Kp) { m_Kp=p_Kp; }
 	float setKi(float p_Ki) { m_Ki=p_Ki; }
 	float setKd(float p_Kd) { m_Kd=p_Kd; }

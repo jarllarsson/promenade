@@ -86,13 +86,6 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			ControllerComponent* controller = m_controllers[n];
 			// Run controller code here
 			controllerUpdate(n, p_dt);
-			//for (unsigned int i = 0; i < legChain->getSize(); i++)
-			//{
-			//	unsigned int tIdx = legChain->jointIDXChain[i];
-			//	glm::vec3 torqueBase = legChain->DOFChain[i];
-			//	glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
-			//	m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
-			//}
 		}
 #else
 		// Multi threaded CPU implementation
@@ -101,13 +94,6 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			ControllerComponent* controller = m_controllers[n];
 			// Run controller code here
 			controllerUpdate(n, p_dt);
-			//for (unsigned int i = 0; i < legChain->getSize(); i++)
-			//{
-			//	unsigned int tIdx = legChain->jointIDXChain[i];
-			//	glm::vec3 torqueBase = legChain->DOFChain[i];
-			//	glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
-			//	//m_jointTorques[tIdx] += torqueBase*13.0f/**(float)(TORAD)*/;
-			//}
 		});
 		/*concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
 			unsigned int tIdx = legChain->jointIDXChain[i];
@@ -185,7 +171,7 @@ void ControllerSystem::buildCheck()
 			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
 			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
 			// start by adding the already existing root id (needed in all leg chains)
-			addJointToChain(&legFrame->m_legs[x], rootIdx);
+			addJointToChain(&legFrame->m_legs[x].m_DOFChain, rootIdx);
 			// Traverse the segment structure for the leg to get the rest
 			artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
 			unsigned int jointsAddedForLeg = 0;
@@ -199,7 +185,7 @@ void ControllerSystem::buildCheck()
 				unsigned int idx = addJoint(jointRB, jointTransform);
 				m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
 				// Get DOF on joint to chain
-				addJointToChain(&legFrame->m_legs[x], idx, parentLink->getDesc()->m_angularDOF_LULimits);
+				addJointToChain(&legFrame->m_legs[x].m_DOFChain, idx, parentLink->getDesc()->m_angularDOF_LULimits);
 				// Get child joint for next iteration
 				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
 				// Add hip joint if first
@@ -214,6 +200,16 @@ void ControllerSystem::buildCheck()
 				}
 				jointsAddedForLeg++;
 			}
+			// Copy all DOFs for ordinary VF-chain to the gravity compensation chain,
+			// Then re-append a copy of decreasing size (of one) for each segment.
+			// So that we get the structure of that chain as described in struct Leg
+			legFrame->m_legs[x].m_DOFChainGravityComp = legFrame->m_legs[x].m_DOFChain;
+			unsigned int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
+			for (int n = 0; n < jointsAddedForLeg; n++)
+			{ 
+				// n+1 to skip re-appending of root:
+				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, n + 1, jointsAddedForLeg - n, origGCDOFsz);
+			}
 		}
 
 		// Calculate number of torques axes in list, store
@@ -227,9 +223,9 @@ void ControllerSystem::buildCheck()
 	m_controllersToBuild.clear();
 }
 
-void ControllerSystem::addJointToChain(ControllerComponent::Leg* p_leg, unsigned int p_idx, const glm::vec3* p_angularLims)
+void ControllerSystem::addJointToChain(ControllerComponent::VFChain* p_legChain, unsigned int p_idx, const glm::vec3* p_angularLims)
 {
-	ControllerComponent::VFChain* legChain = &p_leg->m_DOFChain;
+	ControllerComponent::VFChain* legChain = p_legChain;
 	legChain->vf = glm::vec3(0.0f);
 	// root has 3DOF (for now, to not over-optimize, we add three vec3's)
 	for (int n = 0; n < 3; n++)
@@ -240,6 +236,35 @@ void ControllerSystem::addJointToChain(ControllerComponent::Leg* p_leg, unsigned
 			legChain->DOFChain.push_back(DOFAxisByVecCompId(n));
 		}
 	}
+}
+
+void ControllerSystem::repeatAppendChainPart(ControllerComponent::VFChain* p_legChain, unsigned int p_localJointOffset, 
+	unsigned int p_jointCount, unsigned int p_originalChainSize)
+{
+	ControllerComponent::VFChain* legChain = p_legChain;
+	unsigned int DOFidx=0; // current dof being considerated for copy
+	unsigned int totalJointsProcessed = 0;
+	unsigned int jointAddedCounter = 0; // number of added joints
+	unsigned int oldJointIdx = 0;
+	do 
+	{
+		unsigned int jointIdx=legChain->jointIDXChain[DOFidx];
+		bool isNewJoint = (oldJointIdx != jointIdx);		
+		if (isNewJoint)
+			totalJointsProcessed++;
+		if (totalJointsProcessed >= p_localJointOffset) // only start when we're at offset or more
+		{
+			legChain->jointIDXChain.push_back(jointIdx);
+			legChain->DOFChain.push_back(legChain->DOFChain[DOFidx]);
+			//
+			if (isNewJoint) // only increment joint counter when we're at a new joint
+				jointAddedCounter++;
+		}
+
+		DOFidx++;
+		oldJointIdx = jointIdx;
+	} while (jointAddedCounter <= p_jointCount && DOFidx < p_originalChainSize);
+	// stops adding when we have all specified joints AND have catched all its DOFs
 }
 
 unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform)
@@ -258,6 +283,7 @@ unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, Tr
 	// saveJointMatrix(idx);
 	return idx; // return idx of inserted
 }
+
 
 
 void ControllerSystem::saveJointMatrix(unsigned int p_rigidBodyIdx)
@@ -425,11 +451,11 @@ void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_
 	//
 	//computePDTorques(&tPD, phi); TODO
 	computeVFTorques(&tVF, p_controller, p_controllerId, phi, p_dt);
-	//computeCGVFTorques(&tCGVF, phi, p_dt); TODO
+	//computeCGVFTorques(&tCGVF, phi, p_dt);
 	////// Sum them
 	for (unsigned int i = 0; i < torqueCount; i++)
 	{
-		m_jointTorques[torqueIdxOffset + i] = /*tPD[i] + */tVF[i] /*+ tCGVF[i]*/;
+		m_jointTorques[torqueIdxOffset + i] = /*tPD[i] + */tVF[i] + tCGVF[i];
 			//= glm::vec3(0.0f, 200.0f, 0.0f);
 			//+
 	}
