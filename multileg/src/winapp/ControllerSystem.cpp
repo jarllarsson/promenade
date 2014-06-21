@@ -218,7 +218,7 @@ void ControllerSystem::buildCheck()
 				if (jointId != oldJointGCIdx)
 				{
 					float mass = m_jointMass[jointId];
-					m_VFs.push_back(mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
+					m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
 					vfIdx = (unsigned int)((int)m_VFs.size() - 1);
 				}
 				legFrame->m_legs[x].m_DOFChainGravityComp.vfIdxList[m] = vfIdx;
