@@ -131,7 +131,7 @@ private:
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 	void computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, 
 		unsigned int p_torqueIdxOffset, float p_phi, float p_dt);
-	void computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, ControllerComponent::LegFrame* p_lf,
+	void computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx,
 		ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, float p_phi, float p_dt);
 	void applyNetLegFrameTorque(int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
 	// global variables

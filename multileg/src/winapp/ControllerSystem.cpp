@@ -525,69 +525,70 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 		{
 			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 			calculateLegFrameNetLegVF(i, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
-			computeVFTorquesFromChain(p_outTVF, lf, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
-			computeVFTorquesFromChain(p_outTVF, lf, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			// Begin calculating Jacobian transpose for each leg in leg frame
+			unsigned int legCount = (unsigned)lf->m_legs.size();	
+			for (unsigned int n = 0; n < legCount; n++)
+			{
+				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			}
 		}
 	}
 }
 
-void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, ControllerComponent::LegFrame* p_lf,
+void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx,
 	ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
-	// Begin calculating Jacobian transpose for each leg in leg frame
-	unsigned int legCount = (unsigned)p_lf->m_legs.size();
-	// Calculate torques using each leg chain
-	for (unsigned int n = 0; n < legCount; n++)
+	// calculating Jacobian transpose for specified leg in leg frame
+	// Calculate torques using specified leg chain
+	ControllerComponent::Leg* leg = &p_lf->m_legs[p_legIdx];
+	ControllerComponent::VFChain* chain = &leg->getChain(p_type);
+	// get force for the leg
+	glm::vec3 vf = chain->vf;
+	// Get the end effector position
+	// We're using the COM of the foot
+	glm::vec3 end = MathHelp::getMatrixTranslation(m_jointWorldTransforms[p_lf->m_feetJointId[p_legIdx]]);
+	// Calculate the matrices
+	CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,						// Chain of DOFs to solve for
+		end + vf,						// Our end effector goal position
+		&m_jointWorldInnerEndpoints,	// All joint rotational axes
+		&m_jointWorldTransforms);		// All joint world transformations
+	CMatrix Jt = CMatrix::transpose(J);
+
+	glm::mat4 sum(0.0f);
+	for (unsigned int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
 	{
-		ControllerComponent::Leg* leg = &p_lf->m_legs[n];
-		ControllerComponent::VFChain* chain = &leg->getChain(p_type);
-		// get force for the leg
-		glm::vec3 vf = chain->vf;
-		// Get the end effector position
-		// We're using the COM of the foot
-		glm::vec3 end = MathHelp::getMatrixTranslation(m_jointWorldTransforms[p_lf->m_feetJointId[n]]);
-		// Calculate the matrices
-		CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,						// Chain of DOFs to solve for
-			end + vf,						// Our end effector goal position
-			&m_jointWorldInnerEndpoints,	// All joint rotational axes
-			&m_jointWorldTransforms);		// All joint world transformations
-		CMatrix Jt = CMatrix::transpose(J);
+		sum += m_jointWorldTransforms[g];
+	}
+	DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
+	DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
+	DEBUGPRINT(((std::string("\n") + std::string(" VF: ") + ToString(vf)).c_str()));
 
-		glm::mat4 sum(0.0f);
-		for (unsigned int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
-		{
-			sum += m_jointWorldTransforms[g];
-		}
-		DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
-		DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
-		DEBUGPRINT(((std::string("\n") + std::string(" VF: ") + ToString(vf)).c_str()));
+	// Use matrix to calculate and store torque
+	for (unsigned int m = 0; m < chain->getSize(); m++)
+	{
+		// store torque
+		unsigned int localJointIdx = leg->m_DOFChain.jointIDXChain[m];
+		glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
+		glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
+		glm::vec3 addT = (chain->DOFChain)[m] * glm::dot(JVec, vf);
+		//DEBUGPRINT(((string("\nJx") + toString(Jt(m, 0)) + string(" Jy ") + toString(Jt(m, 2)) + string(" Jz ") + toString(Jt(m, 3))).c_str()));
+		float ssum = JjVec.x + JjVec.y + JjVec.z;
+		DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
+		ssum = JVec.x + JVec.y + JVec.z;
+		DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
+		// Problem med determinism i release
+		// JVec är ej deterministisk
+		//   JVecs inputs:
+		//   end är ok
+		//   vf är ok
+		//   DOF chain är ok
+		//    m_jointWorldInnerEndpoints är ok
+		//   m_jointWorldTransforms är inte ok vid uppdatering av den (bara i debug eller utan uppdatering)
+		// Jt(m, 1) är inte ok (de andra verkar vara ok)
 
-		// Use matrix to calculate and store torque
-		for (unsigned int m = 0; m < chain->getSize(); m++)
-		{
-			// store torque
-			unsigned int localJointIdx = leg->m_DOFChain.jointIDXChain[m];
-			glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
-			glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
-			glm::vec3 addT = (chain->DOFChain)[m] * glm::dot(JVec, vf);
-			//DEBUGPRINT(((string("\nJx") + toString(Jt(m, 0)) + string(" Jy ") + toString(Jt(m, 2)) + string(" Jz ") + toString(Jt(m, 3))).c_str()));
-			float ssum = JjVec.x + JjVec.y + JjVec.z;
-			DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
-			ssum = JVec.x + JVec.y + JVec.z;
-			DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
-			// Problem med determinism i release
-			// JVec är ej deterministisk
-			//   JVecs inputs:
-			//   end är ok
-			//   vf är ok
-			//   DOF chain är ok
-			//    m_jointWorldInnerEndpoints är ok
-			//   m_jointWorldTransforms är inte ok vid uppdatering av den (bara i debug eller utan uppdatering)
-			// Jt(m, 1) är inte ok (de andra verkar vara ok)
-
-			(*p_outTVF)[localJointIdx + p_torqueIdxOffset] += addT; // Here we could write to the global list instead directly maybe as an optimization
-			// Do it like this for now, for the sake of readability and debugging.
-		}
+		(*p_outTVF)[localJointIdx + p_torqueIdxOffset] += addT; // Here we could write to the global list instead directly maybe as an optimization
+		// Do it like this for now, for the sake of readability and debugging.
 	}
 }
 
