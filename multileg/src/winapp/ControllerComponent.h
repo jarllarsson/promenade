@@ -85,11 +85,17 @@ public:
 			return (unsigned int)DOFChain.size();
 		}
 	};
+	enum VFChainType
+	{
+		STANDARD_CHAIN,
+		GRAVITY_COMPENSATION_CHAIN
+	};
 
 	// Leg
 	// Contains information for per-leg actions
 	struct Leg
 	{
+
 		// Chain constructs
 		// ==============================================================================
 		// Each link will all its DOFs to the chain
@@ -112,6 +118,17 @@ public:
 		VFChain m_DOFChainGravityComp;
 
 		// ==============================================================================
+
+		//VFChain& operator[] (VFChainType p_type) a little unclear
+		VFChain& getChain(VFChainType p_type)
+		{
+			VFChain& res = m_DOFChain;
+			if (p_type == VFChainType::STANDARD_CHAIN)
+				res=m_DOFChain;
+			else
+				res=m_DOFChainGravityComp;
+			return res;
+		}
 	};
 
 	// Leg frame
