@@ -1,7 +1,8 @@
 #include "JacobianHelper.h"
 
 CMatrix JacobianHelper::calculateVFChainJacobian(const ControllerComponent::VFChain& p_chain, 
-												 const glm::vec3& p_currentChainEndpointGoalPos, 
+												 const glm::vec3& p_currentChainEndpoint, 
+												 const std::vector<glm::vec3>* p_vfList,
 												 const std::vector<glm::vec4>* p_jointWorldAxes,
 												 const std::vector<glm::mat4>* p_jointWorldTransforms)
 {
@@ -14,10 +15,11 @@ CMatrix JacobianHelper::calculateVFChainJacobian(const ControllerComponent::VFCh
 	for (unsigned int i = 0; i < dofCount; i++) // this is then the "thread pool"
 	{
 		// Fetch the id for the joint from the list
-		unsigned int jointIdx = p_chain.jointIDXChain[i];
+		unsigned int jointIdx = p_chain.jointIdxChain[i];
 		// Start calculating the jacobian for the current DOF
 		glm::vec3 jointAxisPos = MathHelp::toVec3((*p_jointWorldAxes)[jointIdx]);
-		glm::vec3 dir = p_currentChainEndpointGoalPos - jointAxisPos;
+		glm::vec3 vf = (*p_vfList)[p_chain.vfIdxList[i]];
+		glm::vec3 dir = p_currentChainEndpoint + vf - jointAxisPos;
 		//Debug.Log(linkPos.ToString());
 		const glm::vec3* dof = &p_chain.DOFChain[i];
 		// Solve for given axis

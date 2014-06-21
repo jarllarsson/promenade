@@ -34,6 +34,7 @@
 #include "ConstantForceComponent.h"
 #include "ConstantForceSystem.h"
 #include "Time.h"
+#include "PhysWorldDefines.h"
 
 
 //#define MEASURE_RBODIES
@@ -140,7 +141,7 @@ void App::run()
 	// Create the physics world
 	// ==================================
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0, -9.82f, 0));
+	dynamicsWorld->setGravity(btVector3(0, WORLD_GRAVITY, 0));
 
 	// Measurements
 	MeasurementBin<string> rigidBodyStateDbgRecorder;
@@ -350,7 +351,7 @@ void App::run()
 				if (m_gravityStat != m_oldGravityStat)
 				{
 					if (m_gravityStat)
-						dynamicsWorld->setGravity(btVector3(0, -9.82f, 0));
+						dynamicsWorld->setGravity(btVector3(0, WORLD_GRAVITY, 0));
 					else
 						dynamicsWorld->setGravity(btVector3(0, 0.0f, 0));
 				}

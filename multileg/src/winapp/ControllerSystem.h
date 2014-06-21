@@ -50,11 +50,14 @@ private:
 	std::vector<ControllerComponent*> m_controllers;
 	std::vector<VelocityStat>		  m_controllerVelocityStats;
 	std::vector<LocationStat>		  m_controllerLocationStats;
+	// VF run-time data
+	std::vector<glm::vec3>		m_VFs;
 	// Joint run-time data
 	std::vector<glm::vec3>		m_jointTorques;
 	std::vector<btRigidBody*>	m_jointRigidBodies;
 	std::vector<glm::mat4>		m_jointWorldTransforms;
 	std::vector<float>			m_jointLengths;
+	std::vector<float>			m_jointMass;
 	std::vector<glm::vec4>		m_jointWorldInnerEndpoints;
 	std::vector<glm::vec4>		m_jointWorldOuterEndpoints;
 	// Other joint run time data, for debugging
@@ -97,7 +100,7 @@ public:
 	// after constraints & rb's have been inited by their systems
 	void buildCheck();
 	// Add a joint's all DOFs to chain
-	void addJointToChain(ControllerComponent::VFChain* p_legChain, unsigned int p_idx, const glm::vec3* p_angularLims = NULL);
+	void addJointToStandardVFChain(ControllerComponent::VFChain* p_legChain, unsigned int p_idx, unsigned int p_vfIdx, const glm::vec3* p_angularLims = NULL);
 	// Add chain DOFs to list again, from Joint-offset ( this functions skips the appropriate number of DOFs)
 	void repeatAppendChainPart(ControllerComponent::VFChain* p_legChain, unsigned int p_localJointOffset, unsigned int p_jointCount, unsigned int p_originalChainSize);
 

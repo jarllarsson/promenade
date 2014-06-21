@@ -168,6 +168,7 @@
     <ClInclude Include="MaterialComponent.h" />
     <ClInclude Include="PD.h" />
     <ClInclude Include="PDn.h" />
+    <ClInclude Include="PhysWorldDefines.h" />
     <ClInclude Include="PID.h" />
     <ClInclude Include="PieceWiseLinear.h" />
     <ClInclude Include="StepCycle.h" />

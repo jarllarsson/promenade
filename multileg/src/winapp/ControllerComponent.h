@@ -77,9 +77,9 @@ public:
 	{
 	public:
 		std::vector<glm::vec3> DOFChain;
-		std::vector<unsigned int> jointIDXChain;
+		std::vector<unsigned int> jointIdxChain;
 		// VF vector here maybe?
-		glm::vec3 vf;
+		std::vector<unsigned int> vfIdxList;
 		unsigned int getSize() const
 		{
 			return (unsigned int)DOFChain.size();
@@ -120,13 +120,13 @@ public:
 		// ==============================================================================
 
 		//VFChain& operator[] (VFChainType p_type) a little unclear
-		VFChain& getChain(VFChainType p_type)
+		VFChain* getChain(VFChainType p_type)
 		{
-			VFChain& res = m_DOFChain;
+			VFChain* res = &m_DOFChain;
 			if (p_type == VFChainType::STANDARD_CHAIN)
-				res=m_DOFChain;
+				res=&m_DOFChain;
 			else
-				res=m_DOFChainGravityComp;
+				res=&m_DOFChainGravityComp;
 			return res;
 		}
 	};
@@ -144,8 +144,8 @@ public:
 	{
 		LegFrame()
 		{
-			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
-			m_desiredLFTorquePD.setKp_KdEQTwoSqrtKp(30.0f);
+			//m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
+			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(30.0f);
 		}
 
 		// Structure ids

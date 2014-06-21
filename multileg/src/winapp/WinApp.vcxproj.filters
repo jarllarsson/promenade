@@ -126,6 +126,9 @@
     <ClInclude Include="Time.h">
       <Filter>App</Filter>
     </ClInclude>
+    <ClInclude Include="PhysWorldDefines.h">
+      <Filter>Entity System\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
