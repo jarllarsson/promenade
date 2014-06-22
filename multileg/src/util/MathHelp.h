@@ -1,5 +1,6 @@
 #pragma once
 #include <glm\gtc\type_ptr.hpp>
+#include <glm\gtx\compatibility.hpp>
 #include <exception>
 #include "CMatrix.h"
 #include "ColorPalettes.h"
@@ -24,6 +25,8 @@
 
 namespace MathHelp
 {
+
+
 	size_t roundup(int group_size, int global_size);
 
 	void decomposeTRS(const glm::mat4& m, glm::vec3& scaling,
@@ -40,6 +43,8 @@ namespace MathHelp
 
 	float flerp(float p_a, float p_b, float p_t);
 	double dlerp(double p_a, double p_b, double p_t);
+	
 
 	void quatToAngleAxis(const glm::quat& p_quat, float& p_outAngle, glm::vec3& p_outAxis);
-};
+};	
+

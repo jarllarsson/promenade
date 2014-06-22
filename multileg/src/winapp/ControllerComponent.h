@@ -148,6 +148,8 @@ public:
 			// Trajectory settings
 			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
 			m_heightLFTraj.reset(PieceWiseLinear::FULL, 3.0f); // is reinited to character height in build
+			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 1.0f); // Stepping is defaulted to an arc
+			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default
 			// PD settings
 			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(30.0f);
 			m_FhPD.setKp_KdEQTenPrcntKp(30.0f);
@@ -168,6 +170,8 @@ public:
 		PieceWiseLinear		   m_orientationLFTraj[3];	// xyz-orientation trajectory, per leg frame
 		PieceWiseLinear		   m_heightLFTraj;			// height trajectory, per leg frame
 		PieceWiseLinear		   m_footTrackingGainKp;	// Variable proportionate gain for swing phase, per leg frame
+		PieceWiseLinear		   m_stepHeighTraj;			// stepping height trajectory(for legs/feet), per leg frame
+		PieceWiseLinear		   m_footTransitionEase;	// Easing function for swing speed(for legs/feet), per leg frame
 		PDn					   m_desiredLFTorquePD;		// goal torque, per leg frame
 		PD					   m_FhPD;					// driver used to try to reach the desired height VF (Fh)
 		PD					   m_footTrackingSpringDamper;

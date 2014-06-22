@@ -116,13 +116,33 @@ private:
 
 	// Leg logic functions
 	bool isInControlledStance(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi);
+	// Forces
 	glm::vec3 calculateFsw(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, float p_dt);
 	glm::vec3 calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats);
 	glm::vec3 calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up);
 	glm::vec3 calculateFd(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
+	// Virtual force and VF-to-torque algorithms
 	glm::vec3 calculateSwingLegVF(const glm::vec3& p_fsw);
 	glm::vec3 calculateStanceLegVF(unsigned int p_stanceLegCount,
 		const glm::vec3& p_fv, const glm::vec3& p_fh, const glm::vec3& p_fd);
+	void computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, 
+		ControllerComponent* p_controller, unsigned int p_controllerIdx, 
+		unsigned int p_torqueIdxOffset, 
+		float p_phi, float p_dt);
+	void computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, 
+		ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx,
+		ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, 
+		float p_phi, float p_dt);
+	void applyNetLegFrameTorque(int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
+	glm::vec3 getFootPos(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);	
+	// Foot placement model
+	void updateFoot(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity);
+	void updateFootStrikePosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity);
+	void updateFootSwingPosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi);
+	void offsetFootTargetDownOnLateStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
+	glm::vec3 projectFootPosToGround(const glm::vec3& p_footPosLF) const;
+	glm::vec3 calculateVelocityScaledFootPos(const ControllerComponent::LegFrame* p_lf, const glm::vec3& p_footPosLF, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity) const;
+	float getFootTransitionPhase(ControllerComponent::LegFrame* p_lf, float p_swingPhi);
 
 	// Helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
@@ -132,14 +152,9 @@ private:
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const;
-	glm::mat4& getLegFrameTransform(const ControllerComponent::LegFrame* p_lf) const;
+	glm::mat4& getLegFrameTransform(const ControllerComponent::LegFrame* p_lf);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
-	void computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, 
-		unsigned int p_torqueIdxOffset, float p_phi, float p_dt);
-	void computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx,
-		ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, float p_phi, float p_dt);
-	void applyNetLegFrameTorque(int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
-	glm::vec3 getFootPos(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
+
 	// global variables
 	float m_runTime;
 	int m_steps;

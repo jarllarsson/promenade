@@ -45,8 +45,8 @@ public:
 	{
 		m_Kp = p_Kp; m_Kd = 0.1f*m_Kp;
 	}
-	float setKp(float p_Kp) { m_Kp = p_Kp; }
-	float setKd(float p_Kd) { m_Kd = p_Kd; }
+	void setKp(float p_Kp) { m_Kp = p_Kp; }
+	void setKd(float p_Kd) { m_Kd = p_Kd; }
 
 	float getP() { return m_P; }
 	float getD() { return m_D; }

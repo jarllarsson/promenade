@@ -501,34 +501,34 @@ void ControllerSystem::updateFootStrikePosition(ControllerComponent::LegFrame* p
 	float mirror = (float)(p_legIdx * 2 - 1); // flips the coronal axis for the left leg
 	glm::vec3 stepDir(mirror * p_lf->m_stepLength.x, 0.0f, p_lf->m_stepLength.y);
 	glm::vec3 regularFootPos = MathHelp::transformDirection(getLegFrameTransform(p_lf), stepDir);
-	glm::vec3 finalPos = getLegFramePosition(p_lf) + calculateVelocityScaledFootPos(regularFootPos, p_velocity, p_desiredVelocity);
+	glm::vec3 finalPos = getLegFramePosition(p_lf) + calculateVelocityScaledFootPos(p_lf, regularFootPos, p_velocity, p_desiredVelocity);
 	p_lf->m_footStrikePlacement[p_legIdx] = projectFootPosToGround(finalPos);
 }
 
-void ControllerSystem::updateFootSwingPosition(int p_idx, float p_phi)
+void ControllerSystem::updateFootSwingPosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi)
 {
-	Vector3 oldPos = m_footTarget[p_idx]; // only for debug...
+	//Vector3 oldPos = m_footTarget[p_idx]; // only for debug...
 	//
-	m_footLiftPlacementPerformed[p_idx] = false; // reset
+	p_lf->m_footLiftPlacementPerformed[p_legIdx] = false; // reset
 	// Get the fractional swing phase
-	float swingPhi = m_tuneStepCycles[p_idx].getSwingPhase(p_phi);
+	float swingPhi = p_lf->m_stepCycles[p_legIdx].getSwingPhase(p_phi);
 	// The height offset, ie. the "lift" that the foot makes between stepping points.
-	Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(swingPhi), 0.0f);
-	m_currentFootGraphHeight[p_idx] = heightOffset.y;
+	glm::vec3 heightOffset(0.0f, p_lf->m_stepHeighTraj.lerpGet(swingPhi), 0.0f);
+	//m_currentFootGraphHeight[p_idx] = heightOffset.y;
 	// scale the phi based on the easing function, for ground plane movement
-	swingPhi = getFootTransitionPhase(swingPhi);
+	swingPhi = getFootTransitionPhase(p_lf,swingPhi);
 	// Calculate the position
 	// Foot movement along the ground
-	Vector3 groundPlacement = Vector3.Lerp(m_footLiftPlacement[p_idx], m_footStrikePlacement[p_idx], swingPhi);
-	m_footTarget[p_idx] = groundPlacement + heightOffset;
+	glm::vec3 groundPlacement = glm::lerp(p_lf->m_footLiftPlacement[p_legIdx], p_lf->m_footStrikePlacement[p_legIdx], swingPhi);
+	p_lf->m_footTarget[p_legIdx] = groundPlacement + heightOffset;
 	//
-	Color dbg = Color.green;
-	if (p_idx == 0)
-		dbg = Color.red;
-	Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg, 1.0f);
+// 	Color dbg = Color.green;
+// 	if (p_idx == 0)
+// 		dbg = Color.red;
+// 	Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg, 1.0f);
 }
 
-private void ControllerSystem::offsetFootTargetDownOnLateStrike(int p_idx)
+void ControllerSystem::offsetFootTargetDownOnLateStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
 	// !!!!! bool isTouchingGround = m_feet[p_idx].isFootStrike();
 	// !!!!! if (!isTouchingGround)
@@ -556,12 +556,11 @@ glm::vec3 ControllerSystem::calculateVelocityScaledFootPos(const ControllerCompo
 // Get the phase value in the foot transition based on
 // swing phase. Note the phi variable here is the fraction
 // of the swing phase!
-private float getFootTransitionPhase(float p_swingPhi)
+float ControllerSystem::getFootTransitionPhase(ControllerComponent::LegFrame* p_lf, float p_swingPhi)
 {
-	return m_tuneFootTransitionEase.getValAt(p_swingPhi);
+	return p_lf->m_footTransitionEase.lerpGet(p_swingPhi);
 }
 
-//////////////////////////////////
 
 
 
@@ -865,7 +864,7 @@ glm::vec3 ControllerSystem::getFootPos( ControllerComponent::LegFrame* p_lf, uns
 	return MathHelp::getMatrixTranslation(m_jointWorldTransforms[p_lf->m_feetJointId[p_legIdx]]);
 }
 
-glm::mat4& ControllerSystem::getLegFrameTransform(const ControllerComponent::LegFrame* p_lf) const
+glm::mat4& ControllerSystem::getLegFrameTransform(const ControllerComponent::LegFrame* p_lf)
 {
 	return m_jointWorldTransforms[p_lf->m_legFrameJointId];
 }
@@ -873,5 +872,5 @@ glm::mat4& ControllerSystem::getLegFrameTransform(const ControllerComponent::Leg
 glm::vec3 ControllerSystem::getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const
 {
 	unsigned int legFrameJointId = p_lf->m_legFrameJointId;
-	return glm::vec3 pos(MathHelp::getMatrixTranslation(m_jointWorldTransforms[legFrameJointId]));
+	return MathHelp::getMatrixTranslation(m_jointWorldTransforms[legFrameJointId]);
 }
