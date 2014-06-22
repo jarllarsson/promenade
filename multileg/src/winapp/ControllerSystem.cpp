@@ -157,8 +157,8 @@ void ControllerSystem::buildCheck()
 		//
 		legFrame->m_legFrameJointId = rootIdx; // store idx to root for leg frame
 		// prepare legs			
-		legFrame->m_legs.resize(legFrameEntities->m_upperLegEntities.size()); // Allocate the number of specified legs
-		unsigned int legCount = (unsigned int)legFrame->m_legs.size();
+		unsigned int legCount = legFrameEntities->m_upperLegEntities.size();
+		legFrame->m_legs.resize(legCount); // Allocate the number of specified legs
 		// Add debug tracking for leg frame
 		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
 		// when and if we have a spine, add it here and store its id to leg frame
@@ -201,6 +201,7 @@ void ControllerSystem::buildCheck()
 				{
 					legFrame->m_feetJointId.push_back(idx);
 					footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
+					legFrame->createFootPlacementModelVarsForNewLeg(footPos);
 					jointEntity = NULL;
 				}
 				jointsAddedForLeg++;
@@ -433,9 +434,7 @@ glm::vec3 ControllerSystem::getControllerPosition(unsigned int p_controllerId)
 
 glm::vec3 ControllerSystem::getControllerPosition(ControllerComponent* p_controller)
 {
-	unsigned int legFrameJointId = p_controller->getLegFrame(0)->m_legFrameJointId;
-	glm::vec3 pos(MathHelp::getMatrixTranslation(m_jointWorldTransforms[legFrameJointId]));
-	return pos;
+	return getLegFramePosition(p_controller->getLegFrame(0));
 }
 
 glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
@@ -450,13 +449,121 @@ glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
 
 void ControllerSystem::updateFeet( int p_controllerId, ControllerComponent* p_controller )
 {
-	//for (int i = 0; i < m_legFrames.Length; i++)
-	//{
-	//	m_legFrames[i].updateReferenceFeetPositions(m_player.m_gaitPhase, m_time, m_goalVelocity);
-	//	m_legFrames[i].updateFeet(m_player.m_gaitPhase, m_currentVelocity, m_desiredVelocity);
-	//	//m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase);
-	//}
+	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	{
+		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
+		unsigned int legCount = (unsigned int)lf->m_legs.size();
+		glm::vec3 currentV = m_controllerVelocityStats[p_controllerId].m_currentVelocity;
+		glm::vec3 desiredV = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
+		glm::vec3 goalV = m_controllerVelocityStats[p_controllerId].m_goalVelocity;
+		float phi = p_controller->m_player.getPhase();
+		for (unsigned int i = 0; i < legCount; i++)
+		{
+			//updateReferenceFootPosition(phi, m_runTime, goalV);
+			updateFoot(lf, i, phi, currentV, desiredV);
+			// !!!!!!!! m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase); !!!!!!!!!!!SHOULD BE DONE WITH PD!!!!!!!!!
+		}
+	}
 }
+
+// Calculate the next position where the foot should be placed for legs in swing
+void ControllerSystem::updateFoot(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, 
+	const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity)
+{
+	// The position is updated as long as the leg
+	// is in stance. This means that the last calculated
+	// position when the foot leaves the ground is used.
+	if (isInControlledStance(p_lf, p_legIdx, p_phi))
+	{
+		updateFootStrikePosition(p_lf, p_legIdx, p_phi, p_velocity, p_desiredVelocity);
+		offsetFootTargetDownOnLateStrike(p_lf, p_legIdx);
+	}
+	else // If the foot is in swing instead, start updating the current foot swing target
+	{    // along the appropriate trajectory.
+		updateFootSwingPosition(p_lf, p_legIdx, p_phi);
+	}
+}
+
+// Calculate a new position where to place a foot.
+// This is where the foot will try to swing to in its
+// trajectory.
+void ControllerSystem::updateFootStrikePosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, 
+	const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity)
+{
+	// Set the lift position to the old strike position (used for trajectory planning)
+	// the first time each cycle that we enter this function
+	if (!p_lf->m_footLiftPlacementPerformed[p_legIdx])
+	{
+		p_lf->m_footLiftPlacement[p_legIdx] = p_lf->m_footStrikePlacement[p_legIdx];
+		p_lf->m_footLiftPlacementPerformed[p_legIdx] = true;
+	}
+	// Calculate the new position
+	float mirror = (float)(p_legIdx * 2 - 1); // flips the coronal axis for the left leg
+	glm::vec3 stepDir(mirror * p_lf->m_stepLength.x, 0.0f, p_lf->m_stepLength.y);
+	glm::vec3 regularFootPos = MathHelp::transformDirection(getLegFrameTransform(p_lf), stepDir);
+	glm::vec3 finalPos = getLegFramePosition(p_lf) + calculateVelocityScaledFootPos(regularFootPos, p_velocity, p_desiredVelocity);
+	p_lf->m_footStrikePlacement[p_legIdx] = projectFootPosToGround(finalPos);
+}
+
+void ControllerSystem::updateFootSwingPosition(int p_idx, float p_phi)
+{
+	Vector3 oldPos = m_footTarget[p_idx]; // only for debug...
+	//
+	m_footLiftPlacementPerformed[p_idx] = false; // reset
+	// Get the fractional swing phase
+	float swingPhi = m_tuneStepCycles[p_idx].getSwingPhase(p_phi);
+	// The height offset, ie. the "lift" that the foot makes between stepping points.
+	Vector3 heightOffset = new Vector3(0.0f, m_tuneStepHeightTraj.getValAt(swingPhi), 0.0f);
+	m_currentFootGraphHeight[p_idx] = heightOffset.y;
+	// scale the phi based on the easing function, for ground plane movement
+	swingPhi = getFootTransitionPhase(swingPhi);
+	// Calculate the position
+	// Foot movement along the ground
+	Vector3 groundPlacement = Vector3.Lerp(m_footLiftPlacement[p_idx], m_footStrikePlacement[p_idx], swingPhi);
+	m_footTarget[p_idx] = groundPlacement + heightOffset;
+	//
+	Color dbg = Color.green;
+	if (p_idx == 0)
+		dbg = Color.red;
+	Debug.DrawLine(oldPos, m_footTarget[p_idx], dbg, 1.0f);
+}
+
+private void ControllerSystem::offsetFootTargetDownOnLateStrike(int p_idx)
+{
+	// !!!!! bool isTouchingGround = m_feet[p_idx].isFootStrike();
+	// !!!!! if (!isTouchingGround)
+	// !!!!! {
+	// !!!!! 	Vector3 old = m_footStrikePlacement[p_idx];
+	// !!!!! 	m_footStrikePlacement[p_idx] += Vector3.down * m_lateStrikeOffsetDeltaH;
+	// !!!!! 	Debug.DrawLine(old, m_footStrikePlacement[p_idx], Color.black, 0.3f);
+	// !!!!! }
+}
+
+
+// Project a foot position to the ground beneath it
+glm::vec3 ControllerSystem::projectFootPosToGround(const glm::vec3& p_footPosLF) const
+{
+	return glm::vec3(p_footPosLF.x, 0.0f, p_footPosLF.z); // for now, super simple lock to 0
+}
+
+// Scale a foot strike position prediction to the velocity difference
+glm::vec3 ControllerSystem::calculateVelocityScaledFootPos(const ControllerComponent::LegFrame* p_lf, const glm::vec3& p_footPosLF,
+	const glm::vec3& p_velocity,const glm::vec3& p_desiredVelocity) const
+{
+	return p_footPosLF + (p_velocity - p_desiredVelocity) * p_lf->m_footPlacementVelocityScale;
+}
+
+// Get the phase value in the foot transition based on
+// swing phase. Note the phi variable here is the fraction
+// of the swing phase!
+private float getFootTransitionPhase(float p_swingPhi)
+{
+	return m_tuneFootTransitionEase.getValAt(p_swingPhi);
+}
+
+//////////////////////////////////
+
+
 
 void ControllerSystem::updateTorques(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
@@ -574,7 +681,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 	ControllerComponent::VFChain* chain = leg->getChain(p_type);
 	// Get the end effector position
 	// We're using the COM of the foot
-	glm::vec3 end = MathHelp::getMatrixTranslation(m_jointWorldTransforms[p_lf->m_feetJointId[p_legIdx]]);
+	glm::vec3 end = getFootPos(p_lf, p_legIdx);
 	// Calculate the matrices
 	CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,						// Chain of DOFs to solve for
 		end,						// Our end effector goal position
@@ -634,14 +741,17 @@ bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf,
 
 glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, float p_dt)
 {
-	// !!!! float swing = p_lf->m_stepCycles[p_legIdx].getSwingPhase(p_phi);
-	// !!!! float Kft = m_tunePropGainFootTrackingKft.getValAt(swing);
-	// !!!! m_FootTrackingSpringDamper.m_Kp = Kft;
-	// !!!! glm::vec3 diff = m_feet[p_legId].transform.position - m_footStrikePlacement[p_legId];
-	// !!!! float error = glm::length(diff);
-	// !!!! return -glm::normalize(diff) * m_FootTrackingSpringDamper.drive(error, p_dt);
+	float swing = p_lf->m_stepCycles[p_legIdx].getSwingPhase(p_phi);
+	float Kft = p_lf->m_footTrackingGainKp.lerpGet(swing);
+	p_lf->m_footTrackingSpringDamper.setKp(Kft);
+	glm::vec3 diff = getFootPos(p_lf,p_legIdx) - p_lf->m_footStrikePlacement[p_legIdx];
+	float error = glm::length(diff);
+	return -glm::normalize(diff) * p_lf->m_footTrackingSpringDamper.drive(error, p_dt);
 	return glm::vec3(0.0f);
 }
+
+
+
 
 glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats)
 {
@@ -748,4 +858,20 @@ void ControllerSystem::applyNetLegFrameTorque(int p_controllerId, ControllerComp
 	delete[] stanceLegBuf;
 	// The vector reference to the torques, now contains the new LF torque
 	// as well as any corrected stance-leg torques.
+}
+
+glm::vec3 ControllerSystem::getFootPos( ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx )
+{
+	return MathHelp::getMatrixTranslation(m_jointWorldTransforms[p_lf->m_feetJointId[p_legIdx]]);
+}
+
+glm::mat4& ControllerSystem::getLegFrameTransform(const ControllerComponent::LegFrame* p_lf) const
+{
+	return m_jointWorldTransforms[p_lf->m_legFrameJointId];
+}
+
+glm::vec3 ControllerSystem::getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const
+{
+	unsigned int legFrameJointId = p_lf->m_legFrameJointId;
+	return glm::vec3 pos(MathHelp::getMatrixTranslation(m_jointWorldTransforms[legFrameJointId]));
 }

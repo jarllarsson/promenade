@@ -151,6 +151,11 @@ public:
 			// PD settings
 			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(30.0f);
 			m_FhPD.setKp_KdEQTenPrcntKp(30.0f);
+			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(30.0f);
+			// Vectors and Floats
+			m_stepLength = glm::vec2(2.0f, 2.5f);
+			m_footPlacementVelocityScale = 1.0f;
+			m_height = 0.0f;
 		}
 
 		// Structure ids
@@ -162,11 +167,25 @@ public:
 		std::vector<StepCycle> m_stepCycles;			// per leg	
 		PieceWiseLinear		   m_orientationLFTraj[3];	// xyz-orientation trajectory, per leg frame
 		PieceWiseLinear		   m_heightLFTraj;			// height trajectory, per leg frame
+		PieceWiseLinear		   m_footTrackingGainKp;	// Variable proportionate gain for swing phase, per leg frame
 		PDn					   m_desiredLFTorquePD;		// goal torque, per leg frame
 		PD					   m_FhPD;					// driver used to try to reach the desired height VF (Fh)
+		PD					   m_footTrackingSpringDamper;
 		// Structure
-		std::vector<Leg> m_legs;					// per leg
-		float			 m_height;					// per leg frame (max height, lf to feet)
+		std::vector<Leg> m_legs;								// per leg
+		std::vector<glm::vec3>  m_footStrikePlacement;			// The place on the ground where the foot should strike next, per leg
+		std::vector<glm::vec3>	m_footLiftPlacement;			// From where the foot was lifted, per leg
+		std::vector<bool>		m_footLiftPlacementPerformed;	// If foot just took off (and the "old" pos should be updated), per leg
+		std::vector<glm::vec3>	m_footTarget;					// The current position in the foot's swing trajectory, per leg
+		float			 m_footPlacementVelocityScale;			// per leg frame
+		float			 m_height;								// per leg frame (max height, lf to feet)
+		// NOTE!
+		// I've lessened the amount of parameters by letting each leg in a leg frame share
+		// per-leg parameters. Effectively mirroring behaviour over the saggital plane.
+		// There are still two step cycles though, to allow for phase shifting.
+		glm::vec2 m_stepLength;						// PLF, the coronal(x) and saggital(y) step distance. per leg frame
+		float m_lateStrikeOffsetDeltaH = 10.0f;		// Offset used as punishment on foot placement y on late strike. per leg frame
+
 		// =============================================================
 		// Access methods
 		// =============================================================
@@ -187,6 +206,15 @@ public:
 		{
 			glm::vec3 torque = m_desiredLFTorquePD.drive(p_currentOrientation, p_desiredOrientation, p_dt);
 			return torque;
+		}
+
+		// Helper function to correctly init the foot placement variables
+		void createFootPlacementModelVarsForNewLeg(const glm::vec3& p_startPos)
+		{
+			m_footStrikePlacement.push_back(p_startPos);
+			m_footLiftPlacement.push_back(p_startPos);
+			m_footLiftPlacementPerformed.push_back(false);
+			m_footTarget.push_back(p_startPos);
 		}
 	};
 
