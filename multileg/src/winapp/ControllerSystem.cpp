@@ -165,6 +165,7 @@ void ControllerSystem::buildCheck()
 		// Might have to do this after all leg frames instead, due to the link being at different ends of spine
 		legFrame->m_spineJointId = -1; // -1 means it doesn't exist
 		//
+		glm::vec3 legFramePos = rootTransform->getPosition(), footPos;
 		for (unsigned int x = 0; x < legCount; x++)
 		{
 			// Add debug tracking for leg
@@ -199,6 +200,7 @@ void ControllerSystem::buildCheck()
 				else // we are at the foot, so trigger termination add foot id to the leg frame
 				{
 					legFrame->m_feetJointId.push_back(idx);
+					footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
 					jointEntity = NULL;
 				}
 				jointsAddedForLeg++;
@@ -231,7 +233,8 @@ void ControllerSystem::buildCheck()
 				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, n + 1, jointsAddedForLeg - n, origGCDOFsz);
 			}
 		}
-
+		legFrame->m_height = legFramePos.y - footPos.y;
+		legFrame->m_heightLFTraj.reset(PieceWiseLinear::FULL, legFrame->m_height);
 		// Calculate number of torques axes in list, store
 		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
@@ -648,13 +651,12 @@ glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, con
 
 glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up)
 {
-	// !!!! float hLF = p_lf->m_tuneLFHeightTraj.getValAt(p_phi);
-	// !!!! glm::vec3 currentHeight = p_locationStat.m_worldPos - p_locationStat.m_currentGroundPos;
-	// !!!! // the current height y only works for up=0,1,0
-	// !!!! // so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
-	// !!!! // but for now, a float is OK
-	// !!!! return p_up * p_lf->m_heightForceCalc.drive(hLF - currentHeight.y, p_dt); // PD
-	return glm::vec3(0.0f);
+	float hLF = p_lf->m_heightLFTraj.lerpGet(p_phi);
+	glm::vec3 currentHeight = p_locationStat.m_worldPos - p_locationStat.m_currentGroundPos;
+	// the current height y only works for up=0,1,0
+	// so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
+	// but for now, a float is OK
+	return p_up * p_lf->m_FhPD.drive(hLF - currentHeight.y, p_dt); // PD
 }
 
 glm::vec3 ControllerSystem::calculateFd(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)

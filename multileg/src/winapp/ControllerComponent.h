@@ -10,6 +10,7 @@
 #include <vector>
 #include "PieceWiseLinear.h"
 #include "PDn.h"
+#include "PD.h"
 // =======================================================================================
 //                                      ControllerComponent
 // =======================================================================================
@@ -144,8 +145,12 @@ public:
 	{
 		LegFrame()
 		{
-			//m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
-			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(100.0f);
+			// Trajectory settings
+			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
+			m_heightLFTraj.reset(PieceWiseLinear::FULL, 3.0f); // is reinited to character height in build
+			// PD settings
+			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(30.0f);
+			m_FhPD.setKp_KdEQTenPrcntKp(30.0f);
 		}
 
 		// Structure ids
@@ -155,10 +160,13 @@ public:
 		std::vector<unsigned int> m_hipJointId;		// per leg	
 		// Playback data
 		std::vector<StepCycle> m_stepCycles;			// per leg	
-		PieceWiseLinear		   m_orientationLFTraj[3];	// per leg frame
-		PDn					   m_desiredLFTorquePD;		// per leg frame
+		PieceWiseLinear		   m_orientationLFTraj[3];	// xyz-orientation trajectory, per leg frame
+		PieceWiseLinear		   m_heightLFTraj;			// height trajectory, per leg frame
+		PDn					   m_desiredLFTorquePD;		// goal torque, per leg frame
+		PD					   m_FhPD;					// driver used to try to reach the desired height VF (Fh)
 		// Structure
 		std::vector<Leg> m_legs;					// per leg
+		float			 m_height;					// per leg frame (max height, lf to feet)
 		// =============================================================
 		// Access methods
 		// =============================================================

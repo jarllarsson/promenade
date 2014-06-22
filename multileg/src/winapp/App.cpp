@@ -184,7 +184,7 @@ void App::run()
 	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f,
 		CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT,CollisionLayer::COL_CHARACTER | CollisionLayer::COL_DEFAULT));
 	ground.addComponent(new RenderComponent());
-	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -20.0f, 0.0f), 
+	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -10.0f, 0.0f), 
 		glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 		glm::vec3(800.0f, 20.0f, 800.0f)));
 	ground.refresh();
@@ -220,7 +220,7 @@ void App::run()
 		for (int x = 0; x < 1; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
-			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 4.0f, 50.0f);
+			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 10.6f, 50.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, 2.0f);
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f,
@@ -255,8 +255,8 @@ void App::run()
 					glm::vec3 parentSz = boxSize;
 					boxSize = glm::vec3(1.0f, 4.0f, 1.0f); // set new size for current box
 					// segment specific constraint params
-					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
-					glm::vec3 upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.1f, -HALFPI*0.1f);
+					glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.1f, HALFPI*0.1f);
 					string partName;
 					if (i == 0) // if hip joint
 					{
@@ -269,19 +269,20 @@ void App::run()
 					else if (i == 1) // if knee
 					{
 						partName = " lower";
+						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 					}
 					else if (i == 2) // if foot
 					{
 						partName = " foot";
-						jointZOffsetInChild = 1.0f;
-						boxSize = glm::vec3(1.3f, 1.0f, 2.0f);
+						jointZOffsetInChild = 0.5f;
+						boxSize = glm::vec3(1.5f, 1.0f, 2.3f);
 						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 					}
 					string dbgGrp = (" group='" + sideName + "'");
 					m_toolBar->addLabel(Toolbar::CHARACTER, (sideName[0]+partName).c_str(), dbgGrp.c_str());
-					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*1.1f, jointZOffsetInChild));
+					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 					childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f, // note, h-lengths
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));

@@ -18,20 +18,32 @@ class PD
 public:
 	PD()
 	{
+		m_P	 = 0.0f;
+		m_D	 = 0.0f;
 		m_Kp = 1.0f;
 		m_Kd = 0.1f;
 	}
 	PD(float p_Kp, float p_Kd)
 	{
+		m_P = 0.0f;
+		m_D = 0.0f;
 		setK(p_Kp, p_Kd);
 	}
-	~PD();
+	~PD() {}
 
 	float getKp() { return m_Kp; }
 	float getKd() { return m_Kd; }
 	float setK(float p_Kp, float p_Kd)
 	{
 		m_Kp = p_Kp; m_Kd = p_Kd;
+	}
+	void setKp_KdEQTwoSqrtKp(float p_Kp)
+	{
+		m_Kp = p_Kp; m_Kd = 2.0f*sqrt(m_Kp);
+	}
+	void setKp_KdEQTenPrcntKp(float p_Kp)
+	{
+		m_Kp = p_Kp; m_Kd = 0.1f*m_Kp;
 	}
 	float setKp(float p_Kp) { m_Kp = p_Kp; }
 	float setKd(float p_Kd) { m_Kd = p_Kd; }
