@@ -31,6 +31,13 @@ private:
 	// Used to control and read velocity specifics per controller
 	struct VelocityStat
 	{
+		VelocityStat(const glm::vec3& p_pos, const glm::vec3& p_goalGaitVelocity)
+		{
+			m_oldPos = p_pos;
+			m_currentVelocity=glm::vec3(0.0f);
+			m_desiredVelocity=glm::vec3(0.0f);
+			m_goalVelocity = p_goalGaitVelocity;
+		}
 		glm::vec3 m_oldPos;
 		glm::vec3 m_currentVelocity;
 		glm::vec3 m_desiredVelocity;
@@ -136,11 +143,11 @@ private:
 	void applyNetLegFrameTorque(int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
 	glm::vec3 getFootPos(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);	
 	// Foot placement model
-	void updateFoot(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity);
-	void updateFootStrikePosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity);
+	void updateFoot(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos);
+	void updateFootStrikePosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos);
 	void updateFootSwingPosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi);
 	void offsetFootTargetDownOnLateStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
-	glm::vec3 projectFootPosToGround(const glm::vec3& p_footPosLF) const;
+	glm::vec3 projectFootPosToGround(const glm::vec3& p_footPosLF, const glm::vec3& p_groundPos) const;
 	glm::vec3 calculateVelocityScaledFootPos(const ControllerComponent::LegFrame* p_lf, const glm::vec3& p_footPosLF, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity) const;
 	float getFootTransitionPhase(ControllerComponent::LegFrame* p_lf, float p_swingPhi);
 
@@ -148,7 +155,7 @@ private:
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
 	void saveJointMatrix(unsigned int p_rigidBodyIdx);
 	void saveJointWorldEndpoints(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
-	void initControllerLocationAndVelocityStat(unsigned int p_idx);
+	void initControllerLocationAndVelocityStat(unsigned int p_idx, const glm::vec3& p_gaitGoalVelocity);
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const;

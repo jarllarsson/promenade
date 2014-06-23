@@ -91,6 +91,7 @@ public:
 
 	// Getters
 	void* getDevicePointer();
+	void* getDeviceContextPointer();
 	void** getInteropCanvasHandle();
 	BufferFactory* getBufferFactoryRef();
 

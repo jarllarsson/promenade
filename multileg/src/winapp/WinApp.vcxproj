@@ -64,15 +64,15 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(SolutionDir)ext\AntTweakBar\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(SolutionDir)ext\AntTweakBar\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(SolutionDir)ext\AntTweakBar\include;$(SolutionDir)ext\DirectXTK\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(SolutionDir)ext\AntTweakBar\lib\$(PlatformName)\;$(SolutionDir)ext\DirectXTK\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(SolutionDir)ext\AntTweakBar\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(SolutionDir)ext\AntTweakBar\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(SolutionDir)ext\AntTweakBar\include;$(SolutionDir)ext\DirectXTK\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(SolutionDir)ext\AntTweakBar\lib\$(PlatformName)\;$(SolutionDir)ext\DirectXTK\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
@@ -81,15 +81,15 @@
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(SolutionDir)ext\AntTweakBar\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(SolutionDir)ext\AntTweakBar\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(SolutionDir)ext\AntTweakBar\include;$(SolutionDir)ext\DirectXTK\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(SolutionDir)ext\AntTweakBar\lib\$(PlatformName)\;$(SolutionDir)ext\DirectXTK\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)bin\$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration)\$(PlatformShortName)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(SolutionDir)ext\AntTweakBar\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(SolutionDir)ext\AntTweakBar\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)ext\Bullet\bullet-2.82-r2704\src;$(SolutionDir)src\Context;$(SolutionDir)src\Graphics;$(SolutionDir)src\Input;$(SolutionDir)src\Util;$(SolutionDir)ext\GLM\include;$(SolutionDir)ext\OIS\includes;$(SolutionDir)ext\Visual Leak Detector\include\;$(SolutionDir)ext\Artemis\include;$(SolutionDir)ext\AntTweakBar\include;$(SolutionDir)ext\DirectXTK\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)ext\Bullet\lib\$(PlatformName)\;$(SolutionDir)Lib\$(PlatformShortName)\;$(SolutionDir)ext\Visual Leak Detector\lib\$(PlatformName)\;$(SolutionDir)ext\Artemis\lib\$(PlatformName)\;$(SolutionDir)ext\AntTweakBar\lib\$(PlatformName)\;$(SolutionDir)ext\DirectXTK\lib\$(PlatformName)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -101,7 +101,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;DirectXTK_$(Configuration).lib;AntTweakBar.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -115,7 +115,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;DirectXTK_$(Configuration).lib;AntTweakBar64.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
@@ -133,7 +133,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;AntTweakBar.lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;DirectXTK_$(Configuration).lib;AntTweakBar.lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,7 +150,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;AntTweakBar64.lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;DirectXTK_$(Configuration).lib;AntTweakBar64.lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -171,6 +171,8 @@
     <ClInclude Include="PhysWorldDefines.h" />
     <ClInclude Include="PID.h" />
     <ClInclude Include="PieceWiseLinear.h" />
+    <ClInclude Include="PositionRefComponent.h" />
+    <ClInclude Include="PositionRefSystem.h" />
     <ClInclude Include="StepCycle.h" />
     <ClInclude Include="PhysicsWorldHandler.h" />
     <ClInclude Include="RenderComponent.h" />

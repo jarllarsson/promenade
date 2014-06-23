@@ -2,6 +2,14 @@
 
 struct Color3f
 {
+	Color3f()
+	{
+		r = 0.0f; g = 0.0f; b = 0.0f;
+	}
+	Color3f(float p_r, float p_g, float p_b)
+	{
+		r = p_r; g = p_g; b = p_b;
+	}
 	float r, g, b;
 	Color3f operator* (float x) const
 	{
@@ -12,6 +20,14 @@ struct Color3f
 
 struct Color4f
 {
+	Color4f()
+	{
+		r = 0.0f; g = 0.0f; b = 0.0f; a = 1.0f;
+	}
+	Color4f(float p_r, float p_g, float p_b, float p_a=1.0f)
+	{
+		r = p_r; g = p_g; b = p_b; a = p_a;
+	}
 	float r, g, b, a;
 	Color4f operator* (float x) const
 	{

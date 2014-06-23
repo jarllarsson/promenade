@@ -35,6 +35,7 @@
 #include "ConstantForceSystem.h"
 #include "Time.h"
 #include "PhysWorldDefines.h"
+#include "PositionRefSystem.h"
 
 
 //#define MEASURE_RBODIES
@@ -164,11 +165,12 @@ void App::run()
 	ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
 	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
+	PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
 	sysManager->initializeAll();
 
 
 	// Order independent
-	// addOrderIndependentSystem(cforceSystem);
+	addOrderIndependentSystem(posRefSystem);
 
 	// Combine Physics with our stuff!
 	PhysicsWorldHandler physicsWorldHandler(dynamicsWorld,m_controllerSystem);
@@ -220,15 +222,17 @@ void App::run()
 		for (int x = 0; x < 1; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
-			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 10.6f, 50.0f);
+			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, 2.0f);
-			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), 2.0f,
+			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, hipCoronalOffset*2.0f);
+			float characterMass = 50.0f;
+			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 			legFrame.addComponent(new RenderComponent());
 			legFrame.addComponent(new TransformComponent(pos,
 				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 				lfSize));
+			//legFrame.addComponent(new ConstantForceComponent(glm::vec3(0, characterMass*12.0f, 0)));
 			legFrame.refresh();
 			string legFrameName = "LegFrame";
 			/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
@@ -258,33 +262,37 @@ void App::run()
 					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.1f, -HALFPI*0.1f);
 					glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.1f, HALFPI*0.1f);
 					string partName;
-					if (i == 0) // if hip joint
+					float segmentMass = 1.0f;
+					if (i == 0) // if hip joint (upper leg)
 					{
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
+						segmentMass = 5.0f;
 						//lowerAngleLim = glm::vec3(1, 1, 1);
 						//upperAngleLim = glm::vec3(0,0,0);
 					}
-					else if (i == 1) // if knee
+					else if (i == 1) // if knee (lower leg)
 					{
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						segmentMass = 4.0f;
 					}
 					else if (i == 2) // if foot
 					{
 						partName = " foot";
 						jointZOffsetInChild = 0.5f;
-						boxSize = glm::vec3(1.5f, 1.0f, 2.3f);
+						boxSize = glm::vec3(2.0f, 1.0f, 3.3f);
 						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
+						segmentMass = 1.5f;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
 					m_toolBar->addLabel(Toolbar::CHARACTER, (sideName[0]+partName).c_str(), dbgGrp.c_str());
 					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-					childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), 1.0f, // note, h-lengths
+					childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 					childJoint.addComponent(new RenderComponent());
 					childJoint.addComponent(new TransformComponent(legpos,
@@ -394,14 +402,14 @@ void App::run()
 							artemis::Entity & proj = entityManager->create();
 							glm::vec3 pos = MathHelp::toVec3(m_controller->getPos());
 							glm::vec3 bfSize = glm::vec3(1.0f, 1.0f, 1.0f);
-							RigidBodyComponent* btrb = new RigidBodyComponent(new btBoxShape(btVector3(bfSize.x, bfSize.y, bfSize.z)*0.5f), 0.1f,
+							RigidBodyComponent* btrb = new RigidBodyComponent(new btBoxShape(btVector3(bfSize.x, bfSize.y, bfSize.z)*0.5f), 1.0f,
 								CollisionLayer::COL_DEFAULT, CollisionLayer::COL_DEFAULT | CollisionLayer::COL_CHARACTER);
 							proj.addComponent(btrb);
 							proj.addComponent(new RenderComponent());
 							proj.addComponent(new TransformComponent(pos,
 								glm::inverse(glm::quat(m_controller->getRotationMatrix())),
 								bfSize));
-							proj.addComponent(new ConstantForceComponent(MathHelp::transformDirection(glm::inverse(m_controller->getRotationMatrix()),glm::vec3(0, 0, 10.0f)), 1.0f));
+							proj.addComponent(new ConstantForceComponent(MathHelp::transformDirection(glm::inverse(m_controller->getRotationMatrix()),glm::vec3(0, 0, 100.0f)), 1.0f));
 							proj.refresh();
 						}
 					}

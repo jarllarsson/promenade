@@ -147,17 +147,20 @@ public:
 		{
 			// Trajectory settings
 			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
-			m_heightLFTraj.reset(PieceWiseLinear::FULL, 3.0f); // is reinited to character height in build
-			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 1.0f); // Stepping is defaulted to an arc
-			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default
+			m_heightLFTraj.reset(PieceWiseLinear::FULL, 10.0f); // is reinited to character height in build
+			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 3.0f); // Stepping is defaulted to an arc
+			m_footTrackingGainKp.reset(PieceWiseLinear::LIN_INC,1.0f); // Foot tracking controller for fast gaits. linear(=t) by default
+			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
-			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(30.0f);
-			m_FhPD.setKp_KdEQTenPrcntKp(30.0f);
-			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(30.0f);
+			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(300.0f);
+			m_FhPD.setKp_KdEQTenPrcntKp(300.0f);
+			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(1.0f);
 			// Vectors and Floats
-			m_stepLength = glm::vec2(2.0f, 2.5f);
+			m_stepLength = glm::vec2(2.0f, 5.5f);
 			m_footPlacementVelocityScale = 1.0f;
 			m_height = 0.0f;
+			m_lateStrikeOffsetDeltaH = 10.0f;
+			m_velocityRegulatorKv = 30.0f;
 		}
 
 		// Structure ids
@@ -175,6 +178,8 @@ public:
 		PDn					   m_desiredLFTorquePD;		// goal torque, per leg frame
 		PD					   m_FhPD;					// driver used to try to reach the desired height VF (Fh)
 		PD					   m_footTrackingSpringDamper;
+		float				   m_lateStrikeOffsetDeltaH;	// Offset used as punishment on foot placement y on late strike. per leg frame
+		float				   m_velocityRegulatorKv;		// Gain for regulating velocity
 		// Structure
 		std::vector<Leg> m_legs;								// per leg
 		std::vector<glm::vec3>  m_footStrikePlacement;			// The place on the ground where the foot should strike next, per leg
@@ -188,7 +193,6 @@ public:
 		// per-leg parameters. Effectively mirroring behaviour over the saggital plane.
 		// There are still two step cycles though, to allow for phase shifting.
 		glm::vec2 m_stepLength;						// PLF, the coronal(x) and saggital(y) step distance. per leg frame
-		float m_lateStrikeOffsetDeltaH = 10.0f;		// Offset used as punishment on foot placement y on late strike. per leg frame
 
 		// =============================================================
 		// Access methods

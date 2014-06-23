@@ -56,6 +56,7 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 	fitViewport();
 }
 
+
 GraphicsDevice::~GraphicsDevice()
 {
 	m_swapChain->SetFullscreenState(false,nullptr);
@@ -205,6 +206,11 @@ void* GraphicsDevice::getDevicePointer()
 	return (void*)m_device;
 }
 
+
+void* GraphicsDevice::getDeviceContextPointer()
+{
+	return (void*)m_deviceContext;
+}
 
 void** GraphicsDevice::getInteropCanvasHandle()
 {

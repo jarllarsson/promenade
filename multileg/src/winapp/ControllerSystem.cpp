@@ -10,6 +10,8 @@
 #include "MaterialComponent.h"
 #include "Time.h"
 #include "PhysWorldDefines.h"
+#include "RenderComponent.h"
+#include "PositionRefComponent.h"
 
 
 ControllerSystem::~ControllerSystem()
@@ -125,7 +127,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 1000.0f; // 100Nm
+		float tLim = 100000.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
@@ -140,7 +142,7 @@ void ControllerSystem::buildCheck()
 {
 	for (unsigned int i = 0; i < m_controllersToBuild.size(); i++)
 	{
-
+		glm::vec3 startGaitVelocity(0.0f, 0.0f, 3.0f);
 		ControllerComponent* controller = m_controllersToBuild[i];
 		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
 		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
@@ -159,8 +161,6 @@ void ControllerSystem::buildCheck()
 		// prepare legs			
 		unsigned int legCount = legFrameEntities->m_upperLegEntities.size();
 		legFrame->m_legs.resize(legCount); // Allocate the number of specified legs
-		// Add debug tracking for leg frame
-		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
 		// when and if we have a spine, add it here and store its id to leg frame
 		// Might have to do this after all leg frames instead, due to the link being at different ends of spine
 		legFrame->m_spineJointId = -1; // -1 means it doesn't exist
@@ -168,10 +168,6 @@ void ControllerSystem::buildCheck()
 		glm::vec3 legFramePos = rootTransform->getPosition(), footPos;
 		for (unsigned int x = 0; x < legCount; x++)
 		{
-			// Add debug tracking for leg
-			std::string sideName = (std::string(x == 0 ? "Left" : "Right") + "Leg");
-			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
-			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
 			m_VFs.push_back(glm::vec3(0.0f, 0.0f, 0.0f));	
 			unsigned int vfIdx = (unsigned int)((int)m_VFs.size()-1);
 			// start by adding the already existing root id (needed in all leg chains)
@@ -242,7 +238,46 @@ void ControllerSystem::buildCheck()
 		// Add
 		controller->setToBuildComplete();
 		m_controllers.push_back(controller);
-		initControllerLocationAndVelocityStat((int)m_controllers.size() - 1);
+		initControllerLocationAndVelocityStat((int)m_controllers.size() - 1, startGaitVelocity);
+		// Finally, when all vars and lists have been built, add debug data
+		// Add debug tracking for leg frame
+		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
+		// Velocity debug
+		unsigned int vlistpos = m_controllerVelocityStats.size() - 1;
+		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Current velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_currentVelocity, " group='LegFrame'");
+		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Desired velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_desiredVelocity, " group='LegFrame'");
+		dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, "Goal velocity", Toolbar::DIR, (void*)&m_controllerVelocityStats[vlistpos].m_goalVelocity, " group='LegFrame'");
+		 // Debug, per-leg stuff
+		for (unsigned int x = 0; x < legCount; x++)
+		{
+			bool isLeft = x == 0;
+			Color3f col = (isLeft ? Color3f(1.0f, 0.0f, 0.0f) : Color3f(0.0f, 1.0f, 0.0f));
+			// Add debug tracking for leg
+			std::string sideName = (std::string(isLeft? "Left" : "Right") + "Leg");
+			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
+			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
+			// Foot strike placement visualization
+			artemis::Entity & footPlcmtDbg = world->createEntity();
+			footPlcmtDbg.addComponent(new RenderComponent());
+			footPlcmtDbg.addComponent(new TransformComponent());
+			footPlcmtDbg.addComponent(new PositionRefComponent(&legFrame->m_footStrikePlacement[x]));
+			footPlcmtDbg.addComponent(new MaterialComponent( col ));
+			footPlcmtDbg.refresh();
+			// Foot lift placement visualization
+			artemis::Entity & footLiftDbg = world->createEntity();
+			footLiftDbg.addComponent(new RenderComponent());
+			footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f),glm::vec3(0.5f,2.0f,0.5f)));
+			footLiftDbg.addComponent(new PositionRefComponent(&legFrame->m_footLiftPlacement[x]));
+			footLiftDbg.addComponent(new MaterialComponent(col*0.7f));
+			footLiftDbg.refresh();
+			// Foot target placement visualization
+			artemis::Entity & footTargetDbg = world->createEntity();
+			footTargetDbg.addComponent(new RenderComponent());
+			footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f),glm::quat(glm::vec3((float)HALFPI,0.0f,0.0f))));
+			footTargetDbg.addComponent(new PositionRefComponent(&legFrame->m_footTarget[x]));
+			footTargetDbg.addComponent(new MaterialComponent(col*0.25f));
+			footTargetDbg.refresh();
+		}
 	}
 	m_controllersToBuild.clear();
 }
@@ -386,7 +421,7 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 	glm::vec3 desiredV = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
 	float goalSqrMag = glm::sqrLength(goalV);
 	float currentSqrMag = glm::sqrLength(currentV);
-	float stepSz = 0.5f * p_dt;
+	float stepSz = 0.5f/* * p_dt*/;
 	// Note the material doesn't mention taking dt into 
 	// account for the step size, they might be running fixed timestep
 	// Here the dt received is the time since we last ran the control logic
@@ -395,18 +430,18 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 	if (goalSqrMag > currentSqrMag)
 	{
 		// Take steps no bigger than 0.5m/s
-		if (goalSqrMag >= currentSqrMag + stepSz)
+		if (goalSqrMag < currentSqrMag + stepSz)
 			desiredV = goalV;
-		else
-			desiredV += glm::normalize(currentV) * stepSz;
+		else if (goalV != glm::vec3(0.0f))
+			desiredV = currentV + glm::normalize(goalV) * stepSz;
 	}
 	else // if the goal is slower
 	{
 		// Take steps no smaller than 0.5
-		if (goalSqrMag <= currentSqrMag - stepSz)
+		if (goalSqrMag > currentSqrMag - stepSz)
 			desiredV = goalV;
-		else
-			desiredV -= glm::normalize(currentV) * stepSz;
+		else if (goalV != glm::vec3(0.0f))
+			desiredV = currentV - glm::normalize(goalV) * stepSz;
 	}
 	m_controllerVelocityStats[p_controllerId].m_desiredVelocity = desiredV;
 	// Location
@@ -416,10 +451,10 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 
 
 
-void ControllerSystem::initControllerLocationAndVelocityStat(unsigned int p_idx)
+void ControllerSystem::initControllerLocationAndVelocityStat(unsigned int p_idx, const glm::vec3& p_gaitGoalVelocity)
 {
 	glm::vec3 pos = getControllerPosition(p_idx);
-	VelocityStat vstat{ pos, glm::vec3(0.0f), glm::vec3(0.0f) };
+	VelocityStat vstat(pos, p_gaitGoalVelocity);
 	m_controllerVelocityStats.push_back(vstat);	
 	LocationStat lstat{ pos, glm::vec3(pos.x,0.0f,pos.z) }; // In future, use raycast for ground pos
 	m_controllerLocationStats.push_back(lstat);
@@ -456,11 +491,12 @@ void ControllerSystem::updateFeet( int p_controllerId, ControllerComponent* p_co
 		glm::vec3 currentV = m_controllerVelocityStats[p_controllerId].m_currentVelocity;
 		glm::vec3 desiredV = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
 		glm::vec3 goalV = m_controllerVelocityStats[p_controllerId].m_goalVelocity;
+		glm::vec3 groundPos = m_controllerLocationStats[p_controllerId].m_currentGroundPos;
 		float phi = p_controller->m_player.getPhase();
 		for (unsigned int i = 0; i < legCount; i++)
 		{
 			//updateReferenceFootPosition(phi, m_runTime, goalV);
-			updateFoot(lf, i, phi, currentV, desiredV);
+			updateFoot(lf, i, phi, currentV, desiredV, groundPos);
 			// !!!!!!!! m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase); !!!!!!!!!!!SHOULD BE DONE WITH PD!!!!!!!!!
 		}
 	}
@@ -468,14 +504,14 @@ void ControllerSystem::updateFeet( int p_controllerId, ControllerComponent* p_co
 
 // Calculate the next position where the foot should be placed for legs in swing
 void ControllerSystem::updateFoot(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, 
-	const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity)
+	const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos)
 {
 	// The position is updated as long as the leg
 	// is in stance. This means that the last calculated
 	// position when the foot leaves the ground is used.
 	if (isInControlledStance(p_lf, p_legIdx, p_phi))
 	{
-		updateFootStrikePosition(p_lf, p_legIdx, p_phi, p_velocity, p_desiredVelocity);
+		updateFootStrikePosition(p_lf, p_legIdx, p_phi, p_velocity, p_desiredVelocity, p_groundPos);
 		offsetFootTargetDownOnLateStrike(p_lf, p_legIdx);
 	}
 	else // If the foot is in swing instead, start updating the current foot swing target
@@ -488,7 +524,7 @@ void ControllerSystem::updateFoot(ControllerComponent::LegFrame* p_lf, unsigned 
 // This is where the foot will try to swing to in its
 // trajectory.
 void ControllerSystem::updateFootStrikePosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, 
-	const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity)
+	const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos)
 {
 	// Set the lift position to the old strike position (used for trajectory planning)
 	// the first time each cycle that we enter this function
@@ -498,11 +534,13 @@ void ControllerSystem::updateFootStrikePosition(ControllerComponent::LegFrame* p
 		p_lf->m_footLiftPlacementPerformed[p_legIdx] = true;
 	}
 	// Calculate the new position
-	float mirror = (float)(p_legIdx * 2 - 1); // flips the coronal axis for the left leg
+	float mirror = (float)(p_legIdx) * 2.0f - 1.0f; // flips the coronal axis for the left leg
 	glm::vec3 stepDir(mirror * p_lf->m_stepLength.x, 0.0f, p_lf->m_stepLength.y);
 	glm::vec3 regularFootPos = MathHelp::transformDirection(getLegFrameTransform(p_lf), stepDir);
-	glm::vec3 finalPos = getLegFramePosition(p_lf) + calculateVelocityScaledFootPos(p_lf, regularFootPos, p_velocity, p_desiredVelocity);
-	p_lf->m_footStrikePlacement[p_legIdx] = projectFootPosToGround(finalPos);
+	glm::vec3 lfPos = getLegFramePosition(p_lf);
+	glm::vec3 finalPos = lfPos + calculateVelocityScaledFootPos(p_lf, regularFootPos, p_velocity, p_desiredVelocity);
+	glm::vec3* b = &p_lf->m_footStrikePlacement[p_legIdx];
+	p_lf->m_footStrikePlacement[p_legIdx] = projectFootPosToGround(finalPos, p_groundPos);
 }
 
 void ControllerSystem::updateFootSwingPosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi)
@@ -541,9 +579,9 @@ void ControllerSystem::offsetFootTargetDownOnLateStrike(ControllerComponent::Leg
 
 
 // Project a foot position to the ground beneath it
-glm::vec3 ControllerSystem::projectFootPosToGround(const glm::vec3& p_footPosLF) const
+glm::vec3 ControllerSystem::projectFootPosToGround(const glm::vec3& p_footPosLF, const glm::vec3& p_groundPos) const
 {
-	return glm::vec3(p_footPosLF.x, 0.0f, p_footPosLF.z); // for now, super simple lock to 0
+	return glm::vec3(p_footPosLF.x, p_groundPos.y, p_footPosLF.z);
 }
 
 // Scale a foot strike position prediction to the velocity difference
@@ -660,7 +698,7 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 			calculateLegFrameNetLegVF(i, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
 			// Begin calculating Jacobian transpose for each leg in leg frame
-			unsigned int legCount = (unsigned)lf->m_legs.size();	
+			unsigned int legCount = (unsigned int)lf->m_legs.size();	
 			for (unsigned int n = 0; n < legCount; n++)
 			{
 				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
@@ -742,11 +780,10 @@ glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, un
 {
 	float swing = p_lf->m_stepCycles[p_legIdx].getSwingPhase(p_phi);
 	float Kft = p_lf->m_footTrackingGainKp.lerpGet(swing);
-	p_lf->m_footTrackingSpringDamper.setKp(Kft);
+	p_lf->m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(Kft);
 	glm::vec3 diff = getFootPos(p_lf,p_legIdx) - p_lf->m_footStrikePlacement[p_legIdx];
 	float error = glm::length(diff);
 	return -glm::normalize(diff) * p_lf->m_footTrackingSpringDamper.drive(error, p_dt);
-	return glm::vec3(0.0f);
 }
 
 
@@ -754,8 +791,7 @@ glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, un
 
 glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats)
 {
-	// !!!! return p_lf->m_tuneVelocityRegulatorKv*(p_velocityStats.m_desiredVelocity - p_velocityStats.m_currentVelocity);
-	return glm::vec3(0.0f);
+	return p_lf->m_velocityRegulatorKv*(p_velocityStats.m_desiredVelocity - p_velocityStats.m_currentVelocity);
 }
 
 glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up)

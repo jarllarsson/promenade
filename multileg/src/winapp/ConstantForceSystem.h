@@ -63,11 +63,11 @@ public:
 			{
 				btRigidBody* body = rigidBody->getRigidBody();
 				if (body != NULL)
-				{
+				{								
+					glm::vec3& v = cforce->m_force;				
+					rigidBody->getRigidBody()->applyCentralForce(btVector3(v.x, v.y, v.z));
 					if (cforce->m_timeBound)
 					{
-						glm::vec3& v = cforce->m_force;
-						rigidBody->getRigidBody()->applyCentralForce(btVector3(v.x, v.y, v.z));
 						cforce->m_time -= p_dt;
 						if (cforce->m_time <= 0.0f)
 							e.removeComponent<ConstantForceComponent>();

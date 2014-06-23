@@ -129,6 +129,12 @@
     <ClInclude Include="PhysWorldDefines.h">
       <Filter>Entity System\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="PositionRefComponent.h">
+      <Filter>Entity System\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="PositionRefSystem.h">
+      <Filter>Entity System\Transform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
