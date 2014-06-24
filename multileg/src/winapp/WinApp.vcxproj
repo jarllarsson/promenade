@@ -163,6 +163,7 @@
     <ClInclude Include="ConstraintComponent.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="ControllerSystem.h" />
+    <ClInclude Include="DebugDrawer.h" />
     <ClInclude Include="GaitPlayer.h" />
     <ClInclude Include="JacobianHelper.h" />
     <ClInclude Include="MaterialComponent.h" />
@@ -191,8 +192,10 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ConstraintComponent.cpp" />
     <ClCompile Include="ControllerSystem.cpp" />
+    <ClCompile Include="DebugDrawer.cpp" />
     <ClCompile Include="JacobianHelper.cpp" />
     <ClCompile Include="MaterialComponent.cpp" />
+    <ClCompile Include="PhysicsWorldHandler.cpp" />
     <ClCompile Include="PieceWiseLinear.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="RigidBodyComponent.cpp" />

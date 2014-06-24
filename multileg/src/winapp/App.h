@@ -19,6 +19,7 @@ class RenderSystem;
 class RigidBodySystem;
 class ControllerSystem;
 class Toolbar;
+class DebugDrawer;
 
 using namespace std;
 
@@ -44,7 +45,7 @@ public:
 protected:
 	Context* m_context;
 	GraphicsDevice* m_graphicsDevice;
-
+	DebugDrawer* m_debugDrawer;
 
 
 	void processInput();

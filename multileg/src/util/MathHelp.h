@@ -34,7 +34,9 @@ namespace MathHelp
 
 
 	glm::vec3 transformDirection(const glm::mat4& m, const glm::vec3& p_dir);
+	glm::vec3 invTransformDirection(const glm::mat4& m, const glm::vec3& p_dir);
 	glm::vec3 transformPosition(const glm::mat4& m, const glm::vec3& p_pos);
+	glm::vec3 invTransformPosition(const glm::mat4& m, const glm::vec3& p_dir);
 
 	glm::vec3 toVec3(const glm::vec4& p_v);
 	glm::vec3 toVec3(const Color3f& p_col);

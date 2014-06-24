@@ -36,6 +36,7 @@
 #include "Time.h"
 #include "PhysWorldDefines.h"
 #include "PositionRefSystem.h"
+//#include "DebugDrawer.h"
 
 
 //#define MEASURE_RBODIES
@@ -73,6 +74,7 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
 	m_toolBar->setWindowSize(p_width, p_height);
 	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
+	//m_debugDrawer = new DebugDrawer(m_graphicsDevice);
 
 	m_fpsUpdateTick=0.0f;
 	m_controller = new TempController(0.0f,10.0f,-50.0f,0.0f);
@@ -102,6 +104,7 @@ App::~App()
 	m_context->removeSubProcessEntry(m_toolBar);
 	// DELETES
 	SAFE_DELETE(m_toolBar);
+	//SAFE_DELETE(m_debugDrawer);
 	SAFE_DELETE(m_graphicsDevice);
 	SAFE_DELETE(m_context);
 	SAFE_DELETE(m_input);
@@ -144,11 +147,12 @@ void App::run()
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 	dynamicsWorld->setGravity(btVector3(0, WORLD_GRAVITY, 0));
 
-	// Measurements
+	// Measurements and debug
 	MeasurementBin<string> rigidBodyStateDbgRecorder;
 	MeasurementBin<float> controllerPerfRecorder;
 	//
 	controllerPerfRecorder.activate();
+
 
 	
 	// Artemis
@@ -343,7 +347,7 @@ void App::run()
 		{
 			if (!pumpMessage(msg))
 			{
-
+				//m_debugDrawer->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, (float)m_time, (float)m_time), colarr[0], colarr[3]);
 				// Start by rendering
 				render();
 
@@ -656,6 +660,7 @@ void App::render()
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_renderSystem->getInstanceBuffer());
 	// Debug
+	//m_debugDrawer->render(m_controller);
 	m_toolBar->draw();
 	// Flip!
 	m_graphicsDevice->flipBackBuffer();										

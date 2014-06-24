@@ -678,7 +678,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 				fh = calculateFh(p_lf, m_controllerLocationStats[p_controllerIdx], p_phi, p_dt, glm::vec3(0.0f, 1.0f, 0.0));
 				stanceForcesCalculated=true;
 			}	
-			glm::vec3 fd(calculateFd(p_lf, i));
+			glm::vec3 fd(calculateFd(p_controllerIdx,p_lf, i));
 			m_VFs[vfIdx] = calculateStanceLegVF(stanceLegs, fv, fh, fd); // Store force
 		}
 		// Debug test
@@ -804,17 +804,33 @@ glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, con
 	return p_up * p_lf->m_FhPD.drive(hLF - currentHeight.y, p_dt); // PD
 }
 
-glm::vec3 ControllerSystem::calculateFd(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
+glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
 	glm::vec3 FD;
 	// Check van de panne's answer before implementing this
-	// glm::vec3 footPos = transform.position - m_feet[p_legId].transform.position/*-transform.position)*/;
-	// footPos = transform.InverseTransformDirection(footPos);
-	// 
-	// float FDx = m_tuneFD[p_legId, Dx].x;
-	// float FDz = m_tuneFD[p_legId, Dz].z;
-	// //Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
-	// FD = new Vector3(FDx, 0.0f, FDz);
+	glm::vec3 D = getLegFramePosition(p_lf) - getFootPos(p_lf,p_legIdx)/*-transform.position)*/;	
+	// Project onto ground plance
+	D = projectFootPosToGround(D, m_controllerLocationStats[p_controllerId].m_currentGroundPos);
+	// transform to local space so we can interpret the terms as horizontal and vertical
+	D = MathHelp::invTransformDirection(getLegFrameTransform(p_lf),D); 
+
+
+	/*[...] this is just during stance. I believe that each of the horizontal and vertical components of FD
+			is defined to be a linear function of D, i.e.,
+			FD_h = c0 + c1*D
+			FD_v = c2+ c3*D
+			So that is four parameters, per leg x 4 legs = 16 parameters.
+			There is a discrepancy between this and the supplemental material,
+			which lists this as only having 8 parameters  [...] 
+			*/
+
+	
+	//float FDx = m_tuneFD[p_legId, Dx].x;
+	//float FDz = m_tuneFD[p_legId, Dz].z;
+	////Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
+	//// Transform back to world space so that it is applicable to current orientation
+	//FD = MathHelp::transformDirection(getLegFrameTransform(p_lf), glm::vec3(FDx, 0.0f, FDz));
+	FD = glm::vec3(0.0f);
 	return FD;
 }
 

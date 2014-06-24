@@ -127,7 +127,7 @@ private:
 	glm::vec3 calculateFsw(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, float p_dt);
 	glm::vec3 calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats);
 	glm::vec3 calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up);
-	glm::vec3 calculateFd(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
+	glm::vec3 calculateFd(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	// Virtual force and VF-to-torque algorithms
 	glm::vec3 calculateSwingLegVF(const glm::vec3& p_fsw);
 	glm::vec3 calculateStanceLegVF(unsigned int p_stanceLegCount,

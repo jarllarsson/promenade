@@ -30,6 +30,8 @@ public:
 	glm::mat4& getRotationMatrix();
 	glm::mat4& getViewProjMatrix();
 	glm::vec4& getPos();
+	glm::quat& getRotation();
+	float getAspect();
 
 	void update(float p_dt);
 

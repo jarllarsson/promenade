@@ -141,3 +141,13 @@ float TempController::getVelocityAmount()
 {
 	return (float)m_velocity.length();
 }
+
+glm::quat& TempController::getRotation()
+{
+	return m_rotation;
+}
+
+float TempController::getAspect()
+{
+	return m_aspect;
+}

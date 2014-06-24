@@ -158,3 +158,13 @@ void MathHelp::quatToAngleAxis(const glm::quat& p_quat, float& p_outAngle, glm::
 	}
 }
 
+glm::vec3 MathHelp::invTransformDirection(const glm::mat4& m, const glm::vec3& p_dir)
+{
+	return transformDirection(glm::inverse(m), p_dir);
+}
+
+glm::vec3 MathHelp::invTransformPosition(const glm::mat4& m, const glm::vec3& p_dir)
+{
+	return transformPosition(glm::inverse(m), p_dir);
+}
+

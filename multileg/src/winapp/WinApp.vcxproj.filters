@@ -135,6 +135,9 @@
     <ClInclude Include="PositionRefSystem.h">
       <Filter>Entity System\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="DebugDrawer.h">
+      <Filter>Entity System\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -183,6 +186,12 @@
     </ClCompile>
     <ClCompile Include="Time.cpp">
       <Filter>App</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDrawer.cpp">
+      <Filter>Entity System\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsWorldHandler.cpp">
+      <Filter>Entity System\Physics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

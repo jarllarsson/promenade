@@ -1,6 +1,10 @@
 #pragma once
-#include <btBulletDynamicsCommon.h>
-#include "ControllerSystem.h"
+#include <LinearMath/btScalar.h>
+#include <vector>
+
+class btDynamicsWorld;
+class AdvancedEntitySystem;
+class ControllerSystem;
 
 // =======================================================================================
 //                                      PhysicsWorldHandler
@@ -19,69 +23,25 @@ static void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeS
 
 class PhysicsWorldHandler {
 public:
-	PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSystem* p_controllerSystem)
-	{
-		m_world = p_world;
-		m_controllerSystem = p_controllerSystem;
-		m_world->setInternalTickCallback(physicsSimulationTickCallback, static_cast<void *>(this), true);
-		m_internalStepCounter = 0;
-	}
+	PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSystem* p_controllerSystem);
 
-	void myProcessCallback(btScalar timeStep) 
-	{
-		m_internalStepCounter++;
-		//// Character controller
-		m_controllerSystem->fixedUpdate((float)timeStep); // might want this in post tick instead? Have it here for now
-		//// Physics
-		//btCollisionObjectArray objects = m_world->getCollisionObjectArray();
-		//m_world->clearForces();
-		//for (int i = 0; i < objects.size(); i++) {
-		//	btRigidBody *rigidBody = btRigidBody::upcast(objects[i]);
-		//	if (!rigidBody) {
-		//		continue;
-		//	}
-		//	rigidBody->applyGravity();
-		//	//rigidBody->applyTorque(btVector3(0.0f, 0.0f, 0.0f));
-		//	//rigidBody->applyForce(btVector3(-10., 0., 0.), btVector3(0., 0., 0.));
-		//}
-		//// Controller
-		m_controllerSystem->finish();
-		m_controllerSystem->applyTorques((float)timeStep);
-		// Other systems
-		processSystemCollection((float)timeStep);
-		return;
-	}
-	unsigned int getNumberOfInternalSteps()
-	{
-		return m_internalStepCounter;
-	}
+	void myProcessCallback(btScalar timeStep);
 
-	void addOrderIndependentSystem(AdvancedEntitySystem* p_system)
-	{
-		m_orderIndependentSystems.push_back(p_system);
-	}
+	unsigned int getNumberOfInternalSteps();
 
-	void processSystemCollection(float p_dt)
-	{
-		unsigned int count = (unsigned int)m_orderIndependentSystems.size();
-		for (unsigned int i = 0; i < count; i++)
-		{
-			AdvancedEntitySystem* system = m_orderIndependentSystems[i];
-			system->fixedUpdate(p_dt);
-		}
-	}
+	void addOrderIndependentSystem(AdvancedEntitySystem* p_system);
+
+	void processSystemCollection(float p_dt);
+
 protected:
 	// Might want to change this to generic list of a common base class
 	ControllerSystem* m_controllerSystem; // But right now, we only need it for the controllers
 
-	vector<AdvancedEntitySystem*> m_orderIndependentSystems;
+	std::vector<AdvancedEntitySystem*> m_orderIndependentSystems;
 	//
 	// Physics world
 	btDynamicsWorld* m_world;
 	unsigned int m_internalStepCounter;
 };
 
-void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeStep) {
-	PhysicsWorldHandler *w = static_cast<PhysicsWorldHandler *>(world->getWorldUserInfo());
-	w->myProcessCallback(timeStep);
-}
+void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeStep);
