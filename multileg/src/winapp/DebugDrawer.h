@@ -15,6 +15,7 @@
 #include <VertexTypes.h>
 #include <Effects.h>
 #include <wrl\client.h>
+#include "DebugDrawBatch.h"
 // 
 class TempController;
 
@@ -33,21 +34,9 @@ class TempController;
 class DebugDrawer
 {
 public:
-	DebugDrawer(void* p_device, void* p_deviceContext);
+	DebugDrawer(void* p_device, void* p_deviceContext, DebugDrawBatch* p_batch);
 
 	virtual ~DebugDrawer();
-
-	virtual void drawLine(const glm::vec3& p_start, const glm::vec3& p_end,
-		const Color4f& p_color);
-
-	virtual void drawLine(const glm::vec3& p_start, const glm::vec3& p_end,
-		const Color3f& p_color);
-
-	virtual void drawLine(const glm::vec3& p_start, const glm::vec3& p_end,
-		const Color3f& p_startColor, const Color3f& p_endColor);
-
-	virtual void drawLine(const glm::vec3& p_start, const glm::vec3& p_end,
-		const Color4f& p_startColor, const Color4f& p_endColor);
 
 	virtual void render(TempController* p_camera);
 
@@ -61,14 +50,15 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 	float m_drawAreaW, m_drawAreaH;
 
+	DebugDrawBatch* m_batch;
+
 	// Line primitive
-	struct Line
+	struct XMLine
 	{
 		DirectX::VertexPositionColor m_start;
 		DirectX::VertexPositionColor m_end;
 	};
-	std::vector<Line> m_lineList;
-	void clearLineList();
+	XMLine getXMLine(const DebugDrawBatch::Line& p_line);
 
 	// Primitive drawing
 	std::unique_ptr<DirectX::BasicEffect>                         m_batchEffect;

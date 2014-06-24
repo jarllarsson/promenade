@@ -138,6 +138,9 @@
     <ClInclude Include="DebugDrawer.h">
       <Filter>Entity System\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="DebugDrawBatch.h">
+      <Filter>Entity System\Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -180,7 +183,6 @@
     <ClCompile Include="Toolbar.cpp">
       <Filter>Debug\Toolbar</Filter>
     </ClCompile>
-    <ClCompile Include="AdvancedEntitySystem.cpp" />
     <ClCompile Include="MaterialComponent.cpp">
       <Filter>Entity System\Rendering</Filter>
     </ClCompile>
@@ -192,6 +194,12 @@
     </ClCompile>
     <ClCompile Include="PhysicsWorldHandler.cpp">
       <Filter>Entity System\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDrawBatch.cpp">
+      <Filter>Entity System\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="AdvancedEntitySystem.cpp">
+      <Filter>Entity System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

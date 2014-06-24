@@ -20,6 +20,7 @@ class RigidBodySystem;
 class ControllerSystem;
 class Toolbar;
 class DebugDrawer;
+class DebugDrawBatch;
 
 using namespace std;
 
@@ -46,7 +47,7 @@ protected:
 	Context* m_context;
 	GraphicsDevice* m_graphicsDevice;
 	DebugDrawer* m_debugDrawer;
-
+	DebugDrawBatch* m_debugDrawBatch;
 
 	void processInput();
 	void handleContext(double p_dt, double p_physDt, unsigned int p_physSteps);

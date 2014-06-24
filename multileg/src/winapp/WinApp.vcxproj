@@ -164,6 +164,7 @@
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="ControllerSystem.h" />
     <ClInclude Include="DebugDrawer.h" />
+    <ClInclude Include="DebugDrawBatch.h" />
     <ClInclude Include="GaitPlayer.h" />
     <ClInclude Include="JacobianHelper.h" />
     <ClInclude Include="MaterialComponent.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ConstraintComponent.cpp" />
     <ClCompile Include="ControllerSystem.cpp" />
+    <ClCompile Include="DebugDrawBatch.cpp" />
     <ClCompile Include="DebugDrawer.cpp" />
     <ClCompile Include="JacobianHelper.cpp" />
     <ClCompile Include="MaterialComponent.cpp" />

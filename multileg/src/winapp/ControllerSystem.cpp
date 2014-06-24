@@ -663,11 +663,14 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		ControllerComponent::Leg* leg = &p_lf->m_legs[i];
 		// for this list, same for all:
 		unsigned int vfIdx = leg->m_DOFChain.vfIdxList[0];
+		glm::vec3 dbgFootPos = getFootPos(p_lf, i);
 		// Swing force
 		if (!legInStance[i])
 		{
 			glm::vec3 fsw(calculateFsw(p_lf, i, p_phi, p_dt));
 			m_VFs[vfIdx] = calculateSwingLegVF(fsw); // Store force
+			//
+			dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_PINK], dawnBringerPalRGB[COL_PURPLE]);
 		}
 		else
 			// Stance force
@@ -680,6 +683,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			}	
 			glm::vec3 fd(calculateFd(p_controllerIdx,p_lf, i));
 			m_VFs[vfIdx] = calculateStanceLegVF(stanceLegs, fv, fh, fd); // Store force
+			dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_NAVALBLUE]);
 		}
 		// Debug test
 		//leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f*sin((float)m_runTime*0.2f), 0.0f);
@@ -813,7 +817,7 @@ glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerC
 	D = projectFootPosToGround(D, m_controllerLocationStats[p_controllerId].m_currentGroundPos);
 	// transform to local space so we can interpret the terms as horizontal and vertical
 	D = MathHelp::invTransformDirection(getLegFrameTransform(p_lf),D); 
-
+	glm::vec4 c = p_lf->m_FDHVComponents;
 
 	/*[...] this is just during stance. I believe that each of the horizontal and vertical components of FD
 			is defined to be a linear function of D, i.e.,
@@ -823,14 +827,16 @@ glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerC
 			There is a discrepancy between this and the supplemental material,
 			which lists this as only having 8 parameters  [...] 
 			*/
-
+	float FDx = c[0] + c[1] * D.x;
+	float FDz = c[2] + c[3] * D.z;
 	
 	//float FDx = m_tuneFD[p_legId, Dx].x;
 	//float FDz = m_tuneFD[p_legId, Dz].z;
 	////Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
 	//// Transform back to world space so that it is applicable to current orientation
-	//FD = MathHelp::transformDirection(getLegFrameTransform(p_lf), glm::vec3(FDx, 0.0f, FDz));
-	FD = glm::vec3(0.0f);
+	FD = MathHelp::transformDirection(getLegFrameTransform(p_lf), glm::vec3(FDx, 0.0f, FDz));
+	dbgDrawer()->drawLine(getFootPos(p_lf, p_legIdx), getFootPos(p_lf, p_legIdx) + FD + glm::vec3(0.0f, -2.0f, 0.0f), dawnBringerPalRGB[COL_YELLOW], dawnBringerPalRGB[COL_ORANGE]);
+	//FD = glm::vec3(0.0f);
 	return FD;
 }
 

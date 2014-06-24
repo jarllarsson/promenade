@@ -180,6 +180,7 @@ public:
 		PD					   m_footTrackingSpringDamper;
 		float				   m_lateStrikeOffsetDeltaH;	// Offset used as punishment on foot placement y on late strike. per leg frame
 		float				   m_velocityRegulatorKv;		// Gain for regulating velocity
+		glm::vec4			   m_FDHVComponents;
 		// Structure
 		std::vector<Leg> m_legs;								// per leg
 		std::vector<glm::vec3>  m_footStrikePlacement;			// The place on the ground where the foot should strike next, per leg

@@ -1,6 +1,8 @@
 #include "App.h"
 #include <DebugPrint.h>
-#include "DebugDrawer.h"
+#include "DebugDrawer.h" // DirectXTK stuff must be included before bullet stuff.. X(
+#include "DebugDrawBatch.h"
+#include "AdvancedEntitySystem.h"
 #include <Context.h>
 #include <ContextException.h>
 
@@ -30,7 +32,7 @@
 #include "ControllerSystem.h"
 #include "PhysicsWorldHandler.h"
 #include "Toolbar.h"
-#include "AdvancedEntitySystem.h"
+
 #include "ConstantForceComponent.h"
 #include "ConstantForceSystem.h"
 #include "Time.h"
@@ -74,7 +76,9 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
 	m_toolBar->setWindowSize(p_width, p_height);
 	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
-	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),(void*)m_graphicsDevice->getDeviceContextPointer());
+	m_debugDrawBatch = new DebugDrawBatch();
+	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),
+		(void*)m_graphicsDevice->getDeviceContextPointer(),m_debugDrawBatch);
 	m_debugDrawer->setDrawArea(p_width, p_height);
 
 	m_fpsUpdateTick=0.0f;
@@ -106,6 +110,7 @@ App::~App()
 	// DELETES
 	SAFE_DELETE(m_toolBar);
 	SAFE_DELETE(m_debugDrawer);
+	SAFE_DELETE(m_debugDrawBatch);
 	SAFE_DELETE(m_graphicsDevice);
 	SAFE_DELETE(m_context);
 	SAFE_DELETE(m_input);
@@ -160,6 +165,7 @@ void App::run()
 	// Create and initialize systems
 	artemis::SystemManager * sysManager = m_world.getSystemManager();
 	AdvancedEntitySystem::registerDebugToolbar(m_toolBar);
+	AdvancedEntitySystem::registerDebugDrawBatch(m_debugDrawBatch);
 	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 	//addGameLogic(movementsys);
 #ifdef MEASURE_RBODIES
@@ -197,29 +203,29 @@ void App::run()
 	ground.refresh();
 
 	// Create axes
-	artemis::Entity & axisC = entityManager->create();
-	axisC.addComponent(new RenderComponent());
-	axisC.addComponent(new TransformComponent(glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(2.0f, 2.0f, 2.0f)));
-	axisC.refresh();
-	//
-	artemis::Entity & axisX = entityManager->create();
-	axisX.addComponent(new RenderComponent());
-	axisX.addComponent(new TransformComponent(glm::vec3(5.0f, 0.0f, 0.0f),
-		glm::vec3(10.0f, 1.0f, 1.0f)));
-	axisX.refresh();
-	//
-	artemis::Entity & axisY = entityManager->create();
-	axisY.addComponent(new RenderComponent());
-	axisY.addComponent(new TransformComponent(glm::vec3(0.0f, 10.0f, 0.0f),
-		glm::vec3(1.0f, 20.0f, 1.0f)));
-	axisY.refresh();
-	//
-	artemis::Entity & axisZ = entityManager->create();
-	axisZ.addComponent(new RenderComponent());
-	axisZ.addComponent(new TransformComponent(glm::vec3(0.0f, 0.0f, 5.0f),
-		glm::vec3(1.0f, 2.0f, 10.0f)));
-	axisZ.refresh();
+	// artemis::Entity & axisC = entityManager->create();
+	// axisC.addComponent(new RenderComponent());
+	// axisC.addComponent(new TransformComponent(glm::vec3(0.0f, 0.0f, 0.0f),
+	// 	glm::vec3(2.0f, 2.0f, 2.0f)));
+	// axisC.refresh();
+	// //
+	// artemis::Entity & axisX = entityManager->create();
+	// axisX.addComponent(new RenderComponent());
+	// axisX.addComponent(new TransformComponent(glm::vec3(5.0f, 0.0f, 0.0f),
+	// 	glm::vec3(10.0f, 1.0f, 1.0f)));
+	// axisX.refresh();
+	// //
+	// artemis::Entity & axisY = entityManager->create();
+	// axisY.addComponent(new RenderComponent());
+	// axisY.addComponent(new TransformComponent(glm::vec3(0.0f, 10.0f, 0.0f),
+	// 	glm::vec3(1.0f, 20.0f, 1.0f)));
+	// axisY.refresh();
+	// //
+	// artemis::Entity & axisZ = entityManager->create();
+	// axisZ.addComponent(new RenderComponent());
+	// axisZ.addComponent(new TransformComponent(glm::vec3(0.0f, 0.0f, 5.0f),
+	// 	glm::vec3(1.0f, 2.0f, 10.0f)));
+	// axisZ.refresh();
 
 
 		// Test of controller
@@ -348,9 +354,9 @@ void App::run()
 		{
 			if (!pumpMessage(msg))
 			{
-				m_debugDrawer->drawLine(glm::vec3(0.0f), glm::vec3(10.0f,0.0f,0.0f), colarr[0], colarr[1]);
-				m_debugDrawer->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 10.0f, 0.0f), colarr[3], colarr[4]);
-				m_debugDrawer->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(10.0f, 0.0f, 0.0f), colarr[0], colarr[1]);
+				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 10.0f, 0.0f), colarr[3], colarr[4]);
+				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
 				// Start by rendering
 				render();
 
