@@ -41,6 +41,7 @@ public:
 	void moveThrust(const glm::vec3& p_dir);
 	void moveAngularThrust(const glm::vec3& p_dir);
 	void rotate(glm::vec3 p_angularVelocity);
+	float getFovAngle();
 
 	float getVelocityAmount();
 

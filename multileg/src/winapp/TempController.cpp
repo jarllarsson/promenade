@@ -151,3 +151,8 @@ float TempController::getAspect()
 {
 	return m_aspect;
 }
+
+float TempController::getFovAngle()
+{
+	return m_fovYAngle;
+}

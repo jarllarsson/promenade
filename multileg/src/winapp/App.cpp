@@ -1,6 +1,6 @@
 #include "App.h"
 #include <DebugPrint.h>
-
+#include "DebugDrawer.h"
 #include <Context.h>
 #include <ContextException.h>
 
@@ -36,7 +36,7 @@
 #include "Time.h"
 #include "PhysWorldDefines.h"
 #include "PositionRefSystem.h"
-//#include "DebugDrawer.h"
+
 
 
 //#define MEASURE_RBODIES
@@ -74,7 +74,8 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
 	m_toolBar->setWindowSize(p_width, p_height);
 	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
-	//m_debugDrawer = new DebugDrawer(m_graphicsDevice);
+	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),(void*)m_graphicsDevice->getDeviceContextPointer());
+	m_debugDrawer->setDrawArea(p_width, p_height);
 
 	m_fpsUpdateTick=0.0f;
 	m_controller = new TempController(0.0f,10.0f,-50.0f,0.0f);
@@ -104,7 +105,7 @@ App::~App()
 	m_context->removeSubProcessEntry(m_toolBar);
 	// DELETES
 	SAFE_DELETE(m_toolBar);
-	//SAFE_DELETE(m_debugDrawer);
+	SAFE_DELETE(m_debugDrawer);
 	SAFE_DELETE(m_graphicsDevice);
 	SAFE_DELETE(m_context);
 	SAFE_DELETE(m_input);
@@ -347,7 +348,9 @@ void App::run()
 		{
 			if (!pumpMessage(msg))
 			{
-				//m_debugDrawer->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, (float)m_time, (float)m_time), colarr[0], colarr[3]);
+				m_debugDrawer->drawLine(glm::vec3(0.0f), glm::vec3(10.0f,0.0f,0.0f), colarr[0], colarr[1]);
+				m_debugDrawer->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 10.0f, 0.0f), colarr[3], colarr[4]);
+				m_debugDrawer->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
 				// Start by rendering
 				render();
 
@@ -573,6 +576,7 @@ void App::handleContext(double p_dt, double p_physDt, unsigned int p_physSteps)
 		int width = sz.first, height = sz.second;
 		m_graphicsDevice->updateResolution(width,height);
 		m_toolBar->setWindowSize(width, height);
+		m_debugDrawer->setDrawArea(width, height);
 	}
 	// Print fps in window head border
 	m_fpsUpdateTick -= (float)p_dt;
@@ -595,6 +599,7 @@ void App::gameUpdate( double p_dt )
 	updateController(dt);
 	m_controller->setFovFromAngle(52.0f, m_graphicsDevice->getAspectRatio());
 	m_controller->update(dt);
+
 	// Get camera info to buffer
 	std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float)* 4 * 4);
 	m_vp->update();
@@ -660,7 +665,7 @@ void App::render()
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_WIREFRAMEPASS, m_vp, m_renderSystem->getInstanceBuffer());
 	// Debug
-	//m_debugDrawer->render(m_controller);
+	m_debugDrawer->render(m_controller);
 	m_toolBar->draw();
 	// Flip!
 	m_graphicsDevice->flipBackBuffer();										
