@@ -274,6 +274,7 @@ void App::run()
 					glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.1f, HALFPI*0.1f);
 					string partName;
 					float segmentMass = 1.0f;
+					bool foot = false;
 					if (i == 0) // if hip joint (upper leg)
 					{
 						partName = " upper";
@@ -298,13 +299,23 @@ void App::run()
 						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 						segmentMass = 1.5f;
+						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
 					m_toolBar->addLabel(Toolbar::CHARACTER, (sideName[0]+partName).c_str(), dbgGrp.c_str());
 					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-					childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
-						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+					if (foot == true)
+					{
+						childJoint.addComponent(new RigidBodyComponent(RigidBodyComponent::REGISTER_COLLISIONS,
+							new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
+							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+					}
+					else
+					{
+						childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
+							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+					}
 					childJoint.addComponent(new RenderComponent());
 					childJoint.addComponent(new TransformComponent(legpos,
 						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
@@ -359,6 +370,7 @@ void App::run()
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
 				// Start by rendering
 				render();
+
 
 				m_time = (double)Time::getTimeStamp().QuadPart*secondsPerTick - timeStart;
 
@@ -674,7 +686,12 @@ void App::render()
 	m_debugDrawer->render(m_controller);
 	m_toolBar->draw();
 	// Flip!
-	m_graphicsDevice->flipBackBuffer();										
+	m_graphicsDevice->flipBackBuffer();	
+	//
+	// Clear debug draw batch 
+	// (not optimal to only do it here if drawing from game systems,
+	// batch calls should be put in a map or equivalent)
+	m_debugDrawBatch->clearDrawCalls();
 }
 
 // Add a system for game logic processing

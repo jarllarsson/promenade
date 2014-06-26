@@ -77,7 +77,6 @@ void DebugDrawer::render(TempController* p_camera)
 	m_primitiveBatch->End();
 	// End of drawing debug primitives
 
-	m_batch->clearLineList();
 }
 
 

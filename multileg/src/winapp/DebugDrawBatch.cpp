@@ -33,3 +33,8 @@ std::vector<DebugDrawBatch::Line>* DebugDrawBatch::getLineList()
 {
 	return &m_lineList;
 }
+
+void DebugDrawBatch::clearDrawCalls()
+{
+	clearLineList();
+}

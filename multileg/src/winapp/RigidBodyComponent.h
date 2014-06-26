@@ -23,10 +23,19 @@
 class RigidBodyComponent : public artemis::Component
 {
 public:
+	enum ListenerMode
+	{
+		REGISTER_COLLISIONS,
+		DONT_REGISTER_COLLISIONS,
+	};
 
 	RigidBodyComponent(btCollisionShape* p_collisionShape = NULL, float p_mass = 1.0f, 
 		short int p_collisionLayerType=CollisionLayer::CollisionLayerType::COL_DEFAULT,
-		short int p_collidesWithLayer=CollisionLayer::CollisionLayerType::COL_DEFAULT);
+		short int p_collidesWithLayer = CollisionLayer::CollisionLayerType::COL_DEFAULT);	
+	
+	RigidBodyComponent(ListenerMode p_registerCollisions, btCollisionShape* p_collisionShape = NULL, float p_mass = 1.0f,
+		short int p_collisionLayerType = CollisionLayer::CollisionLayerType::COL_DEFAULT,
+		short int p_collidesWithLayer = CollisionLayer::CollisionLayerType::COL_DEFAULT);
 
 	virtual ~RigidBodyComponent();
 
@@ -45,13 +54,25 @@ public:
 	// the constraint before any rigidbodies which it has references to. YIKES
 	void addChildConstraint(ConstraintComponent* p_constraint);
 
+	void addCollisionCallback(btCollisionWorld::ContactResultCallback* p_callback);
+	btCollisionWorld::ContactResultCallback* getCollisionCallbackFunc();
+
+	bool isColliding();
+	const glm::vec3& getCollisionPoint();
+	bool isRegisteringCollisions();
+	void setCollidingStat(bool p_stat, const glm::vec3& p_position=glm::vec3(0.0f));
+
 	bool isInited();
 	short int m_collisionLayerType;
 	short int m_collidesWithLayer;
 private:
+	glm::vec3 m_collisionPoint;
+	bool m_registerCollisions;
+	bool m_colliding;
 	btCollisionShape* m_collisionShape;
 	btRigidBody* m_rigidBody;
 	std::vector<ConstraintComponent*> m_childConstraints;
+	btCollisionWorld::ContactResultCallback* m_callback;
 	float m_mass;
 	btDiscreteDynamicsWorld* m_dynamicsWorldPtr;
 	unsigned int m_uid; ///< Unique id that can be used to retrieve this bodys entity from the rigidbodysystem

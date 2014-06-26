@@ -38,6 +38,14 @@ void RigidBodySystem::added(artemis::Entity &e)
 		btRigidBody* rigidBodyInstance = new btRigidBody(rigidBodyCI);
 		rigidBodyInstance->setDamping(0.1f, 0.1f);
 		rigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
+		// If collision registration is activated,
+		// we need to prepare a callback
+		if (rigidBody->isRegisteringCollisions())
+		{
+			OnCollisionCallback* callback = new OnCollisionCallback(rigidBodyInstance, rigidBody);
+			rigidBody->addCollisionCallback(callback); // the component handles dealloc upon destruction
+		}
+		
 		// Add rigidbody to list
 		unsigned int uid = m_rigidBodyEntities.add(&e);
 		//
@@ -71,6 +79,16 @@ void RigidBodySystem::processEntity(artemis::Entity &e)
 			physTransform.getOpenGLMatrix(glm::value_ptr(mat));
 			transform->setMatrix(mat);
 			transform->setScaleToMatrix(scale);
+			if (rigidBody->isRegisteringCollisions())
+			{
+				rigidBody->setCollidingStat(false);
+				m_dynamicsWorldPtr->contactTest(body, *rigidBody->getCollisionCallbackFunc());
+			}
+			if (rigidBody->isColliding())
+			{
+				glm::vec3 hitPos = transform->getPosition()+rigidBody->getCollisionPoint();
+				dbgDrawer()->drawLine(hitPos, hitPos + glm::vec3(0.0f,1.0f,0.0f), dawnBringerPalRGB[COL_ORANGE], dawnBringerPalRGB[COL_RED]);
+			}
 			//
 			if (m_stateDbgRecorder != NULL && m_stateDbgRecorder->isActive())
 			{

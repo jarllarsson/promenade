@@ -41,6 +41,8 @@ public:
 		const Color4f& p_startColor, const Color4f& p_endColor);
 
 
+	void clearDrawCalls();
+
 	std::vector<Line>* getLineList();
 	void clearLineList();
 
