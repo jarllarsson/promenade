@@ -161,7 +161,8 @@ private:
 	glm::vec3 getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const;
 	glm::mat4& getLegFrameTransform(const ControllerComponent::LegFrame* p_lf);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
-
+	glm::mat4 getDesiredWorldOrientation(unsigned int p_controllerId) const;
+	glm::mat4 getDesiredWorldUpOrientation(unsigned int p_controllerId) const;
 	// global variables
 	float m_runTime;
 	int m_steps;

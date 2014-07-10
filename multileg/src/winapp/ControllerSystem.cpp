@@ -70,6 +70,10 @@ void ControllerSystem::fixedUpdate(float p_dt)
 
 	double startTiming = Time::getTimeMs();
 
+	// Clear debug draw batch 
+	// (not optimal to only do it here if drawing from game systems,
+	// batch calls should be put in a map or equivalent)
+	dbgDrawer()->clearDrawCalls();
 
 	// Update all transforms
 	for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
@@ -127,7 +131,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 100000.0f;
+		float tLim = 600.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
@@ -810,13 +814,23 @@ glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, con
 
 glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
+	/*
+	velocity according to Fv = kv(vd-v). Third, a leg-specific virtual force FD(D) implements a phase-dependent force that is
+	customised for each stance leg. This allows for modeling the indi-vidualized role of each leg in gaits such as the dog gallop [Walter
+	and Carrier 2007]. Here, D measures forward progress in the gait
+	and is computed as the ground-plane projection of PLF - Pfoot, where PLF is the location of the origin of the leg frame, and Pfoot
+	and is computed as the ground-plane projection of PLF - Pfoot, where PLF is the location of the origin of the leg frame, and Pfoot
+	is the location of the foot of a given leg. FD(D)
+	*/
 	glm::vec3 FD;
 	// Check van de panne's answer before implementing this
-	glm::vec3 D = getLegFramePosition(p_lf) - getFootPos(p_lf,p_legIdx)/*-transform.position)*/;	
+	glm::vec3 Dvec = getLegFramePosition(p_lf) - getFootPos(p_lf,p_legIdx)/*-transform.position)*/;		
 	// Project onto ground plance
-	D = projectFootPosToGround(D, m_controllerLocationStats[p_controllerId].m_currentGroundPos);
+	Dvec = projectFootPosToGround(Dvec, m_controllerLocationStats[p_controllerId].m_currentGroundPos);
 	// transform to local space so we can interpret the terms as horizontal and vertical
-	D = MathHelp::invTransformDirection(getLegFrameTransform(p_lf),D); 
+	Dvec = MathHelp::invTransformDirection(getDesiredWorldOrientation(p_controllerId)/*getLegFrameTransform(p_lf)*/, Dvec);
+
+	Dvec.x = 0.0f;
 	glm::vec4 c = p_lf->m_FDHVComponents;
 
 	/*[...] this is just during stance. I believe that each of the horizontal and vertical components of FD
@@ -827,15 +841,19 @@ glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerC
 			There is a discrepancy between this and the supplemental material,
 			which lists this as only having 8 parameters  [...] 
 			*/
-	float FDx = c[0] + c[1] * D.x;
-	float FDz = c[2] + c[3] * D.z;
+	float D = Dvec.z;
+
+	float FDhoriz = c[0] + c[1] * D/*Dvec.y*/;
+	float FDvert =	c[2] + c[3] * D/*Dvec.z*/;
 	
 	//float FDx = m_tuneFD[p_legId, Dx].x;
 	//float FDz = m_tuneFD[p_legId, Dz].z;
 	////Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
 	//// Transform back to world space so that it is applicable to current orientation
-	FD = MathHelp::transformDirection(getLegFrameTransform(p_lf), glm::vec3(FDx, 0.0f, FDz));
-	dbgDrawer()->drawLine(getFootPos(p_lf, p_legIdx), getFootPos(p_lf, p_legIdx) + FD + glm::vec3(0.0f, -2.0f, 0.0f), dawnBringerPalRGB[COL_YELLOW], dawnBringerPalRGB[COL_ORANGE]);
+	//FD = MathHelp::transformDirection(getLegFrameTransform(p_lf), glm::vec3(0.0f, FDvert, FDhoriz));
+
+	FD = MathHelp::transformDirection(getDesiredWorldOrientation(p_controllerId), glm::vec3(0.0f, FDvert, FDhoriz)); // try using wanted orientation, instead of the actual
+	dbgDrawer()->drawLine(getFootPos(p_lf, p_legIdx), getFootPos(p_lf, p_legIdx) + FD*2.0f, dawnBringerPalRGB[COL_YELLOW], dawnBringerPalRGB[COL_ORANGE]);
 	//FD = glm::vec3(0.0f);
 	return FD;
 }
@@ -894,9 +912,30 @@ void ControllerSystem::applyNetLegFrameTorque(int p_controllerId, ControllerComp
 	// 2. Calculate a desired torque, tdLF, using the previous current
 	// torque, tLF, and a PD-controller driving towards the 
 	// desired orientation, omegaLF.
+	glm::mat4 dWM = getDesiredWorldOrientation(p_controllerId);
+	glm::vec3 hgr = MathHelp::transformDirection(dWM, glm::vec3(5.0f, 0.0f, 0.0f));
+	glm::vec3 fram = MathHelp::transformDirection(dWM, glm::vec3(0.0f, 0.0f, 5.0f));
+	//glm::mat4 up = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0), glm::vec3(0.0f, 1.0f, 0.0));
+	glm::quat desiredW = glm::quat_cast(dWM/**up*/);
 	glm::quat omegaLF = lf->getCurrentDesiredOrientation(p_phi);
+	omegaLF = desiredW*omegaLF;
 	glm::quat currentOrientation = MathHelp::getMatrixRotation(m_jointWorldTransforms[lf->m_legFrameJointId]);
+	glm::mat4 orient = glm::mat4_cast(currentOrientation);
 	glm::vec3 tdLF = lf->getOrientationPDTorque(currentOrientation, omegaLF, p_dt);
+
+	glm::vec3 chgr = MathHelp::transformDirection(orient, glm::vec3(5.0f, 0.0f, 0.0f));
+	glm::vec3 cfram = MathHelp::transformDirection(orient, glm::vec3(0.0f, 0.0f, 5.0f));
+
+	// Draw ORIENTATION distance
+	glm::vec3 wanted = MathHelp::transformDirection(glm::mat4_cast(omegaLF), glm::vec3(0.0f, 10.0f, 0.0f));
+	glm::vec3 current = MathHelp::transformDirection(glm::mat4_cast(currentOrientation), glm::vec3(0.0f, 10.0f, 0.0f));
+	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
+	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + current, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_MOSSGREEN]);
+	dbgDrawer()->drawLine(getLegFramePosition(lf) + current, getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
+	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + hgr, dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
+	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + fram, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + chgr, dawnBringerPalRGB[COL_RED] * 0.8f, dawnBringerPalRGB[COL_RED] * 0.8f);
+	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + cfram, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f);
 	// test code
 	//rigidbody.AddTorque(tdLF);
 
@@ -931,4 +970,17 @@ glm::vec3 ControllerSystem::getLegFramePosition(const ControllerComponent::LegFr
 {
 	unsigned int legFrameJointId = p_lf->m_legFrameJointId;
 	return MathHelp::getMatrixTranslation(m_jointWorldTransforms[legFrameJointId]);
+}
+
+// Get the desired world space orientation based on the current desired velocity
+glm::mat4 ControllerSystem::getDesiredWorldOrientation(unsigned int p_controllerId) const
+{
+	glm::vec3 dir = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
+	dir.z *= -1.0f; // as we're using a ogl function below, we flip z
+	return glm::lookAt(glm::vec3(0.0f), dir, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+glm::mat4 ControllerSystem::getDesiredWorldUpOrientation(unsigned int p_controllerId) const
+{
+	return glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f), m_controllerVelocityStats[p_controllerId].m_desiredVelocity);
 }

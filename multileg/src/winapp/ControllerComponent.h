@@ -148,7 +148,7 @@ public:
 			// Trajectory settings
 			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
 			m_heightLFTraj.reset(PieceWiseLinear::FULL, 10.0f); // is reinited to character height in build
-			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 3.0f); // Stepping is defaulted to an arc
+			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 5.0f); // Stepping is defaulted to an arc
 			m_footTrackingGainKp.reset(PieceWiseLinear::LIN_INC,1.0f); // Foot tracking controller for fast gaits. linear(=t) by default
 			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
@@ -161,6 +161,7 @@ public:
 			m_height = 0.0f;
 			m_lateStrikeOffsetDeltaH = 10.0f;
 			m_velocityRegulatorKv = 30.0f;
+			m_FDHVComponents = glm::vec4(0.0f, 0.2f, 0.0f, 0.1f);
 		}
 
 		// Structure ids

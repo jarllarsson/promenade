@@ -691,7 +691,7 @@ void App::render()
 	// Clear debug draw batch 
 	// (not optimal to only do it here if drawing from game systems,
 	// batch calls should be put in a map or equivalent)
-	m_debugDrawBatch->clearDrawCalls();
+	//m_debugDrawBatch->clearDrawCalls();
 }
 
 // Add a system for game logic processing
