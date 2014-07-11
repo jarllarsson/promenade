@@ -113,10 +113,10 @@ public:
 
 private:
 	// Control logic functions
-	void controllerUpdate(int p_controllerId, float p_dt);
+	void controllerUpdate(unsigned int p_controllerId, float p_dt);
 	void updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt);
-	void updateFeet(int p_controllerId, ControllerComponent* p_controller);
-	void updateTorques(int p_controllerId, ControllerComponent* p_controller, float p_dt);
+	void updateFeet(unsigned int p_controllerId, ControllerComponent* p_controller);
+	void updateTorques(unsigned int p_controllerId, ControllerComponent* p_controller, float p_dt);
 
 	// Leg frame logic functions
 	void calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, VelocityStat& p_velocityStats);
@@ -140,11 +140,11 @@ private:
 		ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx,
 		ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, 
 		float p_phi, float p_dt);
-	void applyNetLegFrameTorque(int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
+	void applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
 	glm::vec3 getFootPos(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);	
 	// Foot placement model
-	void updateFoot(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos);
-	void updateFootStrikePosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos);
+	void updateFoot(unsigned int p_controllerId, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos);
+	void updateFootStrikePosition(unsigned int p_controllerId, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos);
 	void updateFootSwingPosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi);
 	void offsetFootTargetDownOnLateStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	glm::vec3 projectFootPosToGround(const glm::vec3& p_footPosLF, const glm::vec3& p_groundPos) const;
@@ -162,7 +162,6 @@ private:
 	glm::mat4& getLegFrameTransform(const ControllerComponent::LegFrame* p_lf);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 	glm::mat4 getDesiredWorldOrientation(unsigned int p_controllerId) const;
-	glm::mat4 getDesiredWorldUpOrientation(unsigned int p_controllerId) const;
 	// global variables
 	float m_runTime;
 	int m_steps;

@@ -79,15 +79,20 @@ void RigidBodySystem::processEntity(artemis::Entity &e)
 			physTransform.getOpenGLMatrix(glm::value_ptr(mat));
 			transform->setMatrix(mat);
 			transform->setScaleToMatrix(scale);
-			if (rigidBody->isRegisteringCollisions())
-			{
-				rigidBody->setCollidingStat(false);
-				m_dynamicsWorldPtr->contactTest(body, *rigidBody->getCollisionCallbackFunc());
-			}
+// 			if (rigidBody->isRegisteringCollisions())
+// 			{
+// 				m_dynamicsWorldPtr->contactTest(body, *rigidBody->getCollisionCallbackFunc());
+// 				if (rigidBody->isColliding())
+// 				{
+// 					glm::vec3 hitPos = transform->getPosition() + rigidBody->getCollisionPoint();
+// 					dbgDrawer()->drawLine(hitPos, hitPos + glm::vec3(0.0f, 1.0f, 0.0f), dawnBringerPalRGB[COL_ORANGE], dawnBringerPalRGB[COL_RED]);
+// 				}
+// 			}
+// 			// Extra debug
 			if (rigidBody->isColliding())
 			{
-				glm::vec3 hitPos = transform->getPosition()+rigidBody->getCollisionPoint();
-				dbgDrawer()->drawLine(hitPos, hitPos + glm::vec3(0.0f,1.0f,0.0f), dawnBringerPalRGB[COL_ORANGE], dawnBringerPalRGB[COL_RED]);
+				glm::vec3 hitPos = transform->getPosition() + rigidBody->getCollisionPoint();
+				dbgDrawer()->drawLine(hitPos, hitPos + glm::vec3(0.0f, 1.0f, 0.0f), dawnBringerPalRGB[COL_ORANGE], dawnBringerPalRGB[COL_RED]);
 			}
 			//
 			if (m_stateDbgRecorder != NULL && m_stateDbgRecorder->isActive())
@@ -194,6 +199,25 @@ void RigidBodySystem::lateUpdate()
 	{
 		m_stateDbgRecorder->saveMeasurementRelTStamp(m_stateString+"\n", world->getDelta());
 		m_stateString.clear();
+	}
+}
+
+void RigidBodySystem::fixedUpdate(float p_dt)
+{
+	for (unsigned int i = 0; i < m_rigidBodyEntities.getSize(); i++)
+	{
+		artemis::Entity* e = m_rigidBodyEntities[i];
+		RigidBodyComponent* rigidBody = rigidBodyMapper.get(*e);
+		TransformComponent* transform = transformMapper.get(*e);
+		if (rigidBody->isInited())
+		{
+			if (rigidBody->isRegisteringCollisions())
+			{
+				btRigidBody* body = rigidBody->getRigidBody();
+				rigidBody->setCollidingStat(false);
+				m_dynamicsWorldPtr->contactTest(body, *rigidBody->getCollisionCallbackFunc());
+			}
+		}
 	}
 }
 

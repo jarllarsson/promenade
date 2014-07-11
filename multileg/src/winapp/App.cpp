@@ -186,7 +186,7 @@ void App::run()
 	// Combine Physics with our stuff!
 	PhysicsWorldHandler physicsWorldHandler(dynamicsWorld,m_controllerSystem);
 	physicsWorldHandler.addOrderIndependentSystem(cforceSystem);
-
+	physicsWorldHandler.addPreprocessSystem(m_rigidBodySystem);
 
 
 	// Entity manager fetch
@@ -235,7 +235,7 @@ void App::run()
 			artemis::Entity & legFrame = entityManager->create();
 			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, hipCoronalOffset*2.0f);
+			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, hipCoronalOffset);
 			float characterMass = 50.0f;
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));

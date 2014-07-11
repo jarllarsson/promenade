@@ -65,6 +65,8 @@ public:
 	// Other deferred updates
 	void lateUpdate();
 
+	virtual void fixedUpdate(float p_dt);
+
 
 	// Contact point callback
 	struct OnCollisionCallback : public btCollisionWorld::ContactResultCallback

@@ -20,6 +20,7 @@ PhysicsWorldHandler::PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSys
 void PhysicsWorldHandler::myProcessCallback(btScalar timeStep)
 {
 	m_internalStepCounter++;
+	processPreprocessSystemCollection((float)timeStep);
 	//// Character controller
 	m_controllerSystem->fixedUpdate((float)timeStep); // might want this in post tick instead? Have it here for now
 	//// Physics
@@ -38,7 +39,7 @@ void PhysicsWorldHandler::myProcessCallback(btScalar timeStep)
 	m_controllerSystem->finish();
 	m_controllerSystem->applyTorques((float)timeStep);
 	// Other systems
-	processSystemCollection((float)timeStep);
+	processOrderIndependentSystemCollection((float)timeStep);
 	return;
 }
 unsigned int PhysicsWorldHandler::getNumberOfInternalSteps()
@@ -51,12 +52,27 @@ void PhysicsWorldHandler::addOrderIndependentSystem(AdvancedEntitySystem* p_syst
 	m_orderIndependentSystems.push_back(p_system);
 }
 
-void PhysicsWorldHandler::processSystemCollection(float p_dt)
+void PhysicsWorldHandler::processOrderIndependentSystemCollection(float p_dt)
 {
 	unsigned int count = (unsigned int)m_orderIndependentSystems.size();
 	for (unsigned int i = 0; i < count; i++)
 	{
 		AdvancedEntitySystem* system = m_orderIndependentSystems[i];
+		system->fixedUpdate(p_dt);
+	}
+}
+
+void PhysicsWorldHandler::addPreprocessSystem(AdvancedEntitySystem* p_system)
+{
+	m_preprocessSystems.push_back(p_system);
+}
+
+void PhysicsWorldHandler::processPreprocessSystemCollection(float p_dt)
+{
+	unsigned int count = (unsigned int)m_preprocessSystems.size();
+	for (unsigned int i = 0; i < count; i++)
+	{
+		AdvancedEntitySystem* system = m_preprocessSystems[i];
 		system->fixedUpdate(p_dt);
 	}
 }
