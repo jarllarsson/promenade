@@ -788,6 +788,8 @@ bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf,
 			float swing = stepCycle->getSwingPhase(p_phi);
 			if (swing > 0.8f) // late swing as defined and mentioned by coros et al (quadruped locomotion)
 			{
+				// update foot target to it's final so it's not stuck in air
+				updateFootSwingPosition(p_lf, p_legIdx, 1.0f); 
 				stance = true;
 			}
 		}
