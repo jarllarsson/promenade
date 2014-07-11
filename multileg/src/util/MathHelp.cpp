@@ -168,3 +168,12 @@ glm::vec3 MathHelp::invTransformPosition(const glm::mat4& m, const glm::vec3& p_
 	return transformPosition(glm::inverse(m), p_dir);
 }
 
+// Safe atan2 hahaha
+float MathHelp::satan2(float p_x, float p_y)
+{
+	float a = 0.0f;
+	if (p_x != 0.0f && p_y != 0.0f)
+		a = atan2(p_x, p_y); // range [-pi, +pi] radians.
+	return a;
+}
+

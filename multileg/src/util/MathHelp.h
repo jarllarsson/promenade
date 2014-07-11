@@ -43,6 +43,8 @@ namespace MathHelp
 	glm::vec3 getMatrixTranslation(const glm::mat4& m);
 	glm::quat getMatrixRotation(const glm::mat4& m);
 
+	float satan2(float p_x, float p_y);
+
 	float flerp(float p_a, float p_b, float p_t);
 	double dlerp(double p_a, double p_b, double p_t);
 	

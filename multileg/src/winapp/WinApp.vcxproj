@@ -166,6 +166,7 @@
     <ClInclude Include="DebugDrawer.h" />
     <ClInclude Include="DebugDrawBatch.h" />
     <ClInclude Include="GaitPlayer.h" />
+    <ClInclude Include="IK2Handler.h" />
     <ClInclude Include="JacobianHelper.h" />
     <ClInclude Include="MaterialComponent.h" />
     <ClInclude Include="PD.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="ControllerSystem.cpp" />
     <ClCompile Include="DebugDrawBatch.cpp" />
     <ClCompile Include="DebugDrawer.cpp" />
+    <ClCompile Include="IK2Handler.cpp" />
     <ClCompile Include="JacobianHelper.cpp" />
     <ClCompile Include="MaterialComponent.cpp" />
     <ClCompile Include="PhysicsWorldHandler.cpp" />

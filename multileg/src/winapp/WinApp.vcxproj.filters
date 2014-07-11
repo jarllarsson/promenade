@@ -141,6 +141,9 @@
     <ClInclude Include="DebugDrawBatch.h">
       <Filter>Entity System\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="IK2Handler.h">
+      <Filter>Entity System\Locomotion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
@@ -200,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="AdvancedEntitySystem.cpp">
       <Filter>Entity System</Filter>
+    </ClCompile>
+    <ClCompile Include="IK2Handler.cpp">
+      <Filter>Entity System\Locomotion</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
