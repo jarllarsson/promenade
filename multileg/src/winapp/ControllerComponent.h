@@ -188,6 +188,8 @@ public:
 		std::vector<glm::vec3>	m_footLiftPlacement;			// From where the foot was lifted, per leg
 		std::vector<bool>		m_footLiftPlacementPerformed;	// If foot just took off (and the "old" pos should be updated), per leg
 		std::vector<glm::vec3>	m_footTarget;					// The current position in the foot's swing trajectory, per leg
+		std::vector<bool>		m_footIsColliding;				// If foot is colliding, per leg
+		std::vector<unsigned int> m_footRigidBodyIdx;				// Idx to foot rigidbody in foot list in system for special collision check, per leg
 		float			 m_footPlacementVelocityScale;			// per leg frame
 		float			 m_height;								// per leg frame (max height, lf to feet)
 		// NOTE!
@@ -225,6 +227,7 @@ public:
 			m_footLiftPlacement.push_back(p_startPos);
 			m_footLiftPlacementPerformed.push_back(false);
 			m_footTarget.push_back(p_startPos);
+			m_footIsColliding.push_back(false);
 		}
 	};
 

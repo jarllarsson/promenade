@@ -84,6 +84,13 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	int controllerCount = (int)m_controllers.size();
 	if (m_controllers.size()>0)
 	{
+		// First, we have to read collision status for all feet. SILLY
+		for (int n = 0; n < controllerCount; n++)
+		{
+			ControllerComponent* controller = m_controllers[(unsigned int)n];
+			writeFeetCollisionStatus(controller);
+		}
+
 		// Start with making the controllers parallel only.
 		// They still write to a global torque list, but without collisions.
 #ifndef MULTI
@@ -202,6 +209,10 @@ void ControllerSystem::buildCheck()
 					legFrame->m_feetJointId.push_back(idx);
 					footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
 					legFrame->createFootPlacementModelVarsForNewLeg(footPos);
+					// add rigidbody so we can check for collisions and late foot strikes
+					m_footRigidBodyRefs.push_back(jointRB);
+					legFrame->m_footRigidBodyIdx.push_back(m_footRigidBodyRefs.size() - 1);
+					//
 					jointEntity = NULL;
 				}
 				jointsAddedForLeg++;
@@ -572,13 +583,13 @@ void ControllerSystem::updateFootSwingPosition(ControllerComponent::LegFrame* p_
 
 void ControllerSystem::offsetFootTargetDownOnLateStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
-	// !!!!! bool isTouchingGround = m_feet[p_idx].isFootStrike();
-	// !!!!! if (!isTouchingGround)
-	// !!!!! {
-	// !!!!! 	Vector3 old = m_footStrikePlacement[p_idx];
-	// !!!!! 	m_footStrikePlacement[p_idx] += Vector3.down * m_lateStrikeOffsetDeltaH;
-	// !!!!! 	Debug.DrawLine(old, m_footStrikePlacement[p_idx], Color.black, 0.3f);
-	// !!!!! }
+	bool isTouchingGround = isFootStrike(p_lf,p_legIdx);
+	if (!isTouchingGround)
+	{
+		glm::vec3 old = p_lf->m_footStrikePlacement[p_legIdx];
+		p_lf->m_footStrikePlacement[p_legIdx] += glm::vec3(0.0f, -1.0f, 0.0f) * p_lf->m_lateStrikeOffsetDeltaH;
+		dbgDrawer()->drawLine(old, p_lf->m_footStrikePlacement[p_legIdx], dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_ORANGE]);
+	}
 }
 
 
@@ -769,18 +780,18 @@ bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf,
 	// foot is really touching the ground while in end of swing
 	StepCycle* stepCycle = &p_lf->m_stepCycles[p_legIdx];
 	bool stance = stepCycle->isInStance(p_phi);
-	// !!!! if (!stance)
-	// !!!! {
-	// !!!! 	bool isTouchingGround = m_feet[p_legIdx].isFootStrike();
-	// !!!! 	if (isTouchingGround)
-	// !!!! 	{
-	// !!!! 		float swing = stepCycle->getSwingPhase(p_phi);
-	// !!!! 		if (swing > 0.8f) // late swing as mentioned by coros et al
-	// !!!! 		{
-	// !!!! 			stance = true;
-	// !!!! 		}
-	// !!!! 	}
-	// !!!! }
+	if (!stance)
+	{
+		bool isTouchingGround = isFootStrike(p_lf,p_legIdx);
+		if (isTouchingGround)
+		{
+			float swing = stepCycle->getSwingPhase(p_phi);
+			if (swing > 0.8f) // late swing as defined and mentioned by coros et al (quadruped locomotion)
+			{
+				stance = true;
+			}
+		}
+	}
 	return stance;
 }
 
@@ -978,4 +989,27 @@ glm::mat4 ControllerSystem::getDesiredWorldOrientation(unsigned int p_controller
 	glm::vec3 dir = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
 	dir.z *= -1.0f; // as we're using a ogl function below, we flip z
 	return glm::lookAt(glm::vec3(0.0f), dir, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+bool ControllerSystem::isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
+{
+	return p_lf->m_footIsColliding[p_legIdx];
+}
+
+// Write the collision status of feet to array
+// Has to be done before all other controller logic, as pre process
+// Coupling to artemis and rigidbody component :/
+void ControllerSystem::writeFeetCollisionStatus(ControllerComponent* p_controller)
+{
+	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	{
+		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
+		unsigned int legCount = (unsigned int)lf->m_legs.size();
+		for (unsigned int i = 0; i < legCount; i++)
+		{
+			unsigned int footRBIdx = lf->m_footRigidBodyIdx[i];
+			lf->m_footIsColliding[i] = m_footRigidBodyRefs[footRBIdx]->isColliding();
+		}
+	}
+	// phew
 }

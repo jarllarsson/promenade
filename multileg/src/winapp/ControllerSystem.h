@@ -62,6 +62,7 @@ private:
 	// Joint run-time data
 	std::vector<glm::vec3>		m_jointTorques;
 	std::vector<btRigidBody*>	m_jointRigidBodies;
+	std::vector<RigidBodyComponent*> m_footRigidBodyRefs;
 	std::vector<glm::mat4>		m_jointWorldTransforms;
 	std::vector<float>			m_jointLengths;
 	std::vector<float>			m_jointMass;
@@ -162,6 +163,8 @@ private:
 	glm::mat4& getLegFrameTransform(const ControllerComponent::LegFrame* p_lf);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 	glm::mat4 getDesiredWorldOrientation(unsigned int p_controllerId) const;
+	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
+	void writeFeetCollisionStatus(ControllerComponent* p_controller);
 	// global variables
 	float m_runTime;
 	int m_steps;
