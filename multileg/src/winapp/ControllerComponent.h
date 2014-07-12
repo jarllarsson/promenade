@@ -73,17 +73,18 @@ public:
 
 	// Internal data types
 	// ==============================================================================
-	// Virtual force chain
+	// Virtual force chain, for legs
 	struct VFChain
 	{
 	public:
-		std::vector<glm::vec3> DOFChain;
-		std::vector<unsigned int> jointIdxChain;
-		// VF vector here maybe?
-		std::vector<unsigned int> vfIdxList;
+		std::vector<glm::vec3> m_DOFChain;
+		std::vector<unsigned int> m_jointIdxChain;
+		// vector with indices to global virtual force list
+		std::vector<unsigned int> m_vfIdxList;
+		//
 		unsigned int getSize() const
 		{
-			return (unsigned int)DOFChain.size();
+			return (unsigned int)m_DOFChain.size();
 		}
 	};
 	enum VFChainType
@@ -92,11 +93,22 @@ public:
 		GRAVITY_COMPENSATION_CHAIN
 	};
 
+	// PD driver chain, for legs
+	struct PDChain
+	{
+	public:
+		std::vector<PDn> m_PDChain;
+		std::vector<unsigned int> m_jointIdxChain;
+		unsigned int getSize() const
+		{
+			return (unsigned int)m_PDChain.size();
+		}
+	};
+
 	// Leg
 	// Contains information for per-leg actions
 	struct Leg
 	{
-
 		// Chain constructs
 		// ==============================================================================
 		// Each link will all its DOFs to the chain
@@ -120,8 +132,13 @@ public:
 
 		// ==============================================================================
 
-		//VFChain& operator[] (VFChainType p_type) a little unclear
-		VFChain* getChain(VFChainType p_type)
+		// PD chain for keeping internal segment orientation
+		// Knee position(upp angle+lower angle) is ik-based and foot angle
+		// is based on an optimizable trajectory
+		PDChain m_PDChain;
+
+		// ==============================================================================
+		VFChain* getVFChain(VFChainType p_type)
 		{
 			VFChain* res = &m_DOFChain;
 			if (p_type == VFChainType::STANDARD_CHAIN)
@@ -129,6 +146,11 @@ public:
 			else
 				res=&m_DOFChainGravityComp;
 			return res;
+		}
+
+		PDChain* getPDChain()
+		{
+			return &m_PDChain;
 		}
 	};
 
@@ -168,7 +190,8 @@ public:
 		unsigned int m_legFrameJointId;				// per leg frame
 		int m_spineJointId;				// per leg frame
 		std::vector<unsigned int> m_feetJointId;	// per leg
-		std::vector<unsigned int> m_hipJointId;		// per leg	
+		std::vector<unsigned int> m_hipJointId;		// per leg		
+		std::vector<unsigned int> m_footRigidBodyIdx;	// Idx to foot rigidbody in foot list in system for special collision check, per leg	
 		// Playback data
 		std::vector<StepCycle> m_stepCycles;			// per leg	
 		PieceWiseLinear		   m_orientationLFTraj[3];	// xyz-orientation trajectory, per leg frame
@@ -189,7 +212,7 @@ public:
 		std::vector<bool>		m_footLiftPlacementPerformed;	// If foot just took off (and the "old" pos should be updated), per leg
 		std::vector<glm::vec3>	m_footTarget;					// The current position in the foot's swing trajectory, per leg
 		std::vector<bool>		m_footIsColliding;				// If foot is colliding, per leg
-		std::vector<unsigned int> m_footRigidBodyIdx;				// Idx to foot rigidbody in foot list in system for special collision check, per leg
+
 		float			 m_footPlacementVelocityScale;			// per leg frame
 		float			 m_height;								// per leg frame (max height, lf to feet)
 		// NOTE!

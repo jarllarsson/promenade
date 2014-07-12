@@ -142,8 +142,14 @@ private:
 		ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, 
 		float p_phi, float p_dt);
 	void applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
+	// PD calculation for legs
+	void computePDTorques(std::vector<glm::vec3>* p_outTVF, 
+		ControllerComponent* p_controller, unsigned int p_controllerIdx, 
+		unsigned int p_torqueIdxOffset, 
+		float p_phi, float p_dt);
+
+	// Foot placement model	
 	glm::vec3 getFootPos(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);	
-	// Foot placement model
 	void updateFoot(unsigned int p_controllerId, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos);
 	void updateFootStrikePosition(unsigned int p_controllerId, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity, const glm::vec3& p_groundPos);
 	void updateFootSwingPosition(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi);
@@ -165,6 +171,7 @@ private:
 	glm::mat4 getDesiredWorldOrientation(unsigned int p_controllerId) const;
 	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	void writeFeetCollisionStatus(ControllerComponent* p_controller);
+	
 	// global variables
 	float m_runTime;
 	int m_steps;

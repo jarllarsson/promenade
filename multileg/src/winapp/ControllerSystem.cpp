@@ -228,14 +228,14 @@ void ControllerSystem::buildCheck()
 			vfIdx = 0;
 			for (unsigned int m = 0; m < origGCDOFsz; m++)
 			{
-				unsigned int jointId = legFrame->m_legs[x].m_DOFChainGravityComp.jointIdxChain[m];
+				unsigned int jointId = legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChain[m];
 				if (jointId != oldJointGCIdx)
 				{
 					float mass = m_jointMass[jointId];
 					m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
 					vfIdx = (unsigned int)((int)m_VFs.size() - 1);
 				}
-				legFrame->m_legs[x].m_DOFChainGravityComp.vfIdxList[m] = vfIdx;
+				legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
 				oldJointGCIdx = jointId;
 			}
 			// Now, re-append piece by piece, so we "automatically" get the additive loop later
@@ -305,9 +305,9 @@ void ControllerSystem::addJointToStandardVFChain(ControllerComponent::VFChain* p
 	{
 		if (p_angularLims == NULL || (p_angularLims[0][n] < p_angularLims[1][n]))
 		{
-			legChain->jointIdxChain.push_back(p_idx);
-			legChain->DOFChain.push_back(DOFAxisByVecCompId(n));
-			legChain->vfIdxList.push_back(p_vfIdx);
+			legChain->m_jointIdxChain.push_back(p_idx);
+			legChain->m_DOFChain.push_back(DOFAxisByVecCompId(n));
+			legChain->m_vfIdxList.push_back(p_vfIdx);
 		}
 	}
 }
@@ -322,15 +322,15 @@ void ControllerSystem::repeatAppendChainPart(ControllerComponent::VFChain* p_leg
 	unsigned int oldJointIdx = 0;
 	do 
 	{
-		unsigned int jointIdx=legChain->jointIdxChain[DOFidx];
+		unsigned int jointIdx=legChain->m_jointIdxChain[DOFidx];
 		bool isNewJoint = (oldJointIdx != jointIdx);		
 		if (isNewJoint)
 			totalJointsProcessed++;
 		if (totalJointsProcessed >= p_localJointOffset) // only start when we're at offset or more
 		{
-			legChain->jointIdxChain.push_back(jointIdx);
-			legChain->DOFChain.push_back(legChain->DOFChain[DOFidx]);
-			legChain->vfIdxList.push_back(legChain->vfIdxList[DOFidx]);
+			legChain->m_jointIdxChain.push_back(jointIdx);
+			legChain->m_DOFChain.push_back(legChain->m_DOFChain[DOFidx]);
+			legChain->m_vfIdxList.push_back(legChain->m_vfIdxList[DOFidx]);
 			//
 			if (isNewJoint) // only increment joint counter when we're at a new joint
 				jointAddedCounter++;
@@ -403,7 +403,6 @@ void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 	//calcHeadAcceleration();
 
 	// Advance the player
-	//m_player.updatePhase(dt);
 	controller->m_player.updatePhase(dt);
 
 	// Update desired velocity
@@ -633,7 +632,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 	//	tPD[i] = glm::vec3(0.0f); /*tCGVF[i] = glm::vec3(0.0f);*/ tVF[i] = glm::vec3(0.0f);
 	//}
 	//
-	//computePDTorques(&tPD, phi); TODO
+	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 	////// Sum them (Right now, we're writing directly to the global array
 	// Summing of partial lists might be good if we parallelize this step as well
@@ -677,7 +676,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 	{
 		ControllerComponent::Leg* leg = &p_lf->m_legs[i];
 		// for this list, same for all:
-		unsigned int vfIdx = leg->m_DOFChain.vfIdxList[0];
+		unsigned int vfIdx = leg->m_DOFChain.m_vfIdxList[0];
 		glm::vec3 dbgFootPos = getFootPos(p_lf, i);
 		// Swing force
 		if (!legInStance[i])
@@ -734,7 +733,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 	// calculating Jacobian transpose for specified leg in leg frame
 	// Calculate torques using specified leg chain
 	ControllerComponent::Leg* leg = &p_lf->m_legs[p_legIdx];
-	ControllerComponent::VFChain* chain = leg->getChain(p_type);
+	ControllerComponent::VFChain* chain = leg->getVFChain(p_type);
 	// Get the end effector position
 	// We're using the COM of the foot
 	glm::vec3 end = getFootPos(p_lf, p_legIdx);
@@ -759,11 +758,11 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 	for (unsigned int m = 0; m < chain->getSize(); m++)
 	{
 		// store torque
-		unsigned int localJointIdx = chain->jointIdxChain[m];
-		glm::vec3 vf = m_VFs[chain->vfIdxList[m]];
+		unsigned int localJointIdx = chain->m_jointIdxChain[m];
+		glm::vec3 vf = m_VFs[chain->m_vfIdxList[m]];
 		glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
 		glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
-		glm::vec3 addT = (chain->DOFChain)[m] * glm::dot(JVec, vf);
+		glm::vec3 addT = (chain->m_DOFChain)[m] * glm::dot(JVec, vf);
 		//
 		float ssum = JjVec.x + JjVec.y + JjVec.z;
 		DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
@@ -968,6 +967,15 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// The vector reference to the torques, now contains the new LF torque
 	// as well as any corrected stance-leg torques.
 }
+
+
+
+void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
+{
+	throw std::exception("The method or operation is not implemented.");
+}
+
+
 
 glm::vec3 ControllerSystem::getFootPos( ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx )
 {
