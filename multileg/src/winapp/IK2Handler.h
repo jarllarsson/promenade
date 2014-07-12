@@ -21,25 +21,19 @@ public:
 
 	void solve(const glm::vec3& p_footPosL, const glm::vec3& p_upperLegJointPosL, float p_upperLegLen, float p_lowerLegLen);
 
+	float getUpperLegAngle() const;
+	float getLowerLocalLegAngle() const;
+	float getLowerWorldLegAngle() const;
+
+	glm::vec3& getHipPosL();
+	glm::vec3& getKneePosL();
+	glm::vec3& getFootPosL();
 protected:
 private:
-
-
-	public LegFrame.LEG m_legType;
-	public Transform m_upperLeg;
-	public Transform m_lowerLeg;
-	public Transform m_foot;
-	public Transform m_dbgMesh;
-	public LegFrame m_legFrame;
-
-	public float m_hipAngle;
-	public float m_kneeAngle;
-	public PIDn m_testPIDUpper;
-	public PIDn m_testPIDLower;
-	public Vector3 m_hipPos;
-	public Vector3 m_kneePos;
-	public Vector3 m_endPos;
-	public Vector3 m_kneePosW;
-
-	private Vector3 m_startPos;
+	void updateAngles(float p_lowerAngle, float p_upperAngle);
+	float m_upperAngle;
+	float m_lowerAngle;
+	glm::vec3 m_hipPos;
+	glm::vec3 m_kneePos;
+	glm::vec3 m_endPos;
 };
