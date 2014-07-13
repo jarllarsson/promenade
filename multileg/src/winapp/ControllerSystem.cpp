@@ -1006,7 +1006,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			ControllerComponent::Leg* leg = &lf->m_legs[n];
 			ControllerComponent::PDChain* pdChain = leg->getPDChain();
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
-			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]);
+			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
 			lf->m_legIK[n].solve(refDesiredFootPos, refHipPos,
 				m_jointLengths[pdChain->getUpperJointIdx()],
 				m_jointLengths[pdChain->getLowerJointIdx()], dbgDrawer());
