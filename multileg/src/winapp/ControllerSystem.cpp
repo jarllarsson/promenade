@@ -181,12 +181,13 @@ void ControllerSystem::buildCheck()
 		{
 			m_VFs.push_back(glm::vec3(0.0f, 0.0f, 0.0f));	
 			unsigned int vfIdx = (unsigned int)((int)m_VFs.size()-1);
+			ControllerComponent::VFChain* standardDOFChain = legFrame->m_legs[x].getVFChain(ControllerComponent::VFChainType::STANDARD_CHAIN);
 			// start by adding the already existing root id (needed in all leg chains)
-			addJointToStandardVFChain(&legFrame->m_legs[x].m_DOFChain, rootIdx, vfIdx);
+			addJointToStandardVFChain(standardDOFChain, rootIdx, vfIdx);
 			// Traverse the segment structure for the leg to get the rest
 			artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
 			unsigned int jointsAddedForLeg = 0;
-			while (jointEntity != NULL)
+			while (jointEntity != NULL) // read all joints
 			{
 				// Get joint data
 				TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
@@ -196,16 +197,21 @@ void ControllerSystem::buildCheck()
 				unsigned int idx = addJoint(jointRB, jointTransform);
 				m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
 				// Get DOF on joint to chain
-				addJointToStandardVFChain(&legFrame->m_legs[x].m_DOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+				addJointToStandardVFChain(standardDOFChain,
+										  idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+				// Register joint for PD (and create PD)
+				addJointToPDChain(legFrame->m_legs[x].getPDChain(), idx, legFrame->m_legPDsKp, legFrame->m_legPDsKd);
 				// Get child joint for next iteration
 				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
 				// Add hip joint if first
 				if (jointsAddedForLeg == 0) legFrame->m_hipJointId.push_back(idx);
 				// find out what to do next time
 				if (childLink != NULL)
+				{	// ===LEG SEGMENT===
 					jointEntity = childLink->getOwnerEntity();
+				}
 				else // we are at the foot, so trigger termination add foot id to the leg frame
-				{
+				{	// ===FOOT===
 					legFrame->m_feetJointId.push_back(idx);
 					footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
 					legFrame->createFootPlacementModelVarsForNewLeg(footPos);
@@ -297,9 +303,9 @@ void ControllerSystem::buildCheck()
 	m_controllersToBuild.clear();
 }
 
-void ControllerSystem::addJointToStandardVFChain(ControllerComponent::VFChain* p_legChain, unsigned int p_idx, unsigned int p_vfIdx, const glm::vec3* p_angularLims /*= NULL*/)
+void ControllerSystem::addJointToStandardVFChain(ControllerComponent::VFChain* p_legVFChain, unsigned int p_idx, unsigned int p_vfIdx, const glm::vec3* p_angularLims /*= NULL*/)
 {
-	ControllerComponent::VFChain* legChain = p_legChain;
+	ControllerComponent::VFChain* legChain = p_legVFChain;
 	// root has 3DOF (for now, to not over-optimize, we add three vec3's)
 	for (int n = 0; n < 3; n++)
 	{
@@ -311,6 +317,15 @@ void ControllerSystem::addJointToStandardVFChain(ControllerComponent::VFChain* p
 		}
 	}
 }
+
+
+void ControllerSystem::addJointToPDChain(ControllerComponent::PDChain* p_legChain, unsigned int p_idx, float p_kp, float p_kd)
+{
+	ControllerComponent::PDChain* legPDChain = p_legChain;
+	legPDChain->m_PDChain.push_back(PDn(p_kp,p_kd));
+	legPDChain->m_jointIdxChain.push_back(p_idx);
+}
+
 
 void ControllerSystem::repeatAppendChainPart(ControllerComponent::VFChain* p_legChain, unsigned int p_localJointOffset, 
 	unsigned int p_jointCount, unsigned int p_originalChainSize)

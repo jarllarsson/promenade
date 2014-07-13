@@ -29,13 +29,18 @@ public:
 		setK(p_Kp, p_Kd);
 		initErrorArrays();
 	}
+	PDn(const PDn& p_PDn)
+	{
+		setK(p_PDn.getKp(), p_PDn.getKd());
+		initErrorArrays();
+	}
 	~PDn()
 	{
 
 	}
 
-	float getKp() { return m_Kp; }
-	float getKd() { return m_Kd; }
+	float getKp() const { return m_Kp; }
+	float getKd() const { return m_Kd; }
 	void setK(float p_Kp, float p_Kd)
 	{
 		m_Kp = p_Kp; m_Kd = p_Kd;
@@ -51,8 +56,8 @@ public:
 	void setKp(float p_Kp) { m_Kp = p_Kp; }
 	void setKd(float p_Kd) { m_Kd = p_Kd; }
 
-	glm::vec3 getP() { return glm::vec3(m_P[0], m_P[1], m_P[2]); }
-	glm::vec3 getD() { return glm::vec3(m_D[0], m_D[1], m_D[2]); }
+	glm::vec3 getP() const { return glm::vec3(m_P[0], m_P[1], m_P[2]); }
+	glm::vec3 getD() const { return glm::vec3(m_D[0], m_D[1], m_D[2]); }
 
 	// Drive the controller and get new value
 	// p_error This is the current error

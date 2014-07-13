@@ -184,6 +184,9 @@ public:
 			m_lateStrikeOffsetDeltaH = 10.0f;
 			m_velocityRegulatorKv = 30.0f;
 			m_FDHVComponents = glm::vec4(-0.1f, 0.2f, 0.0f, 0.1f);
+			//
+			m_legPDsKp = 30.0f;
+			m_legPDsKd = 3.0f;
 		}
 
 		// Structure ids
@@ -204,7 +207,11 @@ public:
 		PD					   m_footTrackingSpringDamper;
 		float				   m_lateStrikeOffsetDeltaH;	// Offset used as punishment on foot placement y on late strike. per leg frame
 		float				   m_velocityRegulatorKv;		// Gain for regulating velocity
-		glm::vec4			   m_FDHVComponents;
+		glm::vec4			   m_FDHVComponents;		// Components to FD lin func, vertical and horizontal in sagittal plane
+
+		// Special for now, define PD gains in these and they'll be used for all segment PDs in build:
+		float			   m_legPDsKp;
+		float			   m_legPDsKd;
 		// Structure
 		std::vector<Leg> m_legs;								// per leg
 		std::vector<glm::vec3>  m_footStrikePlacement;			// The place on the ground where the foot should strike next, per leg

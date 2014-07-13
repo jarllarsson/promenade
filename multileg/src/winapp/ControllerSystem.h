@@ -107,12 +107,18 @@ public:
 	// Build uninited controllers, this has to be called 
 	// after constraints & rb's have been inited by their systems
 	void buildCheck();
-	// Add a joint's all DOFs to chain
-	void addJointToStandardVFChain(ControllerComponent::VFChain* p_legChain, unsigned int p_idx, unsigned int p_vfIdx, const glm::vec3* p_angularLims = NULL);
-	// Add chain DOFs to list again, from Joint-offset ( this functions skips the appropriate number of DOFs)
-	void repeatAppendChainPart(ControllerComponent::VFChain* p_legChain, unsigned int p_localJointOffset, unsigned int p_jointCount, unsigned int p_originalChainSize);
+
 
 private:
+	// build helpers
+	// Add a joint's all DOFs to chain
+	void addJointToStandardVFChain(ControllerComponent::VFChain* p_legVFChain, unsigned int p_idx, 
+		unsigned int p_vfIdx, const glm::vec3* p_angularLims = NULL);
+	void addJointToPDChain(ControllerComponent::PDChain* p_legChain, unsigned int p_idx, float p_kp, float p_kd);
+	// Add chain DOFs to list again, from Joint-offset ( this functions skips the appropriate number of DOFs)
+	void repeatAppendChainPart(ControllerComponent::VFChain* p_legPDChain, 
+		unsigned int p_localJointOffset, unsigned int p_jointCount, unsigned int p_originalChainSize);
+
 	// Control logic functions
 	void controllerUpdate(unsigned int p_controllerId, float p_dt);
 	void updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt);
