@@ -202,31 +202,6 @@ void App::run()
 		glm::vec3(800.0f, 20.0f, 800.0f)));
 	ground.refresh();
 
-	// Create axes
-	// artemis::Entity & axisC = entityManager->create();
-	// axisC.addComponent(new RenderComponent());
-	// axisC.addComponent(new TransformComponent(glm::vec3(0.0f, 0.0f, 0.0f),
-	// 	glm::vec3(2.0f, 2.0f, 2.0f)));
-	// axisC.refresh();
-	// //
-	// artemis::Entity & axisX = entityManager->create();
-	// axisX.addComponent(new RenderComponent());
-	// axisX.addComponent(new TransformComponent(glm::vec3(5.0f, 0.0f, 0.0f),
-	// 	glm::vec3(10.0f, 1.0f, 1.0f)));
-	// axisX.refresh();
-	// //
-	// artemis::Entity & axisY = entityManager->create();
-	// axisY.addComponent(new RenderComponent());
-	// axisY.addComponent(new TransformComponent(glm::vec3(0.0f, 10.0f, 0.0f),
-	// 	glm::vec3(1.0f, 20.0f, 1.0f)));
-	// axisY.refresh();
-	// //
-	// artemis::Entity & axisZ = entityManager->create();
-	// axisZ.addComponent(new RenderComponent());
-	// axisZ.addComponent(new TransformComponent(glm::vec3(0.0f, 0.0f, 5.0f),
-	// 	glm::vec3(1.0f, 2.0f, 10.0f)));
-	// axisZ.refresh();
-
 
 		// Test of controller
 		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
@@ -391,8 +366,11 @@ void App::run()
 				}
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
-				//dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
+#ifdef MEASURE_RBODIES
+				dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
+#else
 				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
+#endif
 				// ========================================================
 
 				unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
@@ -406,7 +384,11 @@ void App::run()
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
+#ifdef MEASURE_RBODIES
+				double dt = fixedStep;
+#else
 				double dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
+#endif
 				// Game clock based updates
 				while (dt >= gameTickS)
 				{
