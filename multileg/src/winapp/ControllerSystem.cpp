@@ -197,11 +197,10 @@ void ControllerSystem::buildCheck()
 				unsigned int idx = addJoint(jointRB, jointTransform);
 				m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
 				// Get DOF on joint to chain
-				addJointToStandardVFChain(standardDOFChain,
-										  idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+				addJointToStandardVFChain(standardDOFChain,idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
 				// Register joint for PD (and create PD)
 				addJointToPDChain(legFrame->m_legs[x].getPDChain(), idx, legFrame->m_legPDsKp, legFrame->m_legPDsKd);
-				// Get child joint for next iteration
+				// Get child joint for next iteration				
 				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
 				// Add hip joint if first
 				if (jointsAddedForLeg == 0) legFrame->m_hipJointId.push_back(idx);
@@ -987,7 +986,7 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 
 void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
-	throw std::exception("The method or operation is not implemented.");
+	//throw std::exception("The method or operation is not implemented.");
 }
 
 

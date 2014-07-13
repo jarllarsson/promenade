@@ -99,9 +99,15 @@ public:
 	public:
 		std::vector<PDn> m_PDChain;
 		std::vector<unsigned int> m_jointIdxChain;
+
 		unsigned int getSize() const
 		{
 			return (unsigned int)m_PDChain.size();
+		}
+
+		unsigned int getFootIdx() const
+		{
+			return (unsigned int)m_PDChain.size()-1;
 		}
 	};
 
