@@ -249,6 +249,8 @@ void ControllerSystem::buildCheck()
 				// n+1 to skip re-appending of root:
 				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, n + 1, jointsAddedForLeg - n, origGCDOFsz);
 			}
+			// Add an IK handler for leg
+			legFrame->m_legIK.push_back(IK2Handler());
 		}
 		legFrame->m_height = legFramePos.y - footPos.y;
 		legFrame->m_heightLFTraj.reset(PieceWiseLinear::FULL, legFrame->m_height);
@@ -984,12 +986,89 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 
 
 
-void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
+void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
+	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
+	glm::mat4 orientation = getDesiredWorldOrientation(p_controllerIdx);
+	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	{
+		unsigned int lfIdx = i;
+		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(lfIdx);
+		unsigned int legCount = (unsigned int)lf->m_legs.size();
+		// for each leg
+		for (unsigned int n = 0; n < legCount; n++)
+		{
+			/*
+				The plane in which the IK chain
+				acts is defined by a normal that is fixed in the leg - frame coordinate
+				system, and the location of the relevant shoulder or hip joint.
+				*/
+			ControllerComponent::Leg* leg = &lf->m_legs[n];
+			ControllerComponent::PDChain* pdChain = leg->getPDChain();
+			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
+			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]);
+			lf->m_legIK[n].solve(refDesiredFootPos, refHipPos,
+				m_jointLengths[pdChain->getUpperJointIdx()],
+				m_jointLengths[pdChain->getLowerJointIdx()], dbgDrawer());
+		}
+	}
 	//throw std::exception("The method or operation is not implemented.");
+	// For each leg:
+	//  Fetch IK
+	//  Fetch foot reference pos
+	//  Fetch upper- and lower leg length
+	//  Solve IK
+	//	For each PD in leg:
+	//	  If less than foot id:
+	//	    Fetch  correct solved angle from IK
+	//	    Drive PD with angle
+	//	    Fetch result from PD, add to torque
+	//    else if is foot id:
+	//		applyFootTorque
+
 }
 
+/*
+public void tempApplyFootTorque(float p_phi)
+{
+//
+// Toe-off is modeled with a linear target trajectory towards a fixed toe-off
+// target angle Theta-A that is triggered DeltaT-A seconds in advance of the start of the swing phase,
+// as dictated by the gait graph.
+//
+// Foot- strike anticipation is done in an analogous fashion with
+// respect to the anticipated foot-strike time and defined by Theta-B and DeltaT-B.
+//
+for (int i = 0; i < c_legCount; i++)
+{
+	StepCycle stepcycle = m_tuneStepCycles[i];
+	Transform foot = m_feet[i].transform;
+	float toeOffStartOffset = m_tuneToeOffTime[i];
+	float footStrikeStartOffset = m_tuneFootStrikeTime[i];
+	// get absolutes
+	// Get point in time when toe lifts off from ground
+	float toeOffStart = stepcycle.m_tuneStepTrigger + stepcycle.m_tuneDutyFactor - toeOffStartOffset;
+	if (toeOffStart >= 1.0f) toeOffStart -= 1.0f;
+	if (toeOffStart < 0.0f) toeOffStart += 1.0f;
+	// Get point in time when foot touches the ground
+	float footStrikeStart = stepcycle.m_tuneStepTrigger - footStrikeStartOffset;
+	if (toeOffStart < 0.0f) footStrikeStart += 1.0f;
+	//         
 
+	// Use PD here:
+	Vector3 torque = Vector3.zero; Color rot = Color.red;
+	if ((p_phi > footStrikeStart && footStrikeStart > toeOffStart) || p_phi < toeOffStart) // catch first
+		torque = Vector3.right*(foot.localRotation.eulerAngles.x - m_tuneFootStrikeAngle);
+	else
+	{
+		torque = Vector3.right*(foot.localRotation.eulerAngles.x - m_tuneToeOffAngle);
+		rot = Color.green;
+	}
+	foot.rigidbody.AddRelativeTorque(torque);
+
+}
+	}
+*/
 
 glm::vec3 ControllerSystem::getFootPos( ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx )
 {

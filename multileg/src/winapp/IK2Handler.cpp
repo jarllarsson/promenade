@@ -1,5 +1,6 @@
 #include "IK2Handler.h"
 #include "..\Util\MathHelp.h"
+#include "DebugDrawBatch.h"
 
 
 IK2Handler::IK2Handler()
@@ -14,7 +15,7 @@ IK2Handler::~IK2Handler()
 }
 
 
-void IK2Handler::solve( const glm::vec3& p_footPosL, const glm::vec3& p_upperLegJointPosL, float p_upperLegLen, float p_lowerLegLen )
+void IK2Handler::solve(const glm::vec3& p_footPosL, const glm::vec3& p_upperLegJointPosL, float p_upperLegLen, float p_lowerLegLen, DebugDrawBatch* p_drawer)
 {
 	int kneeFlip = 1;
 	// Retrieve the current wanted foot position
@@ -22,8 +23,8 @@ void IK2Handler::solve( const glm::vec3& p_footPosL, const glm::vec3& p_upperLeg
 	glm::vec3 upperLegPos = p_upperLegJointPosL;
 
 	// Vector between foot and hip
-	glm::vec3 topToFoot = upperLegPos - footPos;
-	topToFoot.y *= -1;
+	glm::vec3 topToFoot = footPos-upperLegPos;
+	//topToFoot.y *= -1;
 
 
 	// This ik calc is in 2d, so eliminate rotation
@@ -90,6 +91,7 @@ void IK2Handler::solve( const glm::vec3& p_footPosL, const glm::vec3& p_upperLeg
 	//	m_dbgMesh.rotation = m_legFrame.transform.rotation * Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle + Mathf.PI*0.5f), -m_legFrame.transform.right);
 	//	m_dbgMesh.position = upperLegLocalPos;
 	//}
+	debugDraw(p_drawer);
 }
 
 float IK2Handler::getUpperLegAngle() const
@@ -126,4 +128,14 @@ glm::vec3& IK2Handler::getKneePosL()
 glm::vec3& IK2Handler::getFootPosL()
 {
 	return m_endPos;
+}
+
+void IK2Handler::debugDraw(DebugDrawBatch* p_drawer)
+{
+	p_drawer->drawLine(m_hipPos, m_kneePos, dawnBringerPalRGB[COL_PURPLE], dawnBringerPalRGB[COL_PINK]);
+	p_drawer->drawLine(m_kneePos, m_endPos, dawnBringerPalRGB[COL_PINK], dawnBringerPalRGB[COL_SLIMEGREEN]);
+	p_drawer->drawLine(m_endPos + glm::vec3(-1, 0, 1), m_endPos + glm::vec3(1, 0, 1), dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
+	p_drawer->drawLine(m_endPos + glm::vec3(1, 0, 1), m_endPos + glm::vec3(1, 0, -1), dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
+	p_drawer->drawLine(m_endPos + glm::vec3(1, 0, -1), m_endPos + glm::vec3(-1, 0, -1), dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
+	p_drawer->drawLine(m_endPos + glm::vec3(-1, 0, -1), m_endPos + glm::vec3(-1, 0, 1), dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
 }

@@ -11,6 +11,7 @@
 #include "PieceWiseLinear.h"
 #include "PDn.h"
 #include "PD.h"
+#include "IK2Handler.h"
 // =======================================================================================
 //                                      ControllerComponent
 // =======================================================================================
@@ -105,9 +106,34 @@ public:
 			return (unsigned int)m_PDChain.size();
 		}
 
+		unsigned int getUpperLegSegmentIdx() const
+		{
+			return 0; // NOTE! !HACK! HARDCODED!
+		}
+
+		unsigned int getLowerLegSegmentIdx() const
+		{
+			return 1; // NOTE! !HACK! HARDCODED!
+		}
+
 		unsigned int getFootIdx() const
 		{
-			return (unsigned int)m_PDChain.size()-1;
+			return (unsigned int)m_PDChain.size()-1; // NOTE! !HACK! HARDCODED!
+		}
+
+		unsigned int getUpperJointIdx() const
+		{
+			return m_jointIdxChain[getUpperLegSegmentIdx()];
+		}
+
+		unsigned int getLowerJointIdx() const
+		{
+			return m_jointIdxChain[getLowerLegSegmentIdx()];
+		}
+
+		unsigned int getFootJointIdx() const
+		{
+			return m_jointIdxChain[getLowerLegSegmentIdx()];
 		}
 	};
 
@@ -214,6 +240,7 @@ public:
 		float				   m_lateStrikeOffsetDeltaH;	// Offset used as punishment on foot placement y on late strike. per leg frame
 		float				   m_velocityRegulatorKv;		// Gain for regulating velocity
 		glm::vec4			   m_FDHVComponents;		// Components to FD lin func, vertical and horizontal in sagittal plane
+		std::vector<IK2Handler> m_legIK;				// IK handlers for legs
 
 		// Special for now, define PD gains in these and they'll be used for all segment PDs in build:
 		float			   m_legPDsKp;

@@ -11,7 +11,7 @@
 /// 
 /// 11-7-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
-
+class DebugDrawBatch;
 class IK2Handler
 {
 public:
@@ -19,7 +19,7 @@ public:
 	~IK2Handler();
 
 
-	void solve(const glm::vec3& p_footPosL, const glm::vec3& p_upperLegJointPosL, float p_upperLegLen, float p_lowerLegLen);
+	void solve(const glm::vec3& p_footPosL, const glm::vec3& p_upperLegJointPosL, float p_upperLegLen, float p_lowerLegLen, DebugDrawBatch* p_drawer);
 
 	float getUpperLegAngle() const;
 	float getLowerLocalLegAngle() const;
@@ -29,6 +29,7 @@ public:
 	glm::vec3& getKneePosL();
 	glm::vec3& getFootPosL();
 protected:
+	void debugDraw(DebugDrawBatch* p_drawer);
 private:
 	void updateAngles(float p_lowerAngle, float p_upperAngle);
 	float m_upperAngle;
