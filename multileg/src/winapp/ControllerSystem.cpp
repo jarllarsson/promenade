@@ -989,11 +989,12 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
 	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
-	glm::mat4 orientation = getDesiredWorldOrientation(p_controllerIdx);
+	glm::mat4 desiredOrientation = getDesiredWorldOrientation(p_controllerIdx);
 	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
 		unsigned int lfIdx = i;
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(lfIdx);
+		glm::mat4 currentOrientation = getLegFrameTransform(lf);
 		unsigned int legCount = (unsigned int)lf->m_legs.size();
 		// for each leg
 		for (unsigned int n = 0; n < legCount; n++)
@@ -1005,11 +1006,26 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				*/
 			ControllerComponent::Leg* leg = &lf->m_legs[n];
 			ControllerComponent::PDChain* pdChain = leg->getPDChain();
+			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
-			lf->m_legIK[n].solve(refDesiredFootPos, refHipPos,
+			// Fetch upper- and lower leg length and solve IK
+			IK2Handler* ik = &lf->m_legIK[n];
+			ik->solve(refDesiredFootPos, refHipPos,
 				m_jointLengths[pdChain->getUpperJointIdx()],
 				m_jointLengths[pdChain->getLowerJointIdx()], dbgDrawer());
+			// For each PD in leg
+			for (unsigned int x = 0; x < pdChain->getSize(); x++)
+			{
+				float sagittalAngle = 0.0f;
+				if (x == pdChain->getUpperJointIdx())
+					sagittalAngle = ik->getUpperLegAngle();
+				else if (x == pdChain->getLowerLegSegmentIdx())
+					sagittalAngle = ik->getLowerWorldLegAngle();
+				else if (x == pdChain->getFootJointIdx())
+					sagittalAngle = 0.0f; // !!!!!TODO FOOT ROTATION
+
+			}
 		}
 	}
 	//throw std::exception("The method or operation is not implemented.");

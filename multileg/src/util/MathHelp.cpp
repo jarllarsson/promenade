@@ -91,7 +91,7 @@ void MathHelp::decomposeTRS(const glm::mat4& m, glm::vec3& scaling,
 glm::vec3 MathHelp::transformDirection(const glm::mat4& m, const glm::vec3& p_dir)
 {
 	glm::vec4 vec(p_dir.x, p_dir.y, p_dir.z, 0.0f);
-	vec = m*/*glm::normalize(*/vec/*)*/;
+	vec = m*vec;
 	return glm::vec3(vec.x,vec.y,vec.z);
 }
 
