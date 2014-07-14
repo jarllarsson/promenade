@@ -211,7 +211,7 @@ void App::run()
 			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, hipCoronalOffset);
-			float characterMass = 50.0f;
+			float characterMass = 20.0f;
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 			legFrame.addComponent(new RenderComponent());

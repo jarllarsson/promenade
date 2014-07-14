@@ -213,7 +213,7 @@ public:
 			m_stepLength = glm::vec2(2.0f, 5.5f);
 			m_footPlacementVelocityScale = 1.0f;
 			m_height = 0.0f;
-			m_lateStrikeOffsetDeltaH = 10.0f;
+			m_lateStrikeOffsetDeltaH = 0.0f;
 			m_velocityRegulatorKv = 30.0f;
 			m_FDHVComponents = glm::vec4(-0.1f, 0.2f, 0.0f, 0.1f);
 			//

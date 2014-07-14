@@ -138,7 +138,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 10000.0f;
+		float tLim = 600.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
@@ -649,7 +649,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 	//}
 	//
 	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	//computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 	////// Sum them (Right now, we're writing directly to the global array
 	// Summing of partial lists might be good if we parallelize this step as well
 	//for (unsigned int i = 0; i < torqueCount; i++)
@@ -784,7 +784,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 		DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
 		ssum = JVec.x + JVec.y + JVec.z;
 		DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
-		(*p_outTVF)[localJointIdx + p_torqueIdxOffset] += addT; // Here we could write to the global list instead directly maybe as an optimization
+		(*p_outTVF)[localJointIdx/* + p_torqueIdxOffset*/] += addT;
 		// Do it like this for now, for the sake of readability and debugging.
 	}
 }
@@ -990,11 +990,13 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
 	glm::mat4 desiredOrientation = getDesiredWorldOrientation(p_controllerIdx);
+	glm::mat4 invDesiredOrientation = glm::inverse(desiredOrientation);
 	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
 		unsigned int lfIdx = i;
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(lfIdx);
-		glm::mat4 currentOrientation = getLegFrameTransform(lf);
+		glm::quat currentOrientationQuat = MathHelp::getMatrixRotation(getLegFrameTransform(lf));
+		glm::mat4 currentOrientation = glm::mat4_cast(currentOrientationQuat);
 		unsigned int legCount = (unsigned int)lf->m_legs.size();
 		// for each leg
 		for (unsigned int n = 0; n < legCount; n++)
@@ -1019,19 +1021,22 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			{
 				float sagittalAngle = 0.0f;
 				// Fetch correct angle based on segment type
-				if (x == pdChain->getUpperJointIdx())
-					sagittalAngle = ik->getUpperLegAngle();
+				if (x == pdChain->getUpperLegSegmentIdx())
+					sagittalAngle = ik->getUpperLegAngle() + PI*0.5f;
 				else if (x == pdChain->getLowerLegSegmentIdx())
-					sagittalAngle = ik->getLowerWorldLegAngle();
-				else if (x == pdChain->getFootJointIdx())
+					sagittalAngle = ik->getLowerWorldLegAngle() + PI*0.5f;
+				else if (x == pdChain->getFootIdx())
 					sagittalAngle = 0.0f; // !!!!!TODO FOOT ROTATION
+				unsigned jointIdx = pdChain->m_jointIdxChain[x];
 				// Calculate angle to leg frame space
-				glm::quat goal = glm::quat_cast(currentOrientation) * glm::quat(glm::vec3(sagittalAngle,0.0f,0.0f));
-				glm::quat current = glm::quat_cast(m_jointWorldTransforms[pdChain->m_jointIdxChain[x]]);
+				glm::quat goal = currentOrientationQuat * glm::quat(glm::vec3(sagittalAngle, 0.0f, 0.0f));
+				glm::quat current = glm::quat_cast(m_jointWorldTransforms[jointIdx]);
 				// Drive PD using angle
 				glm::vec3 torque = pdChain->m_PDChain[x].drive(current, goal, p_dt);
 				// Add to torque for joint
-
+				(*p_outTVF)[jointIdx] += torque;
+				glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
+				dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x*5], dawnBringerPalRGB[COL_CORNFLOWERBLUE]);
 			}
 		}
 	}
