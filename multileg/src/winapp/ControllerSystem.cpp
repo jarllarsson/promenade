@@ -649,7 +649,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 	//}
 	//
 	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	//computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 	////// Sum them (Right now, we're writing directly to the global array
 	// Summing of partial lists might be good if we parallelize this step as well
 	//for (unsigned int i = 0; i < torqueCount; i++)
@@ -1018,12 +1018,19 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			for (unsigned int x = 0; x < pdChain->getSize(); x++)
 			{
 				float sagittalAngle = 0.0f;
+				// Fetch correct angle based on segment type
 				if (x == pdChain->getUpperJointIdx())
 					sagittalAngle = ik->getUpperLegAngle();
 				else if (x == pdChain->getLowerLegSegmentIdx())
 					sagittalAngle = ik->getLowerWorldLegAngle();
 				else if (x == pdChain->getFootJointIdx())
 					sagittalAngle = 0.0f; // !!!!!TODO FOOT ROTATION
+				// Calculate angle to leg frame space
+				glm::quat goal = glm::quat_cast(currentOrientation) * glm::quat(glm::vec3(sagittalAngle,0.0f,0.0f));
+				glm::quat current = glm::quat_cast(m_jointWorldTransforms[pdChain->m_jointIdxChain[x]]);
+				// Drive PD using angle
+				glm::vec3 torque = pdChain->m_PDChain[x].drive(current, goal, p_dt);
+				// Add to torque for joint
 
 			}
 		}
