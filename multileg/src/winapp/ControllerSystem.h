@@ -116,8 +116,8 @@ private:
 		unsigned int p_vfIdx, const glm::vec3* p_angularLims = NULL);
 	void addJointToPDChain(ControllerComponent::PDChain* p_legChain, unsigned int p_idx, float p_kp, float p_kd);
 	// Add chain DOFs to list again, from Joint-offset ( this functions skips the appropriate number of DOFs)
-	void repeatAppendChainPart(ControllerComponent::VFChain* p_legPDChain, 
-		unsigned int p_localJointOffset, unsigned int p_jointCount, unsigned int p_originalChainSize);
+	void repeatAppendChainPart(ControllerComponent::VFChain* p_legVFChain, 
+		int p_localJointOffset, int p_jointCount, unsigned int p_originalChainSize);
 
 	// Control logic functions
 	void controllerUpdate(unsigned int p_controllerId, float p_dt);

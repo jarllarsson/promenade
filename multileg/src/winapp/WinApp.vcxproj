@@ -134,6 +134,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;DirectXTK_$(Configuration).lib;AntTweakBar.lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -151,6 +152,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>BulletCollision_$(Configuration).lib;BulletDynamics_$(Configuration).lib;BulletLinearMath_$(Configuration).lib;ArtemisCpp_$(Configuration).lib;Util_$(Configuration).lib;Graphics_$(Configuration).lib;Context_$(Configuration).lib;Input_$(Configuration).lib;DirectXTK_$(Configuration).lib;AntTweakBar64.lib;Input_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

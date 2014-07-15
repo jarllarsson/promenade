@@ -186,7 +186,7 @@ void ControllerSystem::buildCheck()
 			addJointToStandardVFChain(standardDOFChain, rootIdx, vfIdx);
 			// Traverse the segment structure for the leg to get the rest
 			artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
-			unsigned int jointsAddedForLeg = 0;
+			int jointsAddedForLeg = 0;
 			while (jointEntity != NULL) // read all joints
 			{
 				// Get joint data
@@ -229,7 +229,7 @@ void ControllerSystem::buildCheck()
 			unsigned int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
 			// Change the VFs for this list, as they need to be used to counter gravity
 			// They're also static, so we only need to do this once
-			unsigned int oldJointGCIdx = -1;
+			int oldJointGCIdx = -1;
 			vfIdx = 0;
 			for (unsigned int m = 0; m < origGCDOFsz; m++)
 			{
@@ -244,10 +244,10 @@ void ControllerSystem::buildCheck()
 				oldJointGCIdx = jointId;
 			}
 			// Now, re-append piece by piece, so we "automatically" get the additive loop later
-			for (unsigned int n = 0; n < jointsAddedForLeg; n++)
+			for (unsigned int n = 0; n < (unsigned int)jointsAddedForLeg; n++)
 			{ 
 				// n+1 to skip re-appending of root:
-				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, n + 1, jointsAddedForLeg - n, origGCDOFsz);
+				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, (int)n + 1, jointsAddedForLeg - (int)n, origGCDOFsz);
 			}
 			// Add an IK handler for leg
 			legFrame->m_legIK.push_back(IK2Handler());
@@ -328,14 +328,14 @@ void ControllerSystem::addJointToPDChain(ControllerComponent::PDChain* p_legChai
 }
 
 
-void ControllerSystem::repeatAppendChainPart(ControllerComponent::VFChain* p_legChain, unsigned int p_localJointOffset, 
-	unsigned int p_jointCount, unsigned int p_originalChainSize)
+void ControllerSystem::repeatAppendChainPart(ControllerComponent::VFChain* p_legVFChain, int p_localJointOffset, 
+	int p_jointCount, unsigned int p_originalChainSize)
 {
-	ControllerComponent::VFChain* legChain = p_legChain;
+	ControllerComponent::VFChain* legChain = p_legVFChain;
 	unsigned int DOFidx=0; // current dof being considerated for copy
 	unsigned int totalJointsProcessed = 0;
 	unsigned int jointAddedCounter = 0; // number of added joints
-	unsigned int oldJointIdx = 0;
+	unsigned int oldJointIdx = legChain->m_jointIdxChain[DOFidx];
 	do 
 	{
 		unsigned int jointIdx=legChain->m_jointIdxChain[DOFidx];
@@ -766,8 +766,8 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 	{
 		sum += m_jointWorldTransforms[g];
 	}
-	DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
-	DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
+	//DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
+	//DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
 	//DEBUGPRINT(((std::string("\n") + std::string(" VF: ") + ToString(vf)).c_str()));
 
 	// Use matrix to calculate and store torque
@@ -781,9 +781,9 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 		glm::vec3 addT = (chain->m_DOFChain)[m] * glm::dot(JVec, vf);
 		//
 		float ssum = JjVec.x + JjVec.y + JjVec.z;
-		DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
+		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
 		ssum = JVec.x + JVec.y + JVec.z;
-		DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
+		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
 		(*p_outTVF)[localJointIdx/* + p_torqueIdxOffset*/] += addT;
 		// Do it like this for now, for the sake of readability and debugging.
 	}

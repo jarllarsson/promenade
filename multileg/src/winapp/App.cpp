@@ -163,7 +163,7 @@ void App::run()
 		MeasurementBin<string> rigidBodyStateDbgRecorder;
 		MeasurementBin<float> controllerPerfRecorder;
 		//
-		controllerPerfRecorder.activate();
+		//controllerPerfRecorder.activate();
 
 
 
@@ -213,7 +213,7 @@ void App::run()
 
 		// Test of controller
 		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
-		for (int x = 0; x < 1; x++) // number of characters
+		for (int x = 0; x < 10; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
 			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
@@ -388,7 +388,7 @@ void App::run()
 	#ifdef MEASURE_RBODIES
 				if (steps >= 600) run = false;
 	#endif
-				DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
+				//DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
