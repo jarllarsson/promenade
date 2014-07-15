@@ -120,6 +120,11 @@ TwBar* Toolbar::getBar(BarType p_type)
 	return m_bars[(int)p_type].m_bar;
 }
 
+void Toolbar::clearBar(BarType p_barType)
+{
+	TwRemoveAllVars(getBar(p_barType));
+}
+
 void TW_CALL boolButton(void* p_bool)
 {
 	*(bool*)p_bool = !*(bool*)p_bool;

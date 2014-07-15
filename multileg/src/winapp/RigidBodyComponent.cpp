@@ -52,9 +52,11 @@ RigidBodyComponent::~RigidBodyComponent()
 {
 	for (unsigned int i = 0; i < m_childConstraints.size(); i++)
 		if (m_childConstraints[i] != NULL) m_childConstraints[i]->forceRemove(m_dynamicsWorldPtr);
+	//m_childConstraints.clear();
 	delete m_collisionShape;
 	if (m_rigidBody!=NULL) delete m_rigidBody->getMotionState();
 	if (m_callback != NULL) delete m_callback;
+	m_dynamicsWorldPtr->removeRigidBody(m_rigidBody);
 	delete m_rigidBody;
 }
 

@@ -5,6 +5,9 @@
 void RigidBodySystem::removed(artemis::Entity &e)
 {
 	RigidBodyComponent* rigidBody = rigidBodyMapper.get(e);
+	ConstraintComponent* constraint = (ConstraintComponent*)e.getComponent<ConstraintComponent>();
+	if (constraint)
+		constraint->forceRemove(m_dynamicsWorldPtr);
 	if (rigidBody->isInited())
 	{
 		//checkForConstraintsToRemove(e, rigidBody);

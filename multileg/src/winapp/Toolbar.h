@@ -84,6 +84,8 @@ public:
 
 	void addLabel(BarType p_barType, const char* p_name, const char* p_misc="");
 
+	void clearBar(BarType p_barType);
+
 	void defineBarParams(BarType p_type, const char* p_params);
 	void defineBarParams(BarType p_type, float p_min, float p_max, float p_stepSz, const char* p_params);
 	void defineBarParams(BarType p_type, int p_min, int p_max, const char* p_params);

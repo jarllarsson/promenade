@@ -144,6 +144,9 @@
     <ClInclude Include="IK2Handler.h">
       <Filter>Entity System\Locomotion</Filter>
     </ClInclude>
+    <ClInclude Include="ConstraintSystem.h">
+      <Filter>Entity System\Physics\Constraints</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">

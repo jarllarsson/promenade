@@ -38,6 +38,7 @@
 #include "Time.h"
 #include "PhysWorldDefines.h"
 #include "PositionRefSystem.h"
+#include "ConstraintSystem.h"
 
 
 
@@ -89,6 +90,7 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
 	m_time = 0.0;
+	m_restart = false;
 	//
 	m_triggerPause = false;
 	//
@@ -99,7 +101,8 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	// Global toolbar vars
 	m_toolBar->addReadOnlyVariable(Toolbar::PLAYER, "Real time", Toolbar::DOUBLE, &m_time);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Physics time scale", Toolbar::FLOAT, &m_timeScale);
-	m_toolBar->addButton(Toolbar::PLAYER, "> ||", boolButton,(void*)&m_triggerPause);
+	m_toolBar->addButton(Toolbar::PLAYER, "Play/Pause", boolButton,(void*)&m_triggerPause);
+	m_toolBar->addButton(Toolbar::PLAYER, "Restart", boolButton, (void*)&m_restart);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Gravity", Toolbar::BOOL, &m_gravityStat);
 }
 
@@ -122,85 +125,90 @@ App::~App()
 
 void App::run()
 {
-	// Set up windows timer
-	LARGE_INTEGER ticksPerSec = Time::getTicksPerSecond();
-	double secondsPerTick = 1.0 / (double)ticksPerSec.QuadPart;
-	// The physics clock is just used to run the physics and runs asynchronously with the gameclock
-	LARGE_INTEGER currTimeStamp = Time::getTimeStamp();
-	LARGE_INTEGER prevTimeStamp = currTimeStamp;
-	// There's an inner loop in here where things happen once every TickMs. These variables are for that.
-	LARGE_INTEGER gameClockTimeOffsetStamp = Time::getTimeStamp();
-	double gameClockTimeOffset = (double)gameClockTimeOffsetStamp.QuadPart * secondsPerTick;
-	const unsigned int gameTickMs = 16;
-	double gameTickS = (double)gameTickMs / 1000.0;
-	// Absolute start
-	double timeStart = (double)Time::getTimeStamp().QuadPart * secondsPerTick;
+	do
+	{
+		m_restart = false;
+		// Set up windows timer
+		LARGE_INTEGER ticksPerSec = Time::getTicksPerSecond();
+		double secondsPerTick = 1.0 / (double)ticksPerSec.QuadPart;
+		// The physics clock is just used to run the physics and runs asynchronously with the gameclock
+		LARGE_INTEGER currTimeStamp = Time::getTimeStamp();
+		LARGE_INTEGER prevTimeStamp = currTimeStamp;
+		// There's an inner loop in here where things happen once every TickMs. These variables are for that.
+		LARGE_INTEGER gameClockTimeOffsetStamp = Time::getTimeStamp();
+		double gameClockTimeOffset = (double)gameClockTimeOffsetStamp.QuadPart * secondsPerTick;
+		const unsigned int gameTickMs = 16;
+		double gameTickS = (double)gameTickMs / 1000.0;
+		// Absolute start
+		double timeStart = (double)Time::getTimeStamp().QuadPart * secondsPerTick;
 
-	// Bullet physics initialization
-	// Broadphase object
-	btBroadphaseInterface* broadphase = new btDbvtBroadphase();
-	// Collision dispatcher with default config
-	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-	// Register collision algorithm (needed for mesh collisions)
-	// btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
-	// Register physics solver
-	// (Single threaded)
-	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-	// ==================================
-	// Create the physics world
-	// ==================================
-	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0, WORLD_GRAVITY, 0));
+		// Bullet physics initialization
+		// Broadphase object
+		btBroadphaseInterface* broadphase = new btDbvtBroadphase();
+		// Collision dispatcher with default config
+		btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+		btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+		// Register collision algorithm (needed for mesh collisions)
+		// btGImpactCollisionAlgorithm::registerAlgorithm(dispatcher);
+		// Register physics solver
+		// (Single threaded)
+		btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+		// ==================================
+		// Create the physics world
+		// ==================================
+		btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+		dynamicsWorld->setGravity(btVector3(0, WORLD_GRAVITY, 0));
 
-	// Measurements and debug
-	MeasurementBin<string> rigidBodyStateDbgRecorder;
-	MeasurementBin<float> controllerPerfRecorder;
-	//
-	controllerPerfRecorder.activate();
-
-
-	
-	// Artemis
-	// Create and initialize systems
-	artemis::SystemManager * sysManager = m_world.getSystemManager();
-	AdvancedEntitySystem::registerDebugToolbar(m_toolBar);
-	AdvancedEntitySystem::registerDebugDrawBatch(m_debugDrawBatch);
-	//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
-	//addGameLogic(movementsys);
-#ifdef MEASURE_RBODIES
-	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
-#else
-	m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
-#endif
-	ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
-	m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
-	m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
-	PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
-	sysManager->initializeAll();
+		// Measurements and debug
+		MeasurementBin<string> rigidBodyStateDbgRecorder;
+		MeasurementBin<float> controllerPerfRecorder;
+		//
+		controllerPerfRecorder.activate();
 
 
-	// Order independent
-	addOrderIndependentSystem(posRefSystem);
 
-	// Combine Physics with our stuff!
-	PhysicsWorldHandler physicsWorldHandler(dynamicsWorld,m_controllerSystem);
-	physicsWorldHandler.addOrderIndependentSystem(cforceSystem);
-	physicsWorldHandler.addPreprocessSystem(m_rigidBodySystem);
+		// Artemis
+		// Create and initialize systems
+		artemis::SystemManager * sysManager = m_world.getSystemManager();
+		AdvancedEntitySystem::registerDebugToolbar(m_toolBar);
+		AdvancedEntitySystem::registerDebugDrawBatch(m_debugDrawBatch);
+		//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
+		//addGameLogic(movementsys);
+	#ifdef MEASURE_RBODIES
+		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
+	#else
+		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
+	#endif
+		ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
+		ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
+		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
+		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
+		PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
+		sysManager->initializeAll();
 
 
-	// Entity manager fetch
-	artemis::EntityManager * entityManager = m_world.getEntityManager();
+		// Order independent
+		addOrderIndependentSystem(constraintSystem);
+		addOrderIndependentSystem(posRefSystem);
 
-	// Create a ground entity
-	artemis::Entity & ground = entityManager->create();
-	ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f,
-		CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT,CollisionLayer::COL_CHARACTER | CollisionLayer::COL_DEFAULT));
-	ground.addComponent(new RenderComponent());
-	ground.addComponent(new TransformComponent(glm::vec3(0.0f, -10.0f, 0.0f), 
-		glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-		glm::vec3(800.0f, 20.0f, 800.0f)));
-	ground.refresh();
+		// Combine Physics with our stuff!
+		PhysicsWorldHandler physicsWorldHandler(dynamicsWorld, m_controllerSystem);
+		physicsWorldHandler.addOrderIndependentSystem(cforceSystem);
+		physicsWorldHandler.addPreprocessSystem(m_rigidBodySystem);
+
+
+		// Entity manager fetch
+		artemis::EntityManager * entityManager = m_world.getEntityManager();
+
+		// Create a ground entity
+		artemis::Entity & ground = entityManager->create();
+		ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f,
+			CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT, CollisionLayer::COL_CHARACTER | CollisionLayer::COL_DEFAULT));
+		ground.addComponent(new RenderComponent());
+		ground.addComponent(new TransformComponent(glm::vec3(0.0f, -10.0f, 0.0f),
+			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+			glm::vec3(800.0f, 20.0f, 800.0f)));
+		ground.refresh();
 
 
 		// Test of controller
@@ -230,7 +238,7 @@ void App::run()
 			{
 				string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
 				m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
-				m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/"+sideName+" opened=false").c_str());
+				m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
 				//m_toolBar->addLabel(Toolbar::CHARACTER, sideName.c_str(),"");
 				artemis::Entity* prev = &legFrame;
 				artemis::Entity* upperLegSegment = NULL;
@@ -277,7 +285,7 @@ void App::run()
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
-					m_toolBar->addLabel(Toolbar::CHARACTER, (sideName[0]+partName).c_str(), dbgGrp.c_str());
+					m_toolBar->addLabel(Toolbar::CHARACTER, (sideName[0] + partName).c_str(), dbgGrp.c_str());
 					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 					if (foot == true)
@@ -295,7 +303,7 @@ void App::run()
 					childJoint.addComponent(new TransformComponent(legpos,
 						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
 						boxSize));					// note scale, so full lengths
-					MaterialComponent* mat = new MaterialComponent(colarr[n*3+i]);
+					MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
 					childJoint.addComponent(mat);
 					m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (sideName[0] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
 					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, -jointZOffsetInChild),	  // child (this)
@@ -315,9 +323,9 @@ void App::run()
 			controller.refresh();
 		}
 
-#ifdef MEASURE_RBODIES
+	#ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.activate();
-#endif
+	#endif
 
 
 		// Message pump struct
@@ -336,7 +344,7 @@ void App::run()
 		m_time = 0.0;
 		bool shooting = false;
 
-		while (!m_context->closeRequested() && run)
+		while (!m_context->closeRequested() && run && !m_restart)
 		{
 			if (!pumpMessage(msg))
 			{
@@ -366,29 +374,29 @@ void App::run()
 				}
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
-#ifdef MEASURE_RBODIES
+	#ifdef MEASURE_RBODIES
 				dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
-#else
+	#else
 				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
-#endif
+	#endif
 				// ========================================================
 
 				unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
 
 				prevTimeStamp = currTimeStamp;
 
-#ifdef MEASURE_RBODIES
+	#ifdef MEASURE_RBODIES
 				if (steps >= 600) run = false;
-#endif
+	#endif
 				DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
-#ifdef MEASURE_RBODIES
+	#ifdef MEASURE_RBODIES
 				double dt = fixedStep;
-#else
+	#else
 				double dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
-#endif
+	#endif
 				// Game clock based updates
 				while (dt >= gameTickS)
 				{
@@ -416,7 +424,7 @@ void App::run()
 							proj.addComponent(new TransformComponent(pos,
 								glm::inverse(glm::quat(m_controller->getRotationMatrix())),
 								bfSize));
-							proj.addComponent(new ConstantForceComponent(MathHelp::transformDirection(glm::inverse(m_controller->getRotationMatrix()),glm::vec3(0, 0, 100.0f)), 1.0f));
+							proj.addComponent(new ConstantForceComponent(MathHelp::transformDirection(glm::inverse(m_controller->getRotationMatrix()), glm::vec3(0, 0, 100.0f)), 1.0f));
 							proj.refresh();
 						}
 					}
@@ -424,62 +432,104 @@ void App::run()
 						shooting = false;
 
 
-
-
 					handleContext(interval, phys_dt, steps - oldSteps);
 					gameUpdate(interval);
 				}
-				
+
 				// ========================================================
 				oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
-				m_oldGravityStat=m_gravityStat;
-			}	
+				m_oldGravityStat = m_gravityStat;
+			}
 		}
 
 		DEBUGPRINT(("\n\nSTOPPING APPLICATION\n\n"));
 
-#ifdef MEASURE_RBODIES
+	#ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.saveMeasurement("Time: "+ToString(time));
 		rigidBodyStateDbgRecorder.saveMeasurement("Steps: "+ToString(physicsWorldHandler.getNumberOfInternalSteps()));
-#ifndef MULTI
-#ifdef _DEBUG
+	#ifndef MULTI
+	#ifdef _DEBUG
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
-#else
+	#else
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_STCPU");
-#endif
-#else
-#ifdef _DEBUG
+	#endif
+	#else
+	#ifdef _DEBUG
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_MTCPU");
-#else
+	#else
 		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_MTCPU");
-#endif
-#endif
-#endif
+	#endif
+	#endif
+	#endif
 		///////////////////////////////////
 
 		controllerPerfRecorder.finishRound();
-#ifndef MULTI
-#ifdef _DEBUG
+	#ifndef MULTI
+	#ifdef _DEBUG
 		controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_STCPU");
-#else
+	#else
 		controllerPerfRecorder.saveResults("../output/controllerPerf_Release_STCPU");
-#endif
-#else
-#ifdef _DEBUG
+	#endif
+	#else
+	#ifdef _DEBUG
 		controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_MTCPU");
-#else
+	#else
 		controllerPerfRecorder.saveResults("../output/controllerPerf_Release_MTCPU");
-#endif
-#endif
+	#endif
+	#endif
 
 
-	// Clean up
-	entityManager->removeAllEntities();
-	delete broadphase;
-	delete collisionConfiguration;
-	delete dispatcher;
-	delete solver;
-	delete dynamicsWorld;
+		// Clean up
+
+		// artemis
+		entityManager->removeAllEntities();
+		m_orderIndependentSystems.clear();
+		m_world.getSystemManager()->getSystems().deleteData();
+		m_rigidBodySystem = NULL;
+		m_renderSystem = NULL;
+		m_controllerSystem = NULL;
+
+		// bullet
+		//cleanup in the reverse order of creation/initialization
+
+		//remove the rigidbodies from the dynamics world and delete them
+		for (int bi = dynamicsWorld->getNumCollisionObjects() - 1; bi >= 0; bi--)
+		{
+			btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[bi];
+			btRigidBody* body = btRigidBody::upcast(obj);
+			if (body && body->getMotionState())
+				delete body->getMotionState();
+			dynamicsWorld->removeCollisionObject(obj);
+			delete obj;
+		}
+
+		//delete collision shapes
+		/*
+		for (int j = 0; j < m_collisionShapes.size(); j++)
+		{
+			btCollisionShape* shape = m_collisionShapes[j];
+			delete shape;
+		}
+		m_collisionShapes.clear();
+		*/
+
+
+		delete broadphase;
+		delete collisionConfiguration;
+		delete dispatcher;
+		delete solver;
+		delete dynamicsWorld;
+		/*
+		delete dynamicsWorld;
+		delete solver;
+		delete broadphase;
+		delete dispatcher;
+		delete collisionConfiguration;*/
+
+
+		// debug
+		m_toolBar->clearBar(Toolbar::CHARACTER);
+	} while (m_restart);
 }
 
 

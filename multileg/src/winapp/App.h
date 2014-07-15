@@ -82,6 +82,7 @@ private:
 	bool m_timePauseStepToggle;
 	bool m_triggerPause;
 	bool m_gravityStat, m_oldGravityStat;
+	bool m_restart;
 
 	// Resource managers
 	//ResourceManager<btCollisionShape> m_collisionShapes;
