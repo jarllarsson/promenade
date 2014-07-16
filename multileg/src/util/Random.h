@@ -32,4 +32,5 @@ public:
 
 protected:
 private:
+	static const int c_seed = 4350809;
 };
