@@ -48,6 +48,9 @@
     <ClInclude Include="OptimizableHelper.h">
       <Filter>Optimization</Filter>
     </ClInclude>
+    <ClInclude Include="ParamChanger.h">
+      <Filter>Optimization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />

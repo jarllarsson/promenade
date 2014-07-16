@@ -150,6 +150,7 @@
     <ClInclude Include="MathHelp.h" />
     <ClInclude Include="MeasurementBin.h" />
     <ClInclude Include="OptimizableHelper.h" />
+    <ClInclude Include="ParamChanger.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ToString.h" />
