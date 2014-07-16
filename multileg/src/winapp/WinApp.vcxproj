@@ -165,6 +165,7 @@
     <ClInclude Include="ConstraintComponent.h" />
     <ClInclude Include="ConstraintSystem.h" />
     <ClInclude Include="ControllerComponent.h" />
+    <ClInclude Include="ControllerOptimizationSystem.h" />
     <ClInclude Include="ControllerSystem.h" />
     <ClInclude Include="DebugDrawer.h" />
     <ClInclude Include="DebugDrawBatch.h" />

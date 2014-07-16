@@ -43,6 +43,15 @@
     <Filter Include="Debug\Toolbar">
       <UniqueIdentifier>{3730e1dd-64c3-4dad-b2cb-1fc20d4fd748}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entity System\Base">
+      <UniqueIdentifier>{9231d966-1c86-4e65-bf44-c74fa91e67a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity System\Locomotion\Controller">
+      <UniqueIdentifier>{bc3d15e0-71fa-42a1-bb76-895501f930ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity System\Locomotion\Optimization">
+      <UniqueIdentifier>{5878d7dc-03b4-460d-b931-5fd470fbe3d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h">
@@ -65,12 +74,6 @@
     </ClInclude>
     <ClInclude Include="PhysicsWorldHandler.h">
       <Filter>Entity System\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="ControllerSystem.h">
-      <Filter>Entity System\Locomotion</Filter>
-    </ClInclude>
-    <ClInclude Include="ControllerComponent.h">
-      <Filter>Entity System\Locomotion</Filter>
     </ClInclude>
     <ClInclude Include="StepCycle.h">
       <Filter>Entity System\Locomotion\Gait</Filter>
@@ -108,9 +111,6 @@
     <ClInclude Include="Toolbar.h">
       <Filter>Debug\Toolbar</Filter>
     </ClInclude>
-    <ClInclude Include="AdvancedEntitySystem.h">
-      <Filter>Entity System</Filter>
-    </ClInclude>
     <ClInclude Include="MaterialComponent.h">
       <Filter>Entity System\Rendering</Filter>
     </ClInclude>
@@ -141,11 +141,23 @@
     <ClInclude Include="DebugDrawBatch.h">
       <Filter>Entity System\Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="IK2Handler.h">
-      <Filter>Entity System\Locomotion</Filter>
-    </ClInclude>
     <ClInclude Include="ConstraintSystem.h">
       <Filter>Entity System\Physics\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="AdvancedEntitySystem.h">
+      <Filter>Entity System\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerSystem.h">
+      <Filter>Entity System\Locomotion\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
+      <Filter>Entity System\Locomotion\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="IK2Handler.h">
+      <Filter>Entity System\Locomotion\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerOptimizationSystem.h">
+      <Filter>Entity System\Locomotion\Optimization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -159,9 +171,6 @@
       <Filter>TempLogic</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ControllerSystem.cpp">
-      <Filter>Entity System\Locomotion</Filter>
-    </ClCompile>
     <ClCompile Include="StepCycle.cpp">
       <Filter>Entity System\Locomotion\Gait</Filter>
     </ClCompile>
@@ -205,10 +214,13 @@
       <Filter>Entity System\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="AdvancedEntitySystem.cpp">
-      <Filter>Entity System</Filter>
+      <Filter>Entity System\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerSystem.cpp">
+      <Filter>Entity System\Locomotion\Controller</Filter>
     </ClCompile>
     <ClCompile Include="IK2Handler.cpp">
-      <Filter>Entity System\Locomotion</Filter>
+      <Filter>Entity System\Locomotion\Math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
