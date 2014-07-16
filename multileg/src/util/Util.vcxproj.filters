@@ -13,6 +13,9 @@
     <Filter Include="Math">
       <UniqueIdentifier>{bdb67dff-f98b-4d60-839e-2ba678c0adae}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Optimization">
+      <UniqueIdentifier>{80dd1817-7cdf-405a-9205-3af158f9e1e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugPrint.h">
@@ -39,6 +42,12 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="ColorPalettes.h" />
+    <ClInclude Include="IOptimizable.h">
+      <Filter>Optimization</Filter>
+    </ClInclude>
+    <ClInclude Include="OptimizableHelper.h">
+      <Filter>Optimization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />

@@ -1,0 +1,84 @@
+#pragma once
+#include <vector>
+#include <glm\gtc\type_ptr.hpp>
+
+// =======================================================================================
+//                                      OptimizableHelper
+// =======================================================================================
+
+///---------------------------------------------------------------------------------------
+/// \brief	Helper functions for IOptimizables
+///        
+/// # OptimizableHelper
+/// 
+/// 16-7-2014 Jarl Larsson
+///---------------------------------------------------------------------------------------
+
+namespace OptimizableHelper
+{
+	std::vector<float> ExtractParamsListFrom(const glm::vec2& p_vec2)
+	{
+		std::vector<float> vals;
+		vals.push_back(p_vec2.x);
+		vals.push_back(p_vec2.y);
+		return vals;
+	}
+
+	std::vector<float> ExtractParamsListFrom(const glm::vec3& p_vec3)
+	{
+		std::vector<float> vals;
+		vals.push_back(p_vec3.x);
+		vals.push_back(p_vec3.y);
+		vals.push_back(p_vec3.z);
+		return vals;
+	}
+
+	std::vector<float> ExtractParamsListFrom(const glm::quat& p_quat)
+	{
+		std::vector<float> vals;
+		vals.push_back(p_quat.x);
+		vals.push_back(p_quat.y);
+		vals.push_back(p_quat.z);
+		vals.push_back(p_quat.w);
+		return vals;
+	}
+
+	void ConsumeParamsTo(std::vector<float>& p_params, float* p_inoutFloat)
+	{
+		*p_inoutFloat = p_params[0];
+		popFront(p_params);
+	}
+
+	void ConsumeParamsTo(std::vector<float>& p_params, glm::vec2* p_inoutVec2)
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			(*p_inoutVec2)[i] = p_params[i];
+		}
+		popFront(p_params, 2);
+	}
+
+	void ConsumeParamsTo(std::vector<float>& p_params, glm::vec3* p_inoutVec3)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			(*p_inoutVec3)[i] = p_params[i];
+		}
+		popFront(p_params, 3);
+	}
+
+	void ConsumeParamsTo(std::vector<float>& p_params, glm::quat* p_inoutQuat)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			(*p_inoutQuat)[i] = p_params[i];
+		}
+		popFront(p_params, 4);
+	}
+
+	void popFront(std::vector<float>& p_params, unsigned int p_range=1)
+	{
+		p_params = std::vector<float>(p_params.begin() + p_range,
+			p_params.end());
+	}
+};
