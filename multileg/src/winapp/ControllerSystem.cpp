@@ -251,6 +251,9 @@ void ControllerSystem::buildCheck()
 			}
 			// Add an IK handler for leg
 			legFrame->m_legIK.push_back(IK2Handler());
+			// add entry for foot rotation timing params in struct
+			legFrame->m_toeOffTime.push_back(0.0f);
+			legFrame->m_tuneFootStrikeTime.push_back(0.0f);
 		}
 		legFrame->m_height = legFramePos.y - footPos.y;
 		legFrame->m_heightLFTraj.reset(PieceWiseLinear::FULL, legFrame->m_height);
@@ -1026,7 +1029,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				else if (x == pdChain->getLowerLegSegmentIdx())
 					sagittalAngle = ik->getLowerWorldLegAngle() + PI*0.5f;
 				else if (x == pdChain->getFootIdx())
-					sagittalAngle = 0.0f; // !!!!!TODO FOOT ROTATION
+					sagittalAngle = getDesiredFootAngle(x, lf, p_phi);
 				unsigned jointIdx = pdChain->m_jointIdxChain[x];
 				// Calculate angle to leg frame space
 				glm::quat goal = currentOrientationQuat * glm::quat(glm::vec3(sagittalAngle, 0.0f, 0.0f));
@@ -1143,4 +1146,39 @@ void ControllerSystem::writeFeetCollisionStatus(ControllerComponent* p_controlle
 		}
 	}
 	// phew
+}
+
+float ControllerSystem::getDesiredFootAngle(unsigned int p_legIdx, ControllerComponent::LegFrame* p_lf, float p_phi)
+{
+	// Toe-off is modeled with a linear target trajectory towards a fixed toe-off
+	// target angle Theta-A that is triggered DeltaT-A seconds in advance of the start of the swing phase,
+	// as dictated by the gait graph.
+	//
+	// Foot- strike anticipation is done in an analogous fashion with
+	// respect to the anticipated foot-strike time and defined by Theta-B and DeltaT-B.
+	//
+	StepCycle* stepcycle = &p_lf->m_stepCycles[p_legIdx];
+	//Transform foot = m_feet[i].transform;
+	float toeOffStartOffset = p_lf->m_toeOffTime[p_legIdx];
+	float footStrikeStartOffset = p_lf->m_tuneFootStrikeTime[p_legIdx];
+	// get absolutes
+	// Get point in time when toe lifts off from ground
+	float toeOffStart = stepcycle->m_tuneStepTrigger + stepcycle->m_tuneDutyFactor - toeOffStartOffset;
+	if (toeOffStart >= 1.0f) toeOffStart -= 1.0f;
+	if (toeOffStart < 0.0f) toeOffStart += 1.0f;
+	// Get point in time when foot touches the ground
+	float footStrikeStart = stepcycle->m_tuneStepTrigger - footStrikeStartOffset;
+	if (toeOffStart < 0.0f) footStrikeStart += 1.0f;
+	//         
+
+	// return correct angle for PD
+	float result = 0.0f;
+	if ((p_phi > footStrikeStart && footStrikeStart > toeOffStart) || 
+		p_phi < toeOffStart) // catch first
+		result = p_lf->m_tuneFootStrikeAngle;
+	else
+	{
+		result = p_lf->m_tuneToeOffAngle;
+	}
+	return result;
 }

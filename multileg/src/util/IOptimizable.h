@@ -21,6 +21,8 @@ public:
 	virtual std::vector<float> getParamsMin() = 0;
 	virtual std::vector<float> getParams() = 0;
 	virtual void consumeParams(const std::vector<float>& p_other) = 0;
+protected:
+	IOptimizable() {}
 private:
 	IOptimizable(const IOptimizable& p_other) {}
 };

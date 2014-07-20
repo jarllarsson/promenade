@@ -177,7 +177,8 @@ private:
 	glm::mat4 getDesiredWorldOrientation(unsigned int p_controllerId) const;
 	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	void writeFeetCollisionStatus(ControllerComponent* p_controller);
-	
+	float getDesiredFootAngle(unsigned int p_legIdx, ControllerComponent::LegFrame* p_lf, float p_phi);
+
 	// global variables
 	float m_runTime;
 	int m_steps;

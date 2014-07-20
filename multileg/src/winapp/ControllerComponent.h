@@ -44,30 +44,7 @@ public:
 	// ==============================================================================
 	// Specify entry points on construction, during build
 	// the chains(lists) will be constructed by walking the pointer chain(double linked list)
-	ControllerComponent(artemis::Entity* p_legFrame, std::vector<artemis::Entity*>& p_hipJoints)
-	{
-		m_buildComplete = false;
-		// for each inputted leg-frame entity...
-
-		// Set up the entity-based leg frame representation
-		// This is simply a struct of pointers to the artemis equivalents of
-		// what the controller system will work with as joints and decomposed DOF-chains
-		LegFrameEntityConstruct legFrameEntityConstruct;
-		legFrameEntityConstruct.m_legFrameEntity = p_legFrame;
-		// Add all legs to it
-		for (unsigned int i = 0; i < p_hipJoints.size();i++)
-		{
-			legFrameEntityConstruct.m_upperLegEntities.push_back(p_hipJoints[i]);
-		}			
-		// add to our list of constructs
-		m_legFrameEntityConstructs.push_back(legFrameEntityConstruct);
-		// Create the leg frame data struct as well
-		// Allocate it according to number of leg entities that was inputted
-		LegFrame legFrame;
-		legFrame.m_stepCycles.resize(legFrameEntityConstruct.m_upperLegEntities.size());
-		legFrame.m_stepCycles[1].m_tuneStepTrigger = 0.5f;
-		m_legFrames.push_back(legFrame);
-	}
+	ControllerComponent(artemis::Entity* p_legFrame, std::vector<artemis::Entity*>& p_hipJoints);
 
 	virtual ~ControllerComponent() {}
 	
@@ -196,7 +173,7 @@ public:
 	// the other.
 	// ==============================================================================
 	// Run-time leg frame structure
-	struct LegFrame
+	struct LegFrame : public IOptimizable
 	{
 		LegFrame()
 		{
@@ -220,6 +197,9 @@ public:
 			//
 			m_legPDsKp = 30.0f;
 			m_legPDsKd = 3.0f;
+			// foot
+			m_tuneToeOffAngle=HALFPI;				
+			m_tuneFootStrikeAngle = -HALFPI/9.0f;
 		}
 
 		// Structure ids
@@ -253,6 +233,13 @@ public:
 		std::vector<bool>		m_footLiftPlacementPerformed;	// If foot just took off (and the "old" pos should be updated), per leg
 		std::vector<glm::vec3>	m_footTarget;					// The current position in the foot's swing trajectory, per leg
 		std::vector<bool>		m_footIsColliding;				// If foot is colliding, per leg
+		
+		// Foot rotation
+		float m_tuneToeOffAngle;								// per leg frame
+		std::vector<float> m_toeOffTime;					// "delta-t" for toe off, per leg
+		float m_tuneFootStrikeAngle;							// per leg frame
+		std::vector<float> m_tuneFootStrikeTime;   // "delta-t" for foot strike, per leg
+
 
 		float			 m_footPlacementVelocityScale;			// per leg frame
 		float			 m_height;								// per leg frame (max height, lf to feet)
@@ -267,32 +254,22 @@ public:
 		// =============================================================
 		// Retrieves the current orientation quaternion from the
 		// trajectory function at time phi.
-		glm::quat getCurrentDesiredOrientation(float p_phi)
-		{
-			float yaw = m_orientationLFTraj[(unsigned int)Orientation::YAW].lerpGet(p_phi);
-			float pitch = m_orientationLFTraj[(unsigned int)Orientation::PITCH].lerpGet(p_phi);
-			float roll = m_orientationLFTraj[(unsigned int)Orientation::ROLL].lerpGet(p_phi);
-			return glm::quat(glm::vec3(pitch, yaw, roll)); // radians
-		}
+		glm::quat getCurrentDesiredOrientation(float p_phi);
 
 		// Drives the PD-controller and retrieves the 3-axis torque
 		// vector that will be used as the desired torque for which the
 		// stance legs tries to accomplish.
-		glm::vec3 getOrientationPDTorque(const glm::quat& p_currentOrientation, const glm::quat& p_desiredOrientation, float p_dt)
-		{
-			glm::vec3 torque = m_desiredLFTorquePD.drive(p_currentOrientation, p_desiredOrientation, p_dt);
-			return torque;
-		}
+		glm::vec3 getOrientationPDTorque(const glm::quat& p_currentOrientation, 
+							const glm::quat& p_desiredOrientation, float p_dt);
 
 		// Helper function to correctly init the foot placement variables
-		void createFootPlacementModelVarsForNewLeg(const glm::vec3& p_startPos)
-		{
-			m_footStrikePlacement.push_back(p_startPos);
-			m_footLiftPlacement.push_back(p_startPos);
-			m_footLiftPlacementPerformed.push_back(false);
-			m_footTarget.push_back(p_startPos);
-			m_footIsColliding.push_back(false);
-		}
+		void createFootPlacementModelVarsForNewLeg(const glm::vec3& p_startPos);
+
+		// Optimization
+		virtual std::vector<float> getParams();
+		virtual void consumeParams(const std::vector<float>& p_other);
+		virtual std::vector<float> getParamsMax();
+		virtual std::vector<float> getParamsMin();
 	};
 
 	// Construction description struct for leg frames
