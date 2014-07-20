@@ -104,8 +104,8 @@ std::vector<float> ControllerComponent::LegFrame::getParams()
 	params.push_back(m_stepHeighTraj.getParams());			//
 	params.push_back(m_footTransitionEase.getParams());	//
 	/*params.push_back(m_desiredLFTorquePD;		//*/
-	params.push_back(m_FhPD.getParams());					// optimiziable height force pd
-	params.push_back(m_lateStrikeOffsetDeltaH);
+	params.push_back(m_FhPD.getParams());					// optimizable height force pd
+	/*params.push_back(m_lateStrikeOffsetDeltaH);*/
 	params.push_back(m_velocityRegulatorKv);
 	params.push_back(OptimizableHelper::ExtractParamsListFrom(m_FDHVComponents));
 	params.push_back(m_footPlacementVelocityScale);			// per leg frame
@@ -120,8 +120,6 @@ std::vector<float> ControllerComponent::LegFrame::getParams()
 		params.push_back(m_toeOffTime[i]);
 		params.push_back(m_tuneFootStrikeTime[i]);
 	}
-
-
 }
 
 void ControllerComponent::LegFrame::consumeParams(const std::vector<float>& p_other)
@@ -131,7 +129,31 @@ void ControllerComponent::LegFrame::consumeParams(const std::vector<float>& p_ot
 
 std::vector<float> ControllerComponent::LegFrame::getParamsMax()
 {
-
+	std::vector<float> paramsmax;
+	// All per leg frame data
+	for (int i = 0; i < 3; i++)
+	for (int x = 0; x < m_orientationLFTraj[i].getSize(); x++)
+		paramsmax.push_back(TWOPI);		// m_orientationLFTraj
+	for (int i = 0; i < m_heightLFTraj.getSize(); i++)			paramsmax.push_back(5.0f);		// heightLFTraj
+	for (int i = 0; i < m_footTrackingGainKp.getSize(); i++)	paramsmax.push_back(10.0f);		// footTrackingGainKp
+	for (int i = 0; i < m_stepHeighTraj.getSize(); i++)			paramsmax.push_back(5.5f);		// stepHeighTraj
+	for (int i = 0; i < m_footTransitionEase.getSize(); i++)	paramsmax.push_back(1.0f);		// footTransitionEase
+	/*params.push_back(m_desiredLFTorquePD;		//*/
+	paramsmax.push_back(200.0f); paramsmax.push_back(20.0f); // FhPD (kp, kd), optimizable height force pd
+	/*paramsmax.push_back(m_lateStrikeOffsetDeltaH);*/
+	paramsmax.push_back(100.0f); // velocityRegulatorKv
+	for (int i=0;i<3;i++) paramsmax.push_back(200.0f);	// FDHVComponents;
+	paramsmax.push_back(10.0f);	// footPlacementVelocityScale
+	paramsmax.push_back(3.0f); paramsmax.push_back(3.0f);// step length
+	paramsmax.push_back(TWOPI); // toe off angle
+	paramsmax.push_back(TWOPI); // foot strike angle
+	// All per leg data
+	for (int i = 0; i < m_legs.size(); i++)
+	{
+		paramsmax.push_back(m_stepCycles[i].getParamsMax());
+		paramsmax.push_back(0.5f); // toe off time
+		paramsmax.push_back(0.5f); // foot strike time
+	}
 }
 
 std::vector<float> ControllerComponent::LegFrame::getParamsMin()
