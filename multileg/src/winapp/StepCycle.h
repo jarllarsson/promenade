@@ -1,4 +1,5 @@
 #pragma once
+#include <IOptimizable.h>
 
 // =======================================================================================
 //                                      StepCycle
@@ -15,7 +16,7 @@
 ///---------------------------------------------------------------------------------------
 
 
-class StepCycle
+class StepCycle : public IOptimizable
 {
 public:
 	// Fraction of overall normalized time for which the 
@@ -29,44 +30,6 @@ public:
 	StepCycle();
 
 
-	// IOptimizable
-	/*
-	vector<float> GetParams()
-	{
-		List<float> vals = new List<float>();
-		vals.Add(m_tuneDutyFactor);
-		vals.Add(m_tuneStepTrigger);
-		return vals;
-	}
-
-	public void ConsumeParams(List<float> p_params)
-	{
-		m_tuneDutyFactor = p_params[0];
-		m_tuneStepTrigger = p_params[1];
-		for (int i = 0; i < 2; i++)
-			p_params.RemoveAt(0);
-		sanitize();
-	}
-
-	public List<float> GetParamsMax()
-	{
-		List<float> maxList = new List<float>();
-		maxList.Add(0.99f);
-		maxList.Add(0.99f);
-		return maxList;
-	}
-
-	public List<float> GetParamsMin()
-	{
-		List<float> minList = new List<float>();
-		minList.Add(0.001f);
-		minList.Add(0.001f);
-		return minList;
-	}
-	*/
-
-
-
 	bool isInStance(float p_phi);
 
 
@@ -77,6 +40,12 @@ public:
 	float getSwingPhase(float p_phi);
 
 	float getStancePhase(float p_phi);
+
+	// Optimization
+	virtual std::vector<float> getParams();
+	virtual void consumeParams(std::vector<float>& p_other);
+	virtual std::vector<float> getParamsMax();
+	virtual std::vector<float> getParamsMin();
 
 private:
 	void sanitize();

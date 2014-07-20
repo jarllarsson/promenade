@@ -1,4 +1,5 @@
 #include "StepCycle.h"
+#include <OptimizableHelper.h>
 
 StepCycle::StepCycle()
 {
@@ -75,4 +76,31 @@ void StepCycle::sanitize()
 		m_tuneDutyFactor = 0.00001f;
 	if (m_tuneStepTrigger < 0.0f)
 		m_tuneStepTrigger = 0.0f;
+}
+
+std::vector<float> StepCycle::getParams()
+{
+	std::vector<float> params;
+	params.push_back(m_tuneDutyFactor);
+	params.push_back(m_tuneStepTrigger);
+}
+
+void StepCycle::consumeParams(std::vector<float>& p_other)
+{
+	OptimizableHelper::ConsumeParamsTo(p_other, &m_tuneDutyFactor);
+	OptimizableHelper::ConsumeParamsTo(p_other, &m_tuneStepTrigger);
+}
+
+std::vector<float> StepCycle::getParamsMax()
+{
+	std::vector<float> params;
+	params.push_back(0.999f); // DF
+	params.push_back(0.999f); // ST
+}
+
+std::vector<float> StepCycle::getParamsMin()
+{
+	std::vector<float> params;
+	params.push_back(0.0f); // DF
+	params.push_back(0.0f); // ST
 }

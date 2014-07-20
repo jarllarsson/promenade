@@ -1,6 +1,6 @@
 #include "PieceWiseLinear.h"
 #include <MathHelp.h>
-#include "..\util\OptimizableHelper.h"
+#include <OptimizableHelper.h>
 
 PieceWiseLinear::PieceWiseLinear()
 {
