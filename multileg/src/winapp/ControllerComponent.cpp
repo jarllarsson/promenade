@@ -1,4 +1,5 @@
 #include "ControllerComponent.h"
+#include <OptimizableHelper.h>
 
 ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame, 
 	std::vector<artemis::Entity*>& p_hipJoints)
@@ -94,36 +95,30 @@ void ControllerComponent::LegFrame::createFootPlacementModelVarsForNewLeg(const 
 
 std::vector<float> ControllerComponent::LegFrame::getParams()
 {
+	std::vector<float> params;
 	// All per leg frame data
-	m_orientationLFTraj[3];	//
-	m_heightLFTraj;			//
-	m_footTrackingGainKp;	//
-	m_stepHeighTraj;			//
-	m_footTransitionEase;	//
-	m_desiredLFTorquePD;		//
-	m_FhPD;					// optimiziable height force pd
-	m_footTrackingSpringDamper;
-	m_lateStrikeOffsetDeltaH;
-	m_velocityRegulatorKv;
-	m_FDHVComponents;		//
-	m_footPlacementVelocityScale;			// per leg frame
-	float			 m_height;
-	m_stepLength;
-	m_tuneToeOffAngle
-	m_tuneFootStrikeAngle
+	for (int i = 0; i < 3; i++)
+		params.push_back(m_orientationLFTraj[i].getParams());	//
+	params.push_back(m_heightLFTraj.getParams());			//
+	params.push_back(m_footTrackingGainKp.getParams());	//
+	params.push_back(m_stepHeighTraj.getParams());			//
+	params.push_back(m_footTransitionEase.getParams());	//
+	/*params.push_back(m_desiredLFTorquePD;		//*/
+	params.push_back(m_FhPD.getParams());					// optimiziable height force pd
+	params.push_back(m_lateStrikeOffsetDeltaH);
+	params.push_back(m_velocityRegulatorKv);
+	params.push_back(OptimizableHelper::ExtractParamsListFrom(m_FDHVComponents));
+	params.push_back(m_footPlacementVelocityScale);			// per leg frame
+	/*float			 m_height;*/
+	params.push_back(OptimizableHelper::ExtractParamsListFrom(m_stepLength));
+	params.push_back(m_tuneToeOffAngle);
+	params.push_back(m_tuneFootStrikeAngle);
 	// All per leg data
 	for (int i = 0; i < m_legs.size(); i++)
 	{
-		m_stepCycles;
-		m_legIK
-			std::vector<Leg> m_legs;								// per leg
-		std::vector<glm::vec3>  m_footStrikePlacement;			// The place on the ground where the foot should strike next, per leg
-		std::vector<glm::vec3>	m_footLiftPlacement;			// From where the foot was lifted, per leg
-		std::vector<bool>		m_footLiftPlacementPerformed;	// If foot just took off (and the "old" pos should be updated), per leg
-		std::vector<glm::vec3>	m_footTarget;					// The current position in the foot's swing trajectory, per leg
-		std::vector<bool>		m_footIsColliding;				// If foot is colliding, per leg
-		m_toeOffTime
-		m_tuneFootStrikeTime
+		params.push_back(m_stepCycles[i].getParams());
+		params.push_back(m_toeOffTime[i]);
+		params.push_back(m_tuneFootStrikeTime[i]);
 	}
 
 

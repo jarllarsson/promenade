@@ -43,6 +43,16 @@ namespace OptimizableHelper
 		return vals;
 	}
 
+	std::vector<float> ExtractParamsListFrom(const glm::vec4& p_vec4)
+	{
+		std::vector<float> vals;
+		vals.push_back(p_vec4.x);
+		vals.push_back(p_vec4.y);
+		vals.push_back(p_vec4.z);
+		vals.push_back(p_vec4.w);
+		return vals;
+	}
+
 	void ConsumeParamsTo(std::vector<float>& p_params, float* p_inoutFloat)
 	{
 		*p_inoutFloat = p_params[0];
