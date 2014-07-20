@@ -222,5 +222,8 @@
     <ClCompile Include="IK2Handler.cpp">
       <Filter>Entity System\Locomotion\Math</Filter>
     </ClCompile>
+    <ClCompile Include="ControllerComponent.cpp">
+      <Filter>Entity System\Locomotion\Controller</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

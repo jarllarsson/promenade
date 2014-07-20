@@ -23,7 +23,10 @@ std::vector<float> Random::getRealUniform(float p_min, float p_max, unsigned int
 
 std::vector<double> Random::getRealUniform(double p_min, double p_max, unsigned int p_intervals, Generator p_generator/*= Generator::DETERMINISTIC*/)
 {
-	return std::vector<double>(); // foo
+	std::vector<double> res(p_intervals);
+	for (int i = 0; i < p_intervals; i++)
+		res[i] = 1.0f;
+	return res; // foo
 }
 
 int Random::getInt(int p_min, int p_max, Generator p_generator/*= Generator::DETERMINISTIC*/)

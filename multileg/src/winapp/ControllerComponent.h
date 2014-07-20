@@ -12,6 +12,7 @@
 #include "PDn.h"
 #include "PD.h"
 #include "IK2Handler.h"
+#include <IOptimizable.h>
 // =======================================================================================
 //                                      ControllerComponent
 // =======================================================================================
@@ -25,7 +26,7 @@
 /// 20-5-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class ControllerComponent : public artemis::Component
+class ControllerComponent : public artemis::Component, IOptimizable
 {
 public:
 
@@ -314,6 +315,13 @@ public:
 	const unsigned int getTorqueListOffset() const { return m_torqueListOffset; }
 	const unsigned int getTorqueListChunkSize() const { return m_torqueListChunkSize; }
 	void setTorqueListProperties(unsigned int p_offset, unsigned int p_size) { m_torqueListOffset = p_offset; m_torqueListChunkSize = p_size; }
+
+	// Optimization
+	virtual std::vector<float> getParams();
+	virtual void consumeParams(const std::vector<float>& p_other);
+	virtual std::vector<float> getParamsMax();
+	virtual std::vector<float> getParamsMin();
+
 
 protected:
 private:

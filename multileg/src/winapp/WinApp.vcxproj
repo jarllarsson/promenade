@@ -197,6 +197,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ConstraintComponent.cpp" />
+    <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="ControllerSystem.cpp" />
     <ClCompile Include="DebugDrawBatch.cpp" />
     <ClCompile Include="DebugDrawer.cpp" />
