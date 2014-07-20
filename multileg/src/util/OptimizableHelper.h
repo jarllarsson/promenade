@@ -77,6 +77,16 @@ namespace OptimizableHelper
 		popFront(p_params, 3);
 	}
 
+	void ConsumeParamsTo(std::vector<float>& p_params, glm::vec4* p_inoutVec4)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			(*p_inoutVec4)[i] = p_params[i];
+		}
+		popFront(p_params, 4);
+	}
+
+
 	void ConsumeParamsTo(std::vector<float>& p_params, glm::quat* p_inoutQuat)
 	{
 		for (int i = 0; i < 4; i++)

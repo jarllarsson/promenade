@@ -38,12 +38,12 @@ std::vector<float> ControllerComponent::getParams()
 }
 
 
-void ControllerComponent::consumeParams(const std::vector<float>& p_other)
+void ControllerComponent::consumeParams(std::vector<float>& p_other)
 {
 	m_player.consumeParams(p_other);
 	for (int i = 0; i < m_legFrames.size(); i++)
 	{
-		m_legFrames[i].consumeParams();
+		m_legFrames[i].consumeParams(p_other);
 	}
 }
 
@@ -123,9 +123,28 @@ std::vector<float> ControllerComponent::LegFrame::getParams()
 	return params;
 }
 
-void ControllerComponent::LegFrame::consumeParams(const std::vector<float>& p_other)
+void ControllerComponent::LegFrame::consumeParams(std::vector<float>& p_other)
 {
-
+	for (int i = 0; i < 3; i++)
+		m_orientationLFTraj[i].consumeParams(p_other);	//
+	m_heightLFTraj.consumeParams(p_other);			//
+	m_footTrackingGainKp.consumeParams(p_other);	//
+	m_stepHeighTraj.consumeParams(p_other);			//
+	m_footTransitionEase.consumeParams(p_other);	//
+	m_FhPD.consumeParams(p_other);					// optimizable height force pd
+	OptimizableHelper::ConsumeParamsTo(p_other, &m_velocityRegulatorKv);
+	OptimizableHelper::ConsumeParamsTo(p_other, &m_FDHVComponents);
+	OptimizableHelper::ConsumeParamsTo(p_other, &m_footPlacementVelocityScale);	
+	OptimizableHelper::ConsumeParamsTo(p_other, &m_stepLength);
+	OptimizableHelper::ConsumeParamsTo(p_other, &m_tuneToeOffAngle);
+	OptimizableHelper::ConsumeParamsTo(p_other, &m_tuneFootStrikeAngle);
+	// All per leg data
+	for (int i = 0; i < m_legs.size(); i++)
+	{
+		m_stepCycles[i].consumeParams(p_other);
+		OptimizableHelper::ConsumeParamsTo(p_other,&m_toeOffTime[i]);
+		OptimizableHelper::ConsumeParamsTo(p_other,&m_tuneFootStrikeTime[i]);
+	}
 }
 
 std::vector<float> ControllerComponent::LegFrame::getParamsMax()

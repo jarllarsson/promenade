@@ -267,7 +267,7 @@ public:
 
 		// Optimization
 		virtual std::vector<float> getParams();
-		virtual void consumeParams(const std::vector<float>& p_other);
+		virtual void consumeParams(std::vector<float>& p_other);
 		virtual std::vector<float> getParamsMax();
 		virtual std::vector<float> getParamsMin();
 	};
@@ -295,7 +295,7 @@ public:
 
 	// Optimization
 	virtual std::vector<float> getParams();
-	virtual void consumeParams(const std::vector<float>& p_other);
+	virtual void consumeParams(std::vector<float>& p_other);
 	virtual std::vector<float> getParamsMax();
 	virtual std::vector<float> getParamsMin();
 
