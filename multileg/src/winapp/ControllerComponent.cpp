@@ -120,6 +120,7 @@ std::vector<float> ControllerComponent::LegFrame::getParams()
 		params.push_back(m_toeOffTime[i]);
 		params.push_back(m_tuneFootStrikeTime[i]);
 	}
+	return params;
 }
 
 void ControllerComponent::LegFrame::consumeParams(const std::vector<float>& p_other)
@@ -142,7 +143,7 @@ std::vector<float> ControllerComponent::LegFrame::getParamsMax()
 	paramsmax.push_back(200.0f); paramsmax.push_back(20.0f); // FhPD (kp, kd), optimizable height force pd
 	/*paramsmax.push_back(m_lateStrikeOffsetDeltaH);*/
 	paramsmax.push_back(100.0f); // velocityRegulatorKv
-	for (int i=0;i<3;i++) paramsmax.push_back(200.0f);	// FDHVComponents;
+	for (int i=0;i<4;i++) paramsmax.push_back(200.0f);	// FDHVComponents;
 	paramsmax.push_back(10.0f);	// footPlacementVelocityScale
 	paramsmax.push_back(3.0f); paramsmax.push_back(3.0f);// step length
 	paramsmax.push_back(TWOPI); // toe off angle
@@ -154,9 +155,35 @@ std::vector<float> ControllerComponent::LegFrame::getParamsMax()
 		paramsmax.push_back(0.5f); // toe off time
 		paramsmax.push_back(0.5f); // foot strike time
 	}
+	return paramsmax;
 }
 
 std::vector<float> ControllerComponent::LegFrame::getParamsMin()
 {
-
+	std::vector<float> paramsmin;
+	// All per leg frame data
+	for (int i = 0; i < 3; i++)
+		for (int x = 0; x < m_orientationLFTraj[i].getSize(); x++)
+			paramsmin.push_back(0.0f);		// m_orientationLFTraj
+	for (int i = 0; i < m_heightLFTraj.getSize(); i++)			paramsmin.push_back(0.0f);		// heightLFTraj
+	for (int i = 0; i < m_footTrackingGainKp.getSize(); i++)	paramsmin.push_back(0.0f);		// footTrackingGainKp
+	for (int i = 0; i < m_stepHeighTraj.getSize(); i++)			paramsmin.push_back(0.0f);		// stepHeighTraj
+	for (int i = 0; i < m_footTransitionEase.getSize(); i++)	paramsmin.push_back(0.0f);		// footTransitionEase
+	/*params.push_back(m_desiredLFTorquePD;		//*/
+	paramsmin.push_back(0.0f); paramsmin.push_back(0.0f); // FhPD (kp, kd), optimizable height force pd
+	/*paramsmax.push_back(m_lateStrikeOffsetDeltaH);*/
+	paramsmin.push_back(0.0f); // velocityRegulatorKv
+	for (int i = 0; i<4; i++) paramsmin.push_back(-200.0f);	// FDHVComponents;
+	paramsmin.push_back(0.0f);	// footPlacementVelocityScale
+	paramsmin.push_back(0.0f); paramsmin.push_back(0.0f);// step length
+	paramsmin.push_back(0.0f); // toe off angle
+	paramsmin.push_back(0.0f); // foot strike angle
+	// All per leg data
+	for (int i = 0; i < m_legs.size(); i++)
+	{
+		paramsmin.push_back(m_stepCycles[i].getParamsMin());
+		paramsmin.push_back(0.0f); // toe off time
+		paramsmin.push_back(0.0f); // foot strike time
+	}
+	return paramsmin;
 }
