@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <IOptimizable.h>
 
 // =======================================================================================
 //                                      PieceWiseLinear
@@ -13,7 +15,7 @@
 /// 17-6-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class PieceWiseLinear
+class PieceWiseLinear : public IOptimizable
 {
 public:
 	enum InitType
@@ -42,6 +44,12 @@ public:
 	float getNormalizedIdx(unsigned int p_idx) const;
 	float lerpGet(float p_phi) const;
 	float get(unsigned int p_idx) const;
+
+	// Optimization
+	virtual std::vector<float> getParams();
+	virtual void consumeParams(std::vector<float>& p_other);
+	virtual std::vector<float> getParamsMax();
+	virtual std::vector<float> getParamsMin();
 
 protected:
 	// The data
