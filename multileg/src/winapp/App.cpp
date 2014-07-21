@@ -321,7 +321,15 @@ void App::run()
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
 			controller.refresh();
+
+			// permutation test
+			//std::vector<float> test = ((ControllerComponent*)controller.getComponent<ControllerComponent>())->getParams();
+			//test[3]+=(float)x;
+			//((ControllerComponent*)controller.getComponent<ControllerComponent>())->consumeParams(test);
+
 		}
+
+		
 
 	#ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.activate();

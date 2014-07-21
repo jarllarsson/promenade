@@ -30,7 +30,7 @@ ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame,
 
 std::vector<float> ControllerComponent::getParams()
 {
-	DEBUGPRINT(("CONTROLLER COMP GETPARAMS\n"));
+	DEBUGPRINT(("\nCONTROLLER COMP GETPARAMS\n"));
 	std::vector<float> params;
 	OptimizableHelper::addRange(params,m_player.getParams());
 	for (int i = 0; i < m_legFrames.size(); i++)
