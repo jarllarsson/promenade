@@ -1,5 +1,7 @@
 #pragma once
 #include <algorithm>
+#include <vector>
+#include <OptimizableHelper.h>
 // =======================================================================================
 //                                      PID
 // =======================================================================================
@@ -12,7 +14,7 @@
 /// 17-6-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class PID
+class PID : public IOptimizable
 {
 public:
 	PID()
@@ -59,6 +61,35 @@ public:
 		m_D = (m_P - oldError) / p_dt; // calculate speed of error change
 		// return weighted sum
 		return m_Kp * m_P + m_Ki * m_I + m_Kd * m_D;
+	}
+
+	// Optimization
+	virtual std::vector<float> getParams()
+	{
+		std::vector<float> params;
+		params.push_back(m_Kp);
+		params.push_back(m_Ki);
+		params.push_back(m_Kd);
+	}
+	virtual void consumeParams(std::vector<float>& p_other)
+	{
+		OptimizableHelper::ConsumeParamsTo(p_other, &m_Kp);
+		OptimizableHelper::ConsumeParamsTo(p_other, &m_Ki);
+		OptimizableHelper::ConsumeParamsTo(p_other, &m_Kd);
+	}
+	virtual std::vector<float> getParamsMax()
+	{
+		std::vector<float> paramsmax;
+		paramsmax.push_back(1000.0f);
+		paramsmax.push_back(1000.0f);
+		paramsmax.push_back(1000.0f);
+	}
+	virtual std::vector<float> getParamsMin()
+	{
+		std::vector<float> paramsmin;
+		paramsmin.push_back(-1000.0f);
+		paramsmin.push_back(-1000.0f);
+		paramsmin.push_back(-1000.0f);
 	}
 
 protected:

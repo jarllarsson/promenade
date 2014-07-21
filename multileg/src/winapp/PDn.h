@@ -2,6 +2,7 @@
 #include <glm\gtc\type_ptr.hpp>
 #include <algorithm>
 #include <MathHelp.h>
+#include <OptimizableHelper.h>
 // =======================================================================================
 //                                      PDn
 // =======================================================================================
@@ -14,7 +15,7 @@
 /// 19-6-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class PDn
+class PDn : public IOptimizable
 {
 public:
 	static const unsigned int c_size = 3;
@@ -112,6 +113,31 @@ public:
 			result = drive(a * dir, p_dt);
 		}
 		return result; // Note, these are 3 PIDs
+	}
+
+	// Optimization
+	virtual std::vector<float> getParams()
+	{
+		std::vector<float> params;
+		params.push_back(m_Kp);
+		params.push_back(m_Kd);
+	}
+	virtual void consumeParams(std::vector<float>& p_other)
+	{
+		OptimizableHelper::ConsumeParamsTo(p_other, &m_Kp);
+		OptimizableHelper::ConsumeParamsTo(p_other, &m_Kd);
+	}
+	virtual std::vector<float> getParamsMax()
+	{
+		std::vector<float> paramsmax;
+		paramsmax.push_back(1000.0f);
+		paramsmax.push_back(1000.0f);
+	}
+	virtual std::vector<float> getParamsMin()
+	{
+		std::vector<float> paramsmin;
+		paramsmin.push_back(-1000.0f);
+		paramsmin.push_back(-1000.0f);
 	}
 
 protected:

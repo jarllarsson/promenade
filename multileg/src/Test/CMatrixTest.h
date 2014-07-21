@@ -1,7 +1,7 @@
 #pragma once
 #include <CMatrix.h>
 
-TEST_CASE("CMatrix creation", "[CMatrix,creation]") {
+TEST_CASE("CMatrixCreation", "[CMatrix,creation]") {
 	// Test default constructor
 	//REQUIRE(CMatrix(4, 4) == CMatrix());
 	// Test member assignment
@@ -10,7 +10,7 @@ TEST_CASE("CMatrix creation", "[CMatrix,creation]") {
 	REQUIRE(mat.m_cols == 10);
 }
 
-TEST_CASE("CMatrix member assignment", "[CMatrix,assignment]") {
+TEST_CASE("CMatrixMemberAssignment", "[CMatrix,assignment]") {
 	// Test member assignment
 	CMatrix mat(100, 10);
 	mat(50, 4) = 4.0f;
@@ -33,7 +33,7 @@ TEST_CASE("CMatrix member assignment", "[CMatrix,assignment]") {
 		}
 }
 
-TEST_CASE("CMatrix transpose", "[CMatrix,transpose]") {
+TEST_CASE("CMatrixTranspose", "[CMatrix,transpose]") {
 	// Test member assignment
 	CMatrix mat(100, 10);
 	//
@@ -52,7 +52,7 @@ TEST_CASE("CMatrix transpose", "[CMatrix,transpose]") {
 	}
 }
 
-TEST_CASE("CMatrix multiply", "[CMatrix,multiply]") {
+TEST_CASE("CMatrixMultiply", "[CMatrix,multiply]") {
 	// Test member assignment
 	CMatrix mat1(20, 10);
 	CMatrix mat2(10, 20);

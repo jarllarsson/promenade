@@ -1,8 +1,8 @@
 #define CATCH_CONFIG_MAIN
 #include <catch.hpp>
 #include <MathHelp.h>
-#include "CMatrixTest.h"
-#include "JacobianVFChainTest.h"
+//#include "CMatrixTest.h"
+#include "RandomTest.h"
 
 // =======================================================================================
 //                                      Unit Tests
@@ -16,7 +16,6 @@
 /// 9-6-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 // 
-
 
 TEST_CASE("Shortening of vec4 to vec3", "[vec3]") {
 	REQUIRE(MathHelp::toVec3(glm::vec4(1.4f, 3.4f, 5.5f, 1.0f)) == glm::vec3(1.4f, 3.4f, 5.5f));

@@ -47,12 +47,6 @@ std::vector<double> Random::getRealUniformList(double p_min, double p_max, unsig
 	return res; // foo
 }
 
-int Random::getIntNormal(int p_min, int p_max, Generator p_generator/*= Generator::DETERMINISTIC*/)
-{
-	std::normal_distribution<int> normal(p_min, p_max);
-	float res = normal(*getEnginebyType(p_generator));
-	return res;
-}
 
 std::default_random_engine* Random::getEnginebyType(Generator p_type)
 {

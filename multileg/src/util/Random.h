@@ -29,7 +29,6 @@ public:
 	float getRealUniform(float p_min, float p_max, Generator p_generator = Generator::DETERMINISTIC);
 	std::vector<float> getRealUniformList(float p_min, float p_max, unsigned int p_population, Generator p_generator= Generator::DETERMINISTIC);
 	std::vector<double> getRealUniformList(double p_min, double p_max, unsigned int p_population, Generator p_generator = Generator::DETERMINISTIC);
-	int getIntNormal(int p_min, int p_max, Generator p_generator= Generator::DETERMINISTIC);
 
 	
 protected:
