@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <OptimizableHelper.h>
+#include <DebugPrint.h>
 // =======================================================================================
 //                                      PID
 // =======================================================================================
@@ -66,10 +67,12 @@ public:
 	// Optimization
 	virtual std::vector<float> getParams()
 	{
+		DEBUGPRINT(("PID GETPARAMS\n"));
 		std::vector<float> params;
 		params.push_back(m_Kp);
 		params.push_back(m_Ki);
 		params.push_back(m_Kd);
+		return params;
 	}
 	virtual void consumeParams(std::vector<float>& p_other)
 	{
@@ -83,6 +86,7 @@ public:
 		paramsmax.push_back(1000.0f);
 		paramsmax.push_back(1000.0f);
 		paramsmax.push_back(1000.0f);
+		return paramsmax;
 	}
 	virtual std::vector<float> getParamsMin()
 	{
@@ -90,6 +94,7 @@ public:
 		paramsmin.push_back(-1000.0f);
 		paramsmin.push_back(-1000.0f);
 		paramsmin.push_back(-1000.0f);
+		return paramsmin;
 	}
 
 protected:

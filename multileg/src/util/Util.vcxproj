@@ -163,6 +163,7 @@
     <ClCompile Include="ColorPalettes.cpp" />
     <ClCompile Include="MathHelp.cpp" />
     <ClCompile Include="MeasurementBin.cpp" />
+    <ClCompile Include="OptimizableHelper.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="ToString.cpp" />
     <ClCompile Include="Util.cpp" />

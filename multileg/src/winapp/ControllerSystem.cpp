@@ -1029,7 +1029,8 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				else if (x == pdChain->getLowerLegSegmentIdx())
 					sagittalAngle = ik->getLowerWorldLegAngle() + PI*0.5f;
 				else if (x == pdChain->getFootIdx())
-					sagittalAngle = getDesiredFootAngle(x, lf, p_phi);
+					sagittalAngle = getDesiredFootAngle(n, lf, p_phi);
+				//
 				unsigned jointIdx = pdChain->m_jointIdxChain[x];
 				// Calculate angle to leg frame space
 				glm::quat goal = currentOrientationQuat * glm::quat(glm::vec3(sagittalAngle, 0.0f, 0.0f));

@@ -1,6 +1,7 @@
 #pragma once
 #include <IOptimizable.h>
 #include <OptimizableHelper.h>
+#include <DebugPrint.h>
 // =======================================================================================
 //                                      PD
 // =======================================================================================
@@ -67,9 +68,11 @@ public:
 	// Optimization
 	virtual std::vector<float> getParams()
 	{
+		DEBUGPRINT(("PD GETPARAMS\n"));
 		std::vector<float> params;
 		params.push_back(m_Kp);
 		params.push_back(m_Kd);
+		return params;
 	}
 	virtual void consumeParams(std::vector<float>& p_other)
 	{
@@ -81,12 +84,14 @@ public:
 		std::vector<float> paramsmax;
 		paramsmax.push_back(1000.0f);
 		paramsmax.push_back(1000.0f);
+		return paramsmax;
 	}
 	virtual std::vector<float> getParamsMin()
 	{
 		std::vector<float> paramsmin;
 		paramsmin.push_back(-1000.0f);
 		paramsmin.push_back(-1000.0f);
+		return paramsmin;
 	}
 
 protected:

@@ -68,5 +68,8 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="ColorPalettes.cpp" />
+    <ClCompile Include="OptimizableHelper.cpp">
+      <Filter>Optimization</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

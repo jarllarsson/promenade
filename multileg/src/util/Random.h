@@ -25,6 +25,7 @@ public:
 		NON_DETERMINISTIC
 	};
 
+	int getRandomInt(int p_min, int p_max, Generator p_generator = Generator::DETERMINISTIC);
 	float getRealNormal(float p_min, float p_max, Generator p_generator= Generator::DETERMINISTIC);
 	float getRealUniform(float p_min, float p_max, Generator p_generator = Generator::DETERMINISTIC);
 	std::vector<float> getRealUniformList(float p_min, float p_max, unsigned int p_population, Generator p_generator= Generator::DETERMINISTIC);

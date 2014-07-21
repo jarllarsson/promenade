@@ -23,6 +23,6 @@ public:
 	virtual void consumeParams(std::vector<float>& p_other) = 0;
 protected:
 	IOptimizable() {}
-private:
 	IOptimizable(const IOptimizable& p_other) {}
+private:
 };

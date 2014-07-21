@@ -1,5 +1,6 @@
 #include "StepCycle.h"
 #include <OptimizableHelper.h>
+#include <DebugPrint.h>
 
 StepCycle::StepCycle()
 {
@@ -80,9 +81,11 @@ void StepCycle::sanitize()
 
 std::vector<float> StepCycle::getParams()
 {
+	DEBUGPRINT(("STEP CYCLE GETPARAMS\n"));
 	std::vector<float> params;
 	params.push_back(m_tuneDutyFactor);
 	params.push_back(m_tuneStepTrigger);
+	return params;
 }
 
 void StepCycle::consumeParams(std::vector<float>& p_other)
@@ -93,14 +96,16 @@ void StepCycle::consumeParams(std::vector<float>& p_other)
 
 std::vector<float> StepCycle::getParamsMax()
 {
-	std::vector<float> params;
-	params.push_back(0.999f); // DF
-	params.push_back(0.999f); // ST
+	std::vector<float> paramsmax;
+	paramsmax.push_back(0.999f); // DF
+	paramsmax.push_back(0.999f); // ST
+	return paramsmax;
 }
 
 std::vector<float> StepCycle::getParamsMin()
 {
-	std::vector<float> params;
-	params.push_back(0.0f); // DF
-	params.push_back(0.0f); // ST
+	std::vector<float> paramsmin;
+	paramsmin.push_back(0.0f); // DF
+	paramsmin.push_back(0.0f); // ST
+	return paramsmin;
 }

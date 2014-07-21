@@ -1,6 +1,7 @@
 #include "PieceWiseLinear.h"
 #include <MathHelp.h>
 #include <OptimizableHelper.h>
+#include <DebugPrint.h>
 
 PieceWiseLinear::PieceWiseLinear()
 {
@@ -132,9 +133,11 @@ float PieceWiseLinear::get(unsigned int p_idx) const
 
 std::vector<float> PieceWiseLinear::getParams()
 {
+	DEBUGPRINT(("PIECEWISE LINEAR GETPARAMS\n"));
 	std::vector<float> params;
 	for (int i = 0; i < getSize(); i++)
 		params.push_back(get(i));	//
+	return params;
 }
 
 void PieceWiseLinear::consumeParams(std::vector<float>& p_other)
@@ -145,14 +148,16 @@ void PieceWiseLinear::consumeParams(std::vector<float>& p_other)
 
 std::vector<float> PieceWiseLinear::getParamsMax()
 {
-	std::vector<float> params;
+	std::vector<float> paramsmax;
 	for (int i = 0; i < getSize(); i++)
-		params.push_back(100.0f);
+		paramsmax.push_back(100.0f);
+	return paramsmax;
 }
 
 std::vector<float> PieceWiseLinear::getParamsMin()
 {
-	std::vector<float> params;
+	std::vector<float> paramsmin;
 	for (int i = 0; i < getSize(); i++)
-		params.push_back(-100.0f);
+		paramsmin.push_back(-100.0f);
+	return paramsmin;
 }

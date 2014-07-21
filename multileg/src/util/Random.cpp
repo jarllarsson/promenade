@@ -56,3 +56,10 @@ std::default_random_engine* Random::getEnginebyType(Generator p_type)
 		return &m_nondetgenerator;
 }
 
+int Random::getRandomInt(int p_min, int p_max, Generator p_generator /*= Generator::DETERMINISTIC*/)
+{
+	std::uniform_int_distribution<int> uniform(p_min, p_max);
+	int res = uniform(*getEnginebyType(p_generator));
+	return res;
+}
+

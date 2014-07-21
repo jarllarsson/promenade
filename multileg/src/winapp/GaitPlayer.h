@@ -1,4 +1,7 @@
 #pragma once
+#include <IOptimizable.h>
+#include <OptimizableHelper.h>
+#include <DebugPrint.h>
 
 // =======================================================================================
 //                                      GaitPlayer
@@ -13,7 +16,7 @@
 /// 3-6-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class GaitPlayer
+class GaitPlayer : public IOptimizable
 {
 public:
 	GaitPlayer()
@@ -76,6 +79,31 @@ public:
 	const float* getPhasePointer()
 	{
 		return &m_gaitPhase;
+	}
+
+	// Optimization
+	virtual std::vector<float> getParams()
+	{
+		DEBUGPRINT(("GAIT PLAYER GETPARAMS\n"));
+		std::vector<float> params;
+		params.push_back(m_tuneGaitPeriod);
+		return params;
+	}
+	virtual void consumeParams(std::vector<float>& p_other)
+	{
+		OptimizableHelper::ConsumeParamsTo(p_other, &m_tuneGaitPeriod);
+	}
+	virtual std::vector<float> getParamsMax()
+	{
+		std::vector<float> paramsmax;
+		paramsmax.push_back(5.0f);
+		return paramsmax;
+	}
+	virtual std::vector<float> getParamsMin()
+	{
+		std::vector<float> paramsmin;
+		paramsmin.push_back(0.01f);
+		return paramsmin;
 	}
 
 private:

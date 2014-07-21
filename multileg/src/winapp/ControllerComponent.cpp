@@ -1,5 +1,6 @@
 #include "ControllerComponent.h"
 #include <OptimizableHelper.h>
+#include <DebugPrint.h>
 
 ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame, 
 	std::vector<artemis::Entity*>& p_hipJoints)
@@ -29,12 +30,14 @@ ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame,
 
 std::vector<float> ControllerComponent::getParams()
 {
+	DEBUGPRINT(("CONTROLLER COMP GETPARAMS\n"));
 	std::vector<float> params;
-	params.push_back(m_player.getParams());
+	OptimizableHelper::addRange(params,m_player.getParams());
 	for (int i = 0; i < m_legFrames.size(); i++)
 	{
-		params.push_back(m_legFrames[i].getParams());
+		OptimizableHelper::addRange(params,m_legFrames[i].getParams());
 	}
+	return params;
 }
 
 
@@ -50,21 +53,23 @@ void ControllerComponent::consumeParams(std::vector<float>& p_other)
 std::vector<float> ControllerComponent::getParamsMax()
 {
 	std::vector<float> paramsmax;
-	paramsmax.push_back(m_player.getParamsMax());
+	OptimizableHelper::addRange(paramsmax, m_player.getParamsMax());
 	for (int i = 0; i < m_legFrames.size(); i++)
 	{
-		paramsmax.push_back(m_legFrames[i].getParamsMax());
+		OptimizableHelper::addRange(paramsmax, m_legFrames[i].getParamsMax());
 	}
+	return paramsmax;
 }
 
 std::vector<float> ControllerComponent::getParamsMin()
 {
 	std::vector<float> paramsmin;
-	paramsmin.push_back(m_player.getParamsMin());
+	OptimizableHelper::addRange(paramsmin, m_player.getParamsMin());
 	for (int i = 0; i < m_legFrames.size(); i++)
 	{
-		paramsmin.push_back(m_legFrames[i].getParamsMin());
+		OptimizableHelper::addRange(paramsmin, m_legFrames[i].getParamsMin());
 	}
+	return paramsmin;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -95,28 +100,29 @@ void ControllerComponent::LegFrame::createFootPlacementModelVarsForNewLeg(const 
 
 std::vector<float> ControllerComponent::LegFrame::getParams()
 {
+	DEBUGPRINT(("LEG FRAME GETPARAMS\n"));
 	std::vector<float> params;
 	// All per leg frame data
 	for (int i = 0; i < 3; i++)
-		params.push_back(m_orientationLFTraj[i].getParams());	//
-	params.push_back(m_heightLFTraj.getParams());			//
-	params.push_back(m_footTrackingGainKp.getParams());	//
-	params.push_back(m_stepHeighTraj.getParams());			//
-	params.push_back(m_footTransitionEase.getParams());	//
-	/*params.push_back(m_desiredLFTorquePD;		//*/
-	params.push_back(m_FhPD.getParams());					// optimizable height force pd
-	/*params.push_back(m_lateStrikeOffsetDeltaH);*/
+		OptimizableHelper::addRange(params,m_orientationLFTraj[i].getParams());	//
+	OptimizableHelper::addRange(params,m_heightLFTraj.getParams());			//
+	OptimizableHelper::addRange(params,m_footTrackingGainKp.getParams());	//
+	OptimizableHelper::addRange(params,m_stepHeighTraj.getParams());			//
+	OptimizableHelper::addRange(params,m_footTransitionEase.getParams());	//
+	/*OptimizableHelper::addRange(params,m_desiredLFTorquePD;		//*/
+	OptimizableHelper::addRange(params,m_FhPD.getParams());					// optimizable height force pd
+	/*OptimizableHelper::addRange(params,m_lateStrikeOffsetDeltaH);*/
 	params.push_back(m_velocityRegulatorKv);
-	params.push_back(OptimizableHelper::ExtractParamsListFrom(m_FDHVComponents));
+	OptimizableHelper::addRange(params,OptimizableHelper::ExtractParamsListFrom(m_FDHVComponents));
 	params.push_back(m_footPlacementVelocityScale);			// per leg frame
 	/*float			 m_height;*/
-	params.push_back(OptimizableHelper::ExtractParamsListFrom(m_stepLength));
+	OptimizableHelper::addRange(params,OptimizableHelper::ExtractParamsListFrom(m_stepLength));
 	params.push_back(m_tuneToeOffAngle);
 	params.push_back(m_tuneFootStrikeAngle);
 	// All per leg data
 	for (int i = 0; i < m_legs.size(); i++)
 	{
-		params.push_back(m_stepCycles[i].getParams());
+		OptimizableHelper::addRange(params,m_stepCycles[i].getParams());
 		params.push_back(m_toeOffTime[i]);
 		params.push_back(m_tuneFootStrikeTime[i]);
 	}
@@ -158,7 +164,7 @@ std::vector<float> ControllerComponent::LegFrame::getParamsMax()
 	for (int i = 0; i < m_footTrackingGainKp.getSize(); i++)	paramsmax.push_back(10.0f);		// footTrackingGainKp
 	for (int i = 0; i < m_stepHeighTraj.getSize(); i++)			paramsmax.push_back(5.5f);		// stepHeighTraj
 	for (int i = 0; i < m_footTransitionEase.getSize(); i++)	paramsmax.push_back(1.0f);		// footTransitionEase
-	/*params.push_back(m_desiredLFTorquePD;		//*/
+	/*OptimizableHelper::addRange(params,m_desiredLFTorquePD;		//*/
 	paramsmax.push_back(200.0f); paramsmax.push_back(20.0f); // FhPD (kp, kd), optimizable height force pd
 	/*paramsmax.push_back(m_lateStrikeOffsetDeltaH);*/
 	paramsmax.push_back(100.0f); // velocityRegulatorKv
@@ -170,7 +176,7 @@ std::vector<float> ControllerComponent::LegFrame::getParamsMax()
 	// All per leg data
 	for (int i = 0; i < m_legs.size(); i++)
 	{
-		paramsmax.push_back(m_stepCycles[i].getParamsMax());
+		OptimizableHelper::addRange(paramsmax, m_stepCycles[i].getParamsMax());
 		paramsmax.push_back(0.5f); // toe off time
 		paramsmax.push_back(0.5f); // foot strike time
 	}
@@ -188,7 +194,7 @@ std::vector<float> ControllerComponent::LegFrame::getParamsMin()
 	for (int i = 0; i < m_footTrackingGainKp.getSize(); i++)	paramsmin.push_back(0.0f);		// footTrackingGainKp
 	for (int i = 0; i < m_stepHeighTraj.getSize(); i++)			paramsmin.push_back(0.0f);		// stepHeighTraj
 	for (int i = 0; i < m_footTransitionEase.getSize(); i++)	paramsmin.push_back(0.0f);		// footTransitionEase
-	/*params.push_back(m_desiredLFTorquePD;		//*/
+	/*OptimizableHelper::addRange(params,m_desiredLFTorquePD;		//*/
 	paramsmin.push_back(0.0f); paramsmin.push_back(0.0f); // FhPD (kp, kd), optimizable height force pd
 	/*paramsmax.push_back(m_lateStrikeOffsetDeltaH);*/
 	paramsmin.push_back(0.0f); // velocityRegulatorKv
@@ -200,7 +206,7 @@ std::vector<float> ControllerComponent::LegFrame::getParamsMin()
 	// All per leg data
 	for (int i = 0; i < m_legs.size(); i++)
 	{
-		paramsmin.push_back(m_stepCycles[i].getParamsMin());
+		OptimizableHelper::addRange(paramsmin, m_stepCycles[i].getParamsMin());
 		paramsmin.push_back(0.0f); // toe off time
 		paramsmin.push_back(0.0f); // foot strike time
 	}

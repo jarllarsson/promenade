@@ -56,7 +56,7 @@ private:
 		std::vector<float> S(p_size);
 		for (int i = 0; i < p_size; i++)
 		{
-			S[i] = m_randomEngine->getIntNormal(0, 99) < changeProbabilityPercent ? 1.0f : 0.0f;
+			S[i] = m_randomEngine->getRandomInt(0, 99) < changeProbabilityPercent ? 1.0f : 0.0f;
 		}
 		return S;
 	}
