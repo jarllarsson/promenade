@@ -56,7 +56,7 @@ private:
 		std::vector<float> S(p_size);
 		for (int i = 0; i < p_size; i++)
 		{
-			S[i] = m_randomEngine->getInt(0, 99) < changeProbabilityPercent ? 1.0f : 0.0f;
+			S[i] = m_randomEngine->getIntNormal(0, 99) < changeProbabilityPercent ? 1.0f : 0.0f;
 		}
 		return S;
 	}
@@ -79,7 +79,7 @@ private:
 
 		// Calculate delta-P
 		std::vector<double> deltaP(size);
-		std::vector<double> U = m_randomEngine->getRealUniform(-0.1,0.1,size);
+		std::vector<double> U = m_randomEngine->getRealUniformList(-0.1,0.1,size);
 		for (unsigned int i = 0; i < size; i++)
 		{
 			double P = (double)p_P[i];
