@@ -1,6 +1,7 @@
 #pragma once
 #include "AdvancedEntitySystem.h"
 #include "ControllerComponent.h"
+#include <ParamChanger.h>
 
 // =======================================================================================
 //                                      ControllerOptimizationSystem
@@ -19,6 +20,19 @@ class ControllerOptimizationSystem : public AdvancedEntitySystem
 {
 private:
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
+
+	ControllerComponent* m_bestScoreController;
+	ParamChanger m_changer;
+	float m_simTime; // The amount of time the sim will be run
+	float m_warmupTime; // The amount of time to ignore taking measurements for score
+	float m_currentSimTime; // The current playback time
+	bool m_instantEval; // whether to evaluate the score at once (1 sim tick)
+
+	int m_currentBestCandidateIdx;
+
+	double m_lastBestScore; // "Hiscore" (the lower, the better)
+	std::vector<float> m_lastBestParams; // saved params needed for a controller to get the hiscore
+	std::vector<std::vector<float> > m_currentParams; // all params for the current controllers
 public:
 
 	ControllerOptimizationSystem()
