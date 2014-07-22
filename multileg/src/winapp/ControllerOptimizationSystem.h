@@ -10,6 +10,8 @@
 ///---------------------------------------------------------------------------------------
 /// \brief	Measures the controllers and perform parameter evaluation on simulation end.
 ///			New parameters are provided as well when restarting.
+///			Note that fixed frame step size is expected for running optimization sim, 
+///			for fully deterministic eval.
 ///        
 /// # ControllerOptimizationSystem
 /// 
@@ -23,22 +25,25 @@ private:
 
 	ControllerComponent* m_bestScoreController;
 	ParamChanger m_changer;
-	float m_simTime; // The amount of time the sim will be run
-	float m_warmupTime; // The amount of time to ignore taking measurements for score
-	float m_currentSimTime; // The current playback time
+	// Note that fixed frame step size is expected for running optimization sim, for fully deterministic eval
+	int m_simTicks; // The amount of ticks the sim will be run
+	int m_warmupTicks; // The amount of ticks to ignore taking measurements for score
+	int m_currentSimTicks; // The current playback ticks
 	bool m_instantEval; // whether to evaluate the score at once (1 sim tick)
 
 	int m_currentBestCandidateIdx;
 
 	double m_lastBestScore; // "Hiscore" (the lower, the better)
+	std::vector<double> m_controllerScores; // All scores for one round
 	std::vector<float> m_lastBestParams; // saved params needed for a controller to get the hiscore
+	std::vector<float> m_paramsMax; // Prefetch of controller parameter
+	std::vector<float> m_paramsMin; // bounds in the current sim
 	std::vector<std::vector<float> > m_currentParams; // all params for the current controllers
+
+	static int m_testCount; // global amount of executed tests
 public:
 
-	ControllerOptimizationSystem()
-	{
-		addComponentType<ControllerComponent>();
-	};
+	ControllerOptimizationSystem();
 
 	virtual void initialize()
 	{
@@ -50,10 +55,7 @@ public:
 
 	}
 
-	virtual void added(artemis::Entity &e)
-	{
-
-	}
+	virtual void added(artemis::Entity &e);
 
 	virtual void processEntity(artemis::Entity &e)
 	{
@@ -66,8 +68,23 @@ public:
 
 	}
 
+	static void resetTestCount();
+	float getCurrentSimTime();
+	bool isSimCompleted();
 protected:
 private:
+	static void incTestCount();
+
+	void restartSim();
+	void findCurrentBestCandidate();
+	void voidBestCandidate();
+	void storeParams();
+	void resetScores();
+	void perturbParams(int p_offset = 0);
+	void evaluateAll();
+	double evaluateCandidateFitness(int p_idx);
+
+	bool m_firstControllerAdded;
 };
 
 /*

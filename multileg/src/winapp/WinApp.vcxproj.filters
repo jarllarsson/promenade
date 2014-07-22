@@ -225,5 +225,8 @@
     <ClCompile Include="ControllerComponent.cpp">
       <Filter>Entity System\Locomotion\Controller</Filter>
     </ClCompile>
+    <ClCompile Include="ControllerOptimizationSystem.cpp">
+      <Filter>Entity System\Locomotion\Optimization</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
