@@ -39,6 +39,7 @@ private:
 	std::vector<float> m_paramsMax; // Prefetch of controller parameter
 	std::vector<float> m_paramsMin; // bounds in the current sim
 	std::vector<std::vector<float> > m_currentParams; // all params for the current controllers
+	std::vector<ControllerComponent*> m_optimizableControllers;
 
 	static int m_testCount; // global amount of executed tests
 public:
@@ -68,6 +69,7 @@ public:
 
 	}
 
+	void initSim();
 	static void resetTestCount();
 	float getCurrentSimTime();
 	bool isSimCompleted();

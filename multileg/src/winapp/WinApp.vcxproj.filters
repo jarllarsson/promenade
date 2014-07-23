@@ -159,6 +159,9 @@
     <ClInclude Include="ControllerOptimizationSystem.h">
       <Filter>Entity System\Locomotion\Optimization</Filter>
     </ClInclude>
+    <ClInclude Include="ControllerMovementRecorder.h">
+      <Filter>Entity System\Locomotion\Optimization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">

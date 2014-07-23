@@ -13,6 +13,7 @@
 #include "PD.h"
 #include "IK2Handler.h"
 #include <IOptimizable.h>
+#include <ControllerMovementRecorder.h>
 // =======================================================================================
 //                                      ControllerComponent
 // =======================================================================================
@@ -26,7 +27,7 @@
 /// 20-5-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-class ControllerComponent : public artemis::Component, IOptimizable
+class ControllerComponent : public artemis::Component, public IOptimizable
 {
 public:
 
@@ -298,6 +299,7 @@ public:
 	virtual void consumeParams(std::vector<float>& p_other);
 	virtual std::vector<float> getParamsMax();
 	virtual std::vector<float> getParamsMin();
+	ControllerMovementRecorder* getRecordedData(){ return NULL; }
 
 
 protected:
