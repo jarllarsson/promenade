@@ -1,35 +1,7 @@
 #include "ControllerMovementRecorder.h"
-
+#include "ControllerComponent.h"
 /*
-void fv_calcStrideMeanVelocity(bool p_forceStore=false)
-	{
-	GaitPlayer player = m_myController.m_player;
-	bool restarted = player.checkHasRestartedStride_AndResetFlag();
-	if (!restarted && !p_forceStore)
-	{
-	m_temp_currentStrideVelocities.Add(m_myController.m_currentVelocity);
-	m_temp_currentStrideDesiredVelocities.Add(m_myController.m_desiredVelocity);
-	}
-	else
-	{
-	Vector3 totalVelocities=Vector3.zero, totalDesiredVelocities=Vector3.zero;
-	for (int i = 0; i < m_temp_currentStrideVelocities.Count; i++)
-	{
-	totalVelocities += m_temp_currentStrideVelocities[i];
-	// force straight movement behavior from tests, set desired coronal velocity to constant zero:
-	totalDesiredVelocities += new Vector3(0.0f,0.0f,m_temp_currentStrideDesiredVelocities[i].z);
-	}
-	//Debug.Log("TV: " + totalVelocities + " c " + m_temp_currentStrideVelocities.Count);
-	totalVelocities /= (float)m_temp_currentStrideVelocities.Count;
-	totalDesiredVelocities /= (float)m_temp_currentStrideDesiredVelocities.Count;
-	// add to lists
-	//Debug.Log("TV: " + totalVelocities.x + " " + totalVelocities.y + " " + totalVelocities.z);
-	m_fvVelocityDeviations.Add((double)Vector3.Magnitude(totalVelocities - totalDesiredVelocities));
-	//
-	m_temp_currentStrideVelocities.Clear();
-	m_temp_currentStrideDesiredVelocities.Clear();
-	}
-	}
+
 
 	void fr_calcRotationDeviations()
 	{
@@ -196,3 +168,82 @@ void fv_calcStrideMeanVelocity(bool p_forceStore=false)
 		return scoreInRightDir;
 	}
 	*/
+
+double ControllerMovementRecorder::evaluate()
+{
+
+}
+
+void ControllerMovementRecorder::fv_calcStrideMeanVelocity(ControllerComponent* p_controller,
+	const glm::vec3& p_currentVelocity, const glm::vec3& p_desiredVelocity, bool p_forceStore /*= false*/)
+{
+	GaitPlayer* player = &p_controller->m_player;
+	bool restarted = player->checkHasRestartedStride_AndResetFlag();
+	if (!restarted && !p_forceStore)
+	{
+		m_temp_currentStrideVelocities.push_back(p_currentVelocity);
+		m_temp_currentStrideDesiredVelocities.push_back(p_desiredVelocity);
+	}
+	else
+	{
+		glm::vec3 totalVelocities(0.0f), totalDesiredVelocities(0.0f);
+		for (int i = 0; i < m_temp_currentStrideVelocities.size(); i++)
+		{
+			totalVelocities += m_temp_currentStrideVelocities[i];
+			// force straight movement behavior from tests, set desired coronal velocity to constant zero:
+			totalDesiredVelocities += glm::vec3(0.0f, 0.0f, m_temp_currentStrideDesiredVelocities[i].z);
+		}
+		totalVelocities /= (float)m_temp_currentStrideVelocities.size();
+		totalDesiredVelocities /= (float)m_temp_currentStrideDesiredVelocities.size();
+		// add to lists
+		m_fvVelocityDeviations.push_back((double)glm::length(totalVelocities - totalDesiredVelocities));
+		//
+		m_temp_currentStrideVelocities.clear();
+		m_temp_currentStrideDesiredVelocities.clear();
+	}
+}
+
+void ControllerMovementRecorder::fr_calcRotationDeviations( ControllerComponent* p_controller )
+{
+
+}
+
+void ControllerMovementRecorder::fh_calcHeadAccelerations( ControllerComponent* p_controller )
+{
+
+}
+
+void ControllerMovementRecorder::fd_calcReferenceMotion( ControllerComponent* p_controller )
+{
+
+}
+
+void ControllerMovementRecorder::fp_calcMovementDistance( ControllerComponent* p_controller )
+{
+
+}
+
+double ControllerMovementRecorder::evaluateFV()
+{
+
+}
+
+double ControllerMovementRecorder::evaluateFR()
+{
+
+}
+
+double ControllerMovementRecorder::evaluateFH()
+{
+
+}
+
+double ControllerMovementRecorder::evaluateFD()
+{
+
+}
+
+double ControllerMovementRecorder::evaluateFP()
+{
+
+}

@@ -1,5 +1,7 @@
 #pragma once
 
+class ControllerComponent;
+
 
 // =======================================================================================
 //                                      ControllerMovementRecorder
@@ -48,22 +50,20 @@ public:
 	{
 	}
 
-	double evaluate()
-	{
-		throw std::exception("The method or operation is not implemented.");
-	}
+	double evaluate();
 
-	void fv_calcStrideMeanVelocity(bool p_forceStore = false);
+	void fv_calcStrideMeanVelocity(ControllerComponent* p_controller, 
+		const glm::vec3& p_currentVelocity, const glm::vec3& p_desiredVelocity,
+		bool p_forceStore = false);
 
-	void fr_calcRotationDeviations();
+	void fr_calcRotationDeviations(ControllerComponent* p_controller);
 
-	void fh_calcHeadAccelerations();
+	void fh_calcHeadAccelerations(ControllerComponent* p_controller);
 
-	void fd_calcReferenceMotion();
+	void fd_calcReferenceMotion(ControllerComponent* p_controller);
 
-	void fp_calcMovementDistance();
+	void fp_calcMovementDistance(ControllerComponent* p_controller);
 
-	double Evaluate();
                       
     // Return standard deviation of fv term
     // as small deviations as possible
@@ -85,9 +85,9 @@ public:
 protected:
 
 private:
-	/*
-	 List<double> m_fvVelocityDeviations = new List<double>(); // (current, mean)-desired
-	 List<Vector3> m_fpMovementDist = new List<Vector3>(); // travel distance
+	
+	 std::vector<double> m_fvVelocityDeviations; // (current, mean)-desired
+	/* List<Vector3> m_fpMovementDist = new List<Vector3>(); // travel distance
 	 List<double> m_fhHeadAcceleration = new List<double>();
 	 List<double> m_fdBodyHeightSqrDiffs = new List<double>();
 	 List<List<float>> m_frBodyRotationDeviations = new List<List<float>>(); //per-leg frame, arcos(current,desired)
@@ -98,10 +98,10 @@ private:
 	 public float m_fpWeight = 0.5f;
 	 float m_origBodyHeight = 0.0f;
 	 float m_origHeadHeight = 0.0f;
-
-	 List<Vector3> m_temp_currentStrideVelocities = new List<Vector3>(); // used to calculate mean stride velocity
-	 List<Vector3> m_temp_currentStrideDesiredVelocities = new List<Vector3>();
-	*/
+*/
+	 std::vector<glm::vec3> m_temp_currentStrideVelocities; // used to calculate mean stride velocity
+	 std::vector<glm::vec3> m_temp_currentStrideDesiredVelocities;
+	
 };
 
 
