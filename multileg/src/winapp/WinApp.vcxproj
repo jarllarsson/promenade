@@ -199,6 +199,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ConstraintComponent.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
+    <ClCompile Include="ControllerMovementRecorder.cpp" />
     <ClCompile Include="ControllerOptimizationSystem.cpp" />
     <ClCompile Include="ControllerSystem.cpp" />
     <ClCompile Include="DebugDrawBatch.cpp" />
