@@ -1,6 +1,7 @@
 #pragma once
 
 class ControllerComponent;
+class ControllerSystem;
 
 
 // =======================================================================================
@@ -42,9 +43,7 @@ fobj(P) = +wvfv +(whfh) +wrfr
 class ControllerMovementRecorder
 {
 public:
-	ControllerMovementRecorder()
-	{
-	}
+	ControllerMovementRecorder();
 
 	~ControllerMovementRecorder()
 	{
@@ -56,13 +55,13 @@ public:
 		const glm::vec3& p_currentVelocity, const glm::vec3& p_desiredVelocity,
 		bool p_forceStore = false);
 
-	void fr_calcRotationDeviations(ControllerComponent* p_controller);
+	void fr_calcRotationDeviations(ControllerComponent* p_controller, ControllerSystem* p_system);
 
 	void fh_calcHeadAccelerations(ControllerComponent* p_controller);
 
 	void fd_calcReferenceMotion(ControllerComponent* p_controller);
 
-	void fp_calcMovementDistance(ControllerComponent* p_controller);
+	void fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system);
 
                       
     // Return standard deviation of fv term
@@ -87,16 +86,17 @@ protected:
 private:
 	
 	 std::vector<double> m_fvVelocityDeviations; // (current, mean)-desired
-	/* List<Vector3> m_fpMovementDist = new List<Vector3>(); // travel distance
-	 List<double> m_fhHeadAcceleration = new List<double>();
-	 List<double> m_fdBodyHeightSqrDiffs = new List<double>();
-	 List<List<float>> m_frBodyRotationDeviations = new List<List<float>>(); //per-leg frame, arcos(current,desired)
-	 public float m_fdWeight = 100.0f;
-	 public float m_fvWeight = 5.0f;
-	 public float m_fhWeight = 0.5f;
-	 public float m_frWeight = 5.0f;
-	 public float m_fpWeight = 0.5f;
-	 float m_origBodyHeight = 0.0f;
+	 glm::vec3 m_fvVelocityGoal;
+	 std::vector<glm::vec3> m_fpMovementDist; // travel distance
+	 std::vector<double> m_fhHeadAcceleration;
+	 std::vector<double> m_fdBodyHeightSqrDiffs;
+	 std::vector<std::vector<float>> m_frBodyRotationDeviations; //per-leg frame, arcos(current,desired)
+	 float m_fdWeight;
+	 float m_fvWeight;
+	 float m_fhWeight;
+	 float m_frWeight;
+	 float m_fpWeight;
+	 /*float m_origBodyHeight = 0.0f;
 	 float m_origHeadHeight = 0.0f;
 */
 	 std::vector<glm::vec3> m_temp_currentStrideVelocities; // used to calculate mean stride velocity

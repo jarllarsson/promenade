@@ -108,6 +108,9 @@ public:
 	// after constraints & rb's have been inited by their systems
 	void buildCheck();
 
+	// Public helper functions
+	glm::mat4& getLegFrameTransform(const ControllerComponent::LegFrame* p_lf);
+	VelocityStat& getControllerVelocityStat(const ControllerComponent* p_controller);
 
 private:
 	// build helpers
@@ -164,7 +167,7 @@ private:
 	glm::vec3 calculateVelocityScaledFootPos(const ControllerComponent::LegFrame* p_lf, const glm::vec3& p_footPosLF, const glm::vec3& p_velocity, const glm::vec3& p_desiredVelocity) const;
 	float getFootTransitionPhase(ControllerComponent::LegFrame* p_lf, float p_swingPhi);
 
-	// Helper functions
+	// Internal helper functions
 	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
 	void saveJointMatrix(unsigned int p_rigidBodyIdx);
 	void saveJointWorldEndpoints(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
@@ -172,7 +175,6 @@ private:
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const;
-	glm::mat4& getLegFrameTransform(const ControllerComponent::LegFrame* p_lf);
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 	glm::mat4 getDesiredWorldOrientation(unsigned int p_controllerId) const;
 	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);

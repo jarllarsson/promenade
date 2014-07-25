@@ -1,177 +1,28 @@
 #include "ControllerMovementRecorder.h"
 #include "ControllerComponent.h"
-/*
+#include "ControllerSystem.h"
 
 
-	void fr_calcRotationDeviations()
-	{
-	int legframes = m_myController.m_legFrames.Length;
-	GaitPlayer player = m_myController.m_player;
-	for (int i = 0; i < legframes; i++)
-	{
-	Quaternion currentDesiredOrientation = m_myController.m_legFrames[i].getCurrentDesiredOrientation(player.m_gaitPhase);
-	Quaternion currentOrientation = m_myController.m_legFrames[i].transform.rotation;
-	Quaternion diff = Quaternion.Inverse(currentOrientation) * currentDesiredOrientation;
-	Vector3 axis; float angle;
-	diff.ToAngleAxis(out angle,out axis);
-	m_frBodyRotationDeviations[i].Add(angle);
-	}
-	}
+ControllerMovementRecorder::ControllerMovementRecorder()
+{
+	m_fdWeight = 100.0f;
+	m_fvWeight = 5.0f;
+	m_fhWeight = 0.5f;
+	m_frWeight = 5.0f;
+	m_fpWeight = 0.5f;
+}
 
-	void fh_calcHeadAccelerations()
-	{
-	m_fhHeadAcceleration.Add((double)m_myController.m_headAcceleration.magnitude);
-	}
-
-	void fd_calcReferenceMotion()
-	{
-	double lenBod = (double)m_myController.transform.position.y - (double)m_origBodyHeight;
-	lenBod *= lenBod; // sqr
-	double lenHd = (double)m_myController.m_head.transform.position.y - (double)m_origHeadHeight;
-	lenHd*= lenHd; // sqr
-	double ghostDist = (double)(m_ghostController.position.z - m_ghostStart.z);
-	double controllerDist = (double)(m_myController.transform.position.z - m_mycontrollerStart.z);
-	double lenDist = ghostDist - controllerDist;
-	if (controllerDist < 0.0) lenDist *= 2.0; // penalty for falling or walking backwards
-	lenDist *= lenDist; // sqr
-
-	double lenFt = 0.0;
-	double lenHips = 0.0;
-	double lenKnees = 0.0;
-	Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z-m_ghostStart.z+m_mycontrollerStart.z);
-	wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_myController.transform.position.z);
-	for (int i = 0; i < m_myLegFrame.m_feet.Length; i++)
-	{
-	Vector3 footRefToFoot   = (m_myLegFrame.m_feet[i].transform.position - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
-	Vector3 hipRefToHip     = (m_myController.m_joints[(i * 2)+1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
-	Vector3 kneeRefToKnee   = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
-	Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position,
-	m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
-	Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,
-	m_myController.m_joints[(i * 2) + 1].transform.position - hipRefToHip, Color.yellow*2.0f);
-	Debug.DrawLine(m_myController.m_joints[(i + 1) * 2].transform.position,
-	m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow);
-
-	lenFt += (double)Vector3.SqrMagnitude(footRefToFoot);
-	lenHips += (double)Vector3.SqrMagnitude(hipRefToHip);
-	lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);
-	}
-
-	m_fdBodyHeightSqrDiffs.Add(lenFt * 0.4 + lenKnees + lenHips + lenBod + 2.0f*lenHd + 0.1 * lenDist);
-	}
-
-	void fp_calcMovementDistance()
-	{
-	m_fpMovementDist.Add(m_myController.transform.position - m_myController.m_oldPos);
-	}
-
-	public double Evaluate()
-	{
-	fv_calcStrideMeanVelocity(true);
-	double fv = EvaluateFV();
-	double fr = EvaluateFR();
-	double fh = EvaluateFH();
-	double fp = EvaluateFP();
-	double fd = EvaluateFD();
-	double fobj = (double)m_fdWeight*fd + (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
-	//Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
-	return fobj;
-	}
-
-	// Return standard deviation of fv term
-	// as small deviations as possible
-	public double EvaluateFV()
-	{
-	double total = 0.0f;
-	// mean
-	foreach (double d in m_fvVelocityDeviations)
-	{
-	total += d;
-	}
-	double avg = total /= Math.Max(1.0, ((double)(m_fvVelocityDeviations.Count)));
-	double totmeandiffsqr = 0.0f;
-	// std
-	foreach (double d in m_fvVelocityDeviations)
-	{
-	double mdiff = d - avg;
-	totmeandiffsqr += mdiff * mdiff;
-	}
-	double sdeviation = Math.Sqrt(totmeandiffsqr / Math.Max(1.0, ((double)m_fvVelocityDeviations.Count)));
-	return avg;
-	}
-
-	// mean of FR
-	// as small angle difference as possible
-	public double EvaluateFR()
-	{
-		double total = 0.0f;
-		int sz = 0;
-		// mean
-		foreach(List<float> fl in m_frBodyRotationDeviations)
-			foreach(float f in fl)
-		{
-			total += (double)f;
-			sz++;
-		}
-		double avg = total /= Math.Max(1, (double)(sz));
-		return avg;
-	}
-
-	// mean of FH
-	// as small distance as possible
-	public double EvaluateFH()
-	{
-		double total = 0.0f;
-		int sz = 0;
-		// mean
-		foreach(double d in m_fhHeadAcceleration)
-		{
-			total += d;
-			sz++;
-		}
-
-		double avg = total /= Math.Max(1.0, (double)(sz));
-		return avg;
-	}
-
-	public double EvaluateFD()
-	{
-		double total = 0.0f;
-		// mean
-		foreach(double d in m_fdBodyHeightSqrDiffs)
-		{
-			total += d;
-		}
-		double avg = total /= Math.Max(1.0, (double)(m_fdBodyHeightSqrDiffs.Count));
-		double totmeandiffsqr = 0.0f;
-		// std
-		foreach(double d in m_fdBodyHeightSqrDiffs)
-		{
-			double mdiff = d - avg;
-			totmeandiffsqr += mdiff * mdiff;
-		}
-		double sdeviation = Math.Sqrt(totmeandiffsqr / Math.Max(1.0, (double)m_fdBodyHeightSqrDiffs.Count));
-		return avg;
-	}
-
-	public double EvaluateFP()
-	{
-		Vector3 total = Vector3.zero;
-		// mean
-		foreach(Vector3 dist in m_fpMovementDist)
-		{
-			total += dist;
-		}
-		float movementSign = Mathf.Max(0.1f, m_myController.m_goalVelocity.z) / Mathf.Abs(Mathf.Max(0.1f, m_myController.m_goalVelocity.z));
-		if (movementSign == 0.0) movementSign = 1.0f;
-		double scoreInRightDir = Math.Max(0.0f, total.z * movementSign);
-		return scoreInRightDir;
-	}
-	*/
 
 double ControllerMovementRecorder::evaluate()
 {
-
+	double fv = evaluateFV();
+	double fr = evaluateFR();
+	double fh = evaluateFH();
+	double fp = evaluateFP();
+	double fd = evaluateFD();
+	double fobj = (double)m_fdWeight*fd + (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
+	//Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
+	return fobj;
 }
 
 void ControllerMovementRecorder::fv_calcStrideMeanVelocity(ControllerComponent* p_controller,
@@ -203,47 +54,150 @@ void ControllerMovementRecorder::fv_calcStrideMeanVelocity(ControllerComponent* 
 	}
 }
 
-void ControllerMovementRecorder::fr_calcRotationDeviations( ControllerComponent* p_controller )
+void ControllerMovementRecorder::fr_calcRotationDeviations(ControllerComponent* p_controller, ControllerSystem* p_system)
 {
-
+	unsigned int legframes = p_controller->getLegFrameCount();
+	GaitPlayer* player = &p_controller->m_player;
+	for (int i = 0; i < legframes; i++)
+	{
+		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
+		glm::quat currentDesiredOrientation = lf->getCurrentDesiredOrientation(player->getPhase());
+		glm::quat currentOrientation = MathHelp::getMatrixRotation(p_system->getLegFrameTransform(lf));
+		glm::quat diff = glm::inverse(currentOrientation) * currentDesiredOrientation;
+		glm::vec3 axis; float angle;
+		MathHelp::quatToAngleAxis(diff, angle, axis);
+		m_frBodyRotationDeviations[i].push_back(angle);
+	}
 }
 
 void ControllerMovementRecorder::fh_calcHeadAccelerations( ControllerComponent* p_controller )
 {
-
+	//m_fhHeadAcceleration.Add((double)m_myController.m_headAcceleration.magnitude);
 }
 
 void ControllerMovementRecorder::fd_calcReferenceMotion( ControllerComponent* p_controller )
 {
+	/*
+	double lenBod = (double)m_myController.transform.position.y - (double)m_origBodyHeight;
+	lenBod *= lenBod; // sqr
+	double lenHd = (double)m_myController.m_head.transform.position.y - (double)m_origHeadHeight;
+	lenHd *= lenHd; // sqr
+	double ghostDist = (double)(m_ghostController.position.z - m_ghostStart.z);
+	double controllerDist = (double)(m_myController.transform.position.z - m_mycontrollerStart.z);
+	double lenDist = ghostDist - controllerDist;
+	if (controllerDist < 0.0) lenDist *= 2.0; // penalty for falling or walking backwards
+	lenDist *= lenDist; // sqr
 
+	double lenFt = 0.0;
+	double lenHips = 0.0;
+	double lenKnees = 0.0;
+	Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z - m_ghostStart.z + m_mycontrollerStart.z);
+	wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_myController.transform.position.z);
+	for (int i = 0; i < m_myLegFrame.m_feet.Length; i++)
+	{
+		Vector3 footRefToFoot = (m_myLegFrame.m_feet[i].transform.position - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
+		Vector3 hipRefToHip = (m_myController.m_joints[(i * 2) + 1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
+		Vector3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
+		Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position,
+			m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
+		Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,
+			m_myController.m_joints[(i * 2) + 1].transform.position - hipRefToHip, Color.yellow*2.0f);
+		Debug.DrawLine(m_myController.m_joints[(i + 1) * 2].transform.position,
+			m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow);
+
+		lenFt += (double)Vector3.SqrMagnitude(footRefToFoot);
+		lenHips += (double)Vector3.SqrMagnitude(hipRefToHip);
+		lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);
+	}
+	m_fdBodyHeightSqrDiffs.Add(lenFt * 0.4 + lenKnees + lenHips + lenBod + 2.0f*lenHd + 0.1 * lenDist);*/
 }
 
-void ControllerMovementRecorder::fp_calcMovementDistance( ControllerComponent* p_controller )
+void ControllerMovementRecorder::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)
 {
-
+	m_fpMovementDist.push_back(p_system->getControllerVelocityStat(p_controller).m_currentVelocity);
+	m_fvVelocityGoal = p_system->getControllerVelocityStat(p_controller).m_goalVelocity;
 }
 
 double ControllerMovementRecorder::evaluateFV()
 {
-
+	double total = 0.0f;
+	// mean
+	for (auto n : m_fvVelocityDeviations)
+	{
+		total += n;
+	}
+	double avg = total /= max(1.0, ((double)(m_fvVelocityDeviations.size())));
+	double totmeandiffsqr = 0.0f;
+	// std
+	for (auto n : m_fvVelocityDeviations)
+	{
+		double mdiff = n - avg;
+		totmeandiffsqr += mdiff * mdiff;
+	}
+	double sdeviation = sqrt(totmeandiffsqr / max(1.0, ((double)m_fvVelocityDeviations.size())));
+	return avg;
 }
 
 double ControllerMovementRecorder::evaluateFR()
 {
-
+	double total = 0.0f;
+	int sz = 0;
+	// mean
+	for (int x = 0; x < m_frBodyRotationDeviations.size();x++)
+	for (int y = 0; y < m_frBodyRotationDeviations[x].size(); y++)
+	{
+		total += (double)m_frBodyRotationDeviations[x][y];
+		sz++;
+	}
+	double avg = total /= max(1, (double)(sz));
+	return avg;
 }
 
 double ControllerMovementRecorder::evaluateFH()
 {
+	double total = 0.0f;
+	int sz = 0;
+	// mean
+	for(auto n : m_fhHeadAcceleration)
+	{
+		total += n;
+		sz++;
+	}
 
+	double avg = total /= max(1.0, (double)(sz));
+	return avg;
 }
 
 double ControllerMovementRecorder::evaluateFD()
 {
-
+	double total = 0.0f;
+	// mean
+	for (auto n : m_fdBodyHeightSqrDiffs)
+	{
+		total += n;
+	}
+	double avg = total /= max(1.0, (double)(m_fdBodyHeightSqrDiffs.size()));
+	double totmeandiffsqr = 0.0f;
+	// std
+	for (auto n : m_fdBodyHeightSqrDiffs)
+	{
+		double mdiff = n - avg;
+		totmeandiffsqr += mdiff * mdiff;
+	}
+	double sdeviation = sqrt(totmeandiffsqr / max(1.0, (double)m_fdBodyHeightSqrDiffs.size()));
+	return avg;
 }
 
 double ControllerMovementRecorder::evaluateFP()
 {
-
+	glm::vec3 total;
+	// mean
+	for (auto n : m_fpMovementDist)
+	{
+		total += n;
+	}
+	float movementSign = max(0.1f, m_fvVelocityGoal.z) / abs(max(0.1f, m_fvVelocityGoal.z));
+	if (movementSign == 0.0) movementSign = 1.0f;
+	double scoreInRightDir = max(0.0f, total.z * movementSign);
+	return scoreInRightDir;
 }

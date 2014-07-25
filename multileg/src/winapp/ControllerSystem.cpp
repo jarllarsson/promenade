@@ -262,6 +262,7 @@ void ControllerSystem::buildCheck()
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
 		// Add
 		controller->setToBuildComplete();
+		controller->m_sysIdx = m_controllers.size();
 		m_controllers.push_back(controller);
 		initControllerLocationAndVelocityStat((int)m_controllers.size() - 1, startGaitVelocity);
 		// Finally, when all vars and lists have been built, add debug data
@@ -1182,4 +1183,9 @@ float ControllerSystem::getDesiredFootAngle(unsigned int p_legIdx, ControllerCom
 		result = p_lf->m_tuneToeOffAngle;
 	}
 	return result;
+}
+
+ControllerSystem::VelocityStat& ControllerSystem::getControllerVelocityStat(const ControllerComponent* p_controller)
+{
+	return m_controllerVelocityStats[p_controller->m_sysIdx];
 }

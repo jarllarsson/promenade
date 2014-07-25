@@ -13,7 +13,6 @@
 #include "PD.h"
 #include "IK2Handler.h"
 #include <IOptimizable.h>
-#include <ControllerMovementRecorder.h>
 // =======================================================================================
 //                                      ControllerComponent
 // =======================================================================================
@@ -280,6 +279,8 @@ public:
 		artemis::Entity* m_legFrameEntity;
 		std::vector<artemis::Entity*> m_upperLegEntities;
 	};
+
+	unsigned int m_sysIdx;
 
 	// Leg frame lists access and handling
 	const unsigned int getLegFrameCount() const {return (unsigned int)m_legFrames.size();}
