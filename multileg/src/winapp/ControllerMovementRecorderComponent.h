@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Artemis.h>
+#include <vector>
+#include <glm\gtc\type_ptr.hpp>
 
 class ControllerComponent;
 class ControllerSystem;

@@ -3,6 +3,7 @@
 #include "ControllerComponent.h"
 #include "ControllerMovementRecorderComponent.h"
 #include <ParamChanger.h>
+#include "ControllerSystem.h"
 
 // =======================================================================================
 //                                      ControllerOptimizationSystem
@@ -75,23 +76,27 @@ public:
 
 	void initSim(std::vector<float>* p_initParams=NULL);
 	static void resetTestCount();
-	float getCurrentSimTime();
-	bool isSimCompleted();
+	int getCurrentSimTicks();
+	void incSimTick();
+	bool isSimCompleted();	
+	void evaluateAll();
 	std::vector<float>& getWinnerParams();
+	void findCurrentBestCandidate();
 protected:
 private:
 	static void incTestCount();
+	void populateControllerInitParams();
 
 	void restartSim();
-	void findCurrentBestCandidate();
 	void voidBestCandidate();
 	void storeParams(std::vector<float>* p_initParams=NULL);
 	void resetScores();
 	void perturbParams(int p_offset = 0);
-	void evaluateAll();
+
 	double evaluateCandidateFitness(int p_idx);
 
 	bool m_firstControllerAdded;
+	bool m_inited;
 };
 
 /*

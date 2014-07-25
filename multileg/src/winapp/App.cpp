@@ -39,10 +39,12 @@
 #include "PhysWorldDefines.h"
 #include "PositionRefSystem.h"
 #include "ConstraintSystem.h"
+#include "ControllerOptimizationSystem.h"
 
 
 
 //#define MEASURE_RBODIES
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -125,6 +127,10 @@ App::~App()
 
 void App::run()
 {
+#ifdef OPTIMIZATION
+	std::vector<float>* bestParams = NULL;
+	int optimizationIterationCount = 0;
+#endif
 	do
 	{
 		m_restart = false;
@@ -184,12 +190,18 @@ void App::run()
 		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
 		PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
+	#ifdef OPTIMIZATION
+		ControllerOptimizationSystem* optimizationSystem = (ControllerOptimizationSystem*)sysManager->setSystem(new ControllerOptimizationSystem());
+	#endif
 		sysManager->initializeAll();
 
 
 		// Order independent
 		addOrderIndependentSystem(constraintSystem);
 		addOrderIndependentSystem(posRefSystem);
+	#ifdef OPTIMIZATION
+		addOrderIndependentSystem(optimizationSystem);
+	#endif
 
 		// Combine Physics with our stuff!
 		PhysicsWorldHandler physicsWorldHandler(dynamicsWorld, m_controllerSystem);
@@ -320,6 +332,9 @@ void App::run()
 			artemis::Entity & controller = entityManager->create();
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
+#ifdef OPTIMIZATION
+			controller.addComponent(new ControllerMovementRecorderComponent());
+#endif
 			controller.refresh();
 
 			// permutation test
@@ -329,7 +344,10 @@ void App::run()
 
 		}
 
-		
+	#ifdef OPTIMIZATION
+		optimizationSystem->initSim(bestParams);
+		SAFE_DELETE(bestParams);
+	#endif
 
 	#ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.activate();
@@ -382,7 +400,7 @@ void App::run()
 				}
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
-	#ifdef MEASURE_RBODIES
+	#ifdef MEASURE_RBODIES || OPTIMIZATION
 				dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
 	#else
 				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
@@ -396,11 +414,19 @@ void App::run()
 	#ifdef MEASURE_RBODIES
 				if (steps >= 600) run = false;
 	#endif
+	#ifdef OPTIMIZATION
+				optimizationSystem->incSimTick();
+				if (optimizationSystem->isSimCompleted())
+				{
+					run=false;
+					m_restart = true;
+				}
+	#endif
 				//DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
-	#ifdef MEASURE_RBODIES
+	#ifdef MEASURE_RBODIES || OPTIMIZATION
 				double dt = fixedStep;
 	#else
 				double dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
@@ -451,6 +477,14 @@ void App::run()
 		}
 
 		DEBUGPRINT(("\n\nSTOPPING APPLICATION\n\n"));
+
+	#ifdef OPTIMIZATION
+		optimizationSystem->evaluateAll();
+		optimizationSystem->findCurrentBestCandidate();
+		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
+		optimizationIterationCount++;
+	#endif
+
 
 	#ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.saveMeasurement("Time: "+ToString(time));
@@ -511,33 +545,22 @@ void App::run()
 			delete obj;
 		}
 
-		//delete collision shapes
-		/*
-		for (int j = 0; j < m_collisionShapes.size(); j++)
-		{
-			btCollisionShape* shape = m_collisionShapes[j];
-			delete shape;
-		}
-		m_collisionShapes.clear();
-		*/
-
 
 		delete broadphase;
 		delete collisionConfiguration;
 		delete dispatcher;
 		delete solver;
 		delete dynamicsWorld;
-		/*
-		delete dynamicsWorld;
-		delete solver;
-		delete broadphase;
-		delete dispatcher;
-		delete collisionConfiguration;*/
 
 
 		// debug
 		m_toolBar->clearBar(Toolbar::CHARACTER);
 	} while (m_restart);
+
+
+#ifdef OPTIMIZATION
+	SAFE_DELETE(bestParams);
+#endif
 }
 
 

@@ -8,14 +8,15 @@ ControllerOptimizationSystem::ControllerOptimizationSystem()
 	addComponentType<ControllerComponent>();
 	addComponentType<ControllerMovementRecorderComponent>();
 	// settings
-	m_simTicks = 1.0f;			
-	m_warmupTicks = 0.0f;	
+	m_simTicks = 100;			
+	m_warmupTicks = 2;	
 	m_instantEval = false;
 	// playback
 	m_currentSimTicks = 0.0f;	
 	m_currentBestCandidateIdx = -1;
 	m_lastBestScore = FLT_MAX;
 	m_firstControllerAdded = false;
+	m_inited = false;
 	//
 	m_controllerSystemRef = NULL;
 };
@@ -31,6 +32,7 @@ void ControllerOptimizationSystem::added(artemis::Entity &e)
 	}
 	m_optimizableControllers.push_back(controller);
 	m_controllerRecorders.push_back(recorder);
+	m_controllerScores.push_back(0.0);
 	m_firstControllerAdded = true;
 }
 
@@ -44,7 +46,7 @@ void ControllerOptimizationSystem::incTestCount()
 	m_testCount++;
 }
 
-float ControllerOptimizationSystem::getCurrentSimTime()
+int ControllerOptimizationSystem::getCurrentSimTicks()
 {
 	return m_currentSimTicks;
 }
@@ -88,7 +90,6 @@ void ControllerOptimizationSystem::voidBestCandidate()
 
 void ControllerOptimizationSystem::storeParams( std::vector<float>* p_initParams/*=NULL*/ )
 {
-	m_currentParams.clear();
 	if (p_initParams==NULL)
 	{
 		for (int i = 0; i < m_optimizableControllers.size(); i++)
@@ -137,25 +138,15 @@ double ControllerOptimizationSystem::evaluateCandidateFitness(int p_idx)
 
 void ControllerOptimizationSystem::initSim( std::vector<float>* p_initParams/*=NULL*/ )
 {
-	unsigned int sz = m_optimizableControllers.size();
-	m_controllerScores=std::vector<double>(sz); // All scores for one round
-	m_currentParams = std::vector<std::vector<float>>(sz);
-	//
-	storeParams(p_initParams);
-	m_lastBestParams = m_currentParams[0];
-	perturbParams(1);
-
-	for (int i = 0; i < m_optimizableControllers.size(); i++)
-	{
-		IOptimizable* opt = static_cast<IOptimizable*>(m_optimizableControllers[i]);
-		std::vector<float> paramslist = m_currentParams[i];
-		opt->consumeParams(paramslist); // consume it to controller
-	}
-	resetScores();
+	if (p_initParams != NULL)
+		m_lastBestParams = *p_initParams;
 }
 
 void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
 {
+	populateControllerInitParams(); // only done once
+
+
 	ControllerComponent* controller = controllerComponentMapper.get(e);
 	ControllerMovementRecorderComponent* recorder = controllerRecorderComponentMapper.get(e);
 
@@ -171,4 +162,35 @@ void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
 std::vector<float>& ControllerOptimizationSystem::getWinnerParams()
 {
 	return m_lastBestParams;
+}
+
+void ControllerOptimizationSystem::populateControllerInitParams()
+{
+	unsigned int sz = m_optimizableControllers.size();
+	if (sz > 0 && !m_inited)
+	{
+		m_currentParams.clear();
+		m_controllerScores.resize(sz); // All scores for one round
+		//
+		if (m_lastBestParams.size()>0)
+			storeParams(&m_lastBestParams);
+		else
+			storeParams();
+		m_lastBestParams = m_currentParams[0];
+		perturbParams(1);
+
+		for (int i = 0; i < m_optimizableControllers.size(); i++)
+		{
+			IOptimizable* opt = static_cast<IOptimizable*>(m_optimizableControllers[i]);
+			std::vector<float> paramslist = m_currentParams[i];
+			opt->consumeParams(paramslist); // consume it to controller
+		}
+		restartSim();
+		m_inited = true;
+	}
+}
+
+void ControllerOptimizationSystem::incSimTick()
+{
+	m_currentSimTicks++;
 }

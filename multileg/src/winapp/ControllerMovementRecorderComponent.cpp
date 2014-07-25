@@ -45,8 +45,8 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 			// force straight movement behavior from tests, set desired coronal velocity to constant zero:
 			totalDesiredVelocities += glm::vec3(0.0f, 0.0f, m_temp_currentStrideDesiredVelocities[i].z);
 		}
-		totalVelocities /= (float)m_temp_currentStrideVelocities.size();
-		totalDesiredVelocities /= (float)m_temp_currentStrideDesiredVelocities.size();
+		totalVelocities /= max(1.0f, (float)m_temp_currentStrideVelocities.size());
+		totalDesiredVelocities /= max(1.0f, (float)m_temp_currentStrideDesiredVelocities.size());
 		// add to lists
 		m_fvVelocityDeviations.push_back((double)glm::length(totalVelocities - totalDesiredVelocities));
 		//
@@ -59,6 +59,7 @@ void ControllerMovementRecorderComponent::fr_calcRotationDeviations(ControllerCo
 {
 	unsigned int legframes = p_controller->getLegFrameCount();
 	GaitPlayer* player = &p_controller->m_player;
+	if (m_frBodyRotationDeviations.size() < legframes) m_frBodyRotationDeviations.resize(legframes);
 	for (int i = 0; i < legframes; i++)
 	{
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);

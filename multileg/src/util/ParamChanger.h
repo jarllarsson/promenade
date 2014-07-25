@@ -31,7 +31,7 @@ public:
 		int p_iteration)
 	{
 		int size = p_params.size();
-		std::vector<float> result(size);
+		std::vector<float> result(size,0.0f);
 		std::vector<double> deltaP = getDeltaP(p_params, 
 											   p_Pmin, p_Pmax, p_iteration);
 		for (unsigned int i = 0; i < size; i++)
@@ -53,7 +53,7 @@ private:
 	std::vector<float> getS(unsigned int p_size)
 	{
 		int changeProbabilityPercent = 20;
-		std::vector<float> S(p_size);
+		std::vector<float> S(p_size,0.0f);
 		for (int i = 0; i < p_size; i++)
 		{
 			S[i] = m_randomEngine->getRandomInt(0, 99) < changeProbabilityPercent ? 1.0f : 0.0f;
@@ -78,7 +78,7 @@ private:
 		std::vector<float> S = getS(size);
 
 		// Calculate delta-P
-		std::vector<double> deltaP(size);
+		std::vector<double> deltaP(size,0.0);
 		std::vector<double> U = m_randomEngine->getRealUniformList(-0.1,0.1,size);
 		for (unsigned int i = 0; i < size; i++)
 		{
