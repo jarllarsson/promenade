@@ -165,7 +165,7 @@
     <ClInclude Include="ConstraintComponent.h" />
     <ClInclude Include="ConstraintSystem.h" />
     <ClInclude Include="ControllerComponent.h" />
-    <ClInclude Include="ControllerMovementRecorder.h" />
+    <ClInclude Include="ControllerMovementRecorderComponent.h" />
     <ClInclude Include="ControllerOptimizationSystem.h" />
     <ClInclude Include="ControllerSystem.h" />
     <ClInclude Include="DebugDrawer.h" />
@@ -199,7 +199,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="ConstraintComponent.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
-    <ClCompile Include="ControllerMovementRecorder.cpp" />
+    <ClCompile Include="ControllerMovementRecorderComponent.cpp" />
     <ClCompile Include="ControllerOptimizationSystem.cpp" />
     <ClCompile Include="ControllerSystem.cpp" />
     <ClCompile Include="DebugDrawBatch.cpp" />

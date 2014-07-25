@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Artemis.h>
+
 class ControllerComponent;
 class ControllerSystem;
 
@@ -40,19 +42,18 @@ fobj(P) = +wvfv +(whfh) +wrfr
 *
 * */
 
-class ControllerMovementRecorder
+class ControllerMovementRecorderComponent : public artemis::Component
 {
 public:
-	ControllerMovementRecorder();
+	ControllerMovementRecorderComponent();
 
-	~ControllerMovementRecorder()
+	~ControllerMovementRecorderComponent()
 	{
 	}
 
 	double evaluate();
 
-	void fv_calcStrideMeanVelocity(ControllerComponent* p_controller, 
-		const glm::vec3& p_currentVelocity, const glm::vec3& p_desiredVelocity,
+	void fv_calcStrideMeanVelocity(ControllerComponent* p_controller, ControllerSystem* p_system,
 		bool p_forceStore = false);
 
 	void fr_calcRotationDeviations(ControllerComponent* p_controller, ControllerSystem* p_system);

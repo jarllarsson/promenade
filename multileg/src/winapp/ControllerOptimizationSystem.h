@@ -1,6 +1,7 @@
 #pragma once
 #include "AdvancedEntitySystem.h"
 #include "ControllerComponent.h"
+#include "ControllerMovementRecorderComponent.h"
 #include <ParamChanger.h>
 
 // =======================================================================================
@@ -22,6 +23,7 @@ class ControllerOptimizationSystem : public AdvancedEntitySystem
 {
 private:
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
+	artemis::ComponentMapper<ControllerMovementRecorderComponent> controllerRecorderComponentMapper;
 
 	ControllerComponent* m_bestScoreController;
 	ParamChanger m_changer;
@@ -40,8 +42,11 @@ private:
 	std::vector<float> m_paramsMin; // bounds in the current sim
 	std::vector<std::vector<float> > m_currentParams; // all params for the current controllers
 	std::vector<ControllerComponent*> m_optimizableControllers;
+	std::vector<ControllerMovementRecorderComponent*> m_controllerRecorders;
 
 	static int m_testCount; // global amount of executed tests
+
+	ControllerSystem* m_controllerSystemRef;
 public:
 
 	ControllerOptimizationSystem();
@@ -49,6 +54,8 @@ public:
 	virtual void initialize()
 	{
 		controllerComponentMapper.init(*world);
+		controllerRecorderComponentMapper.init(*world);
+		m_controllerSystemRef = (ControllerSystem*)(world->getSystemManager()->getSystem<ControllerSystem>());
 	};
 
 	virtual void removed(artemis::Entity &e)
@@ -58,10 +65,7 @@ public:
 
 	virtual void added(artemis::Entity &e);
 
-	virtual void processEntity(artemis::Entity &e)
-	{
-
-	}
+	virtual void processEntity(artemis::Entity &e);
 
 	virtual void fixedUpdate(float p_dt)
 	{
@@ -69,10 +73,11 @@ public:
 
 	}
 
-	void initSim();
+	void initSim(std::vector<float>* p_initParams=NULL);
 	static void resetTestCount();
 	float getCurrentSimTime();
 	bool isSimCompleted();
+	std::vector<float>& getWinnerParams();
 protected:
 private:
 	static void incTestCount();
@@ -80,7 +85,7 @@ private:
 	void restartSim();
 	void findCurrentBestCandidate();
 	void voidBestCandidate();
-	void storeParams();
+	void storeParams(std::vector<float>* p_initParams=NULL);
 	void resetScores();
 	void perturbParams(int p_offset = 0);
 	void evaluateAll();

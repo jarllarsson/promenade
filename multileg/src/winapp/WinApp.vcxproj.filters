@@ -159,7 +159,7 @@
     <ClInclude Include="ControllerOptimizationSystem.h">
       <Filter>Entity System\Locomotion\Optimization</Filter>
     </ClInclude>
-    <ClInclude Include="ControllerMovementRecorder.h">
+    <ClInclude Include="ControllerMovementRecorderComponent.h">
       <Filter>Entity System\Locomotion\Optimization</Filter>
     </ClInclude>
   </ItemGroup>
@@ -231,7 +231,7 @@
     <ClCompile Include="ControllerOptimizationSystem.cpp">
       <Filter>Entity System\Locomotion\Optimization</Filter>
     </ClCompile>
-    <ClCompile Include="ControllerMovementRecorder.cpp">
+    <ClCompile Include="ControllerMovementRecorderComponent.cpp">
       <Filter>Entity System\Locomotion\Optimization</Filter>
     </ClCompile>
   </ItemGroup>

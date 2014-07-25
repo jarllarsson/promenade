@@ -27,7 +27,7 @@
 
 class ControllerSystem : public AdvancedEntitySystem
 {
-private:
+public:
 	// Used to control and read velocity specifics per controller
 	struct VelocityStat
 	{
@@ -50,7 +50,7 @@ private:
 		glm::vec3 m_worldPos;
 		glm::vec3 m_currentGroundPos;
 	};
-
+private:
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
 	// Controller run-time data
 	std::vector<ControllerComponent*> m_controllersToBuild;

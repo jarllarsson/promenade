@@ -13,6 +13,7 @@
 #include "PD.h"
 #include "IK2Handler.h"
 #include <IOptimizable.h>
+
 // =======================================================================================
 //                                      ControllerComponent
 // =======================================================================================
@@ -300,7 +301,6 @@ public:
 	virtual void consumeParams(std::vector<float>& p_other);
 	virtual std::vector<float> getParamsMax();
 	virtual std::vector<float> getParamsMin();
-	ControllerMovementRecorder* getRecordedData(){ return NULL; }
 
 
 protected:
