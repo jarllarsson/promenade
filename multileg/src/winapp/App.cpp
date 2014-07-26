@@ -297,6 +297,8 @@ void App::run()
 						boxSize = glm::vec3(2.0f, 1.0f, 3.3f);
 						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
+						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						segmentMass = 1.5f;
 						foot = true;
 					}
@@ -542,15 +544,15 @@ void App::run()
 		//cleanup in the reverse order of creation/initialization
 
 		//remove the rigidbodies from the dynamics world and delete them
-		//for (int bi = dynamicsWorld->getNumCollisionObjects() - 1; bi >= 0; bi--)
-		//{
-		//	btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[bi];
-		//	btRigidBody* body = btRigidBody::upcast(obj);
-		//	if (body && body->getMotionState())
-		//		delete body->getMotionState();
-		//	dynamicsWorld->removeCollisionObject(obj);
-		//	delete obj;
-		//}
+		for (int bi = dynamicsWorld->getNumCollisionObjects() - 1; bi >= 0; bi--)
+		{
+			btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[bi];
+			btRigidBody* body = btRigidBody::upcast(obj);
+			if (body && body->getMotionState())
+				delete body->getMotionState();
+			dynamicsWorld->removeCollisionObject(obj);
+			delete obj;
+		}
 
 
 		delete broadphase;
