@@ -64,7 +64,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 
 void ControllerSystem::fixedUpdate(float p_dt)
 {
-	DEBUGPRINT(( (std::string("\nDT=") + ToString(p_dt) + "\n").c_str() ));
+	//DEBUGPRINT(( (std::string("\nDT=") + ToString(p_dt) + "\n").c_str() ));
 	m_runTime += p_dt;
 	m_steps++;
 
@@ -138,7 +138,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 600.0f;
+		float tLim = 2000.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
@@ -704,7 +704,8 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			glm::vec3 fsw(calculateFsw(p_lf, i, p_phi, p_dt));
 			m_VFs[vfIdx] = calculateSwingLegVF(fsw); // Store force
 			//
-			dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_PINK], dawnBringerPalRGB[COL_PURPLE]);
+			if (p_controllerIdx == 0)
+				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_PINK], dawnBringerPalRGB[COL_PURPLE]);
 		}
 		else
 			// Stance force
@@ -717,7 +718,8 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			}	
 			glm::vec3 fd(calculateFd(p_controllerIdx,p_lf, i));
 			m_VFs[vfIdx] = calculateStanceLegVF(stanceLegs, fv, fh, fd); // Store force
-			dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_NAVALBLUE]);
+			if (p_controllerIdx == 0)
+				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_NAVALBLUE]);
 		}
 		// Debug test
 		//leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f*sin((float)m_runTime*0.2f), 0.0f);
@@ -734,7 +736,7 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 		for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 		{
 			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
-			calculateLegFrameNetLegVF(i, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
+			calculateLegFrameNetLegVF(p_controllerIdx, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
 			// Begin calculating Jacobian transpose for each leg in leg frame
 			unsigned int legCount = (unsigned int)lf->m_legs.size();	
 			for (unsigned int n = 0; n < legCount; n++)
@@ -885,7 +887,8 @@ glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerC
 	//FD = MathHelp::transformDirection(getLegFrameTransform(p_lf), glm::vec3(0.0f, FDvert, FDhoriz));
 
 	FD = MathHelp::transformDirection(getDesiredWorldOrientation(p_controllerId), glm::vec3(0.0f, FDvert, FDhoriz)); // try using wanted orientation, instead of the actual
-	dbgDrawer()->drawLine(getFootPos(p_lf, p_legIdx), getFootPos(p_lf, p_legIdx) + FD*2.0f, dawnBringerPalRGB[COL_YELLOW], dawnBringerPalRGB[COL_ORANGE]);
+	if (p_controllerId==0)
+		dbgDrawer()->drawLine(getFootPos(p_lf, p_legIdx), getFootPos(p_lf, p_legIdx) + FD*2.0f, dawnBringerPalRGB[COL_YELLOW], dawnBringerPalRGB[COL_ORANGE]);
 	//FD = glm::vec3(0.0f);
 	return FD;
 }
@@ -961,13 +964,16 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// Draw ORIENTATION distance
 	glm::vec3 wanted = MathHelp::transformDirection(glm::mat4_cast(omegaLF), glm::vec3(0.0f, 10.0f, 0.0f));
 	glm::vec3 current = MathHelp::transformDirection(glm::mat4_cast(currentOrientation), glm::vec3(0.0f, 10.0f, 0.0f));
-	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
-	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + current, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_MOSSGREEN]);
-	dbgDrawer()->drawLine(getLegFramePosition(lf) + current, getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
-	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + hgr, dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
-	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + fram, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
-	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + chgr, dawnBringerPalRGB[COL_RED] * 0.8f, dawnBringerPalRGB[COL_RED] * 0.8f);
-	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + cfram, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f);
+	if (p_controllerId == 0)
+	{
+		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
+		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + current, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_MOSSGREEN]);
+		dbgDrawer()->drawLine(getLegFramePosition(lf) + current, getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
+		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + hgr, dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
+		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + fram, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + chgr, dawnBringerPalRGB[COL_RED] * 0.8f, dawnBringerPalRGB[COL_RED] * 0.8f);
+		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + cfram, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f);
+	}
 	// test code
 	//rigidbody.AddTorque(tdLF);
 
@@ -1041,7 +1047,8 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				// Add to torque for joint
 				(*p_outTVF)[jointIdx] += torque;
 				glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
-				dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x*5], dawnBringerPalRGB[COL_CORNFLOWERBLUE]);
+				if (p_controllerIdx == 0)
+					dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x*5], dawnBringerPalRGB[COL_CORNFLOWERBLUE]);
 			}
 		}
 	}
