@@ -133,12 +133,13 @@ public:
 				if (writeInstanceDat != NULL)
 				{
 					writeInstanceDat->m_transform = glm::transpose(*readMat);
-				}
-				// Optionals
-				if (materialIsDirty)
-				{
-					writeInstanceDat->m_color = material->getColorRGBA();
-					material->unsetHighLight();
+			
+					// Optionals
+					if (materialIsDirty)
+					{
+						writeInstanceDat->m_color = material->getColorRGBA();
+						material->unsetHighLight();
+					}
 				}
 				//DEBUGPRINT(((string("render instance ") + toString(instanceIdx) + "\n").c_str()));
 				transform->unsetTransformRenderDirty();

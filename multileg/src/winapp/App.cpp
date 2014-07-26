@@ -130,6 +130,8 @@ void App::run()
 #ifdef OPTIMIZATION
 	std::vector<float>* bestParams = NULL;
 	int optimizationIterationCount = 0;
+	double bestScore = FLT_MAX;
+	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestScore);
 #endif
 	do
 	{
@@ -144,6 +146,7 @@ void App::run()
 		LARGE_INTEGER gameClockTimeOffsetStamp = Time::getTimeStamp();
 		double gameClockTimeOffset = (double)gameClockTimeOffsetStamp.QuadPart * secondsPerTick;
 		const unsigned int gameTickMs = 16;
+
 		double gameTickS = (double)gameTickMs / 1000.0;
 		// Absolute start
 		double timeStart = (double)Time::getTimeStamp().QuadPart * secondsPerTick;
@@ -186,7 +189,7 @@ void App::run()
 		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
 	#endif
 		ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
-		ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
+		//ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
 		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
 		PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
@@ -197,7 +200,7 @@ void App::run()
 
 
 		// Order independent
-		addOrderIndependentSystem(constraintSystem);
+		//addOrderIndependentSystem(constraintSystem);
 		addOrderIndependentSystem(posRefSystem);
 	#ifdef OPTIMIZATION
 		addOrderIndependentSystem(optimizationSystem);
@@ -225,13 +228,14 @@ void App::run()
 
 		// Test of controller
 		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
+		glm::vec3 bodOffset;
 		for (int x = 0; x < 10; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
-			glm::vec3 pos = glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
+			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, hipCoronalOffset);
-			float characterMass = 20.0f;
+			float characterMass = 30.0f;
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 			legFrame.addComponent(new RenderComponent());
@@ -336,7 +340,7 @@ void App::run()
 			controller.addComponent(new ControllerMovementRecorderComponent());
 #endif
 			controller.refresh();
-
+			bodOffset = glm::vec3(10.0f, 0.0f, 0.0f);
 			// permutation test
 			//std::vector<float> test = ((ControllerComponent*)controller.getComponent<ControllerComponent>())->getParams();
 			//test[3]+=(float)x;
@@ -345,7 +349,7 @@ void App::run()
 		}
 
 	#ifdef OPTIMIZATION
-		optimizationSystem->initSim(bestParams);
+		optimizationSystem->initSim(bestScore,bestParams);
 		SAFE_DELETE(bestParams);
 	#endif
 
@@ -400,7 +404,7 @@ void App::run()
 				}
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
-	#ifdef MEASURE_RBODIES || OPTIMIZATION
+	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
 				dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
 	#else
 				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
@@ -418,6 +422,8 @@ void App::run()
 				optimizationSystem->incSimTick();
 				if (optimizationSystem->isSimCompleted())
 				{
+					DEBUGPRINT((" NO: "));
+					DEBUGPRINT((ToString(optimizationIterationCount).c_str()));
 					run=false;
 					m_restart = true;
 				}
@@ -426,7 +432,7 @@ void App::run()
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
-	#ifdef MEASURE_RBODIES || OPTIMIZATION
+	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
 				double dt = fixedStep;
 	#else
 				double dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
@@ -482,6 +488,7 @@ void App::run()
 		optimizationSystem->evaluateAll();
 		optimizationSystem->findCurrentBestCandidate();
 		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
+		bestScore = optimizationSystem->getWinnerScore();
 		optimizationIterationCount++;
 	#endif
 
@@ -527,23 +534,23 @@ void App::run()
 		entityManager->removeAllEntities();
 		m_orderIndependentSystems.clear();
 		m_world.getSystemManager()->getSystems().deleteData();
-		m_rigidBodySystem = NULL;
-		m_renderSystem = NULL;
-		m_controllerSystem = NULL;
+		m_rigidBodySystem=NULL;
+		m_renderSystem=NULL;
+		m_controllerSystem=NULL;
 
 		// bullet
 		//cleanup in the reverse order of creation/initialization
 
 		//remove the rigidbodies from the dynamics world and delete them
-		for (int bi = dynamicsWorld->getNumCollisionObjects() - 1; bi >= 0; bi--)
-		{
-			btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[bi];
-			btRigidBody* body = btRigidBody::upcast(obj);
-			if (body && body->getMotionState())
-				delete body->getMotionState();
-			dynamicsWorld->removeCollisionObject(obj);
-			delete obj;
-		}
+		//for (int bi = dynamicsWorld->getNumCollisionObjects() - 1; bi >= 0; bi--)
+		//{
+		//	btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[bi];
+		//	btRigidBody* body = btRigidBody::upcast(obj);
+		//	if (body && body->getMotionState())
+		//		delete body->getMotionState();
+		//	dynamicsWorld->removeCollisionObject(obj);
+		//	delete obj;
+		//}
 
 
 		delete broadphase;

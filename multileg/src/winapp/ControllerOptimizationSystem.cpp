@@ -1,5 +1,6 @@
 #include "ControllerOptimizationSystem.h"
 #include "ControllerMovementRecorderComponent.h"
+#include <ToString.h>
 
 int ControllerOptimizationSystem::m_testCount = 0;
 
@@ -8,14 +9,14 @@ ControllerOptimizationSystem::ControllerOptimizationSystem()
 	addComponentType<ControllerComponent>();
 	addComponentType<ControllerMovementRecorderComponent>();
 	// settings
-	m_simTicks = 100;			
+	m_simTicks = 600;			
 	m_warmupTicks = 2;	
 	m_instantEval = false;
 	// playback
-	m_currentSimTicks = 0.0f;	
+	m_currentSimTicks = 0;	
 	m_currentBestCandidateIdx = -1;
 	m_lastBestScore = FLT_MAX;
-	m_firstControllerAdded = false;
+	//m_firstControllerAdded = false;
 	m_inited = false;
 	//
 	m_controllerSystemRef = NULL;
@@ -25,15 +26,9 @@ void ControllerOptimizationSystem::added(artemis::Entity &e)
 {
 	ControllerComponent* controller = controllerComponentMapper.get(e);
 	ControllerMovementRecorderComponent* recorder = controllerRecorderComponentMapper.get(e);
-	if (!m_firstControllerAdded)
-	{
-		m_paramsMax = controller->getParamsMax();
-		m_paramsMin = controller->getParamsMin();
-	}
 	m_optimizableControllers.push_back(controller);
 	m_controllerRecorders.push_back(recorder);
 	m_controllerScores.push_back(0.0);
-	m_firstControllerAdded = true;
 }
 
 void ControllerOptimizationSystem::resetTestCount()
@@ -53,6 +48,10 @@ int ControllerOptimizationSystem::getCurrentSimTicks()
 
 bool ControllerOptimizationSystem::isSimCompleted()
 {
+	DEBUGPRINT(("SIM "));
+	DEBUGPRINT((ToString(m_currentSimTicks).c_str()));
+	DEBUGPRINT((" |"));
+	DEBUGPRINT((ToString(m_simTicks).c_str()));
 	return m_currentSimTicks >= m_simTicks;
 }
 
@@ -136,10 +135,11 @@ double ControllerOptimizationSystem::evaluateCandidateFitness(int p_idx)
 }
 
 
-void ControllerOptimizationSystem::initSim( std::vector<float>* p_initParams/*=NULL*/ )
+void ControllerOptimizationSystem::initSim( double p_hiscore, std::vector<float>* p_initParams/*=NULL*/ )
 {
 	if (p_initParams != NULL)
 		m_lastBestParams = *p_initParams;
+	m_lastBestScore = p_hiscore;
 }
 
 void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
@@ -169,6 +169,10 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 	unsigned int sz = m_optimizableControllers.size();
 	if (sz > 0 && !m_inited)
 	{
+		m_paramsMax = m_optimizableControllers[0]->getParamsMax();
+		m_paramsMin = m_optimizableControllers[0]->getParamsMin();
+
+		//
 		m_currentParams.clear();
 		m_controllerScores.resize(sz); // All scores for one round
 		//
@@ -193,4 +197,9 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 void ControllerOptimizationSystem::incSimTick()
 {
 	m_currentSimTicks++;
+}
+
+double ControllerOptimizationSystem::getWinnerScore()
+{
+	return m_lastBestScore;
 }

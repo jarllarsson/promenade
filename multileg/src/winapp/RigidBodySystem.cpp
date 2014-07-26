@@ -8,11 +8,14 @@ void RigidBodySystem::removed(artemis::Entity &e)
 	ConstraintComponent* constraint = (ConstraintComponent*)e.getComponent<ConstraintComponent>();
 	if (constraint)
 		constraint->forceRemove(m_dynamicsWorldPtr);
-	if (rigidBody->isInited())
-	{
-		//checkForConstraintsToRemove(e, rigidBody);
-		m_dynamicsWorldPtr->removeRigidBody(rigidBody->getRigidBody());
-	}
+	//if (rigidBody)
+	//{
+	//	if (rigidBody->isInited())
+	//	{
+	//		//checkForConstraintsToRemove(e, rigidBody);
+	//		m_dynamicsWorldPtr->removeRigidBody(rigidBody->getRigidBody());
+	//	}
+	//}
 };
 
 void RigidBodySystem::added(artemis::Entity &e)

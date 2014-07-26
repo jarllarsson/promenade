@@ -74,13 +74,14 @@ public:
 
 	}
 
-	void initSim(std::vector<float>* p_initParams=NULL);
+	void initSim(double p_hiscore, std::vector<float>* p_initParams=NULL);
 	static void resetTestCount();
 	int getCurrentSimTicks();
 	void incSimTick();
 	bool isSimCompleted();	
 	void evaluateAll();
 	std::vector<float>& getWinnerParams();
+	double getWinnerScore();
 	void findCurrentBestCandidate();
 protected:
 private:
@@ -95,7 +96,7 @@ private:
 
 	double evaluateCandidateFitness(int p_idx);
 
-	bool m_firstControllerAdded;
+	//bool m_firstControllerAdded;
 	bool m_inited;
 };
 

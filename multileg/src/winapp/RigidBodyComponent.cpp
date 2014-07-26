@@ -1,4 +1,6 @@
 #include "RigidBodyComponent.h"
+#include <ToString.h>
+#include <DebugPrint.h>
 
 
 RigidBodyComponent::RigidBodyComponent(btCollisionShape* p_collisionShape /*= NULL*/,
@@ -50,14 +52,28 @@ RigidBodyComponent::RigidBodyComponent(ListenerMode p_registerCollisions,
 
 RigidBodyComponent::~RigidBodyComponent()
 {
-	for (unsigned int i = 0; i < m_childConstraints.size(); i++)
-		if (m_childConstraints[i] != NULL) m_childConstraints[i]->forceRemove(m_dynamicsWorldPtr);
-	//m_childConstraints.clear();
-	delete m_collisionShape;
-	if (m_rigidBody!=NULL) delete m_rigidBody->getMotionState();
-	if (m_callback != NULL) delete m_callback;
-	m_dynamicsWorldPtr->removeRigidBody(m_rigidBody);
-	delete m_rigidBody;
+	if (m_inited)
+	{
+		unsigned int csz = m_childConstraints.size();
+		if (csz > 0)
+		{
+			for (unsigned int i = 0; i < csz; i++)
+			{
+				if (m_childConstraints[i] != NULL)
+				{
+					m_childConstraints[i]->forceRemove(m_dynamicsWorldPtr);
+				}
+			}
+		}
+
+		m_childConstraints.clear();
+		SAFE_DELETE(m_collisionShape);
+		if (m_rigidBody != NULL && m_rigidBody->getMotionState()) delete m_rigidBody->getMotionState();
+		SAFE_DELETE(m_callback);
+		if (m_dynamicsWorldPtr!=NULL) m_dynamicsWorldPtr->removeRigidBody(m_rigidBody);
+	}
+	m_inited = false;
+	SAFE_DELETE(m_rigidBody);
 }
 
 

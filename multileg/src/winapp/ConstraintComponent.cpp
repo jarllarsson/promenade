@@ -32,7 +32,8 @@ void ConstraintComponent::forceRemove(btDiscreteDynamicsWorld* p_world)
 {
 	if (!m_removed)
 	{
-		p_world->removeConstraint(m_constraint);
+		if (p_world!=NULL && m_constraint!=NULL)
+			p_world->removeConstraint(m_constraint);
 		SAFE_DELETE(m_constraint);
 		m_removed = true;
 	}
