@@ -40,7 +40,9 @@ Color4f toColor4f(const Color3f& p_col);
 
 Color3f toColor3f(const Color4f& p_col);
 
-static const Color3f colarr[18] = { { 1.0f, 0.0f, 0.0f },
+#define colarrSz 18
+
+static const Color3f colarr[colarrSz] = { { 1.0f, 0.0f, 0.0f },
 { 1.0f, 0.5f, 0.0f },
 { 1.0f, 0.0f, 0.5f },
 { 0.0f, 0.7f, 0.0f },

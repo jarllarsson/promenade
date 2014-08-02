@@ -131,6 +131,7 @@ void App::run()
 	std::vector<float>* bestParams = NULL;
 	int optimizationIterationCount = 0;
 	double bestScore = FLT_MAX;
+	std::vector<double> allResults;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestScore);
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 #endif
@@ -381,9 +382,27 @@ void App::run()
 		{
 			if (!pumpMessage(msg))
 			{
+				// draw axes
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(10.0f, 0.0f, 0.0f), colarr[0], colarr[1]);
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 10.0f, 0.0f), colarr[3], colarr[4]);
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+				
+#ifdef OPTIMIZATION
+				// draw test graph if optimizing
+				int vals = allResults.size();
+				if (vals > 1)
+				{
+					m_debugDrawBatch->drawLine(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(vals-1, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
+					for (int i = 0; i < vals - 1; i++)
+					{
+						m_debugDrawBatch->drawLine(
+							glm::vec3((float)i, 20.0f + allResults[i]*10.0f, 0.0f),
+							glm::vec3((float)i + 1.0f, 20.0f + allResults[i + 1]*10.0f, 0.0f),
+							colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
+					}
+				}
+#endif
+				
 				// Start by rendering
 				render();
 
@@ -497,6 +516,7 @@ void App::run()
 		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
 		bestScore = optimizationSystem->getWinnerScore();
 		optimizationIterationCount++;
+		allResults.push_back(bestScore);
 	#endif
 
 

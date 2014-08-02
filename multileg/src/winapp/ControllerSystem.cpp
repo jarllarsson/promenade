@@ -828,13 +828,17 @@ glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, un
 	p_lf->m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(Kft);
 	glm::vec3 diff = getFootPos(p_lf,p_legIdx) - p_lf->m_footStrikePlacement[p_legIdx];
 	float error = glm::length(diff);
-	glm::vec3 normdiff = glm::normalize(diff);
-	float pdval = p_lf->m_footTrackingSpringDamper.drive(error, p_dt);
-	glm::vec3 res = -normdiff * pdval;
-	bool vecnanchk = glm::isnan(res) == glm::bool3(true, true, true);
-	if (vecnanchk)
+	glm::vec3 res;
+	if (error > 0.0f)
 	{
-		int i = 0;
+		glm::vec3 normdiff = glm::normalize(diff);
+		float pdval = p_lf->m_footTrackingSpringDamper.drive(error, p_dt);
+		glm::vec3 res = -normdiff * pdval;
+		bool vecnanchk = glm::isnan(res) == glm::bool3(true, true, true);
+		if (vecnanchk)
+		{
+			int i = 0;
+		}
 	}
 	return res;
 }
