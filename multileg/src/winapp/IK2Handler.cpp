@@ -91,7 +91,7 @@ void IK2Handler::solve(const glm::vec3& p_footPosL, const glm::vec3& p_upperLegJ
 	//	m_dbgMesh.rotation = m_legFrame.transform.rotation * Quaternion.AngleAxis(Mathf.Rad2Deg * (upperLegAngle + Mathf.PI*0.5f), -m_legFrame.transform.right);
 	//	m_dbgMesh.position = upperLegLocalPos;
 	//}
-	debugDraw(p_drawer);
+	if (p_drawer!=NULL) debugDraw(p_drawer);
 }
 
 float IK2Handler::getUpperLegAngle() const

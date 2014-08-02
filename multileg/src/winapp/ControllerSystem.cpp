@@ -138,7 +138,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 2000.0f;
+		float tLim = 500.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3* t = &m_jointTorques[i];
@@ -1023,9 +1023,11 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
 			// Fetch upper- and lower leg length and solve IK
 			IK2Handler* ik = &lf->m_legIK[n];
+			DebugDrawBatch* drawer = NULL;
+			if (p_controllerIdx == 0) drawer = dbgDrawer();
 			ik->solve(refDesiredFootPos, refHipPos,
 				m_jointLengths[pdChain->getUpperJointIdx()],
-				m_jointLengths[pdChain->getLowerJointIdx()], dbgDrawer());
+				m_jointLengths[pdChain->getLowerJointIdx()], drawer);
 			// For each PD in leg
 			for (unsigned int x = 0; x < pdChain->getSize(); x++)
 			{

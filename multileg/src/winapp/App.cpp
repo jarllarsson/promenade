@@ -342,7 +342,7 @@ void App::run()
 			controller.addComponent(new ControllerMovementRecorderComponent());
 #endif
 			controller.refresh();
-			bodOffset = glm::vec3(10.0f, 0.0f, 0.0f);
+			bodOffset = glm::vec3(30.0f, 0.0f, 0.0f);
 			// permutation test
 			//std::vector<float> test = ((ControllerComponent*)controller.getComponent<ControllerComponent>())->getParams();
 			//test[3]+=(float)x;

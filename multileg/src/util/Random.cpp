@@ -4,7 +4,7 @@
 
 Random::Random()
 {
-	m_detgenerator.seed(c_detseed);
+	m_detgenerator.seed(time(NULL)/*c_detseed*/); // cheat right now to get new reseed in optimization
 	m_nondetgenerator.seed(time(NULL));
 }
 
