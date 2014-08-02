@@ -132,6 +132,7 @@ void App::run()
 	int optimizationIterationCount = 0;
 	double bestScore = FLT_MAX;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestScore);
+	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 #endif
 	do
 	{
@@ -418,7 +419,11 @@ void App::run()
 				prevTimeStamp = currTimeStamp;
 
 	#ifdef MEASURE_RBODIES
-				if (steps >= 600) run = false;
+		#ifdef OPTIMIZATION
+			if (optimizationIterationCount >= 5) run = false;
+		#else
+			if (steps >= 600) run = false;
+		#endif
 	#endif
 	#ifdef OPTIMIZATION
 				optimizationSystem->incSimTick();

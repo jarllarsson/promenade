@@ -144,6 +144,9 @@ void ControllerSystem::applyTorques( float p_dt )
 			glm::vec3* t = &m_jointTorques[i];
 			if (glm::length(*t)>tLim) 
 				*t = glm::normalize(*t)*tLim;
+			//bool nanchk = glm::isnan(*t) == glm::bool3(true, true, true);
+
+			//assert(glm::isnan(*t)!=glm::bool3(true,true,true));
 			m_jointRigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z));
 		}
 	}
@@ -531,7 +534,6 @@ void ControllerSystem::updateFeet( unsigned int p_controllerId, ControllerCompon
 		{
 			//updateReferenceFootPosition(phi, m_runTime, goalV);
 			updateFoot(p_controllerId, lf, i, phi, currentV, desiredV, groundPos);
-			// !!!!!!!! m_legFrames[i].tempApplyFootTorque(m_player.m_gaitPhase); !!!!!!!!!!!SHOULD BE DONE WITH PD!!!!!!!!!
 		}
 	}
 }
@@ -701,7 +703,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		// Swing force
 		if (!legInStance[i])
 		{
-			glm::vec3 fsw(calculateFsw(p_lf, i, p_phi, p_dt));
+			glm::vec3 fsw=calculateFsw(p_lf, i, p_phi, p_dt);
 			m_VFs[vfIdx] = calculateSwingLegVF(fsw); // Store force
 			//
 			if (p_controllerIdx == 0)
@@ -790,6 +792,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
 		ssum = JVec.x + JVec.y + JVec.z;
 		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
+		//bool vecnanchk = glm::isnan(addT) == glm::bool3(true, true, true);
 		(*p_outTVF)[localJointIdx/* + p_torqueIdxOffset*/] += addT;
 		// Do it like this for now, for the sake of readability and debugging.
 	}
@@ -825,7 +828,15 @@ glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, un
 	p_lf->m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(Kft);
 	glm::vec3 diff = getFootPos(p_lf,p_legIdx) - p_lf->m_footStrikePlacement[p_legIdx];
 	float error = glm::length(diff);
-	return -glm::normalize(diff) * p_lf->m_footTrackingSpringDamper.drive(error, p_dt);
+	glm::vec3 normdiff = glm::normalize(diff);
+	float pdval = p_lf->m_footTrackingSpringDamper.drive(error, p_dt);
+	glm::vec3 res = -normdiff * pdval;
+	bool vecnanchk = glm::isnan(res) == glm::bool3(true, true, true);
+	if (vecnanchk)
+	{
+		int i = 0;
+	}
+	return res;
 }
 
 
@@ -895,6 +906,11 @@ glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerC
 
 glm::vec3 ControllerSystem::calculateSwingLegVF(const glm::vec3& p_fsw)
 {
+	bool vecnanchk = glm::isnan(p_fsw) == glm::bool3(true, true, true);
+	if (vecnanchk)
+	{
+		int i = 0;
+	}
 	return p_fsw; // Right now, this force is equivalent to fsw
 }
 
@@ -902,7 +918,13 @@ glm::vec3 ControllerSystem::calculateStanceLegVF(unsigned int p_stanceLegCount,
 	const glm::vec3& p_fv, const glm::vec3& p_fh, const glm::vec3& p_fd)
 {
 	float n = (float)p_stanceLegCount;
-	return -p_fd - (p_fh / n) - (p_fv / n); // note fd should be stance fd
+	glm::vec3 stanceVF = -p_fd - (p_fh / n) - (p_fv / n);
+	bool vecnanchk = glm::isnan(stanceVF) == glm::bool3(true, true, true);
+	if (vecnanchk)
+	{
+		int i = 0;
+	}
+	return stanceVF; // note fd should be stance fd
 }
 
 
@@ -1046,6 +1068,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				glm::quat current = glm::quat_cast(m_jointWorldTransforms[jointIdx]);
 				// Drive PD using angle
 				glm::vec3 torque = pdChain->m_PDChain[x].drive(current, goal, p_dt);
+				//bool vecnanchk = glm::isnan(torque) == glm::bool3(true, true, true);
 				// Add to torque for joint
 				(*p_outTVF)[jointIdx] += torque;
 				glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
@@ -1070,47 +1093,6 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 
 }
 
-/*
-public void tempApplyFootTorque(float p_phi)
-{
-//
-// Toe-off is modeled with a linear target trajectory towards a fixed toe-off
-// target angle Theta-A that is triggered DeltaT-A seconds in advance of the start of the swing phase,
-// as dictated by the gait graph.
-//
-// Foot- strike anticipation is done in an analogous fashion with
-// respect to the anticipated foot-strike time and defined by Theta-B and DeltaT-B.
-//
-for (int i = 0; i < c_legCount; i++)
-{
-	StepCycle stepcycle = m_tuneStepCycles[i];
-	Transform foot = m_feet[i].transform;
-	float toeOffStartOffset = m_tuneToeOffTime[i];
-	float footStrikeStartOffset = m_tuneFootStrikeTime[i];
-	// get absolutes
-	// Get point in time when toe lifts off from ground
-	float toeOffStart = stepcycle.m_tuneStepTrigger + stepcycle.m_tuneDutyFactor - toeOffStartOffset;
-	if (toeOffStart >= 1.0f) toeOffStart -= 1.0f;
-	if (toeOffStart < 0.0f) toeOffStart += 1.0f;
-	// Get point in time when foot touches the ground
-	float footStrikeStart = stepcycle.m_tuneStepTrigger - footStrikeStartOffset;
-	if (toeOffStart < 0.0f) footStrikeStart += 1.0f;
-	//         
-
-	// Use PD here:
-	Vector3 torque = Vector3.zero; Color rot = Color.red;
-	if ((p_phi > footStrikeStart && footStrikeStart > toeOffStart) || p_phi < toeOffStart) // catch first
-		torque = Vector3.right*(foot.localRotation.eulerAngles.x - m_tuneFootStrikeAngle);
-	else
-	{
-		torque = Vector3.right*(foot.localRotation.eulerAngles.x - m_tuneToeOffAngle);
-		rot = Color.green;
-	}
-	foot.rigidbody.AddRelativeTorque(torque);
-
-}
-	}
-*/
 
 glm::vec3 ControllerSystem::getFootPos( ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx )
 {

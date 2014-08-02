@@ -110,6 +110,8 @@ public:
 			float a=0.0f;
 			glm::vec3 dir;
 			MathHelp::quatToAngleAxis(error, a, dir);
+			bool vecnanchk = glm::isnan(dir) == glm::bool3(true, true, true);
+			bool ananchk = glm::isnan(a) == true;
 			// Get torque
 			result = drive(a * dir, p_dt);
 		}
