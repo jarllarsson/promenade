@@ -71,5 +71,8 @@
     <ClCompile Include="OptimizableHelper.cpp">
       <Filter>Optimization</Filter>
     </ClCompile>
+    <ClCompile Include="ParamChanger.cpp">
+      <Filter>Optimization</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,10 +1,10 @@
-#include "ControllerMovementRecorderComponent.h"
+#include "ControllerMovementRecorder.h"
 #include "ControllerComponent.h"
 #include "ControllerSystem.h"
 #include <assert.h>
 
 
-ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
+ControllerMovementRecorder::ControllerMovementRecorder()
 {
 	m_fdWeight = 100.0f;
 	m_fvWeight = 5.0f;
@@ -14,7 +14,7 @@ ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 }
 
 
-double ControllerMovementRecorderComponent::evaluate()
+double ControllerMovementRecorder::evaluate()
 {
 	double fv = evaluateFV();
 	double fr = evaluateFR();
@@ -26,16 +26,15 @@ double ControllerMovementRecorderComponent::evaluate()
 	return fobj;
 }
 
-void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerComponent* p_controller,
-	ControllerSystem* p_system, bool p_forceStore /*= false*/)
+void ControllerMovementRecorder::fv_calcStrideMeanVelocity(ControllerComponent* p_controller,
+	const glm::vec3& p_currentVelocity, const glm::vec3& p_desiredVelocity, bool p_forceStore /*= false*/)
 {
 	GaitPlayer* player = &p_controller->m_player;
 	bool restarted = player->checkHasRestartedStride_AndResetFlag();
-	ControllerSystem::VelocityStat& velocities = p_system->getControllerVelocityStat(p_controller);
 	if (!restarted && !p_forceStore)
 	{
-		m_temp_currentStrideVelocities.push_back(velocities.m_currentVelocity);
-		m_temp_currentStrideDesiredVelocities.push_back(velocities.m_desiredVelocity);
+		m_temp_currentStrideVelocities.push_back(p_currentVelocity);
+		m_temp_currentStrideDesiredVelocities.push_back(p_desiredVelocity);
 	}
 	else
 	{
@@ -46,8 +45,8 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 			// force straight movement behavior from tests, set desired coronal velocity to constant zero:
 			totalDesiredVelocities += glm::vec3(0.0f, 0.0f, m_temp_currentStrideDesiredVelocities[i].z);
 		}
-		totalVelocities /= max(1.0f, (float)m_temp_currentStrideVelocities.size());
-		totalDesiredVelocities /= max(1.0f, (float)m_temp_currentStrideDesiredVelocities.size());
+		totalVelocities /= (float)m_temp_currentStrideVelocities.size();
+		totalDesiredVelocities /= (float)m_temp_currentStrideDesiredVelocities.size();
 		// add to lists
 		m_fvVelocityDeviations.push_back((double)glm::length(totalVelocities - totalDesiredVelocities));
 		//
@@ -56,11 +55,10 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 	}
 }
 
-void ControllerMovementRecorderComponent::fr_calcRotationDeviations(ControllerComponent* p_controller, ControllerSystem* p_system)
+void ControllerMovementRecorder::fr_calcRotationDeviations(ControllerComponent* p_controller, ControllerSystem* p_system)
 {
 	unsigned int legframes = p_controller->getLegFrameCount();
 	GaitPlayer* player = &p_controller->m_player;
-	if (m_frBodyRotationDeviations.size() < legframes) m_frBodyRotationDeviations.resize(legframes);
 	for (int i = 0; i < legframes; i++)
 	{
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
@@ -73,12 +71,12 @@ void ControllerMovementRecorderComponent::fr_calcRotationDeviations(ControllerCo
 	}
 }
 
-void ControllerMovementRecorderComponent::fh_calcHeadAccelerations( ControllerComponent* p_controller )
+void ControllerMovementRecorder::fh_calcHeadAccelerations( ControllerComponent* p_controller )
 {
 	//m_fhHeadAcceleration.Add((double)m_myController.m_headAcceleration.magnitude);
 }
 
-void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller )
+void ControllerMovementRecorder::fd_calcReferenceMotion( ControllerComponent* p_controller )
 {
 	/*
 	double lenBod = (double)m_myController.transform.position.y - (double)m_origBodyHeight;
@@ -115,13 +113,13 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	m_fdBodyHeightSqrDiffs.Add(lenFt * 0.4 + lenKnees + lenHips + lenBod + 2.0f*lenHd + 0.1 * lenDist);*/
 }
 
-void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)
+void ControllerMovementRecorder::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)
 {
 	m_fpMovementDist.push_back(p_system->getControllerVelocityStat(p_controller).m_currentVelocity);
 	m_fvVelocityGoal = p_system->getControllerVelocityStat(p_controller).m_goalVelocity;
 }
 
-double ControllerMovementRecorderComponent::evaluateFV()
+double ControllerMovementRecorder::evaluateFV()
 {
 	double total = 0.0f;
 	// mean
@@ -138,10 +136,11 @@ double ControllerMovementRecorderComponent::evaluateFV()
 		totmeandiffsqr += mdiff * mdiff;
 	}
 	double sdeviation = sqrt(totmeandiffsqr / max(1.0, ((double)m_fvVelocityDeviations.size())));
+	assert(avg > 0.0f);
 	return avg;
 }
 
-double ControllerMovementRecorderComponent::evaluateFR()
+double ControllerMovementRecorder::evaluateFR()
 {
 	double total = 0.0f;
 	int sz = 0;
@@ -153,10 +152,11 @@ double ControllerMovementRecorderComponent::evaluateFR()
 		sz++;
 	}
 	double avg = total /= max(1, (double)(sz));
+	assert(avg > 0.0f);
 	return avg;
 }
 
-double ControllerMovementRecorderComponent::evaluateFH()
+double ControllerMovementRecorder::evaluateFH()
 {
 	double total = 0.0f;
 	int sz = 0;
@@ -168,10 +168,11 @@ double ControllerMovementRecorderComponent::evaluateFH()
 	}
 
 	double avg = total /= max(1.0, (double)(sz));
+	assert(avg > 0.0f);
 	return avg;
 }
 
-double ControllerMovementRecorderComponent::evaluateFD()
+double ControllerMovementRecorder::evaluateFD()
 {
 	double total = 0.0f;
 	// mean
@@ -188,10 +189,11 @@ double ControllerMovementRecorderComponent::evaluateFD()
 		totmeandiffsqr += mdiff * mdiff;
 	}
 	double sdeviation = sqrt(totmeandiffsqr / max(1.0, (double)m_fdBodyHeightSqrDiffs.size()));
+	assert(avg > 0.0f);
 	return avg;
 }
 
-double ControllerMovementRecorderComponent::evaluateFP()
+double ControllerMovementRecorder::evaluateFP()
 {
 	glm::vec3 total;
 	// mean
