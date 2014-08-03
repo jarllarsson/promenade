@@ -244,7 +244,7 @@ void App::run()
 		// Test of controller
 		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
-		for (int x = 0; x < 10; x++) // number of characters
+		for (int x = 0; x < 20; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
 			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
@@ -360,12 +360,7 @@ void App::run()
 			controller.addComponent(new ControllerMovementRecorderComponent());
 #endif
 			controller.refresh();
-			bodOffset = glm::vec3(30.0f, 0.0f, 0.0f);
-			// permutation test
-			//std::vector<float> test = ((ControllerComponent*)controller.getComponent<ControllerComponent>())->getParams();
-			//test[3]+=(float)x;
-			//((ControllerComponent*)controller.getComponent<ControllerComponent>())->consumeParams(test);
-
+			//bodOffset = glm::vec3(30.0f, 0.0f, 0.0f);
 		}
 
 	#ifdef OPTIMIZATION
@@ -415,13 +410,13 @@ void App::run()
 				int vals = allResults.size();
 				if (vals > 1)
 				{
-					m_debugDrawBatch->drawLine(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(vals-1, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
+					m_debugDrawBatch->drawLine(glm::vec3(-10.0f, 20.0f, 0.0f), glm::vec3(10.0f, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
 
 					for (int i = 0; i < vals - 1; i++)
 					{
 						m_debugDrawBatch->drawLine(
-							glm::vec3((float)i, 20.0f + (allResults[i] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
-							glm::vec3((float)i + 1.0f, 20.0f + (allResults[i + 1] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
+							glm::vec3(((float)i / (float)vals)*20.0f-10.0f, 20.0f + (allResults[i] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
+							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f-10.0f, 20.0f + (allResults[i + 1] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
 							colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
 					}
 				}
@@ -540,6 +535,7 @@ void App::run()
 		optimizationSystem->findCurrentBestCandidate();
 		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
 		bestScore = optimizationSystem->getWinnerScore();
+		DEBUGPRINT((("\nbestscore: " + ToString(bestScore)).c_str()));
 		optimizationIterationCount++;
 		debugTicker = 0;
 		allResults.push_back(bestScore);

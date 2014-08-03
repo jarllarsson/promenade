@@ -9,7 +9,7 @@ ControllerOptimizationSystem::ControllerOptimizationSystem()
 	addComponentType<ControllerComponent>();
 	addComponentType<ControllerMovementRecorderComponent>();
 	// settings
-	m_simTicks = 120;			
+	m_simTicks = 600;			
 	m_warmupTicks = 2;	
 	m_instantEval = false;
 	// playback
@@ -120,17 +120,19 @@ void ControllerOptimizationSystem::perturbParams(int p_offset /*= 0*/)
 
 void ControllerOptimizationSystem::evaluateAll()
 {
+	DEBUGPRINT(("\n\n CURRENT SCORE PARTS:\n"));
 	for (int i = 0; i < m_controllerRecorders.size(); i++)
 	{
 		//Debug.Log("Eval "+i+" "+m_optimizableControllers[i]);
 		m_controllerScores[i] += evaluateCandidateFitness(i);
 	}
+	DEBUGPRINT(("\n\n ----------------------------\n"));
 }
 
 double ControllerOptimizationSystem::evaluateCandidateFitness(int p_idx)
 {
 	ControllerMovementRecorderComponent* record = m_controllerRecorders[p_idx];
-	double score = record->evaluate(p_idx==0);
+	double score = record->evaluate(true);
 	return score;
 }
 

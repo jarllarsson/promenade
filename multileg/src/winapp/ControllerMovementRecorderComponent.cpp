@@ -10,7 +10,7 @@ ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 	m_fdWeight = 100.0f; // deviation from reference motion
 	m_fvWeight = 5.0f;   // deviation from desired speed
 	m_fhWeight = 0.5f;	 // acceleration of head
-	m_frWeight = 5.0f;	 // whole body rotation
+	m_frWeight = 0.01f;	 // whole body rotation
 	m_fpWeight = 0.0f;	 // movement distance
 }
 
@@ -25,9 +25,7 @@ double ControllerMovementRecorderComponent::evaluate( bool p_dbgPrint )
 	double fobj = (double)m_fdWeight*fd + (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
 	if (p_dbgPrint)
 	{
-		DEBUGPRINT(("\n\n CURRENT SCORE PARTS:\n"));
-		DEBUGPRINT(((ToString(fobj) + " = fv" + ToString((double)m_fvWeight*fv) + " + fr" + ToString((double)m_frWeight*fr) + " + fh" + ToString((double)m_fhWeight*fh) + " - fp" + ToString((double)m_fpWeight*fp)).c_str()));
-		DEBUGPRINT(("\n\n ----------------------------\n"));
+		DEBUGPRINT(((ToString(fobj) + " = fd" + ToString((double)m_fdWeight*fd) +" = fv" + ToString((double)m_fvWeight*fv) + " + fr" + ToString((double)m_frWeight*fr) + " + fh" + ToString((double)m_fhWeight*fh) + " - fp" + ToString((double)m_fpWeight*fp)+"\n").c_str()));
 	}
 	return fobj;
 }
