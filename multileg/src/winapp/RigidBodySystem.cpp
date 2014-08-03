@@ -77,6 +77,8 @@ void RigidBodySystem::processEntity(artemis::Entity &e)
 			btMotionState* motionState = body->getMotionState();
 			btTransform physTransform;
 			motionState->getWorldTransform(physTransform);
+			// Store old position
+			glm::vec3 oldpos = transform->getPosition();
 			// update the transform component
 			// Get the transform from Bullet and into mat
 			glm::mat4 mat(0.0f);
@@ -85,6 +87,18 @@ void RigidBodySystem::processEntity(artemis::Entity &e)
 			physTransform.getOpenGLMatrix(glm::value_ptr(mat));
 			transform->setMatrix(mat);
 			transform->setScaleToMatrix(scale);
+			// Now if the calculation of velocity is enabled, sample and calculate it
+			if (m_measureVelocityAndAcceleration)
+			{
+				glm::vec3 npos = transform->getPosition(); // new pos
+				// get old velocity
+				glm::vec3 oldvel = rigidBody->getVelocity();
+				// velocity is delta position
+				rigidBody->setVelocityStat(npos - oldpos);
+				glm::vec3 nvel = rigidBody->getVelocity();
+				// acceleration is delta velocity
+				rigidBody->setAccelerationStat(nvel - oldvel);
+			}
 // 			if (rigidBody->isRegisteringCollisions())
 // 			{
 // 				m_dynamicsWorldPtr->contactTest(body, *rigidBody->getCollisionCallbackFunc());

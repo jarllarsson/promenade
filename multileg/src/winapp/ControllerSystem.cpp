@@ -1192,7 +1192,7 @@ glm::vec3 ControllerSystem::getJointAcceleration(unsigned int p_jointId)
 	glm::vec3 result;
 	if (idx < m_jointRigidBodies.size())
 	{
-		result = m_jo
+		result = m_rigidBodyRefs[idx]->getAcceleration();
 	}
 	return result;
 }
