@@ -48,10 +48,10 @@ int ControllerOptimizationSystem::getCurrentSimTicks()
 
 bool ControllerOptimizationSystem::isSimCompleted()
 {
-	DEBUGPRINT(("SIM "));
+	/*DEBUGPRINT(("SIM "));
 	DEBUGPRINT((ToString(m_currentSimTicks).c_str()));
 	DEBUGPRINT((" |"));
-	DEBUGPRINT((ToString(m_simTicks).c_str()));
+	DEBUGPRINT((ToString(m_simTicks).c_str()));*/
 	return m_currentSimTicks >= m_simTicks;
 }
 

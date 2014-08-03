@@ -132,6 +132,8 @@ void App::run()
 	int optimizationIterationCount = 0;
 	double bestScore = FLT_MAX;
 	std::vector<double> allResults;
+	int debugTicker = 0;
+	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Tick", Toolbar::INT, &debugTicker);
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestScore);
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 #endif
@@ -446,6 +448,7 @@ void App::run()
 	#endif
 	#ifdef OPTIMIZATION
 				optimizationSystem->incSimTick();
+				debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
 				if (optimizationSystem->isSimCompleted())
 				{
 					DEBUGPRINT((" NO: "));
@@ -516,6 +519,7 @@ void App::run()
 		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
 		bestScore = optimizationSystem->getWinnerScore();
 		optimizationIterationCount++;
+		debugTicker = 0;
 		allResults.push_back(bestScore);
 	#endif
 
