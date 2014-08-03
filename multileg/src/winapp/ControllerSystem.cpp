@@ -169,6 +169,7 @@ void ControllerSystem::buildCheck()
 		RigidBodyComponent* rootRB = (RigidBodyComponent*)legFrameEntities->m_legFrameEntity->getComponent<RigidBodyComponent>();
 		TransformComponent* rootTransform = (TransformComponent*)legFrameEntities->m_legFrameEntity->getComponent<TransformComponent>();
 		unsigned int rootIdx = addJoint(rootRB, rootTransform);
+		m_rigidBodyRefs.push_back(rootRB);
 		m_dbgJointEntities.push_back(legFrameEntities->m_legFrameEntity); // for easy debugging options
 		//
 		legFrame->m_legFrameJointId = rootIdx; // store idx to root for leg frame
@@ -198,6 +199,7 @@ void ControllerSystem::buildCheck()
 				ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
 				// Add the joint
 				unsigned int idx = addJoint(jointRB, jointTransform);
+				m_rigidBodyRefs.push_back(jointRB);
 				m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
 				// Get DOF on joint to chain
 				addJointToStandardVFChain(standardDOFChain,idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
@@ -217,9 +219,8 @@ void ControllerSystem::buildCheck()
 					legFrame->m_feetJointId.push_back(idx);
 					footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
 					legFrame->createFootPlacementModelVarsForNewLeg(footPos);
-					// add rigidbody so we can check for collisions and late foot strikes
-					m_footRigidBodyRefs.push_back(jointRB);
-					legFrame->m_footRigidBodyIdx.push_back(m_footRigidBodyRefs.size() - 1);
+					// add rigidbody idx so we can check for collisions and late foot strikes
+					legFrame->m_footRigidBodyIdx.push_back(m_rigidBodyRefs.size() - 1);
 					//
 					jointEntity = NULL;
 				}
@@ -1139,7 +1140,7 @@ void ControllerSystem::writeFeetCollisionStatus(ControllerComponent* p_controlle
 		for (unsigned int i = 0; i < legCount; i++)
 		{
 			unsigned int footRBIdx = lf->m_footRigidBodyIdx[i];
-			lf->m_footIsColliding[i] = m_footRigidBodyRefs[footRBIdx]->isColliding();
+			lf->m_footIsColliding[i] = m_rigidBodyRefs[footRBIdx]->isColliding();
 		}
 	}
 	// phew
@@ -1183,4 +1184,15 @@ float ControllerSystem::getDesiredFootAngle(unsigned int p_legIdx, ControllerCom
 ControllerSystem::VelocityStat& ControllerSystem::getControllerVelocityStat(const ControllerComponent* p_controller)
 {
 	return m_controllerVelocityStats[p_controller->m_sysIdx];
+}
+
+glm::vec3 ControllerSystem::getJointAcceleration(unsigned int p_jointId)
+{
+	unsigned int idx = p_jointId;
+	glm::vec3 result;
+	if (idx < m_jointRigidBodies.size())
+	{
+		result = m_jo
+	}
+	return result;
 }

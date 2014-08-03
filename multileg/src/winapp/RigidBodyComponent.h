@@ -59,14 +59,20 @@ public:
 
 	bool isColliding();
 	const glm::vec3& getCollisionPoint();
+	const glm::vec3& getVelocity();
+	const glm::vec3& getAcceleration();
 	bool isRegisteringCollisions();
 	void setCollidingStat(bool p_stat, const glm::vec3& p_position=glm::vec3(0.0f));
+	void setVelocityStat(glm::vec3& p_velocity);
+	void setAccelerationStat(glm::vec3& p_acceleration);
 
 	bool isInited();
 	short int m_collisionLayerType;
 	short int m_collidesWithLayer;
 private:
 	glm::vec3 m_collisionPoint;
+	glm::vec3 m_velocity;
+	glm::vec3 m_acceleration;
 	bool m_registerCollisions;
 	bool m_colliding;
 	btCollisionShape* m_collisionShape;

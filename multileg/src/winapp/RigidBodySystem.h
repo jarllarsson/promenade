@@ -37,12 +37,14 @@ private:
 public:
 
 
-	RigidBodySystem(btDiscreteDynamicsWorld* p_dynamicsWorld, MeasurementBin<string>* p_stateDbgRecorder=NULL) 
+	RigidBodySystem(btDiscreteDynamicsWorld* p_dynamicsWorld, MeasurementBin<string>* p_stateDbgRecorder=NULL,
+		bool p_measureVelocityAndAcceleration=false)
 	{
 		addComponentType<TransformComponent>();
 		addComponentType<RigidBodyComponent>();
 		m_dynamicsWorldPtr = p_dynamicsWorld;
 		m_stateDbgRecorder = p_stateDbgRecorder;
+		m_measureVelocityAndAcceleration = p_measureVelocityAndAcceleration;
 	};
 
 	virtual void initialize() 
@@ -110,6 +112,7 @@ public:
 	};
 
 private:
+	bool m_measureVelocityAndAcceleration;
 	void checkForNewConstraints(artemis::Entity &e);
 	//void checkForConstraintsToRemove(artemis::Entity &e, RigidBodyComponent* p_rigidBody);
 	void setupConstraints(artemis::Entity *e);

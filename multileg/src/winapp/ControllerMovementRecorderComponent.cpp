@@ -73,9 +73,11 @@ void ControllerMovementRecorderComponent::fr_calcRotationDeviations(ControllerCo
 	}
 }
 
-void ControllerMovementRecorderComponent::fh_calcHeadAccelerations( ControllerComponent* p_controller )
+void ControllerMovementRecorderComponent::fh_calcHeadAccelerations( ControllerComponent* p_controller, ControllerSystem* p_system )
 {
-	//m_fhHeadAcceleration.Add((double)m_myController.m_headAcceleration.magnitude);
+	unsigned int headJointId = p_controller->getHeadJointId();
+	glm::vec3 acceleration = p_system->getJointAcceleration(headJointId);
+	m_fhHeadAcceleration.Add((double)glm::length(acceleration));
 }
 
 void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller )

@@ -153,7 +153,7 @@ void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
 	// record:
 	recorder->fv_calcStrideMeanVelocity(controller, m_controllerSystemRef);
 	recorder->fr_calcRotationDeviations(controller, m_controllerSystemRef);
-	recorder->fh_calcHeadAccelerations(controller);
+	recorder->fh_calcHeadAccelerations(controller, TODO);
 	recorder->fd_calcReferenceMotion(controller);
 	recorder->fp_calcMovementDistance(controller, m_controllerSystemRef);
 }

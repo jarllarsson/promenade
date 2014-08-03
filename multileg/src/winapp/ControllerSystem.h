@@ -62,7 +62,7 @@ private:
 	// Joint run-time data
 	std::vector<glm::vec3>		m_jointTorques;
 	std::vector<btRigidBody*>	m_jointRigidBodies;
-	std::vector<RigidBodyComponent*> m_footRigidBodyRefs;
+	std::vector<RigidBodyComponent*> m_rigidBodyRefs;
 	std::vector<glm::mat4>		m_jointWorldTransforms;
 	std::vector<float>			m_jointLengths;
 	std::vector<float>			m_jointMass;
@@ -180,7 +180,7 @@ private:
 	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	void writeFeetCollisionStatus(ControllerComponent* p_controller);
 	float getDesiredFootAngle(unsigned int p_legIdx, ControllerComponent::LegFrame* p_lf, float p_phi);
-
+	glm::vec3 getJointAcceleration(unsigned int p_jointId);
 	// global variables
 	float m_runTime;
 	int m_steps;

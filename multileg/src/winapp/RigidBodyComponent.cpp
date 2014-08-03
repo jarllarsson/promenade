@@ -157,3 +157,23 @@ bool RigidBodyComponent::isColliding()
 {
 	return m_colliding;
 }
+
+const glm::vec3& RigidBodyComponent::getVelocity()
+{
+	return m_velocity;
+}
+
+const glm::vec3& RigidBodyComponent::getAcceleration()
+{
+	return m_acceleration;
+}
+
+void RigidBodyComponent::setVelocityStat(glm::vec3& p_velocity)
+{
+	m_velocity = p_velocity;
+}
+
+void RigidBodyComponent::setAccelerationStat(glm::vec3& p_acceleration)
+{
+	m_acceleration = p_acceleration;
+}

@@ -72,6 +72,11 @@ std::vector<float> ControllerComponent::getParamsMin()
 	return paramsmin;
 }
 
+unsigned int ControllerComponent::getHeadJointId()
+{
+	return m_legFrames[0].m_legFrameJointId; // currently no head exist, so check the frame itself
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // LEG-FRAME
 

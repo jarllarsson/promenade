@@ -301,7 +301,7 @@ public:
 	virtual void consumeParams(std::vector<float>& p_other);
 	virtual std::vector<float> getParamsMax();
 	virtual std::vector<float> getParamsMin();
-
+	unsigned int getHeadJointId();
 
 protected:
 private:
