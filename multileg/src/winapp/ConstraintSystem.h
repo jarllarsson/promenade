@@ -18,6 +18,7 @@ class ConstraintSystem : public AdvancedEntitySystem
 {
 private:
 	artemis::ComponentMapper<ConstraintComponent> constraintMapper;
+	std::vector<ConstraintComponent*> m_constraints;
 public:
 
 	ConstraintSystem(btDiscreteDynamicsWorld* p_dynamicsWorld)
@@ -40,12 +41,20 @@ public:
 
 	virtual void added(artemis::Entity &e)
 	{
-
+		ConstraintComponent* constraint = constraintMapper.get(e);
+		if (constraint)
+			m_constraints.push_back(constraint);
 	}
 
 	virtual void processEntity(artemis::Entity &e)
 	{
+	}
 
+	void removeAllConstraints()
+	{
+		for (int i = 0; i < m_constraints.size(); i++)
+			m_constraints[i]->forceRemove(m_dynamicsWorldPtr);
+		m_constraints.clear();
 	}
 
 protected:

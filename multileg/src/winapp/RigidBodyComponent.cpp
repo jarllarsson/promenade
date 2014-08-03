@@ -54,17 +54,21 @@ RigidBodyComponent::~RigidBodyComponent()
 {
 	if (m_inited)
 	{
-		unsigned int csz = m_childConstraints.size();
+		/*unsigned int csz = m_childConstraints.size();
+		DEBUGPRINT(((" sz:"+ToString(csz)).c_str()));
 		if (csz > 0)
 		{
 			for (unsigned int i = 0; i < csz; i++)
 			{
+				DEBUGPRINT(((" p:"+ToString(m_childConstraints[i])).c_str()));
 				if (m_childConstraints[i] != NULL)
 				{
+					std::string strr = m_childConstraints[i]->getDesc()->m_collisionBetweenLinked ? "[T]" : "[F]";
+					DEBUGPRINT(((" cc:" + strr).c_str()));
 					m_childConstraints[i]->forceRemove(m_dynamicsWorldPtr);
 				}
 			}
-		}
+		}*/
 
 		m_childConstraints.clear();
 		SAFE_DELETE(m_collisionShape);

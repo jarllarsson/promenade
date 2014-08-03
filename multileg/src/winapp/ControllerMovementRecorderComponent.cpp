@@ -26,7 +26,7 @@ double ControllerMovementRecorderComponent::evaluate( bool p_dbgPrint )
 	if (p_dbgPrint)
 	{
 		DEBUGPRINT(("\n\n CURRENT SCORE PARTS:\n"));
-		DEBUGPRINT(((ToString(fobj) + " = " + ToString((double)m_fvWeight*fv) + " + " + ToString((double)m_frWeight*fr) + " + " + ToString((double)m_fhWeight*fh) + " - " + ToString((double)m_fpWeight*fp)).c_str()));
+		DEBUGPRINT(((ToString(fobj) + " = fv" + ToString((double)m_fvWeight*fv) + " + fr" + ToString((double)m_frWeight*fr) + " + fh" + ToString((double)m_fhWeight*fh) + " - fp" + ToString((double)m_fpWeight*fp)).c_str()));
 		DEBUGPRINT(("\n\n ----------------------------\n"));
 	}
 	return fobj;
@@ -75,7 +75,7 @@ void ControllerMovementRecorderComponent::fr_calcRotationDeviations(ControllerCo
 		glm::quat diff = glm::inverse(currentOrientation) * currentDesiredOrientation;
 		glm::vec3 axis; float angle;
 		MathHelp::quatToAngleAxis(diff, angle, axis);
-		m_frBodyRotationDeviations[i].push_back(angle);
+		m_frBodyRotationDeviations[i].push_back(TODEG*angle);
 	}
 }
 

@@ -210,11 +210,12 @@ void App::run()
 	#ifdef OPTIMIZATION
 		ControllerOptimizationSystem* optimizationSystem = (ControllerOptimizationSystem*)sysManager->setSystem(new ControllerOptimizationSystem());
 	#endif
+		ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
 		sysManager->initializeAll();
 
 
 		// Order independent
-		//addOrderIndependentSystem(constraintSystem);
+		addOrderIndependentSystem(constraintSystem);
 		addOrderIndependentSystem(posRefSystem);
 	#ifdef OPTIMIZATION
 		addOrderIndependentSystem(optimizationSystem);
@@ -392,6 +393,10 @@ void App::run()
 		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		m_time = 0.0;
 		bool shooting = false;
+#ifdef OPTIMIZATION
+		double maxscoreelem = 1.0f;
+		if (allResults.size()>1) maxscoreelem=*std::max_element(allResults.begin(), allResults.end());
+#endif
 
 		while (!m_context->closeRequested() && run && !m_restart)
 		{
@@ -411,11 +416,12 @@ void App::run()
 				if (vals > 1)
 				{
 					m_debugDrawBatch->drawLine(glm::vec3(0.0f, 20.0f, 0.0f), glm::vec3(vals-1, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
+
 					for (int i = 0; i < vals - 1; i++)
 					{
 						m_debugDrawBatch->drawLine(
-							glm::vec3((float)i, 20.0f + allResults[i]*10.0f, 0.0f),
-							glm::vec3((float)i + 1.0f, 20.0f + allResults[i + 1]*10.0f, 0.0f),
+							glm::vec3((float)i, 20.0f + (allResults[i] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
+							glm::vec3((float)i + 1.0f, 20.0f + (allResults[i + 1] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
 							colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
 					}
 				}
@@ -578,6 +584,7 @@ void App::run()
 		// Clean up
 
 		// artemis
+		constraintSystem->removeAllConstraints();
 		entityManager->removeAllEntities();
 		m_orderIndependentSystems.clear();
 		m_world.getSystemManager()->getSystems().deleteData();
