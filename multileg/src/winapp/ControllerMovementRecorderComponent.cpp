@@ -84,14 +84,26 @@ void ControllerMovementRecorderComponent::fh_calcHeadAccelerations( ControllerCo
 	m_fhHeadAcceleration.push_back((double)glm::length(acceleration));
 }
 
-void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller )
+void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller, ControllerSystem* p_system )
 {
-	/*
-	double lenBod = (double)m_myController.transform.position.y - (double)m_origBodyHeight;
-	lenBod *= lenBod; // sqr
-	double lenHd = (double)m_myController.m_head.transform.position.y - (double)m_origHeadHeight;
-	lenHd *= lenHd; // sqr
-	double ghostDist = (double)(m_ghostController.position.z - m_ghostStart.z);
+	unsigned int idx = p_controller->m_sysIdx;
+	ControllerSystem::VelocityStat velstat = p_system->getControllerVelocityStat(p_controller);
+	unsigned int legFrames = p_controller->getLegFrameCount();
+	// totalscores
+	double lenFt = 0.0, lenKnees = 0.0, lenHips = 0.0, lenBod = 0.0, lenHd = 0.0, lenDist=0.0;
+	// step through each lf and add score
+	for (unsigned int i = 0; i < legFrames; i++)
+	{
+		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
+		glm::vec3 lfPos = p_system->getLegFramePosition(lf);
+		double tlenBod = (double)lfPos.y - (double)lf->m_height; // assuming ground is 0!!
+		tlenBod *= tlenBod; // sqr
+		double tlenHd = 0.0; // head height
+		tlenHd *= tlenHd; // sqr
+		lenBod += tlenBod;
+		lenHd += tlenBod;
+	}
+	/*double ghostDist = (double)(m_ghostController.position.z - m_ghostStart.z);
 	double controllerDist = (double)(m_myController.transform.position.z - m_mycontrollerStart.z);
 	double lenDist = ghostDist - controllerDist;
 	if (controllerDist < 0.0) lenDist *= 2.0; // penalty for falling or walking backwards
@@ -117,8 +129,8 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 		lenFt += (double)Vector3.SqrMagnitude(footRefToFoot);
 		lenHips += (double)Vector3.SqrMagnitude(hipRefToHip);
 		lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);
-	}
-	m_fdBodyHeightSqrDiffs.Add(lenFt * 0.4 + lenKnees + lenHips + lenBod + 2.0f*lenHd + 0.1 * lenDist);*/
+	}*/
+	m_fdBodyHeightSqrDiffs.push_back(/*lenFt * 0.4 + lenKnees + lenHips + */lenBod + 2.0f*lenHd + 0.1 * lenDist);
 }
 
 void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)

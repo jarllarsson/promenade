@@ -156,7 +156,7 @@ void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
 	recorder->fv_calcStrideMeanVelocity(controller, m_controllerSystemRef);
 	recorder->fr_calcRotationDeviations(controller, m_controllerSystemRef);
 	recorder->fh_calcHeadAccelerations(controller, m_controllerSystemRef);
-	recorder->fd_calcReferenceMotion(controller);
+	recorder->fd_calcReferenceMotion(controller, m_controllerSystemRef);
 	recorder->fp_calcMovementDistance(controller, m_controllerSystemRef);
 }
 
@@ -181,8 +181,11 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 		if (m_lastBestParams.size()>0)
 			storeParams(&m_lastBestParams);
 		else
+		{
 			storeParams();
-		m_lastBestParams = m_currentParams[0];
+			m_lastBestParams = m_currentParams[0];
+		}
+
 		perturbParams(1);
 
 		for (int i = 0; i < m_optimizableControllers.size(); i++)

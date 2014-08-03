@@ -114,7 +114,9 @@ public:
 	VelocityStat& getControllerVelocityStat(const ControllerComponent* p_controller);
 	glm::vec3 getJointAcceleration(unsigned int p_jointId);
 	double getLatestTiming();
-
+	glm::vec3 getControllerPosition(unsigned int p_controllerId);
+	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
+	glm::vec3 getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const;
 private:
 	// build helpers
 	// Add a joint's all DOFs to chain
@@ -175,9 +177,6 @@ private:
 	void saveJointMatrix(unsigned int p_rigidBodyIdx);
 	void saveJointWorldEndpoints(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
 	void initControllerLocationAndVelocityStat(unsigned int p_idx, const glm::vec3& p_gaitGoalVelocity);
-	glm::vec3 getControllerPosition(unsigned int p_controllerId);
-	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
-	glm::vec3 getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const;
 	glm::vec3 DOFAxisByVecCompId(unsigned int p_id);
 	glm::mat4 getDesiredWorldOrientation(unsigned int p_controllerId) const;
 	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);

@@ -250,10 +250,10 @@ void App::run()
 			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, hipCoronalOffset);
-			float characterMass = 30.0f;
+			float characterMass = 20.0f;
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
-			legFrame.addComponent(new RenderComponent());
+			if (x==0) legFrame.addComponent(new RenderComponent());
 			legFrame.addComponent(new TransformComponent(pos,
 				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 				lfSize));
@@ -297,7 +297,7 @@ void App::run()
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
-						segmentMass = 5.0f;
+						segmentMass = 2.5f;
 						//lowerAngleLim = glm::vec3(1, 1, 1);
 						//upperAngleLim = glm::vec3(0,0,0);
 					}
@@ -306,7 +306,7 @@ void App::run()
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 4.0f;
+						segmentMass = 2.0f;
 					}
 					else if (i == 2) // if foot
 					{
@@ -317,7 +317,7 @@ void App::run()
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 1.5f;
+						segmentMass = 1.0f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
@@ -335,7 +335,7 @@ void App::run()
 						childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
 							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 					}
-					childJoint.addComponent(new RenderComponent());
+					if (x == 0) childJoint.addComponent(new RenderComponent());
 					childJoint.addComponent(new TransformComponent(legpos,
 						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
 						boxSize));					// note scale, so full lengths
@@ -365,7 +365,6 @@ void App::run()
 
 	#ifdef OPTIMIZATION
 		optimizationSystem->initSim(bestScore,bestParams);
-		SAFE_DELETE(bestParams);
 	#endif
 
 	#ifdef MEASURE_RBODIES
@@ -389,8 +388,13 @@ void App::run()
 		m_time = 0.0;
 		bool shooting = false;
 #ifdef OPTIMIZATION
-		double maxscoreelem = 1.0f;
+		double maxscoreelem = 1.0f, bparamsmaxelem=1.0f,bparamsminelem=0.0f;
 		if (allResults.size()>1) maxscoreelem=*std::max_element(allResults.begin(), allResults.end());
+		if (bestParams!=NULL && bestParams->size() > 1)
+		{
+			bparamsmaxelem = *std::max_element(bestParams->begin(), bestParams->end());
+			bparamsminelem = *std::min_element(bestParams->begin(), bestParams->end());
+		}
 #endif
 
 		while (!m_context->closeRequested() && run && !m_restart)
@@ -418,6 +422,18 @@ void App::run()
 							glm::vec3(((float)i / (float)vals)*20.0f-10.0f, 20.0f + (allResults[i] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
 							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f-10.0f, 20.0f + (allResults[i + 1] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
 							colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
+					}
+				}
+				// params	
+				if (bestParams != NULL)
+				{
+					vals = bestParams->size();
+					for (int i = 0; i < bestParams->size() - 1; i++)
+					{
+						m_debugDrawBatch->drawLine(
+							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -20.0f + ((*bestParams)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
+							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -20.0f + ((*bestParams)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
+							Color3f(0.0f, 0.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f));
 					}
 				}
 #endif
@@ -533,6 +549,7 @@ void App::run()
 	#ifdef OPTIMIZATION
 		optimizationSystem->evaluateAll();
 		optimizationSystem->findCurrentBestCandidate();
+		SAFE_DELETE(bestParams);
 		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
 		bestScore = optimizationSystem->getWinnerScore();
 		DEBUGPRINT((("\nbestscore: " + ToString(bestScore)).c_str()));
