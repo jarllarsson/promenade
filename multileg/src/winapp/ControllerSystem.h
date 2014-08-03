@@ -82,6 +82,7 @@ public:
 		m_useCGVFTorque = true;
 		m_usePDTorque = true;
 		m_perfRecorder = p_perfMeasurer;
+		m_timing = 0;
 	}
 
 	virtual ~ControllerSystem();
@@ -111,6 +112,8 @@ public:
 	// Public helper functions
 	glm::mat4& getLegFrameTransform(const ControllerComponent::LegFrame* p_lf);
 	VelocityStat& getControllerVelocityStat(const ControllerComponent* p_controller);
+	glm::vec3 getJointAcceleration(unsigned int p_jointId);
+	double getLatestTiming();
 
 private:
 	// build helpers
@@ -180,7 +183,6 @@ private:
 	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	void writeFeetCollisionStatus(ControllerComponent* p_controller);
 	float getDesiredFootAngle(unsigned int p_legIdx, ControllerComponent::LegFrame* p_lf, float p_phi);
-	glm::vec3 getJointAcceleration(unsigned int p_jointId);
 	// global variables
 	float m_runTime;
 	int m_steps;
@@ -190,4 +192,5 @@ private:
 
 	// Dbg
 	MeasurementBin<float>* m_perfRecorder;
+	double m_timing;
 };

@@ -124,9 +124,9 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	{
 		DEBUGPRINT(("\nNO CONTROLLERS YET\n"));
 	}
-
+	m_timing = Time::getTimeMs() - startTiming;
 	if (m_perfRecorder != NULL)
-		m_perfRecorder->saveMeasurement(Time::getTimeMs() - startTiming,m_steps);
+		m_perfRecorder->saveMeasurement(m_timing,m_steps);
 }
 
 void ControllerSystem::finish()
@@ -271,42 +271,45 @@ void ControllerSystem::buildCheck()
 		initControllerLocationAndVelocityStat((int)m_controllers.size() - 1, startGaitVelocity);
 		// Finally, when all vars and lists have been built, add debug data
 		// Add debug tracking for leg frame
-		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
-		// Velocity debug
-		unsigned int vlistpos = m_controllerVelocityStats.size() - 1;
-		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Current velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_currentVelocity, " group='LegFrame'");
-		dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Desired velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_desiredVelocity, " group='LegFrame'");
-		dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, "Goal velocity", Toolbar::DIR, (void*)&m_controllerVelocityStats[vlistpos].m_goalVelocity, " group='LegFrame'");
-		 // Debug, per-leg stuff
-		for (unsigned int x = 0; x < legCount; x++)
+		if (i == 0)
 		{
-			bool isLeft = x == 0;
-			Color3f col = (isLeft ? Color3f(1.0f, 0.0f, 0.0f) : Color3f(0.0f, 1.0f, 0.0f));
-			// Add debug tracking for leg
-			std::string sideName = (std::string(isLeft? "Left" : "Right") + "Leg");
-			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
-			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
-			// Foot strike placement visualization
-			artemis::Entity & footPlcmtDbg = world->createEntity();
-			footPlcmtDbg.addComponent(new RenderComponent());
-			footPlcmtDbg.addComponent(new TransformComponent());
-			footPlcmtDbg.addComponent(new PositionRefComponent(&legFrame->m_footStrikePlacement[x]));
-			footPlcmtDbg.addComponent(new MaterialComponent( col ));
-			footPlcmtDbg.refresh();
-			// Foot lift placement visualization
-			artemis::Entity & footLiftDbg = world->createEntity();
-			footLiftDbg.addComponent(new RenderComponent());
-			footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f),glm::vec3(0.5f,2.0f,0.5f)));
-			footLiftDbg.addComponent(new PositionRefComponent(&legFrame->m_footLiftPlacement[x]));
-			footLiftDbg.addComponent(new MaterialComponent(col*0.7f));
-			footLiftDbg.refresh();
-			// Foot target placement visualization
-			artemis::Entity & footTargetDbg = world->createEntity();
-			footTargetDbg.addComponent(new RenderComponent());
-			footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f),glm::quat(glm::vec3((float)HALFPI,0.0f,0.0f))));
-			footTargetDbg.addComponent(new PositionRefComponent(&legFrame->m_footTarget[x]));
-			footTargetDbg.addComponent(new MaterialComponent(col*0.25f));
-			footTargetDbg.refresh();
+			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
+			// Velocity debug
+			unsigned int vlistpos = m_controllerVelocityStats.size() - 1;
+			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Current velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_currentVelocity, " group='LegFrame'");
+			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Desired velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_desiredVelocity, " group='LegFrame'");
+			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, "Goal velocity", Toolbar::DIR, (void*)&m_controllerVelocityStats[vlistpos].m_goalVelocity, " group='LegFrame'");
+			// Debug, per-leg stuff
+			for (unsigned int x = 0; x < legCount; x++)
+			{
+				bool isLeft = x == 0;
+				Color3f col = (isLeft ? Color3f(1.0f, 0.0f, 0.0f) : Color3f(0.0f, 1.0f, 0.0f));
+				// Add debug tracking for leg
+				std::string sideName = (std::string(isLeft ? "Left" : "Right") + "Leg");
+				dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
+				dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
+				// Foot strike placement visualization
+				artemis::Entity & footPlcmtDbg = world->createEntity();
+				footPlcmtDbg.addComponent(new RenderComponent());
+				footPlcmtDbg.addComponent(new TransformComponent());
+				footPlcmtDbg.addComponent(new PositionRefComponent(&legFrame->m_footStrikePlacement[x]));
+				footPlcmtDbg.addComponent(new MaterialComponent(col));
+				footPlcmtDbg.refresh();
+				// Foot lift placement visualization
+				artemis::Entity & footLiftDbg = world->createEntity();
+				footLiftDbg.addComponent(new RenderComponent());
+				footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.5f, 2.0f, 0.5f)));
+				footLiftDbg.addComponent(new PositionRefComponent(&legFrame->m_footLiftPlacement[x]));
+				footLiftDbg.addComponent(new MaterialComponent(col*0.7f));
+				footLiftDbg.refresh();
+				// Foot target placement visualization
+				artemis::Entity & footTargetDbg = world->createEntity();
+				footTargetDbg.addComponent(new RenderComponent());
+				footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::quat(glm::vec3((float)HALFPI, 0.0f, 0.0f))));
+				footTargetDbg.addComponent(new PositionRefComponent(&legFrame->m_footTarget[x]));
+				footTargetDbg.addComponent(new MaterialComponent(col*0.25f));
+				footTargetDbg.refresh();
+			}
 		}
 	}
 	m_controllersToBuild.clear();
@@ -1195,4 +1198,9 @@ glm::vec3 ControllerSystem::getJointAcceleration(unsigned int p_jointId)
 		result = m_rigidBodyRefs[idx]->getAcceleration();
 	}
 	return result;
+}
+
+double ControllerSystem::getLatestTiming()
+{
+	return m_timing;
 }

@@ -2,19 +2,20 @@
 #include "ControllerComponent.h"
 #include "ControllerSystem.h"
 #include <assert.h>
+#include <ToString.h>
 
 
 ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 {
-	m_fdWeight = 100.0f;
-	m_fvWeight = 5.0f;
-	m_fhWeight = 0.5f;
-	m_frWeight = 5.0f;
-	m_fpWeight = 0.5f;
+	m_fdWeight = 100.0f; // deviation from reference motion
+	m_fvWeight = 5.0f;   // deviation from desired speed
+	m_fhWeight = 0.5f;	 // acceleration of head
+	m_frWeight = 5.0f;	 // whole body rotation
+	m_fpWeight = 0.0f;	 // movement distance
 }
 
 
-double ControllerMovementRecorderComponent::evaluate()
+double ControllerMovementRecorderComponent::evaluate( bool p_dbgPrint )
 {
 	double fv = evaluateFV();
 	double fr = evaluateFR();
@@ -22,7 +23,12 @@ double ControllerMovementRecorderComponent::evaluate()
 	double fp = evaluateFP();
 	double fd = evaluateFD();
 	double fobj = (double)m_fdWeight*fd + (double)m_fvWeight*fv + (double)m_frWeight*fr + (double)m_fhWeight*fh - (double)m_fpWeight*fp;
-	//Debug.Log(fobj+" = "+(double)m_fvWeight*fv+" + "+(double)m_frWeight*fr+" + "+(double)m_fhWeight*fh+" - "+(double)m_fpWeight*fp);
+	if (p_dbgPrint)
+	{
+		DEBUGPRINT(("\n\n CURRENT SCORE PARTS:\n"));
+		DEBUGPRINT(((ToString(fobj) + " = " + ToString((double)m_fvWeight*fv) + " + " + ToString((double)m_frWeight*fr) + " + " + ToString((double)m_fhWeight*fh) + " - " + ToString((double)m_fpWeight*fp)).c_str()));
+		DEBUGPRINT(("\n\n ----------------------------\n"));
+	}
 	return fobj;
 }
 
@@ -77,7 +83,7 @@ void ControllerMovementRecorderComponent::fh_calcHeadAccelerations( ControllerCo
 {
 	unsigned int headJointId = p_controller->getHeadJointId();
 	glm::vec3 acceleration = p_system->getJointAcceleration(headJointId);
-	m_fhHeadAcceleration.Add((double)glm::length(acceleration));
+	m_fhHeadAcceleration.push_back((double)glm::length(acceleration));
 }
 
 void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller )

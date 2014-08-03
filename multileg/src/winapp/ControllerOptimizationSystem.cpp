@@ -130,7 +130,7 @@ void ControllerOptimizationSystem::evaluateAll()
 double ControllerOptimizationSystem::evaluateCandidateFitness(int p_idx)
 {
 	ControllerMovementRecorderComponent* record = m_controllerRecorders[p_idx];
-	double score = record->evaluate();
+	double score = record->evaluate(p_idx==0);
 	return score;
 }
 
@@ -153,7 +153,7 @@ void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
 	// record:
 	recorder->fv_calcStrideMeanVelocity(controller, m_controllerSystemRef);
 	recorder->fr_calcRotationDeviations(controller, m_controllerSystemRef);
-	recorder->fh_calcHeadAccelerations(controller, TODO);
+	recorder->fh_calcHeadAccelerations(controller, m_controllerSystemRef);
 	recorder->fd_calcReferenceMotion(controller);
 	recorder->fp_calcMovementDistance(controller, m_controllerSystemRef);
 }

@@ -137,6 +137,8 @@ void App::run()
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestScore);
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 #endif
+	double controllerSystemTiming = 0.0;
+	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTiming);
 	do
 	{
 		m_restart = false;
@@ -188,9 +190,17 @@ void App::run()
 		//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 		//addGameLogic(movementsys);
 	#ifdef MEASURE_RBODIES
-		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
+		#ifdef OPTIMIZATION
+				m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld,&rigidBodyStateDbgRecorder,true));
+		#else
+				m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
+		#endif
 	#else
-		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
+		#ifdef OPTIMIZATION
+			m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld,NULL,true));
+		#else
+			m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
+		#endif
 	#endif
 		ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
 		//ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
@@ -250,15 +260,18 @@ void App::run()
 			legFrame.refresh();
 			string legFrameName = "LegFrame";
 			/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
-			m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
+			if (x==0) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
 			//
 			vector<artemis::Entity*> hipJoints;
 			// Number of leg frames per character
 			for (int n = 0; n < 2; n++) // number of legs per frame
 			{
 				string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
-				m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
-				m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
+				if (x == 0)
+				{
+					m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
+					m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
+				}
 				//m_toolBar->addLabel(Toolbar::CHARACTER, sideName.c_str(),"");
 				artemis::Entity* prev = &legFrame;
 				artemis::Entity* upperLegSegment = NULL;
@@ -307,7 +320,7 @@ void App::run()
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
-					m_toolBar->addLabel(Toolbar::CHARACTER, (sideName[0] + partName).c_str(), dbgGrp.c_str());
+					if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
 					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 					if (foot == true)
@@ -327,7 +340,7 @@ void App::run()
 						boxSize));					// note scale, so full lengths
 					MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
 					childJoint.addComponent(mat);
-					m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (sideName[0] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
+					if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
 					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, -jointZOffsetInChild),	  // child (this)
 						glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
 						{ lowerAngleLim, upperAngleLim },
@@ -389,6 +402,9 @@ void App::run()
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 10.0f, 0.0f), colarr[3], colarr[4]);
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
 				
+				// update timing debug var
+				controllerSystemTiming = m_controllerSystem->getLatestTiming();
+
 #ifdef OPTIMIZATION
 				// draw test graph if optimizing
 				int vals = allResults.size();

@@ -53,7 +53,7 @@ public:
 	{
 	}
 
-	double evaluate();
+	double evaluate(bool p_dbgPrint);
 
 	void fv_calcStrideMeanVelocity(ControllerComponent* p_controller, ControllerSystem* p_system,
 		bool p_forceStore = false);
