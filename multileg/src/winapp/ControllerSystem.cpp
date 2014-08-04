@@ -141,13 +141,10 @@ void ControllerSystem::applyTorques( float p_dt )
 		float tLim = 1000.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
-			glm::vec3* t = &m_jointTorques[i];
-			if (glm::length(*t)>tLim) 
-				*t = glm::normalize(*t)*tLim;
-			//bool nanchk = glm::isnan(*t) == glm::bool3(true, true, true);
-
-			//assert(glm::isnan(*t)!=glm::bool3(true,true,true));
-			m_jointRigidBodies[i]->applyTorque(btVector3(t->x, t->y, t->z));
+			glm::vec3 t = m_jointTorques[i];
+			if (glm::length(t)>tLim) 
+				t = glm::normalize(t)*tLim;
+			m_jointRigidBodies[i]->applyTorque(btVector3(t.x, t.y, t.z));
 		}
 	}
 }
@@ -647,34 +644,40 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 	float phi = p_controller->m_player.getPhase();
 	unsigned int torqueCount = p_controller->getTorqueListChunkSize();
 	unsigned int torqueIdxOffset = p_controller->getTorqueListOffset();
-	//// Get the three variants of torque
-	//Vector3[] tPD = computePDTorques(phi);
-	//Vector3[] tCGVF = computeCGVFTorques(phi, p_dt);
-	//std::vector<glm::vec3> tPD(torqueCount);
-	////std::vector<glm::vec3> tCGVF(torqueCount);
-	//std::vector<glm::vec3> tVF(torqueCount);
-	//for (unsigned int i = 0; i < torqueCount; i++)
-	//{
-	//	tPD[i] = glm::vec3(0.0f); /*tCGVF[i] = glm::vec3(0.0f);*/ tVF[i] = glm::vec3(0.0f);
-	//}
-	//
+
+		//// Get the three variants of torque
+		//Vector3[] tPD = computePDTorques(phi);
+		//Vector3[] tCGVF = computeCGVFTorques(phi, p_dt);
+		//std::vector<glm::vec3> tPD(torqueCount);
+		////std::vector<glm::vec3> tCGVF(torqueCount);
+		//std::vector<glm::vec3> tVF(torqueCount);
+		//for (unsigned int i = 0; i < torqueCount; i++)
+		//{
+		//	tPD[i] = glm::vec3(0.0f); /*tCGVF[i] = glm::vec3(0.0f);*/ tVF[i] = glm::vec3(0.0f);
+		//}
+		//
+
 	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	////// Sum them (Right now, we're writing directly to the global array
-	// Summing of partial lists might be good if we parallelize this step as well
-	//for (unsigned int i = 0; i < torqueCount; i++)
-	//{
-	//	m_jointTorques[torqueIdxOffset + i] = /*tPD[i] + */tVF[i];
-	//		//= glm::vec3(0.0f, 200.0f, 0.0f);
-	//		//+
-	//}
-	//
-	// Apply them to the leg frames, also
-	// feed back corrections for hip joints
-	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
-	{
-		applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
-	}
+	//computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+
+		////// Sum them (Right now, we're writing directly to the global array
+		// Summing of partial lists might be good if we parallelize this step as well
+		//for (unsigned int i = 0; i < torqueCount; i++)
+		//{
+		//	m_jointTorques[torqueIdxOffset + i] = /*tPD[i] + */tVF[i];
+		//		//= glm::vec3(0.0f, 200.0f, 0.0f);
+		//		//+
+		//}
+		//
+		// Apply them to the leg frames, also
+		// feed back corrections for hip joints
+
+		for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+		{
+			applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
+		}
+
+
 }
 
 void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, 
