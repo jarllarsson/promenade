@@ -1,6 +1,7 @@
 #include "ControllerOptimizationSystem.h"
 #include "ControllerMovementRecorderComponent.h"
 #include <ToString.h>
+#include <DebugPrint.h>
 
 int ControllerOptimizationSystem::m_testCount = 0;
 
@@ -175,6 +176,7 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 		m_paramsMin = m_optimizableControllers[0]->getParamsMin();
 
 		//
+		bool first = false;
 		m_currentParams.clear();
 		m_controllerScores.resize(sz); // All scores for one round
 		//
@@ -182,8 +184,9 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 			storeParams(&m_lastBestParams);
 		else
 		{
+			first = true;
 			storeParams();
-			m_lastBestParams = m_currentParams[0];
+			m_lastBestParams = m_currentParams[0];			
 		}
 
 		perturbParams(1);
@@ -192,7 +195,26 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 		{
 			IOptimizable* opt = static_cast<IOptimizable*>(m_optimizableControllers[i]);
 			std::vector<float> paramslist = m_currentParams[i];
+			std::vector<float> paramslistcopy = paramslist;
 			opt->consumeParams(paramslist); // consume it to controller
+			// make sure they're the same
+			if (!first)
+			{
+				std::vector<float> nparamslist = opt->getParams();
+				for (int n = 0; n < nparamslist.size(); n++)
+				{
+					float oparms = paramslistcopy[n];
+					float nparms = nparamslist[n];
+					if (oparms != nparms)
+					{
+						DEBUGPRINT((("mismatch at[" + ToString(n) + "] " + ToString(nparms) + "!=" + ToString(oparms) + "\n").c_str()));
+					}
+					else
+					{
+						DEBUGPRINT((("match at[" + ToString(n) + "] " + ToString(nparms) + "==" + ToString(oparms) + "\n").c_str()));
+					}
+				}
+			}
 		}
 		restartSim();
 		m_inited = true;
@@ -207,4 +229,24 @@ void ControllerOptimizationSystem::incSimTick()
 double ControllerOptimizationSystem::getWinnerScore()
 {
 	return m_lastBestScore;
+}
+
+double ControllerOptimizationSystem::getScoreOf(unsigned int p_idx)
+{
+	double score = -1.0;
+	if (p_idx < m_controllerScores.size())
+	{
+		score = m_controllerScores[p_idx];
+	}
+	return score;
+}
+
+std::vector<float>* ControllerOptimizationSystem::getParamsOf(unsigned int p_idx)
+{
+	std::vector<float>* res = NULL;
+	if (p_idx < m_currentParams.size())
+	{
+		res = &m_currentParams[p_idx];
+	}
+	return res;
 }

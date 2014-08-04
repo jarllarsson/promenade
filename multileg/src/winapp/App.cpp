@@ -549,12 +549,34 @@ void App::run()
 	#ifdef OPTIMIZATION
 		optimizationSystem->evaluateAll();
 		optimizationSystem->findCurrentBestCandidate();
-		SAFE_DELETE(bestParams);
-		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
+		double oldbestscore = bestScore;
+		double firstScore = optimizationSystem->getScoreOf(0);
 		bestScore = optimizationSystem->getWinnerScore();
+		if (oldbestscore != firstScore && optimizationIterationCount!=0)
+		{
+			DEBUGPRINT((("\nNot deterministic!: old=" + ToString(oldbestscore) +" new="+ToString(firstScore)+"\n").c_str()));
+			int i = 0;
+			std::vector<float>* parms = optimizationSystem->getParamsOf(0);
+			for (int i = 0; i < parms->size(); i++)
+			{
+				float cparms = (*parms)[i];
+				float bparms = (*bestParams)[i];
+				if (cparms!=bparms)
+				{
+					DEBUGPRINT((("mismatch at[" + ToString(i)+"] "+ToString(cparms)+"!="+ToString(bparms)+"\n").c_str()));
+				}
+				else
+				{
+					DEBUGPRINT((("match at[" + ToString(i) + "] " + ToString(cparms) + "==" + ToString(bparms) + "\n").c_str()));
+				}
+			}
+			DEBUGPRINT((("\ni: " + ToString(i)).c_str()));
+		}
 		DEBUGPRINT((("\nbestscore: " + ToString(bestScore)).c_str()));
 		optimizationIterationCount++;
 		debugTicker = 0;
+		SAFE_DELETE(bestParams);
+		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
 		allResults.push_back(bestScore);
 	#endif
 
