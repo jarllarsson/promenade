@@ -48,9 +48,9 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 			unsigned int jointId = lf->m_hipJointId[i];
 			if (isInControlledStance(lf, i, controller->m_player.getPhase()))
 			{
-				for (int i = 0; i < 3; i++) // 3 segments
+				for (int n = 0; n < 3; n++) // 3 segments
 				{
-					artemis::Entity* segEntity = m_dbgJointEntities[jointId + i];
+					artemis::Entity* segEntity = m_dbgJointEntities[jointId + n];
 					MaterialComponent* mat = (MaterialComponent*)segEntity->getComponent<MaterialComponent>();
 					if (mat)
 					{

@@ -44,7 +44,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -245,7 +245,7 @@ void App::run()
 		// Test of controller
 		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
-		for (int x = 0; x < 2; x++) // number of characters
+		for (int x = 0; x < 1; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
 			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);

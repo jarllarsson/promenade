@@ -189,7 +189,7 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 			m_lastBestParams = m_currentParams[0];
 		}
 
-		perturbParams(1);
+		//perturbParams(1);
 
 		for (int i = 0; i < m_optimizableControllers.size(); i++)
 		{
