@@ -186,7 +186,7 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 		{
 			first = true;
 			storeParams();
-			m_lastBestParams = m_currentParams[0];			
+			m_lastBestParams = m_currentParams[0];
 		}
 
 		perturbParams(1);
@@ -198,6 +198,7 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 			std::vector<float> paramslistcopy = paramslist;
 			opt->consumeParams(paramslist); // consume it to controller
 			// make sure they're the same
+			/*
 			if (!first)
 			{
 				std::vector<float> nparamslist = opt->getParams();
@@ -207,14 +208,29 @@ void ControllerOptimizationSystem::populateControllerInitParams()
 					float nparms = nparamslist[n];
 					if (oparms != nparms)
 					{
-						DEBUGPRINT((("mismatch at[" + ToString(n) + "] " + ToString(nparms) + "!=" + ToString(oparms) + "\n").c_str()));
+						DEBUGPRINT((("!!!mismatch at[" + ToString(n) + "] " + ToString(nparms) + "!=" + ToString(oparms) + "\n").c_str()));
 					}
 					else
 					{
 						DEBUGPRINT((("match at[" + ToString(n) + "] " + ToString(nparms) + "==" + ToString(oparms) + "\n").c_str()));
 					}
+					// also check if correct for 0 with the last winning params
+					if (i == 0)
+					{
+						float bparms = m_lastBestParams[n];
+						float nparms2 = nparamslist[n];
+						if (oparms != nparms)
+						{
+							DEBUGPRINT((("!!! origin mismatch at[" + ToString(n) + "] " + ToString(nparms2) + "!=" + ToString(bparms) + "\n").c_str()));
+						}
+						else
+						{
+							DEBUGPRINT((("origin match at[" + ToString(n) + "] " + ToString(nparms2) + "==" + ToString(bparms) + "\n").c_str()));
+						}
+					}
 				}
 			}
+			*/
 		}
 		restartSim();
 		m_inited = true;

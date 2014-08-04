@@ -131,6 +131,7 @@ void App::run()
 	std::vector<float>* bestParams = NULL;
 	int optimizationIterationCount = 0;
 	double bestScore = FLT_MAX;
+	double oldfirstscore = FLT_MAX;
 	std::vector<double> allResults;
 	int debugTicker = 0;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Tick", Toolbar::INT, &debugTicker);
@@ -552,10 +553,16 @@ void App::run()
 		double oldbestscore = bestScore;
 		double firstScore = optimizationSystem->getScoreOf(0);
 		bestScore = optimizationSystem->getWinnerScore();
-		if (oldbestscore != firstScore && optimizationIterationCount!=0)
+		if (oldbestscore <= bestScore || firstScore!=oldbestscore)
+		{
+			DEBUGPRINT((("\nNot deterministic!: old=" + ToString(oldbestscore) + " new=" + ToString(bestScore) + "\n").c_str()));
+			DEBUGPRINT((("\nold best=" + ToString(oldbestscore) + "\nold first=" + ToString(oldfirstscore) + " new first=" + ToString(firstScore) + "\n").c_str()));
+		}
+		/*if (oldbestscore == firstScore && optimizationIterationCount!=0)
 		{
 			DEBUGPRINT((("\nNot deterministic!: old=" + ToString(oldbestscore) +" new="+ToString(firstScore)+"\n").c_str()));
 			int i = 0;
+			
 			std::vector<float>* parms = optimizationSystem->getParamsOf(0);
 			for (int i = 0; i < parms->size(); i++)
 			{
@@ -570,14 +577,16 @@ void App::run()
 					DEBUGPRINT((("match at[" + ToString(i) + "] " + ToString(cparms) + "==" + ToString(bparms) + "\n").c_str()));
 				}
 			}
+			
 			DEBUGPRINT((("\ni: " + ToString(i)).c_str()));
-		}
+		}*/
 		DEBUGPRINT((("\nbestscore: " + ToString(bestScore)).c_str()));
 		optimizationIterationCount++;
 		debugTicker = 0;
 		SAFE_DELETE(bestParams);
 		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
 		allResults.push_back(bestScore);
+		oldfirstscore = firstScore;
 	#endif
 
 
