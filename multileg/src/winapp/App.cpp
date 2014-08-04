@@ -245,7 +245,7 @@ void App::run()
 		// Test of controller
 		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
-		for (int x = 0; x < 20; x++) // number of characters
+		for (int x = 0; x < 2; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
 			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
@@ -553,10 +553,17 @@ void App::run()
 		double oldbestscore = bestScore;
 		double firstScore = optimizationSystem->getScoreOf(0);
 		bestScore = optimizationSystem->getWinnerScore();
-		if (oldbestscore <= bestScore || firstScore!=oldbestscore)
+		//if (firstScore!=oldbestscore)
 		{
-			DEBUGPRINT((("\nNot deterministic!: old=" + ToString(oldbestscore) + " new=" + ToString(bestScore) + "\n").c_str()));
+			DEBUGPRINT(("\n========================================================================"));
+			DEBUGPRINT((("\nNot deterministic!: new best=" + ToString(bestScore) + "\n").c_str()));
 			DEBUGPRINT((("\nold best=" + ToString(oldbestscore) + "\nold first=" + ToString(oldfirstscore) + " new first=" + ToString(firstScore) + "\n").c_str()));
+			std::vector<float> parms = optimizationSystem->getParamsOf(0);
+			for (int i = 0; i < parms.size(); i++)
+			{
+				DEBUGPRINT(((ToString(parms[i]) + " ").c_str()));
+			}
+			DEBUGPRINT(("\n========================================================================\n"));
 		}
 		/*if (oldbestscore == firstScore && optimizationIterationCount!=0)
 		{

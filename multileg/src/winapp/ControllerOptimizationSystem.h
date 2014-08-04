@@ -84,7 +84,8 @@ public:
 	double getWinnerScore();
 	void findCurrentBestCandidate();
 	double getScoreOf(unsigned int p_idx);
-	std::vector<float>* getParamsOf(unsigned int p_idx);
+	std::vector<float>* getCurrentParamsOf(unsigned int p_idx);
+	std::vector<float> getParamsOf(unsigned int p_idx);
 protected:
 private:
 	static void incTestCount();

@@ -257,12 +257,22 @@ double ControllerOptimizationSystem::getScoreOf(unsigned int p_idx)
 	return score;
 }
 
-std::vector<float>* ControllerOptimizationSystem::getParamsOf(unsigned int p_idx)
+std::vector<float>* ControllerOptimizationSystem::getCurrentParamsOf(unsigned int p_idx)
 {
 	std::vector<float>* res = NULL;
 	if (p_idx < m_currentParams.size())
 	{
 		res = &m_currentParams[p_idx];
+	}
+	return res;
+}
+
+std::vector<float> ControllerOptimizationSystem::getParamsOf(unsigned int p_idx)
+{
+	std::vector<float> res;
+	if (p_idx < m_optimizableControllers.size())
+	{
+		res = m_optimizableControllers[p_idx]->getParams();
 	}
 	return res;
 }
