@@ -245,7 +245,7 @@ void App::run()
 		// Test of controller
 		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
-		for (int x = 0; x < 2; x++) // number of characters
+		for (int x = 0; x < 10; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
 			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
@@ -254,7 +254,7 @@ void App::run()
 			float characterMass = 20.0f;
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
-			/*if (x==0) */legFrame.addComponent(new RenderComponent());
+			if (x==0) legFrame.addComponent(new RenderComponent());
 			legFrame.addComponent(new TransformComponent(pos,
 				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 				lfSize));
@@ -335,7 +335,7 @@ void App::run()
 						childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
 							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 					}
-					/*if (x == 0) */childJoint.addComponent(new RenderComponent());
+					if (x == 0) childJoint.addComponent(new RenderComponent());
 					childJoint.addComponent(new TransformComponent(legpos,
 						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
 						boxSize));					// note scale, so full lengths
@@ -354,13 +354,12 @@ void App::run()
 			}
 			// Controller
 			artemis::Entity & controller = entityManager->create();
-			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
 #ifdef OPTIMIZATION
 			controller.addComponent(new ControllerMovementRecorderComponent());
 #endif
 			controller.refresh();
-			//bodOffset = glm::vec3(30.0f, 0.0f, 0.0f);
+			// bodOffset = glm::vec3(30.0f, 0.0f, 0.0f);
 		}
 
 	#ifdef OPTIMIZATION
@@ -544,55 +543,40 @@ void App::run()
 			}
 		}
 
-		DEBUGPRINT(("\n\nSTOPPING APPLICATION\n\n"));
+		if (!m_restart)
+			DEBUGPRINT(("\n\nSTOPPING APPLICATION\n\n"));
 
 	#ifdef OPTIMIZATION
-		optimizationSystem->evaluateAll();
-		optimizationSystem->findCurrentBestCandidate();
-		double oldbestscore = bestScore;
-		double firstScore = optimizationSystem->getScoreOf(0);
-		bestScore = optimizationSystem->getWinnerScore();
-		//if (firstScore!=oldbestscore)
+		if (m_restart)
 		{
-			DEBUGPRINT(("\n========================================================================"));
-			DEBUGPRINT((("\nNot deterministic!: new best=" + ToString(bestScore) + "\n").c_str()));
-			DEBUGPRINT((("\nold best=" + ToString(oldbestscore) + "\nold first=" + ToString(oldfirstscore) + " new first=" + ToString(firstScore) + "\n").c_str()));
-			std::vector<float> parms = optimizationSystem->getParamsOf(0);
-			for (int i = 0; i < parms.size(); i++)
+			optimizationSystem->evaluateAll();
+			optimizationSystem->findCurrentBestCandidate();
+			double oldbestscore = bestScore;
+			double firstScore = optimizationSystem->getScoreOf(0);
+			bestScore = optimizationSystem->getWinnerScore();
+			//if (firstScore!=oldbestscore)
 			{
-				DEBUGPRINT(((ToString(parms[i]) + " ").c_str()));
-			}
-			DEBUGPRINT(("\n========================================================================\n"));
-		}
-		/*if (oldbestscore == firstScore && optimizationIterationCount!=0)
-		{
-			DEBUGPRINT((("\nNot deterministic!: old=" + ToString(oldbestscore) +" new="+ToString(firstScore)+"\n").c_str()));
-			int i = 0;
-			
-			std::vector<float>* parms = optimizationSystem->getParamsOf(0);
-			for (int i = 0; i < parms->size(); i++)
-			{
-				float cparms = (*parms)[i];
-				float bparms = (*bestParams)[i];
-				if (cparms!=bparms)
-				{
-					DEBUGPRINT((("mismatch at[" + ToString(i)+"] "+ToString(cparms)+"!="+ToString(bparms)+"\n").c_str()));
-				}
+				DEBUGPRINT(("\n========================================================================"));
+				if (firstScore != oldbestscore)
+					DEBUGPRINT((("\nNot deterministic!: new best=" + ToString(bestScore) + "\n").c_str()));
 				else
+					DEBUGPRINT((("\nnew best=" + ToString(bestScore) + "\n").c_str()));
+				DEBUGPRINT((("\nold best=" + ToString(oldbestscore) + "\nold first=" + ToString(oldfirstscore) + " new first=" + ToString(firstScore) + "\n").c_str()));
+				std::vector<float> parms = optimizationSystem->getParamsOf(0);
+				for (int i = 0; i < parms.size(); i++)
 				{
-					DEBUGPRINT((("match at[" + ToString(i) + "] " + ToString(cparms) + "==" + ToString(bparms) + "\n").c_str()));
+					DEBUGPRINT(((ToString(parms[i]) + " ").c_str()));
 				}
+				DEBUGPRINT(("\n========================================================================\n"));
 			}
-			
-			DEBUGPRINT((("\ni: " + ToString(i)).c_str()));
-		}*/
-		DEBUGPRINT((("\nbestscore: " + ToString(bestScore)).c_str()));
-		optimizationIterationCount++;
-		debugTicker = 0;
-		SAFE_DELETE(bestParams);
-		bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
-		allResults.push_back(bestScore);
-		oldfirstscore = firstScore;
+			DEBUGPRINT((("\nbestscore: " + ToString(bestScore)).c_str()));
+			optimizationIterationCount++;
+			debugTicker = 0;
+			SAFE_DELETE(bestParams);
+			bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
+			allResults.push_back(bestScore);
+			oldfirstscore = firstScore;
+		}
 	#endif
 
 

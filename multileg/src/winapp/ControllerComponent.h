@@ -186,7 +186,7 @@ public:
 			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
 			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(1000.0f);
-			m_FhPD.setKp_KdEQTenPrcntKp(1000.0f);
+			m_FhPD.setKp_KdEQTenPrcntKp(100.0f);
 			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(100.0f);
 			// Vectors and Floats
 			m_stepLength = glm::vec2(2.0f, 5.5f);
@@ -196,8 +196,8 @@ public:
 			m_velocityRegulatorKv = 30.0f;
 			m_FDHVComponents = glm::vec4(-0.1f, 0.2f, 0.0f, 0.1f);
 			//
-			m_legPDsKp = 500/*50.0f*/;
-			m_legPDsKd = 50/*5.0f*/;
+			m_legPDsKp = 30.0f;
+			m_legPDsKd = 3.0f;
 			// foot
 			m_tuneToeOffAngle=HALFPI;				
 			m_tuneFootStrikeAngle = -HALFPI/9.0f;

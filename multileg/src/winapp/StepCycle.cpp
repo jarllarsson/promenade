@@ -81,7 +81,7 @@ void StepCycle::sanitize()
 
 std::vector<float> StepCycle::getParams()
 {
-	DEBUGPRINT(("STEP CYCLE GETPARAMS\n"));
+	//DEBUGPRINT(("STEP CYCLE GETPARAMS\n"));
 	std::vector<float> params;
 	params.push_back(m_tuneDutyFactor);
 	params.push_back(m_tuneStepTrigger);

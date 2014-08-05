@@ -67,7 +67,7 @@ public:
 	// Optimization
 	virtual std::vector<float> getParams()
 	{
-		DEBUGPRINT(("PID GETPARAMS\n"));
+		//DEBUGPRINT(("PID GETPARAMS\n"));
 		std::vector<float> params;
 		params.push_back(m_Kp);
 		params.push_back(m_Ki);

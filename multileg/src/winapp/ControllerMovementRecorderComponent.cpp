@@ -10,7 +10,7 @@ ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 	m_fdWeight = 100.0f; // deviation from reference motion
 	m_fvWeight = 5.0f;   // deviation from desired speed
 	m_fhWeight = 0.5f;	 // acceleration of head
-	m_frWeight = 0.01f;	 // whole body rotation
+	m_frWeight = 5.0f;	 // whole body rotation
 	m_fpWeight = 0.0f;	 // movement distance
 }
 

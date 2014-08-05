@@ -84,7 +84,7 @@ public:
 	// Optimization
 	virtual std::vector<float> getParams()
 	{
-		DEBUGPRINT(("GAIT PLAYER GETPARAMS\n"));
+		//DEBUGPRINT(("GAIT PLAYER GETPARAMS\n"));
 		std::vector<float> params;
 		params.push_back(m_tuneGaitPeriod);
 		return params;

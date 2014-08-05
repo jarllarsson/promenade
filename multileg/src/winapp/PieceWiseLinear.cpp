@@ -133,7 +133,7 @@ float PieceWiseLinear::get(unsigned int p_idx) const
 
 std::vector<float> PieceWiseLinear::getParams()
 {
-	DEBUGPRINT(("PIECEWISE LINEAR GETPARAMS\n"));
+	//DEBUGPRINT(("PIECEWISE LINEAR GETPARAMS\n"));
 	std::vector<float> params;
 	for (int i = 0; i < getSize(); i++)
 		params.push_back(get(i));	//

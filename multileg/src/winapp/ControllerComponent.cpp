@@ -30,7 +30,7 @@ ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame,
 
 std::vector<float> ControllerComponent::getParams()
 {
-	DEBUGPRINT(("\nCONTROLLER COMP GETPARAMS\n"));
+	//DEBUGPRINT(("\nCONTROLLER COMP GETPARAMS\n"));
 	std::vector<float> params;
 	OptimizableHelper::addRange(params,m_player.getParams());
 	for (int i = 0; i < m_legFrames.size(); i++)
@@ -105,7 +105,7 @@ void ControllerComponent::LegFrame::createFootPlacementModelVarsForNewLeg(const 
 
 std::vector<float> ControllerComponent::LegFrame::getParams()
 {
-	DEBUGPRINT(("LEG FRAME GETPARAMS\n"));
+	//DEBUGPRINT(("LEG FRAME GETPARAMS\n"));
 	std::vector<float> params;
 	// All per leg frame data
 	for (int i = 0; i < 3; i++)
