@@ -645,39 +645,17 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 	unsigned int torqueCount = p_controller->getTorqueListChunkSize();
 	unsigned int torqueIdxOffset = p_controller->getTorqueListOffset();
 
-		//// Get the three variants of torque
-		//Vector3[] tPD = computePDTorques(phi);
-		//Vector3[] tCGVF = computeCGVFTorques(phi, p_dt);
-		//std::vector<glm::vec3> tPD(torqueCount);
-		////std::vector<glm::vec3> tCGVF(torqueCount);
-		//std::vector<glm::vec3> tVF(torqueCount);
-		//for (unsigned int i = 0; i < torqueCount; i++)
-		//{
-		//	tPD[i] = glm::vec3(0.0f); /*tCGVF[i] = glm::vec3(0.0f);*/ tVF[i] = glm::vec3(0.0f);
-		//}
-		//
-
+	//// Compute the variants of torque and write to torque array
 	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	//computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 
-		////// Sum them (Right now, we're writing directly to the global array
-		// Summing of partial lists might be good if we parallelize this step as well
-		//for (unsigned int i = 0; i < torqueCount; i++)
-		//{
-		//	m_jointTorques[torqueIdxOffset + i] = /*tPD[i] + */tVF[i];
-		//		//= glm::vec3(0.0f, 200.0f, 0.0f);
-		//		//+
-		//}
-		//
-		// Apply them to the leg frames, also
-		// feed back corrections for hip joints
-
-		for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
-		{
-			applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
-		}
-
-
+	
+	// Apply them to the leg frames, also
+	// feed back corrections for hip joints
+	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	{
+		applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
+	}
 }
 
 void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, 
@@ -730,8 +708,6 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			if (p_controllerIdx == 0)
 				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_NAVALBLUE]);
 		}
-		// Debug test
-		//leg->m_DOFChain.vf = glm::vec3(0.0f, 50.0f*sin((float)m_runTime*0.2f), 0.0f);
 	}
 
 	delete[] legInStance;
