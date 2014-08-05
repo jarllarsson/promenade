@@ -248,7 +248,7 @@ void App::run()
 		for (int x = 0; x < 10; x++) // number of characters
 		{
 			artemis::Entity & legFrame = entityManager->create();
-			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 10.0f);
+			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 0.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, hipCoronalOffset);
 			float characterMass = 20.0f;

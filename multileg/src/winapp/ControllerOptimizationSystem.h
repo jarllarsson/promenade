@@ -70,7 +70,7 @@ public:
 
 	virtual void fixedUpdate(float p_dt)
 	{
-
+		m_time += p_dt;
 
 	}
 
@@ -101,4 +101,5 @@ private:
 
 	//bool m_firstControllerAdded;
 	bool m_inited;
+	float m_time;
 };

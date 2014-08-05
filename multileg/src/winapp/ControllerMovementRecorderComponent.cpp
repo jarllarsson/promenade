@@ -84,13 +84,24 @@ void ControllerMovementRecorderComponent::fh_calcHeadAccelerations( ControllerCo
 	m_fhHeadAcceleration.push_back((double)glm::length(acceleration));
 }
 
-void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller, ControllerSystem* p_system )
+void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller, ControllerSystem* p_system, float p_time )
 {
+	// totalscores
+	double lenFt = 0.0, lenKnees = 0.0, lenHips = 0.0, lenBod = 0.0, lenHd = 0.0, movDistDeviation = 0.0;
+	// Fetch initial data
 	unsigned int idx = p_controller->m_sysIdx;
 	ControllerSystem::VelocityStat velstat = p_system->getControllerVelocityStat(p_controller);
 	unsigned int legFrames = p_controller->getLegFrameCount();
-	// totalscores
-	double lenFt = 0.0, lenKnees = 0.0, lenHips = 0.0, lenBod = 0.0, lenHd = 0.0, lenDist=0.0;
+	glm::vec3 controllerstart = glm::vec3(0.0f); // for now, always start in origo on optimization
+
+	// Calc global distance deviation
+	double ghostDist = (double)(velstat.m_goalVelocity.z);
+	double controllerDist = (double)(p_system->getControllerPosition(p_controller).z - controllerstart.z);
+	movDistDeviation = ghostDist - controllerDist;
+	if (controllerDist < 0.0) movDistDeviation *= 2.0; // penalty for falling or walking backwards
+	movDistDeviation *= movDistDeviation; // sqr
+
+
 	// step through each lf and add score
 	for (unsigned int i = 0; i < legFrames; i++)
 	{
@@ -98,39 +109,44 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 		glm::vec3 lfPos = p_system->getLegFramePosition(lf);
 		double tlenBod = (double)lfPos.y - (double)lf->m_height; // assuming ground is 0!!
 		tlenBod *= tlenBod; // sqr
-		double tlenHd = 0.0; // head height
-		tlenHd *= tlenHd; // sqr
-		lenBod += tlenBod;
-		lenHd += tlenBod;
+		lenBod += tlenBod; 
+		// head height
+		//double tlenHd = 0.0;
+		//tlenHd *= tlenHd; // sqr
+		//lenHd += tlenBod;
+
+
+		// Legs
+		//Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z - m_ghostStart.z + m_mycontrollerStart.z);
+		glm::vec3 wantedWPos(lfPos.x, lf->m_height, lfPos.z);
+		unsigned int numLegs = lf->m_legs.size();
+		for (unsigned int n = 0; n < numLegs; n++)
+		{
+			/*Vector3 footRefToFoot = (p_system->getFootPos(lf,n) - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
+			Vector3 hipRefToHip = (m_myController.m_joints[(i * 2) + 1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
+			Vector3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
+			Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position,
+				m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
+			Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,
+				m_myController.m_joints[(i * 2) + 1].transform.position - hipRefToHip, Color.yellow*2.0f);
+			Debug.DrawLine(m_myController.m_joints[(i + 1) * 2].transform.position,
+				m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow);
+
+			lenFt += (double)Vector3.SqrMagnitude(footRefToFoot);
+			lenHips += (double)Vector3.SqrMagnitude(hipRefToHip);
+			lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);*/
+		}
 	}
-	/*double ghostDist = (double)(m_ghostController.position.z - m_ghostStart.z);
+	/*
+	double ghostDist = (double)(m_ghostController.position.z - m_ghostStart.z);
 	double controllerDist = (double)(m_myController.transform.position.z - m_mycontrollerStart.z);
 	double lenDist = ghostDist - controllerDist;
 	if (controllerDist < 0.0) lenDist *= 2.0; // penalty for falling or walking backwards
 	lenDist *= lenDist; // sqr
+	*/
+	
 
-	double lenFt = 0.0;
-	double lenHips = 0.0;
-	double lenKnees = 0.0;
-	Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z - m_ghostStart.z + m_mycontrollerStart.z);
-	wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_myController.transform.position.z);
-	for (int i = 0; i < m_myLegFrame.m_feet.Length; i++)
-	{
-		Vector3 footRefToFoot = (m_myLegFrame.m_feet[i].transform.position - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
-		Vector3 hipRefToHip = (m_myController.m_joints[(i * 2) + 1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
-		Vector3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
-		Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position,
-			m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
-		Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,
-			m_myController.m_joints[(i * 2) + 1].transform.position - hipRefToHip, Color.yellow*2.0f);
-		Debug.DrawLine(m_myController.m_joints[(i + 1) * 2].transform.position,
-			m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow);
-
-		lenFt += (double)Vector3.SqrMagnitude(footRefToFoot);
-		lenHips += (double)Vector3.SqrMagnitude(hipRefToHip);
-		lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);
-	}*/
-	m_fdBodyHeightSqrDiffs.push_back(/*lenFt * 0.4 + lenKnees + lenHips + */lenBod + 2.0f*lenHd + 0.1 * lenDist);
+	m_fdBodyHeightSqrDiffs.push_back(/*lenFt * 0.4 + lenKnees + lenHips + */lenBod + 2.0f*lenHd + 0.1 * movDistDeviation);
 }
 
 void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)

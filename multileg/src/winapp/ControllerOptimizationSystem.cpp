@@ -49,10 +49,6 @@ int ControllerOptimizationSystem::getCurrentSimTicks()
 
 bool ControllerOptimizationSystem::isSimCompleted()
 {
-	/*DEBUGPRINT(("SIM "));
-	DEBUGPRINT((ToString(m_currentSimTicks).c_str()));
-	DEBUGPRINT((" |"));
-	DEBUGPRINT((ToString(m_simTicks).c_str()));*/
 	return m_currentSimTicks >= m_simTicks;
 }
 
@@ -157,7 +153,7 @@ void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
 	recorder->fv_calcStrideMeanVelocity(controller, m_controllerSystemRef);
 	recorder->fr_calcRotationDeviations(controller, m_controllerSystemRef);
 	recorder->fh_calcHeadAccelerations(controller, m_controllerSystemRef);
-	recorder->fd_calcReferenceMotion(controller, m_controllerSystemRef);
+	recorder->fd_calcReferenceMotion(controller, m_controllerSystemRef, m_time);
 	recorder->fp_calcMovementDistance(controller, m_controllerSystemRef);
 }
 
