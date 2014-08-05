@@ -3,6 +3,7 @@
 #include <Artemis.h>
 #include <vector>
 #include <glm\gtc\type_ptr.hpp>
+#include "ReferenceLegMovementController.h"
 
 class ControllerComponent;
 class ControllerSystem;
@@ -62,10 +63,13 @@ public:
 
 	void fh_calcHeadAccelerations(ControllerComponent* p_controller, ControllerSystem* p_system);
 
-	void fd_calcReferenceMotion(ControllerComponent* p_controller, ControllerSystem* p_system, float p_time);
+	void fd_calcReferenceMotion(ControllerComponent* p_controller, ControllerSystem* p_system, 
+		float p_time, float p_dt, DebugDrawBatch* p_drawer);
 
 	void fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system);
 
+	void setUpperLegLengths(std::vector<float>& p_lengths) { m_upperLegsLen = p_lengths; }
+	void setLowerLegLengths(std::vector<float>& p_lengths) { m_lowerLegsLen = p_lengths; }
                       
     // Return standard deviation of fv term
     // as small deviations as possible
@@ -87,20 +91,21 @@ public:
 protected:
 
 private:
-	
-	 std::vector<double> m_fvVelocityDeviations; // (current, mean)-desired
-	 glm::vec3 m_fvVelocityGoal;
-	 std::vector<glm::vec3> m_fpMovementDist; // travel distance
-	 std::vector<double> m_fhHeadAcceleration;
-	 std::vector<double> m_fdBodyHeightSqrDiffs;
-	 std::vector<std::vector<float>> m_frBodyRotationDeviations; //per-leg frame, arcos(current,desired)
-	 float m_fdWeight;
-	 float m_fvWeight;
-	 float m_fhWeight;
-	 float m_frWeight;
-	 float m_fpWeight;
-	 /*float m_origBodyHeight = 0.0f;
-	 float m_origHeadHeight = 0.0f;
+	std::vector<float> m_upperLegsLen, m_lowerLegsLen;
+	std::vector<double> m_fvVelocityDeviations; // (current, mean)-desired
+	glm::vec3 m_fvVelocityGoal;
+	std::vector<glm::vec3> m_fpMovementDist; // travel distance
+	std::vector<double> m_fhHeadAcceleration;
+	std::vector<double> m_fdBodyHeightSqrDiffs;
+	std::vector<std::vector<float>> m_frBodyRotationDeviations; //per-leg frame, arcos(current,desired)
+	std::vector<ReferenceLegMovementController> m_referenceControllers; // per leg-frame (references for leg segments)
+	float m_fdWeight;
+	float m_fvWeight;
+	float m_fhWeight;
+	float m_frWeight;
+	float m_fpWeight;
+	/*float m_origBodyHeight = 0.0f;
+	float m_origHeadHeight = 0.0f;
 */
 	 std::vector<glm::vec3> m_temp_currentStrideVelocities; // used to calculate mean stride velocity
 	 std::vector<glm::vec3> m_temp_currentStrideDesiredVelocities;

@@ -1,6 +1,7 @@
 #include "IK2Handler.h"
 #include <MathHelp.h>
 #include "DebugDrawBatch.h"
+#include <algorithm> 
 
 
 IK2Handler::IK2Handler()
@@ -46,7 +47,7 @@ void IK2Handler::solve(const glm::vec3& p_footPosL, const glm::vec3& p_upperLegJ
 		float lBS = lB * lB;
 		float hBS = toFootLen * toFootLen;
 		// law of cosines for first angle
-		upperLegAngle = (float)(kneeFlip)* acos((hBS + uBS - lBS) / (2.0f * uB * toFootLen)) + offsetAngle;
+		upperLegAngle = (float)(kneeFlip)* acos((hBS + uBS - lBS) / std::max(0.001f,(2.0f * uB * toFootLen))) + offsetAngle;
 		// second angle
 		glm::vec2 newLeg(uB * cos(upperLegAngle), uB * sin(upperLegAngle));
 		lowerLegAngle = MathHelp::satan2(topToFoot.y - newLeg.y, topToFoot.z - newLeg.x) - upperLegAngle;
@@ -115,17 +116,17 @@ void IK2Handler::updateAngles(float p_lowerAngle, float p_upperAngle)
 	m_upperAngle = p_upperAngle;
 }
 
-glm::vec3& IK2Handler::getHipPosL()
+glm::vec3& IK2Handler::getHipPos()
 {
 	return m_hipPos;
 }
 
-glm::vec3& IK2Handler::getKneePosL()
+glm::vec3& IK2Handler::getKneePos()
 {
 	return m_kneePos;
 }
 
-glm::vec3& IK2Handler::getFootPosL()
+glm::vec3& IK2Handler::getFootPos()
 {
 	return m_endPos;
 }

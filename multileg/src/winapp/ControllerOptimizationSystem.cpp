@@ -13,6 +13,7 @@ ControllerOptimizationSystem::ControllerOptimizationSystem()
 	m_simTicks = 1000;			
 	m_warmupTicks = 2;	
 	m_instantEval = false;
+	m_time = 0.0;
 	// playback
 	m_currentSimTicks = 0;	
 	m_currentBestCandidateIdx = -1;
@@ -153,7 +154,7 @@ void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
 	recorder->fv_calcStrideMeanVelocity(controller, m_controllerSystemRef);
 	recorder->fr_calcRotationDeviations(controller, m_controllerSystemRef);
 	recorder->fh_calcHeadAccelerations(controller, m_controllerSystemRef);
-	recorder->fd_calcReferenceMotion(controller, m_controllerSystemRef, m_time);
+	recorder->fd_calcReferenceMotion(controller, m_controllerSystemRef, m_time, world->getDelta(), dbgDrawer());
 	recorder->fp_calcMovementDistance(controller, m_controllerSystemRef);
 }
 

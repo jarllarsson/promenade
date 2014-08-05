@@ -1183,3 +1183,18 @@ double ControllerSystem::getLatestTiming()
 {
 	return m_timing;
 }
+
+glm::vec3 ControllerSystem::getJointPos(unsigned int p_jointIdx)
+{
+	return MathHelp::getMatrixTranslation(m_jointWorldTransforms[p_jointIdx]);
+}
+
+glm::vec3 ControllerSystem::getJointOuterPos(unsigned int p_jointIdx)
+{
+	return MathHelp::toVec3(m_jointWorldOuterEndpoints[p_jointIdx]);
+}
+
+glm::vec3 ControllerSystem::getJointInnerPos(unsigned int p_jointIdx)
+{
+	return MathHelp::toVec3(m_jointWorldInnerEndpoints[p_jointIdx]);
+}

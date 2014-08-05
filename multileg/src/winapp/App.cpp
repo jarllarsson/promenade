@@ -247,6 +247,9 @@ void App::run()
 		glm::vec3 bodOffset;
 		for (int x = 0; x < 10; x++) // number of characters
 		{
+#ifdef OPTIMIZATION
+			std::vector<float> uLegLens; std::vector<float> lLegLens;
+#endif
 			artemis::Entity & legFrame = entityManager->create();
 			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 0.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
@@ -299,6 +302,7 @@ void App::run()
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 						segmentMass = 2.5f;
+						if (n==0) uLegLens.push_back(boxSize.y);
 						//lowerAngleLim = glm::vec3(1, 1, 1);
 						//upperAngleLim = glm::vec3(0,0,0);
 					}
@@ -308,6 +312,7 @@ void App::run()
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						segmentMass = 2.0f;
+						if (n == 0) lLegLens.push_back(boxSize.y);
 					}
 					else if (i == 2) // if foot
 					{
@@ -356,7 +361,10 @@ void App::run()
 			artemis::Entity & controller = entityManager->create();
 			controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
 #ifdef OPTIMIZATION
-			controller.addComponent(new ControllerMovementRecorderComponent());
+			ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
+			recComp->setLowerLegLengths(lLegLens);
+			recComp->setUpperLegLengths(uLegLens);
+			controller.addComponent(recComp);
 #endif
 			controller.refresh();
 			// bodOffset = glm::vec3(30.0f, 0.0f, 0.0f);

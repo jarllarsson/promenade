@@ -84,7 +84,8 @@ void ControllerMovementRecorderComponent::fh_calcHeadAccelerations( ControllerCo
 	m_fhHeadAcceleration.push_back((double)glm::length(acceleration));
 }
 
-void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller, ControllerSystem* p_system, float p_time )
+void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComponent* p_controller, ControllerSystem* p_system, 
+	float p_time, float p_dt, DebugDrawBatch* p_drawer )
 {
 	// totalscores
 	double lenFt = 0.0, lenKnees = 0.0, lenHips = 0.0, lenBod = 0.0, lenHd = 0.0, movDistDeviation = 0.0;
@@ -95,14 +96,22 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	glm::vec3 controllerstart = glm::vec3(0.0f); // for now, always start in origo on optimization
 
 	// Calc global distance deviation
-	double ghostDist = (double)(velstat.m_goalVelocity.z);
+	double ghostDist = (double)(velstat.m_goalVelocity.z*p_time);
+	glm::vec3 ghostPos(0.0f, 0.0f, ghostDist);
 	double controllerDist = (double)(p_system->getControllerPosition(p_controller).z - controllerstart.z);
 	movDistDeviation = ghostDist - controllerDist;
 	if (controllerDist < 0.0) movDistDeviation *= 2.0; // penalty for falling or walking backwards
 	movDistDeviation *= movDistDeviation; // sqr
 
 	// IK
-	IK2Handler ref_ik;
+	if (m_referenceControllers.size() < legFrames)
+	{
+		for (int i = 0; i < legFrames; i++)
+		{
+			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
+			m_referenceControllers.push_back(ReferenceLegMovementController(p_controller, lf));
+		}
+	}
 
 
 	// step through each lf and add score
@@ -123,21 +132,24 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 		//Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z - m_ghostStart.z + m_mycontrollerStart.z);
 		glm::vec3 wantedWPos(lfPos.x, lf->m_height, lfPos.z);
 		unsigned int numLegs = lf->m_legs.size();
+		ReferenceLegMovementController* refLegMovement = &m_referenceControllers[i];
 		for (unsigned int n = 0; n < numLegs; n++)
 		{
-			glm::vec3 footRefToFoot = (p_system->getFootPos(lf,n) - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
-			glm::vec3 hipRefToHip = (m_myController.m_joints[(i * 2) + 1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
-			glm::vec3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
+			refLegMovement->updateRefPositions(n, lfPos, lf->m_height, m_upperLegsLen[i], m_lowerLegsLen[i], p_dt, p_drawer);
+
+			glm::vec3 footRefToFoot = (p_system->getFootPos(lf, n) - wantedWPos) - (refLegMovement->m_feet[n] - ghostPos);
+			glm::vec3 hipRefToHip = (p_system->getJointInnerPos(lf->m_hipJointId[n]) - wantedWPos) - (refLegMovement->m_IK.getHipPos() - ghostPos);
+			glm::vec3 kneeRefToKnee = (p_system->getJointOuterPos(lf->m_hipJointId[n]) - wantedWPos) - (refLegMovement->m_knees[n] - ghostPos);
 			/*Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position,
 				m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
 			Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,
 				m_myController.m_joints[(i * 2) + 1].transform.position - hipRefToHip, Color.yellow*2.0f);
 			Debug.DrawLine(m_myController.m_joints[(i + 1) * 2].transform.position,
 				m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow);
-
-			lenFt += (double)Vector3.SqrMagnitude(footRefToFoot);
-			lenHips += (double)Vector3.SqrMagnitude(hipRefToHip);
-			lenKnees += (double)Vector3.SqrMagnitude(kneeRefToKnee);*/
+			*/
+			lenFt += (double)glm::sqrLength(footRefToFoot);
+			lenHips += (double)glm::sqrLength(hipRefToHip);
+			lenKnees += (double)glm::sqrLength(kneeRefToKnee);
 		}
 	}
 	/*
@@ -147,9 +159,8 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	if (controllerDist < 0.0) lenDist *= 2.0; // penalty for falling or walking backwards
 	lenDist *= lenDist; // sqr
 	*/
-	
 
-	m_fdBodyHeightSqrDiffs.push_back(/*lenFt * 0.4 + lenKnees + lenHips + */lenBod + 2.0f*lenHd + 0.1 * movDistDeviation);
+	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + 2.0f*lenHd + 0.1 * movDistDeviation);
 }
 
 void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)
@@ -189,7 +200,7 @@ double ControllerMovementRecorderComponent::evaluateFR()
 		total += (double)m_frBodyRotationDeviations[x][y];
 		sz++;
 	}
-	double avg = total /= max(1, (double)(sz));
+	double avg = total /= max(1.0, (double)(sz));
 	return avg;
 }
 

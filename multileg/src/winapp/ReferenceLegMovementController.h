@@ -35,7 +35,7 @@ public:
 		m_stepHeightTraj = p_lf->m_stepHeighTraj;
 		m_player = p_controller->m_player;
 	}
-	virtual ~ReferenceLegMovementController();
+	virtual ~ReferenceLegMovementController() {}
 
 	IK2Handler				m_IK;
 	std::vector<glm::vec3>	m_feet;
@@ -49,65 +49,45 @@ public:
 
 	PieceWiseLinear m_stepHeightTraj;
 	std::vector<glm::vec3> m_liftPos;
-	//public PcswiseLinear m_tuneFootTransitionEase;
 
-// 	void Awake()
-// 	{
-// 		for (int i = 0; i < m_feet.size(); i++)
-// 		{
-// 			m_oldFeetPos[i] = m_feet[i];
-// 		}
-// 	}
-
-	// Use this for initialization
-//	void Start()
-//	{
-// 		for (int i = 0; i < m_foot.Length; i++)
-// 		{
-// 			m_liftPos[i] = m_foot[i].position;
-// 		}
-
-
-
-	void updateRefPositions(const glm::vec3& p_lfPos, float p_lfHeight, float p_uLegLen, float p_lLegLen, float p_dt, DebugDrawBatch* p_drawer)
+	void updateRefPositions(unsigned int p_legIdx, const glm::vec3& p_lfPos, float p_lfHeight, float p_uLegLen, float p_lLegLen, float p_dt, DebugDrawBatch* p_drawer)
 	{
 		// Advance the player
 		m_player.updatePhase(p_dt);
 		float phi = m_player.getPhase();
 		//
-		for (int i = 0; i < m_feet.size(); i++)
+		
+		bool inStance = m_stepCycles[p_legIdx].isInStance(phi);
+		//				
+		float flip = (p_legIdx * 2.0f) - 1.0f;
+		glm::vec3 baseOffset(flip*m_stepLength.x, 0.0f, 0.0f);
+		glm::vec3 lfPlaneBase(p_lfPos.x, 0.0f, p_lfPos.z);
+		if (!inStance)
 		{
-			bool inStance = m_stepCycles[i].isInStance(phi);
-			//				
-			float flip = (i * 2.0f) - 1.0f;
-			glm::vec3 baseOffset(flip*m_stepLength.x, 0.0f, 0.0f);
-			glm::vec3 lfPlaneBase(p_lfPos.x, 0.0f, p_lfPos.z);
-			if (!inStance)
-			{
-				float swingPhi = m_stepCycles[i].getSwingPhase(phi);
-				// The height offset, ie. the "lift" that the foot makes between stepping points.
-				glm::vec3 heightOffset(0.0f, m_stepHeightTraj.lerpGet(swingPhi), 0.0f);
+			float swingPhi = m_stepCycles[p_legIdx].getSwingPhase(phi);
+			// The height offset, ie. the "lift" that the foot makes between stepping points.
+			glm::vec3 heightOffset(0.0f, m_stepHeightTraj.lerpGet(swingPhi), 0.0f);
 
-				glm::vec3 wpos = glm::lerp(m_liftPos[i],
-					p_lfPos + glm::vec3(baseOffset.x, 0.0f, m_stepLength.y*0.5f),
-					swingPhi);
-				wpos = glm::vec3(wpos.x, 0.0f, wpos.z);
-				m_feet[i]= wpos + heightOffset;
+			glm::vec3 wpos = glm::lerp(m_liftPos[p_legIdx],
+				p_lfPos + glm::vec3(baseOffset.x, 0.0f, m_stepLength.y*0.5f),
+				swingPhi);
+			wpos = glm::vec3(wpos.x, 0.0f, wpos.z);
+			m_feet[p_legIdx] = wpos + heightOffset;
 
-			}
-			else
-			{
-				m_liftPos[i] = m_feet[i];
-				//Debug.DrawLine(m_foot[i].position, m_foot[i].position + Vector3.up, Color.magenta - new Color(0.3f, 0.3f, 0.3f, 0.0f), 10.0f);
-			}
-			//Color debugColor = Color.red;
-			//if (i == 1) debugColor = Color.green;
-			//Debug.DrawLine(m_oldFootPos[i], m_foot[i].position, debugColor, 30.0f);
-			m_oldFeetPos[i] = m_feet[i];
-			m_IK.solve(m_feet[i], baseOffset + lfPlaneBase, p_uLegLen, p_lLegLen, p_drawer);
-			//
-			m_knees[i] = m_IK.getKneePosL() + lfPlaneBase;
 		}
+		else
+		{
+			m_liftPos[p_legIdx] = m_feet[p_legIdx];
+			//Debug.DrawLine(m_foot[i].position, m_foot[i].position + Vector3.up, Color.magenta - new Color(0.3f, 0.3f, 0.3f, 0.0f), 10.0f);
+		}
+		//Color debugColor = Color.red;
+		//if (i == 1) debugColor = Color.green;
+		//Debug.DrawLine(m_oldFootPos[i], m_foot[i].position, debugColor, 30.0f);
+		m_oldFeetPos[p_legIdx] = m_feet[p_legIdx];
+		m_IK.solve(m_feet[p_legIdx], baseOffset + lfPlaneBase, p_uLegLen, p_lLegLen, p_drawer);
+		//
+		m_knees[p_legIdx] = m_IK.getKneePos() + lfPlaneBase;
 	}
+
 
 };

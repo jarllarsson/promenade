@@ -118,6 +118,9 @@ public:
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
 	glm::vec3 getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const;
 	glm::vec3 getFootPos(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
+	glm::vec3 getJointPos(unsigned int p_jointIdx);
+	glm::vec3 getJointOuterPos(unsigned int p_jointIdx);
+	glm::vec3 getJointInnerPos(unsigned int p_jointIdx);
 private:
 	// build helpers
 	// Add a joint's all DOFs to chain

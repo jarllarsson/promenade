@@ -25,9 +25,9 @@ public:
 	float getLowerLocalLegAngle() const;
 	float getLowerWorldLegAngle() const;
 
-	glm::vec3& getHipPosL();
-	glm::vec3& getKneePosL();
-	glm::vec3& getFootPosL();
+	glm::vec3& getHipPos();
+	glm::vec3& getKneePos();
+	glm::vec3& getFootPos();
 protected:
 	void debugDraw(DebugDrawBatch* p_drawer);
 private:
