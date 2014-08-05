@@ -101,6 +101,9 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	if (controllerDist < 0.0) movDistDeviation *= 2.0; // penalty for falling or walking backwards
 	movDistDeviation *= movDistDeviation; // sqr
 
+	// IK
+	IK2Handler ref_ik;
+
 
 	// step through each lf and add score
 	for (unsigned int i = 0; i < legFrames; i++)
@@ -122,10 +125,10 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 		unsigned int numLegs = lf->m_legs.size();
 		for (unsigned int n = 0; n < numLegs; n++)
 		{
-			/*Vector3 footRefToFoot = (p_system->getFootPos(lf,n) - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
-			Vector3 hipRefToHip = (m_myController.m_joints[(i * 2) + 1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
-			Vector3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
-			Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position,
+			glm::vec3 footRefToFoot = (p_system->getFootPos(lf,n) - wantedWPos) - (m_referenceHandler.m_foot[i].position - m_ghostController.position);
+			glm::vec3 hipRefToHip = (m_myController.m_joints[(i * 2) + 1].transform.position - wantedWPos) - (m_referenceHandler.m_IK[i].m_hipPos - m_ghostController.position);
+			glm::vec3 kneeRefToKnee = (m_myController.m_joints[(i + 1) * 2].transform.position - wantedWPos) - (m_referenceHandler.m_knee[i].position - m_ghostController.position);
+			/*Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position,
 				m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
 			Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,
 				m_myController.m_joints[(i * 2) + 1].transform.position - hipRefToHip, Color.yellow*2.0f);

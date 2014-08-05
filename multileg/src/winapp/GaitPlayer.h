@@ -25,8 +25,6 @@ public:
 		m_tuneGaitPeriod = 1.0f;
 	}
 
-
-
 	// IOptimizable
 	/*public List<float> GetParams()
 	{

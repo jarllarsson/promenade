@@ -162,6 +162,9 @@
     <ClInclude Include="ControllerMovementRecorderComponent.h">
       <Filter>Entity System\Locomotion\Optimization</Filter>
     </ClInclude>
+    <ClInclude Include="ReferenceLegMovementController.h">
+      <Filter>Entity System\Locomotion\Optimization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp">
