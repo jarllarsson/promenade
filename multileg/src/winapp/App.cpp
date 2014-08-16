@@ -370,16 +370,15 @@ void App::run()
 				hipJoints.push_back(upperLegSegment);
 			}
 			// Controller
-			//artemis::Entity & controller = entityManager->create();
-			//controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
+			artemis::Entity & controller = entityManager->create();
+			controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
 #ifdef OPTIMIZATION
 			ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
 			recComp->setLowerLegLengths(lLegLens);
 			recComp->setUpperLegLengths(uLegLens);
 			controller.addComponent(recComp);
 #endif
-			//controller.refresh();
-			// bodOffset = glm::vec3(30.0f, 0.0f, 0.0f);
+			controller.refresh();
 		}
 
 	#ifdef OPTIMIZATION

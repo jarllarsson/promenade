@@ -25,6 +25,12 @@ public:
 		m_tuneGaitPeriod = 1.0f;
 	}
 
+	GaitPlayer(float p_gaitPeriod)
+	{
+		m_gaitPhase = 0.0f;
+		m_tuneGaitPeriod = p_gaitPeriod;
+	}
+
 	// IOptimizable
 	/*public List<float> GetParams()
 	{

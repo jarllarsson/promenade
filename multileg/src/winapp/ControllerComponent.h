@@ -181,23 +181,23 @@ public:
 			// Trajectory settings
 			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
 			m_heightLFTraj.reset(PieceWiseLinear::FULL, 10.0f); // is reinited to character height in build
-			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 5.0f); // Stepping is defaulted to an arc
+			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 1.0f); // Stepping is defaulted to an arc
 			m_footTrackingGainKp.reset(PieceWiseLinear::LIN_INC,1.0f); // Foot tracking controller for fast gaits. linear(=t) by default
 			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
-			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(1000.0f);
-			m_FhPD.setKp_KdEQTenPrcntKp(1000.0f);
-			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(100.0f);
+			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(30.0f);
+			m_FhPD.setKp_KdEQTenPrcntKp(3.0f);
+			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(1.0f);
 			// Vectors and Floats
-			m_stepLength = glm::vec2(2.0f, 5.5f);
+			m_stepLength = glm::vec2(0.5f, 1.0f);
 			m_footPlacementVelocityScale = 1.0f;
 			m_height = 0.0f;
-			m_lateStrikeOffsetDeltaH = 10.0f;
-			m_velocityRegulatorKv = 30.0f;
+			m_lateStrikeOffsetDeltaH = 1.0f;
+			m_velocityRegulatorKv = 3.0f;
 			m_FDHVComponents = glm::vec4(-0.1f, 0.2f, 0.0f, 0.1f);
 			//
-			m_legPDsKp = 100.0f;
-			m_legPDsKd = 10.0f;
+			m_legPDsKp = 3.0f;
+			m_legPDsKd = 0.3f;
 			// foot
 			m_tuneToeOffAngle=HALFPI;				
 			m_tuneFootStrikeAngle = -HALFPI/9.0f;
