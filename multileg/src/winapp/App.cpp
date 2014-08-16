@@ -44,7 +44,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -94,7 +94,7 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_time = 0.0;
 	m_restart = false;
 	//
-	m_triggerPause = false;
+	m_triggerPause = true;
 	//
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 	m_gravityStat = true;
@@ -243,18 +243,24 @@ void App::run()
 
 
 		// Test of controller
-		float hipCoronalOffset = 2.0f; // coronal distance between hip joints and center
+		float hipCoronalOffset = 0.5f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
+		// size setups
+		float	lfHeight = 1.0f,
+				uLegHeight = 1.0f,
+				lLegHeight = 1.0f,
+				footHeight = 0.1847207f;
+		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
 		for (int x = 0; x < 10; x++) // number of characters
 		{
 #ifdef OPTIMIZATION
 			std::vector<float> uLegLens; std::vector<float> lLegLens;
 #endif
 			artemis::Entity & legFrame = entityManager->create();
-			glm::vec3 pos = bodOffset+glm::vec3(/*x*3*/0.0f, 11.0f, 0.0f);
+			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, 4.0f, hipCoronalOffset);
-			float characterMass = 20.0f;
+			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset*2.0f);
+			float characterMass = 50.0f;
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 			if (x==0) legFrame.addComponent(new RenderComponent());
@@ -282,14 +288,14 @@ void App::run()
 				artemis::Entity* upperLegSegment = NULL;
 				float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
 				glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
-				glm::vec3 boxSize = glm::vec3(1.0f, 4.0f, 1.0f);
+				glm::vec3 boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
 				for (int i = 0; i < 3; i++) // number of segments per leg
 				{
 					artemis::Entity & childJoint = entityManager->create();
 					float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
 					float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
 					glm::vec3 parentSz = boxSize;
-					boxSize = glm::vec3(1.0f, 4.0f, 1.0f); // set new size for current box
+					boxSize = glm::vec3(0.25f, uLegHeight, 0.25f); // set new size for current box
 					// segment specific constraint params
 					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.1f, -HALFPI*0.1f);
 					glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.1f, HALFPI*0.1f);
@@ -301,8 +307,11 @@ void App::run()
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
-						segmentMass = 2.5f;
+						segmentMass = 5.0f;
+						boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
+#ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(boxSize.y);
+#endif
 						//lowerAngleLim = glm::vec3(1, 1, 1);
 						//upperAngleLim = glm::vec3(0,0,0);
 					}
@@ -311,18 +320,21 @@ void App::run()
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 2.0f;
+						segmentMass = 4.0f;
+						boxSize = glm::vec3(0.25f, lLegHeight, 0.25f);
+#ifdef OPTIMIZATION
 						if (n == 0) lLegLens.push_back(boxSize.y);
+#endif
 					}
 					else if (i == 2) // if foot
 					{
 						partName = " foot";
-						jointZOffsetInChild = 0.5f;
-						boxSize = glm::vec3(2.0f, 1.0f, 3.3f);
-						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
-						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						boxSize = glm::vec3(0.571618f, footHeight, 0.5f);
+						jointZOffsetInChild = boxSize.z*0.5f;
+						//lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
+						//upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
+						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						segmentMass = 1.0f;
 						foot = true;
 					}
@@ -358,15 +370,15 @@ void App::run()
 				hipJoints.push_back(upperLegSegment);
 			}
 			// Controller
-			artemis::Entity & controller = entityManager->create();
-			controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
+			//artemis::Entity & controller = entityManager->create();
+			//controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
 #ifdef OPTIMIZATION
 			ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
 			recComp->setLowerLegLengths(lLegLens);
 			recComp->setUpperLegLengths(uLegLens);
 			controller.addComponent(recComp);
 #endif
-			controller.refresh();
+			//controller.refresh();
 			// bodOffset = glm::vec3(30.0f, 0.0f, 0.0f);
 		}
 
