@@ -23,7 +23,7 @@ ControllerSystem::~ControllerSystem()
 
 void ControllerSystem::removed(artemis::Entity &e)
 {
-
+	DEBUGPRINT(("\nREMOVING CONTROLLER\n"));
 }
 
 void ControllerSystem::added(artemis::Entity &e)
@@ -138,12 +138,17 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 10000.0f;
+		float tLim = 40.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3 t = m_jointTorques[i];
 			if (glm::length(t)>tLim) 
 				t = glm::normalize(t)*tLim;
+// 			if (glm::length(t) > 0)
+// 			{
+// 				glm::vec3 pos = getJointPos(i);
+// 				dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+// 			}
 			m_jointRigidBodies[i]->applyTorque(btVector3(t.x, t.y, t.z));
 		}
 	}
@@ -952,6 +957,7 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// with current real-world scenarios.
 	glm::vec3 tLF = tstance + tswing + tspine;
 	m_jointTorques[lfJointIdx] = tLF;
+	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tLF, dawnBringerPalRGB[COL_PURPLE], dawnBringerPalRGB[COL_YELLOW]);
 
 	// 2. Calculate a desired torque, tdLF, using the previous current
 	// torque, tLF, and a PD-controller driving towards the 
@@ -982,6 +988,9 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + fram, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + chgr, dawnBringerPalRGB[COL_RED] * 0.8f, dawnBringerPalRGB[COL_RED] * 0.8f);
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + cfram, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f);
+		// torque
+		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tdLF, dawnBringerPalRGB[COL_ORANGE], dawnBringerPalRGB[COL_YELLOW]);
+
 	}
 	// test code
 	//rigidbody.AddTorque(tdLF);
@@ -1036,7 +1045,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			if (p_controllerIdx == 0) drawer = dbgDrawer();
 			ik->solve(refDesiredFootPos, refHipPos,
 				m_jointLengths[pdChain->getUpperJointIdx()],
-				m_jointLengths[pdChain->getLowerJointIdx()], drawer);
+				m_jointLengths[pdChain->getLowerJointIdx()] + 0.1847207f/*+m_jointLengths[pdChain->getFootJointIdx()]*/, drawer);
 			// For each PD in leg
 			for (unsigned int x = 0; x < pdChain->getSize(); x++)
 			{

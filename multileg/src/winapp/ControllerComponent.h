@@ -97,7 +97,8 @@ public:
 
 		unsigned int getFootIdx() const
 		{
-			return (unsigned int)m_PDChain.size()-1; // NOTE! !HACK! HARDCODED!
+			return 2;
+				//(unsigned int)m_PDChain.size()-1; // NOTE! !HACK! HARDCODED!
 		}
 
 		unsigned int getUpperJointIdx() const
@@ -112,7 +113,7 @@ public:
 
 		unsigned int getFootJointIdx() const
 		{
-			return m_jointIdxChain[getLowerLegSegmentIdx()];
+			return m_jointIdxChain[getFootIdx()];
 		}
 	};
 

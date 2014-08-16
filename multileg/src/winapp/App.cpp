@@ -252,7 +252,11 @@ void App::run()
 				lLegHeight = 1.0f,
 				footHeight = 0.1847207f;
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
-		for (int x = 0; x < 10; x++) // number of characters
+		int chars = 1;
+#ifdef OPTIMIZATION
+		chars=10;
+#endif
+		for (int x = 0; x < chars; x++) // number of characters
 		{
 #ifdef OPTIMIZATION
 			std::vector<float> uLegLens; std::vector<float> lLegLens;
@@ -261,7 +265,7 @@ void App::run()
 			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset*2.0f);
-			float characterMass = 50.0f;
+			float characterMass = 5.0f;
 			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 			if (x==0) legFrame.addComponent(new RenderComponent());
@@ -301,17 +305,19 @@ void App::run()
 					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.1f, -HALFPI*0.1f);
 					glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.1f, HALFPI*0.1f);
 					string partName;
-					float segmentMass = 1.0f;
+					float segmentMass = 5.0f;
 					bool foot = false;
 					if (i == 0) // if hip joint (upper leg)
 					{
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
-						segmentMass = 5.0f;
+						//lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
+						//upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+						segmentMass = 1.0f;
 						boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
 #ifdef OPTIMIZATION
-						if (n==0) uLegLens.push_back(boxSize.y);
+						if (n==0) uLegLens.push_back(uLegHeight);
 #endif
 						//lowerAngleLim = glm::vec3(1, 1, 1);
 						//upperAngleLim = glm::vec3(0,0,0);
@@ -321,22 +327,22 @@ void App::run()
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 4.0f;
+						segmentMass = 1.0f;
 						boxSize = glm::vec3(0.25f, lLegHeight, 0.25f);
 #ifdef OPTIMIZATION
-						if (n == 0) lLegLens.push_back(boxSize.y);
+						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
 #endif
 					}
 					else if (i == 2) // if foot
 					{
 						partName = " foot";
-						boxSize = glm::vec3(0.571618f, footHeight, 0.5f);
-						jointZOffsetInChild = boxSize.z*0.5f;
+						boxSize = glm::vec3(0.571618f, footHeight, 0.8f);
+						jointZOffsetInChild = (boxSize.z-0.3f)*0.5f;
 						//lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 5.0f;
+						segmentMass = 0.1f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
@@ -481,7 +487,7 @@ void App::run()
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
-				dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
+				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1, (btScalar)fixedStep);
 	#else
 				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
 	#endif
@@ -499,7 +505,7 @@ void App::run()
 		#endif
 	#endif
 	#ifdef OPTIMIZATION
-				optimizationSystem->incSimTick();
+				if (m_timeScale>0) optimizationSystem->incSimTick();
 				debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
 				if (optimizationSystem->isSimCompleted())
 				{

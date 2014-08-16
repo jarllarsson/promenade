@@ -43,6 +43,8 @@ void RigidBodySystem::added(artemis::Entity &e)
 		btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
 		btRigidBody* rigidBodyInstance = new btRigidBody(rigidBodyCI);
 		rigidBodyInstance->setDamping(0.0f, 0.1f);
+		//float test = rigidBodyInstance->getFriction();
+		rigidBodyInstance->setFriction(0.8f); // custom friction, default is 0.5
 		rigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
 		// If collision registration is activated,
 		// we need to prepare a callback

@@ -211,8 +211,9 @@ public class Controller : MonoBehaviour, IOptimizable
         {
             Vector3 torque = m_jointTorques[i];
             m_joints[i].AddTorque(torque);
-            Vector3 drawTorque = new Vector3(0.0f, 0.0f, -torque.x);
-            Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+drawTorque*0.001f,Color.cyan );
+            Vector3 drawTorque = Mathf.Deg2Rad * torque;
+                //new Vector3(0.0f, 0.0f, -torque.x);
+            Debug.DrawLine(m_joints[i].transform.position,m_joints[i].transform.position+drawTorque,Color.cyan );
         }
     }
 
@@ -382,9 +383,9 @@ public class Controller : MonoBehaviour, IOptimizable
                                                                    legFrameRootDofId); // As we use the leg frame as base, we supply it separately (it will be actual root now)
                             CMatrix Jt = CMatrix.Transpose(J);
 
-                            Debug.DrawLine(end, end + VF * 0.4f, Color.magenta);
+                            //Debug.DrawLine(end, end + VF * 0.4f, Color.magenta);
                             Color idxCol = new Color((float)n / (float)LegFrame.c_legCount, (float)m / (float)LegFrame.c_legSegments, (float)segIdx / (float)(LegFrame.c_legCount * LegFrame.c_legSegments));
-                            Debug.DrawLine(end, transform.position, idxCol);
+                            //Debug.DrawLine(end, transform.position, idxCol);
 
                             int jIdx = 0;
                             int extra = 0;
@@ -409,7 +410,7 @@ public class Controller : MonoBehaviour, IOptimizable
                                 newTorques[x] += addT;
                                 jIdx++;
                                 Vector3 drawTorque = addT;
-                                Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + drawTorque * 0.5f, idxCol);
+                                //Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + drawTorque * 0.5f, idxCol);
 
                             }
                         } // endfor legsegments

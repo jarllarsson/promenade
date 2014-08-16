@@ -62,6 +62,7 @@ public:
 		float flip = (p_legIdx * 2.0f) - 1.0f;
 		glm::vec3 baseOffset(flip*m_stepLength.x, 0.0f, 0.0f);
 		glm::vec3 lfPlaneBase(p_lfPos.x, 0.0f, p_lfPos.z);
+		glm::vec3 lfHeightBase(0.0f, p_uLegLen+p_lLegLen, 0.0f);
 		if (!inStance)
 		{
 			float swingPhi = m_stepCycles[p_legIdx].getSwingPhase(phi);
@@ -84,7 +85,7 @@ public:
 		//if (i == 1) debugColor = Color.green;
 		//Debug.DrawLine(m_oldFootPos[i], m_foot[i].position, debugColor, 30.0f);
 		m_oldFeetPos[p_legIdx] = m_feet[p_legIdx];
-		m_IK.solve(m_feet[p_legIdx], baseOffset + lfPlaneBase, p_uLegLen, p_lLegLen, p_drawer);
+		m_IK.solve(m_feet[p_legIdx], baseOffset + lfPlaneBase + lfHeightBase, p_uLegLen, p_lLegLen, p_drawer);
 		//
 		m_knees[p_legIdx] = m_IK.getKneePos() + lfPlaneBase;
 	}

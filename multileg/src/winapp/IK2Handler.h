@@ -19,7 +19,7 @@ public:
 	~IK2Handler();
 
 
-	void solve(const glm::vec3& p_footPosL, const glm::vec3& p_upperLegJointPosL, float p_upperLegLen, float p_lowerLegLen, DebugDrawBatch* p_drawer);
+	void solve(const glm::vec3& p_footPos, const glm::vec3& p_upperLegJointPos, float p_upperLegLen, float p_lowerLegLen, DebugDrawBatch* p_drawer);
 
 	float getUpperLegAngle() const;
 	float getLowerLocalLegAngle() const;
