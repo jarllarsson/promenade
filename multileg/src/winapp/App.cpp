@@ -85,7 +85,8 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_debugDrawer->setDrawArea(p_width, p_height);
 
 	m_fpsUpdateTick=0.0f;
-	m_controller = new TempController(0.0f,10.0f,-50.0f,0.0f);
+	m_controller = new TempController(-8.0f,2.5f,0.0f,0.0f);
+	m_controller->rotate(glm::vec3(0.0f, -HALFPI, 0.0f));
 	m_input = new Input();
 	m_input->doStartup(m_context->getWindowHandle());
 	m_timeScale = 1.0f;
@@ -335,7 +336,7 @@ void App::run()
 						//upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 1.0f;
+						segmentMass = 5.0f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
@@ -689,7 +690,7 @@ void App::updateController(float p_dt)
 	JoyStick* joy = nullptr;
 	if (m_input->hasJoysticks()) 
 		joy = m_input->g_joys[0];
-	float thrustPow = 10.0f;
+	float thrustPow = 1.0f;
 	// Thrust
 	if (m_input->g_kb->isKeyDown(KC_LEFT) || m_input->g_kb->isKeyDown(KC_A))
 		m_controller->moveThrust(glm::vec3(-1.0f,0.0f,0.0f)*thrustPow);

@@ -42,7 +42,7 @@ void RigidBodySystem::added(artemis::Entity &e)
 		// Construction info
 		btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
 		btRigidBody* rigidBodyInstance = new btRigidBody(rigidBodyCI);
-		rigidBodyInstance->setDamping(0.1f, 0.1f);
+		rigidBodyInstance->setDamping(0.0f, 0.1f);
 		rigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
 		// If collision registration is activated,
 		// we need to prepare a callback
