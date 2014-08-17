@@ -24,6 +24,8 @@ RigidBodyComponent::RigidBodyComponent(btCollisionShape* p_collisionShape /*= NU
 	m_callback = NULL;
 	m_registerCollisions = false;
 	m_colliding = false;
+	m_linearFactor = glm::vec3(1, 1, 1);
+	m_angularFactor = glm::vec3(1, 1, 1);
 }
 
 RigidBodyComponent::RigidBodyComponent(ListenerMode p_registerCollisions, 
@@ -48,6 +50,8 @@ RigidBodyComponent::RigidBodyComponent(ListenerMode p_registerCollisions,
 	m_callback = NULL;
 	m_registerCollisions = (p_registerCollisions==ListenerMode::REGISTER_COLLISIONS);
 	m_colliding = false;
+	m_linearFactor = glm::vec3(1, 1, 1);
+	m_angularFactor = glm::vec3(1, 1, 1);
 }
 
 RigidBodyComponent::~RigidBodyComponent()
@@ -88,6 +92,8 @@ void RigidBodyComponent::init(unsigned int p_uid, btRigidBody* p_rigidBody,
 	m_dynamicsWorldPtr = p_dynamicsWorldPtr;
 	m_inited = true;
 	m_uid = p_uid;
+	setLinearFactor(m_linearFactor);
+	setAngularFactor(m_angularFactor);
 }
 
 btRigidBody* RigidBodyComponent::getRigidBody()
@@ -180,4 +186,28 @@ void RigidBodyComponent::setVelocityStat(glm::vec3& p_velocity)
 void RigidBodyComponent::setAccelerationStat(glm::vec3& p_acceleration)
 {
 	m_acceleration = p_acceleration;
+}
+
+const glm::vec3& RigidBodyComponent::getLinearFactor()
+{
+	return m_linearFactor;
+}
+
+const glm::vec3& RigidBodyComponent::getAngularFactor()
+{
+	return m_angularFactor;
+}
+
+void RigidBodyComponent::setLinearFactor(glm::vec3& p_axis)
+{
+	m_linearFactor = p_axis;
+	if (m_rigidBody != NULL)
+		m_rigidBody->setLinearFactor(btVector3(m_linearFactor.x, m_linearFactor.y, m_linearFactor.z));
+}
+
+void RigidBodyComponent::setAngularFactor(glm::vec3& p_axis)
+{
+	m_angularFactor = p_axis;
+	if (m_rigidBody != NULL)
+		m_rigidBody->setAngularFactor(btVector3(m_angularFactor.x, m_angularFactor.y, m_angularFactor.z));
 }

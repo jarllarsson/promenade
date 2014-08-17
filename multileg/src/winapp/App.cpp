@@ -40,11 +40,12 @@
 #include "PositionRefSystem.h"
 #include "ConstraintSystem.h"
 #include "ControllerOptimizationSystem.h"
+#include <ReferenceLegMovementController.h>
 
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -138,6 +139,7 @@ void App::run()
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Tick", Toolbar::INT, &debugTicker);
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestScore);
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
+	std::vector<ReferenceLegMovementController> baseReferenceMovementControllers;
 #endif
 	double controllerSystemTiming = 0.0;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTiming);
@@ -253,6 +255,7 @@ void App::run()
 				footHeight = 0.1847207f;
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
 		int chars = 1;
+		bool lockPos = true;
 #ifdef OPTIMIZATION
 		chars=10;
 #endif
@@ -265,13 +268,22 @@ void App::run()
 			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset*2.0f);
-			float characterMass = 5.0f;
-			legFrame.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
-				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+			float characterMass = 50.0f;
+			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
+				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
+			legFrame.addComponent(lfRB);
 			if (x==0) legFrame.addComponent(new RenderComponent());
 			legFrame.addComponent(new TransformComponent(pos,
 				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 				lfSize));
+
+			if (lockPos)
+			{
+				lfRB->setLinearFactor(glm::vec3(0,0,1));
+				lfRB->setAngularFactor(glm::vec3(0, 0, 0));
+			}
+
+
 			//legFrame.addComponent(new ConstantForceComponent(glm::vec3(0, characterMass*12.0f, 0)));
 			legFrame.refresh();
 			string legFrameName = "LegFrame";
@@ -378,12 +390,27 @@ void App::run()
 			}
 			// Controller
 			artemis::Entity & controller = entityManager->create();
-			controller.addComponent(new ControllerComponent(&legFrame, hipJoints));
+			ControllerComponent* controllerComp = new ControllerComponent(&legFrame, hipJoints);
+			controller.addComponent(controllerComp);
 #ifdef OPTIMIZATION
 			ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
 			recComp->setLowerLegLengths(lLegLens);
 			recComp->setUpperLegLengths(uLegLens);
+			// If first optimization run, and controller 0, add the current settings
+			// as the "ghost" reference to measure for leg movements (measure physics result to kinematic target)
+			// If this is another iteration, or another controller, add the reference ghost that we saved in the beginning.
+			// The ghost is thus not changed between runs or controllers, everyone measures to the same reference.
+			for (int r = 0; r < controllerComp->getLegFrameCount(); r++)
+			{
+				if (x == 0 && r>=baseReferenceMovementControllers.size())
+				{
+					baseReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r));
+				}
+				else
+					recComp->addLegReferenceController(baseReferenceMovementControllers[r]);
+			}
 			controller.addComponent(recComp);
+			
 #endif
 			controller.refresh();
 		}

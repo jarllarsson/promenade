@@ -61,16 +61,22 @@ public:
 	const glm::vec3& getCollisionPoint();
 	const glm::vec3& getVelocity();
 	const glm::vec3& getAcceleration();
+	const glm::vec3& getLinearFactor();
+	const glm::vec3& getAngularFactor();
 	bool isRegisteringCollisions();
 	void setCollidingStat(bool p_stat, const glm::vec3& p_position=glm::vec3(0.0f));
 	void setVelocityStat(glm::vec3& p_velocity);
 	void setAccelerationStat(glm::vec3& p_acceleration);
+	void setLinearFactor(glm::vec3& p_axis);
+	void setAngularFactor(glm::vec3& p_axis);
 
 	bool isInited();
 	short int m_collisionLayerType;
 	short int m_collidesWithLayer;
 private:
-	glm::vec3 m_collisionPoint;
+	glm::vec3 m_linearFactor; // allowed axes for movement
+	glm::vec3 m_angularFactor;// allowed axes for rotation
+	glm::vec3 m_collisionPoint; 
 	glm::vec3 m_velocity;
 	glm::vec3 m_acceleration;
 	bool m_registerCollisions;

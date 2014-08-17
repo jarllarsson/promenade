@@ -138,17 +138,17 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 40.0f;
+		float tLim = 10000.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3 t = m_jointTorques[i];
 			if (glm::length(t)>tLim) 
 				t = glm::normalize(t)*tLim;
-// 			if (glm::length(t) > 0)
-// 			{
-// 				glm::vec3 pos = getJointPos(i);
-// 				dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
-// 			}
+			if (glm::length(t) > 0)
+			{
+				glm::vec3 pos = getJointPos(i);
+				dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+ 			}
 			m_jointRigidBodies[i]->applyTorque(btVector3(t.x, t.y, t.z));
 		}
 	}
@@ -652,7 +652,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 
 	//// Compute the variants of torque and write to torque array
 	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	//computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 
 	
 	// Apply them to the leg frames, also
@@ -1060,16 +1060,16 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				//
 				unsigned jointIdx = pdChain->m_jointIdxChain[x];
 				// Calculate angle to leg frame space
-				glm::quat goal = currentOrientationQuat * glm::quat(glm::vec3(sagittalAngle, 0.0f, 0.0f));
+				glm::quat goal = currentOrientationQuat * glm::quat(glm::vec3(-sagittalAngle, 0.0f, 0.0f));
 				glm::quat current = glm::quat_cast(m_jointWorldTransforms[jointIdx]);
 				// Drive PD using angle
 				glm::vec3 torque = pdChain->m_PDChain[x].drive(current, goal, p_dt);
 				//bool vecnanchk = glm::isnan(torque) == glm::bool3(true, true, true);
 				// Add to torque for joint
 				(*p_outTVF)[jointIdx] += torque;
-				glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
+				/*glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
 				if (p_controllerIdx == 0)
-					dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x*5], dawnBringerPalRGB[COL_CORNFLOWERBLUE]);
+					dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x*5], dawnBringerPalRGB[COL_CORNFLOWERBLUE]);*/
 			}
 		}
 	}

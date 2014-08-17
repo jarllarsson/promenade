@@ -798,7 +798,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
         // test code
         //rigidbody.AddTorque(tdLF);
 
-        Debug.Log("a: "+tLF+"  stance: " + tstance + "  swing: " + tswing);
+       // Debug.Log("a: "+tLF+"  stance: " + tstance + "  swing: " + tswing);
         Debug.DrawLine(transform.position, transform.position + Mathf.Deg2Rad * tdLF, Color.red);
 
         // 3. Now loop through all legs in stance (N) and

@@ -104,14 +104,14 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	movDistDeviation *= movDistDeviation; // sqr
 
 	// IK
-	if (m_referenceControllers.size() < legFrames)
-	{
-		for (int i = 0; i < legFrames; i++)
-		{
-			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
-			m_referenceControllers.push_back(ReferenceLegMovementController(p_controller, lf));
-		}
-	}
+	//if (m_referenceControllers.size() < legFrames)
+	//{
+	//	for (int i = 0; i < legFrames; i++)
+	//	{
+	//		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
+	//		m_referenceControllers.push_back(ReferenceLegMovementController(p_controller, lf));
+	//	}
+	//}
 
 
 	// step through each lf and add score
@@ -251,4 +251,9 @@ double ControllerMovementRecorderComponent::evaluateFP()
 	if (movementSign == 0.0) movementSign = 1.0f;
 	double scoreInRightDir = max(0.0f, total.z * movementSign);
 	return scoreInRightDir;
+}
+
+void ControllerMovementRecorderComponent::addLegReferenceController(ReferenceLegMovementController& p_refController)
+{
+	m_referenceControllers.push_back(p_refController);
 }

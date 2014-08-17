@@ -70,7 +70,9 @@ public:
 
 	void setUpperLegLengths(std::vector<float>& p_lengths) { m_upperLegsLen = p_lengths; }
 	void setLowerLegLengths(std::vector<float>& p_lengths) { m_lowerLegsLen = p_lengths; }
-                      
+                 
+	void addLegReferenceController(ReferenceLegMovementController& p_refController);
+
     // Return standard deviation of fv term
     // as small deviations as possible
 	double evaluateFV();
