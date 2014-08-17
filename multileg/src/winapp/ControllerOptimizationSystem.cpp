@@ -154,7 +154,9 @@ void ControllerOptimizationSystem::processEntity(artemis::Entity &e)
 	recorder->fv_calcStrideMeanVelocity(controller, m_controllerSystemRef);
 	recorder->fr_calcRotationDeviations(controller, m_controllerSystemRef);
 	recorder->fh_calcHeadAccelerations(controller, m_controllerSystemRef);
-	recorder->fd_calcReferenceMotion(controller, m_controllerSystemRef, m_time, world->getDelta(), dbgDrawer());
+	DebugDrawBatch* drawer = NULL;
+	if (controller == m_optimizableControllers[0]) drawer = dbgDrawer();
+	recorder->fd_calcReferenceMotion(controller, m_controllerSystemRef, m_time, world->getDelta(), drawer);
 	recorder->fp_calcMovementDistance(controller, m_controllerSystemRef);
 }
 

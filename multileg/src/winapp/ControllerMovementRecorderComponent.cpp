@@ -132,22 +132,31 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 		//Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z - m_ghostStart.z + m_mycontrollerStart.z);
 		//glm::vec3 wantedWPos(lfPos.x, lf->m_height, lfPos.z);
 		glm::vec3 wantedWPos(0.0f, lf->m_height, ghostDistVec.z);
+		glm::vec3 lfPosOptHeight(lfPos.x, lf->m_height, lfPos.z);
 		unsigned int numLegs = lf->m_legs.size();
 		ReferenceLegMovementController* refLegMovement = &m_referenceControllers[i];
 		for (unsigned int n = 0; n < numLegs; n++)
 		{
 			refLegMovement->updateRefPositions(n, wantedWPos, lf->m_height, m_upperLegsLen[i], m_lowerLegsLen[i], p_dt, p_drawer);
 
-			glm::vec3 footRefToFoot = (p_system->getFootPos(lf, n) - wantedWPos) - (refLegMovement->m_feet[n] - ghostDistVec);
-			glm::vec3 hipRefToHip = (p_system->getJointInnerPos(lf->m_hipJointId[n]) - wantedWPos) - (refLegMovement->m_IK.getHipPos() - ghostDistVec);
-			glm::vec3 kneeRefToKnee = (p_system->getJointOuterPos(lf->m_hipJointId[n]) - wantedWPos) - (refLegMovement->m_knees[n] - ghostDistVec);
-			/*Debug.DrawLine(m_myLegFrame.m_feet[i].transform.position,
-				m_myLegFrame.m_feet[i].transform.position - footRefToFoot, Color.white);
-			Debug.DrawLine(m_myController.m_joints[(i * 2) + 1].transform.position,
-				m_myController.m_joints[(i * 2) + 1].transform.position - hipRefToHip, Color.yellow*2.0f);
-			Debug.DrawLine(m_myController.m_joints[(i + 1) * 2].transform.position,
-				m_myController.m_joints[(i + 1) * 2].transform.position - kneeRefToKnee, Color.yellow);
-			*/
+			glm::vec3 charFootPos = p_system->getFootPos(lf, n);
+			glm::vec3 charHipPos = p_system->getJointInnerPos(lf->m_hipJointId[n]);
+			glm::vec3 charKneePos = p_system->getJointOuterPos(lf->m_hipJointId[n]);
+
+			// Take the local(in lf space) limb pos of the controller and subtract
+			// with the local limb pos of the ghost.
+			glm::vec3 footRefToFoot =	(charFootPos - lfPosOptHeight)	-	(refLegMovement->m_feet[n]		  - wantedWPos);
+			glm::vec3 hipRefToHip =		(charHipPos  - lfPosOptHeight)	-	(refLegMovement->m_IK.getHipPos() - wantedWPos);
+			glm::vec3 kneeRefToKnee =	(charKneePos - lfPosOptHeight)	-	(refLegMovement->m_knees[n]		  - wantedWPos);
+			
+			// Draw dists
+			if (p_drawer!=NULL)
+			{
+				p_drawer->drawLine(charFootPos, charFootPos - footRefToFoot, dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_WHITE]);
+				p_drawer->drawLine(charHipPos, charHipPos - hipRefToHip, dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_YELLOW]);
+				p_drawer->drawLine(charKneePos, charKneePos - kneeRefToKnee, dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_YELLOW]);
+			}
+			
 			lenFt += (double)glm::sqrLength(footRefToFoot);
 			lenHips += (double)glm::sqrLength(hipRefToHip);
 			lenKnees += (double)glm::sqrLength(kneeRefToKnee);
@@ -161,7 +170,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	lenDist *= lenDist; // sqr
 	*/
 
-	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.1 * movDistDeviation);
+	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.0 * movDistDeviation);
 }
 
 void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)

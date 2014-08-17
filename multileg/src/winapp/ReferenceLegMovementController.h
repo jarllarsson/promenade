@@ -101,7 +101,7 @@ public:
 		m_oldFeetPos[p_legIdx] = m_feet[p_legIdx];
 		m_IK.solve(m_feet[p_legIdx], baseOffset + lfPlaneBase + lfHeightBase, p_uLegLen, p_lLegLen, p_drawer);
 		//
-		m_knees[p_legIdx] = m_IK.getKneePos() + lfPlaneBase;
+		m_knees[p_legIdx] = m_IK.getKneePos()/* + lfPlaneBase (already world)*/;
 	}
 
 

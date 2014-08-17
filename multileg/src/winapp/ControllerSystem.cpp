@@ -144,11 +144,11 @@ void ControllerSystem::applyTorques( float p_dt )
 			glm::vec3 t = m_jointTorques[i];
 			if (glm::length(t)>tLim) 
 				t = glm::normalize(t)*tLim;
-			if (glm::length(t) > 0)
-			{
-				glm::vec3 pos = getJointPos(i);
-				dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
- 			}
+			//if (glm::length(t) > 0)
+			//{
+			//	glm::vec3 pos = getJointPos(i);
+			//	dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+ 			//}
 			m_jointRigidBodies[i]->applyTorque(btVector3(t.x, t.y, t.z));
 		}
 	}

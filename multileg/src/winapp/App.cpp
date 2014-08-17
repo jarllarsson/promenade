@@ -96,7 +96,7 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_time = 0.0;
 	m_restart = false;
 	//
-	m_triggerPause = true;
+	m_triggerPause = false;
 	//
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 	m_gravityStat = true;
@@ -257,7 +257,7 @@ void App::run()
 		int chars = 1;
 		bool lockPos = true;
 #ifdef OPTIMIZATION
-		chars=10;
+		chars=20;
 #endif
 		for (int x = 0; x < chars; x++) // number of characters
 		{
@@ -279,7 +279,7 @@ void App::run()
 
 			if (lockPos)
 			{
-				lfRB->setLinearFactor(glm::vec3(0,0,1));
+				lfRB->setLinearFactor(glm::vec3(1,0,1));
 				lfRB->setAngularFactor(glm::vec3(0, 0, 0));
 			}
 
@@ -476,15 +476,27 @@ void App::run()
 					}
 				}
 				// params	
+				for (int i = 0; i < optimizationSystem->getEntityCount(); i++)
+				{
+					std::vector<float>* p = optimizationSystem->getCurrentParamsOf(i);
+					vals = p->size();
+					for (int i = 0; i < vals- 1; i++)
+					{
+						m_debugDrawBatch->drawLine(
+							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -20.0f + ((*p)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
+							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -20.0f + ((*p)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
+							Color3f((float)i/(float)vals, 0.0f, 1.0f-(float)i/(float)vals));
+					}
+				}
 				if (bestParams != NULL)
 				{
 					vals = bestParams->size();
-					for (int i = 0; i < bestParams->size() - 1; i++)
+					for (int i = 0; i < vals - 1; i++)
 					{
 						m_debugDrawBatch->drawLine(
 							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -20.0f + ((*bestParams)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
 							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -20.0f + ((*bestParams)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
-							Color3f(0.0f, 0.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f));
+							Color3f(0.0f, 0.0f, 0.0f));
 					}
 				}
 #endif
