@@ -138,17 +138,23 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 10000.0f;
+		float tLim = 100000.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3 t = m_jointTorques[i];
 			if (glm::length(t)>tLim) 
 				t = glm::normalize(t)*tLim;
-			//if (glm::length(t) > 0)
-			//{
-			//	glm::vec3 pos = getJointPos(i);
-			//	dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
- 			//}
+			if (glm::length(t) > 0)
+			{
+				glm::vec3 pos = getJointPos(i);
+				dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+ 			}
+			// The torque being applied is:
+			// clockwise along x axis = +x
+			// clockwise along y axis = +y
+			// clockwise along z axis = +z
+			// Where clockwise along an axis is when watching the rotation at the "top" of the axis down towards origo.
+			// Counter-clockwise is then the opposite (-x,-y and -z)
 			m_jointRigidBodies[i]->applyTorque(btVector3(t.x, t.y, t.z));
 		}
 	}
@@ -657,10 +663,10 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 	
 	// Apply them to the leg frames, also
 	// feed back corrections for hip joints
-	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	/*for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
 		applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
-	}
+	}*/
 }
 
 void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, 
@@ -1046,22 +1052,26 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			if (p_controllerIdx == 0) drawer = dbgDrawer();
 			ik->solve(refDesiredFootPos, refHipPos,
 				m_jointLengths[pdChain->getUpperJointIdx()],
-				m_jointLengths[pdChain->getLowerJointIdx()] + 0.1847207f/*+m_jointLengths[pdChain->getFootJointIdx()]*/, drawer);
+				m_jointLengths[pdChain->getLowerJointIdx()] + m_jointLengths[pdChain->getFootJointIdx()], drawer);
 			// For each PD in leg
 			for (unsigned int x = 0; x < pdChain->getSize(); x++)
 			{
 				float sagittalAngle = 0.0f;
 				// Fetch correct angle based on segment type
+				// remember that the legs points "downwards when angle=0"
+				// 90 forward = -HALFPI (counterclockwise)
+				// 90 deg backward = HALFPI (clockwise)
+				// But the ik has other angle space 
 				if (x == pdChain->getUpperLegSegmentIdx())
-					sagittalAngle = ik->getUpperLegAngle() + PI*0.5f;
+					sagittalAngle = -(ik->getUpperLegAngle() + PI*0.5f);
 				else if (x == pdChain->getLowerLegSegmentIdx())
-					sagittalAngle = ik->getLowerWorldLegAngle() + PI*0.5f;
+					sagittalAngle = -(ik->getLowerWorldLegAngle() + PI*0.5f);
 				else if (x == pdChain->getFootIdx())
 					sagittalAngle = getDesiredFootAngle(n, lf, p_phi);
 				//
 				unsigned jointIdx = pdChain->m_jointIdxChain[x];
 				// Calculate angle to leg frame space
-				glm::quat goal = currentOrientationQuat * glm::quat(glm::vec3(-sagittalAngle, 0.0f, 0.0f));
+				glm::quat goal = currentOrientationQuat * glm::quat(glm::vec3(sagittalAngle, 0.0f, 0.0f));
 				glm::quat current = glm::quat_cast(m_jointWorldTransforms[jointIdx]);
 				// Drive PD using angle
 				glm::vec3 torque = pdChain->m_PDChain[x].drive(current, goal, p_dt);

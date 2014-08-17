@@ -198,10 +198,10 @@ public:
 			m_FDHVComponents = glm::vec4(0.0f);
 				//glm::vec4(-0.1f, 0.2f, 0.0f, 0.1f);
 			//
-			m_legPDsKp = 3.0f;
-			m_legPDsKd = 0.3f;
+			m_legPDsKp = 30.0f;
+			m_legPDsKd = 3.3f;
 			// foot
-			m_tuneToeOffAngle=HALFPI;				
+			m_tuneToeOffAngle=HALFPI/9.0f;				
 			m_tuneFootStrikeAngle = -HALFPI/9.0f;
 		}
 

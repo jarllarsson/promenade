@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -280,7 +280,7 @@ void App::run()
 			if (lockPos)
 			{
 				lfRB->setLinearFactor(glm::vec3(1,0,1));
-				lfRB->setAngularFactor(glm::vec3(0, 0, 0));
+				lfRB->setAngularFactor(glm::vec3(1,0,1));
 			}
 
 
@@ -326,7 +326,7 @@ void App::run()
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 						//lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
-						segmentMass = 1.0f;
+						segmentMass = 5.0f;
 						boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
 #ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(uLegHeight);
@@ -339,7 +339,7 @@ void App::run()
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 1.0f;
+						segmentMass = 2.0f;
 						boxSize = glm::vec3(0.25f, lLegHeight, 0.25f);
 #ifdef OPTIMIZATION
 						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
@@ -350,11 +350,11 @@ void App::run()
 						partName = " foot";
 						boxSize = glm::vec3(0.571618f, footHeight, 0.8f);
 						jointZOffsetInChild = (boxSize.z-0.3f)*0.5f;
-						//lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
-						//upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
-						lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 0.1f;
+						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
+						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
+						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						segmentMass = 2.1f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");

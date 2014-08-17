@@ -140,8 +140,8 @@ double MathHelp::dlerp(double p_a, double p_b, double p_t)
 void MathHelp::quatToAngleAxis(const glm::quat& p_quat, float& p_outAngle, glm::vec3& p_outAxis)
 {
 	glm::quat q1 = p_quat;
-	if (p_quat.w > 1) q1=glm::normalize(p_quat); // if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
-	p_outAngle = 2.0f * acos(q1.w);
+	if (q1.w > 1) q1=glm::normalize(p_quat); // if w>1 acos and sqrt will produce errors, this cant happen if quaternion is normalised
+	p_outAngle = 2.0f * std::acos(q1.w);
 	double s = sqrt(1.0 - (double)q1.w * (double)q1.w); // assuming quaternion normalised then w is less than 1, so term always positive.
 	if (s < 0.001)
 	{ // test to avoid divide by zero, s is always positive due to sqrt
@@ -173,7 +173,7 @@ float MathHelp::satan2(float p_x, float p_y)
 {
 	float a = 0.0f;
 	if (p_x != 0.0f && p_y != 0.0f)
-		a = atan2(p_x, p_y); // range [-pi, +pi] radians.
+		a = std::atan2(p_x, p_y); // range [-pi, +pi] radians.
 	return a;
 }
 

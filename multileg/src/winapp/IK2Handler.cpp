@@ -25,6 +25,7 @@ void IK2Handler::solve(const glm::vec3& p_footPos, const glm::vec3& p_upperLegJo
 
 	// Vector between foot and hip
 	glm::vec3 topToFoot = footPos-upperLegPos;
+	//topToFoot.z *= -1;
 	//topToFoot.y *= -1;
 
 
@@ -56,8 +57,8 @@ void IK2Handler::solve(const glm::vec3& p_footPos, const glm::vec3& p_upperLegJo
 // 			int i = 0;
 		upperLegAngle = (float)(kneeFlip)* acosVal + offsetAngle;
 		// second angle
-		glm::vec2 newLeg(uB * cos(upperLegAngle), uB * sin(upperLegAngle));
-		lowerLegAngle = MathHelp::satan2(topToFoot.y - newLeg.y, topToFoot.z - newLeg.x) - upperLegAngle;
+		glm::vec2 newLeg(uB * std::cos(upperLegAngle), uB * std::sin(upperLegAngle));
+		lowerLegAngle = (MathHelp::satan2(topToFoot.y - newLeg.y, topToFoot.z - newLeg.x) - upperLegAngle);
 	}
 	else // otherwise, straight leg
 	{
@@ -72,8 +73,8 @@ void IK2Handler::solve(const glm::vec3& p_footPos, const glm::vec3& p_upperLegJo
 	m_lowerAngle = lowerAngleW;
 
 	// Debug draw bones
-	m_kneePos = glm::vec3(0.0f, uB * sin(upperLegAngle), uB * cos(upperLegAngle));
-	m_endPos = glm::vec3(0.0f, lB * sin(lowerAngleW), lB * cos(lowerAngleW));
+	m_kneePos = glm::vec3(0.0f, uB * std::sin(upperLegAngle), uB * std::cos(upperLegAngle));
+	m_endPos = glm::vec3(0.0f, lB * std::sin(lowerAngleW), lB * std::cos(lowerAngleW));
 	//
 	m_kneePos += upperLegPos;
 	m_endPos += m_kneePos;
