@@ -957,7 +957,8 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// with current real-world scenarios.
 	glm::vec3 tLF = tstance + tswing + tspine;
 	m_jointTorques[lfJointIdx] = tLF;
-	dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tLF, dawnBringerPalRGB[COL_PURPLE], dawnBringerPalRGB[COL_YELLOW]);
+	if (p_controllerId==0)
+		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tLF, dawnBringerPalRGB[COL_PURPLE], dawnBringerPalRGB[COL_YELLOW]);
 
 	// 2. Calculate a desired torque, tdLF, using the previous current
 	// torque, tLF, and a PD-controller driving towards the 
