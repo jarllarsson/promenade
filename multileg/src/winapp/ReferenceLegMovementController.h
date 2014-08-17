@@ -20,9 +20,10 @@
 class ReferenceLegMovementController
 {
 public:
-	ReferenceLegMovementController(ControllerComponent* p_controller, ControllerComponent::LegFrame* p_lf)
+	ReferenceLegMovementController(ControllerComponent* p_controller, ControllerComponent::LegFrame* p_lf, 
+		unsigned int p_legCount=2)
 	{
-		unsigned int legs = p_lf->m_legs.size();
+		unsigned int legs = p_legCount;
 		for (int i = 0; i < legs; i++)
 		{
 			m_feet.push_back(glm::vec3());
@@ -35,6 +36,19 @@ public:
 		m_stepHeightTraj = p_lf->m_stepHeighTraj;
 		m_player = p_controller->m_player;
 	}
+
+	ReferenceLegMovementController(const ReferenceLegMovementController& p_copy)
+	{
+		m_feet			= p_copy.m_feet;
+		m_knees			= p_copy.m_knees;
+		m_oldFeetPos	= p_copy.m_oldFeetPos;
+		m_stepCycles	= p_copy.m_stepCycles;
+		m_player		= p_copy.m_player;
+		m_stepLength		= p_copy.m_stepLength;
+		m_stepHeightTraj	= p_copy.m_stepHeightTraj;
+		m_liftPos			= p_copy.m_liftPos;
+	}
+
 	virtual ~ReferenceLegMovementController() {}
 
 	IK2Handler				m_IK;

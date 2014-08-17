@@ -40,7 +40,7 @@
 #include "PositionRefSystem.h"
 #include "ConstraintSystem.h"
 #include "ControllerOptimizationSystem.h"
-#include <ReferenceLegMovementController.h>
+#include "ReferenceLegMovementController.h"
 
 
 
@@ -404,10 +404,9 @@ void App::run()
 			{
 				if (x == 0 && r>=baseReferenceMovementControllers.size())
 				{
-					baseReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r));
+					baseReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r)));
 				}
-				else
-					recComp->addLegReferenceController(baseReferenceMovementControllers[r]);
+				recComp->addLegReferenceController(baseReferenceMovementControllers[r]);
 			}
 			controller.addComponent(recComp);
 			
@@ -532,7 +531,11 @@ void App::run()
 		#endif
 	#endif
 	#ifdef OPTIMIZATION
-				if (m_timeScale>0) optimizationSystem->incSimTick();
+				if (m_timeScale > 0)
+				{
+					optimizationSystem->incSimTick();
+					optimizationSystem->stepTime((double)m_timeScale*fixedStep);
+				}
 				debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
 				if (optimizationSystem->isSimCompleted())
 				{

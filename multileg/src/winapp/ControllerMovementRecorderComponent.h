@@ -64,7 +64,7 @@ public:
 	void fh_calcHeadAccelerations(ControllerComponent* p_controller, ControllerSystem* p_system);
 
 	void fd_calcReferenceMotion(ControllerComponent* p_controller, ControllerSystem* p_system, 
-		float p_time, float p_dt, DebugDrawBatch* p_drawer);
+		double p_time, float p_dt, DebugDrawBatch* p_drawer);
 
 	void fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system);
 

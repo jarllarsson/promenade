@@ -273,3 +273,9 @@ std::vector<float> ControllerOptimizationSystem::getParamsOf(unsigned int p_idx)
 	}
 	return res;
 }
+
+
+void ControllerOptimizationSystem::stepTime(double p_dt)
+{
+	m_time += p_dt;
+}

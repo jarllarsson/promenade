@@ -78,6 +78,7 @@ public:
 	static void resetTestCount();
 	int getCurrentSimTicks();
 	void incSimTick();
+	void stepTime(double p_dt);
 	bool isSimCompleted();	
 	void evaluateAll();
 	std::vector<float>& getWinnerParams();
@@ -101,5 +102,5 @@ private:
 
 	//bool m_firstControllerAdded;
 	bool m_inited;
-	float m_time;
+	double m_time;
 };
