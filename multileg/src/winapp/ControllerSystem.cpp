@@ -660,7 +660,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 
 	//// Compute the variants of torque and write to torque array
 	//resetNonFeedbackJointTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	//computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 
 	
@@ -856,7 +856,8 @@ glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, con
 	// the current height y only works for up=0,1,0
 	// so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
 	// but for now, a float is OK
-	return p_up * p_lf->m_FhPD.drive(hLF - currentHeight.y, p_dt); // PD
+	float fh=p_lf->m_FhPD.drive(max(0.0f,hLF - currentHeight.y), p_dt);// PD
+	return p_up * fh;
 }
 
 glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
