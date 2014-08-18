@@ -79,7 +79,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 	{
 		saveJointMatrix(i);
-		m_jointTorques[i] = glm::vec3(0.0f);
+		//m_jointTorques[i] = glm::vec3(0.0f);
 	}
 	int controllerCount = (int)m_controllers.size();
 	if (m_controllers.size()>0)
@@ -138,7 +138,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 100000.0f;
+		float tLim = 200.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3 t = m_jointTorques[i];
@@ -657,16 +657,17 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 	unsigned int torqueIdxOffset = p_controller->getTorqueListOffset();
 
 	//// Compute the variants of torque and write to torque array
-	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	//computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	//resetNonFeedbackJointTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	//computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 
 	
 	// Apply them to the leg frames, also
 	// feed back corrections for hip joints
-	/*for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
 		applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
-	}*/
+	}
 }
 
 void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, 
@@ -988,6 +989,7 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	glm::vec3 current = MathHelp::transformDirection(glm::mat4_cast(currentOrientation), glm::vec3(0.0f, 10.0f, 0.0f));
 	if (p_controllerId == 0)
 	{
+		/*
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + current, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_MOSSGREEN]);
 		dbgDrawer()->drawLine(getLegFramePosition(lf) + current, getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
@@ -995,6 +997,7 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + fram, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + chgr, dawnBringerPalRGB[COL_RED] * 0.8f, dawnBringerPalRGB[COL_RED] * 0.8f);
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + cfram, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f);
+		*/
 		// torque
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tdLF, dawnBringerPalRGB[COL_ORANGE], dawnBringerPalRGB[COL_YELLOW]);
 
@@ -1217,4 +1220,34 @@ glm::vec3 ControllerSystem::getJointOuterPos(unsigned int p_jointIdx)
 glm::vec3 ControllerSystem::getJointInnerPos(unsigned int p_jointIdx)
 {
 	return MathHelp::toVec3(m_jointWorldInnerEndpoints[p_jointIdx]);
+}
+
+
+void ControllerSystem::resetNonFeedbackJointTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
+	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
+{
+	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	{
+		unsigned int lfIdx = i;
+		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(lfIdx);
+		unsigned int legCount = (unsigned int)lf->m_legs.size();
+		// for each leg
+		for (unsigned int n = 0; n < legCount; n++)
+		{
+			/*Use the PD chain info to find the joints of which to reset the torque*/
+			ControllerComponent::Leg* leg = &lf->m_legs[n];
+			ControllerComponent::PDChain* pdChain = leg->getPDChain();
+			// For each PD in leg
+			for (unsigned int x = 0; x < pdChain->getSize(); x++)
+			{
+				if (x!= pdChain->getUpperLegSegmentIdx())
+				{
+					unsigned jointIdx = pdChain->m_jointIdxChain[x];
+					// Add to torque for joint
+					(*p_outTVF)[jointIdx] = glm::vec3(0.0f);
+				}
+			}
+		}
+	}
+
 }

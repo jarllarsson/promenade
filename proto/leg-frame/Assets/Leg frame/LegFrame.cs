@@ -709,7 +709,6 @@ public class LegFrame : MonoBehaviour, IOptimizable
         if (footPos.z <= 0) { Dz = 0; dbgCol = Color.blue*0.5f; } else { dbgCol = Color.blue; }
 
         //Debug.DrawLine(transform.position, transform.position + new Vector3(footPos.x,1.0f,footPos.z),dbgCol);
-
         float FDx = m_tuneFD[p_legId, Dx].x;
         float FDz = m_tuneFD[p_legId, Dz].z;
         //Debug.DrawLine(transform.position, transform.position + new Vector3(FDx, 0.0f, FDz), Color.magenta,1.0f);
@@ -800,6 +799,9 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
        // Debug.Log("a: "+tLF+"  stance: " + tstance + "  swing: " + tswing);
         Debug.DrawLine(transform.position, transform.position + Mathf.Deg2Rad * tdLF, Color.red);
+
+
+        Debug.Log(Mathf.Deg2Rad * tLF);
 
         // 3. Now loop through all legs in stance (N) and
         // modify their torques in the vector according

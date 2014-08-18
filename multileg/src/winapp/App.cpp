@@ -279,8 +279,8 @@ void App::run()
 
 			if (lockPos)
 			{
-				lfRB->setLinearFactor(glm::vec3(1,0,1));
-				lfRB->setAngularFactor(glm::vec3(1,0,1));
+				lfRB->setLinearFactor(glm::vec3(1,1,1));
+				lfRB->setAngularFactor(glm::vec3(1,1,1));
 			}
 
 

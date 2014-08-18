@@ -270,17 +270,19 @@ public class Controller : MonoBehaviour, IOptimizable
         Vector3[] tPD = computePDTorques(phi);
         Vector3[] tCGVF = computeCGVFTorques(phi, p_dt);
         Vector3[] tVF = computeVFTorques(phi,p_dt);
+        Vector3[] tSum = new Vector3[m_jointTorques.Length];
+
         // Sum them
-        for (int i = 0; i < m_jointTorques.Length; i++)
+        for (int i = 0; i < tSum.Length; i++)
         {
-            m_jointTorques[i] = tPD[i] + tVF[i] + tCGVF[i];
+            tSum[i] = tPD[i] + tVF[i] + tCGVF[i];
         }
 
         // Apply them to the leg frames, also
         // feed back corrections for hip joints
         for (int i = 0; i < m_legFrames.Length; i++)
         {
-           m_jointTorques = m_legFrames[i].applyNetLegFrameTorque(m_jointTorques, phi);
+            m_jointTorques = m_legFrames[i].applyNetLegFrameTorque(tSum, phi);
         }
     }
 
