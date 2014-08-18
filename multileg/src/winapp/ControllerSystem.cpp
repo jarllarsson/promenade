@@ -79,7 +79,8 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 	{
 		saveJointMatrix(i);
-		//m_jointTorques[i] = glm::vec3(0.0f);
+		m_oldJointTorques[i] = m_jointTorques[i];
+		m_jointTorques[i] = glm::vec3(0.0f);
 	}
 	int controllerCount = (int)m_controllers.size();
 	if (m_controllers.size()>0)
@@ -381,6 +382,7 @@ unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, Tr
 {
 	m_jointRigidBodies.push_back(p_jointRigidBody->getRigidBody());
 	m_jointTorques.push_back(glm::vec3(0.0f));
+	m_oldJointTorques.push_back(glm::vec3(0.0f));
 	glm::mat4 matPosRot = p_jointTransform->getMatrixPosRot();
 	m_jointWorldTransforms.push_back(matPosRot);
 	m_jointLengths.push_back(p_jointTransform->getScale().y);
@@ -801,7 +803,8 @@ bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf,
 	bool stance = stepCycle->isInStance(p_phi);
 	if (!stance)
 	{
-		bool isTouchingGround = isFootStrike(p_lf,p_legIdx);
+		bool isTouchingGround = false;
+			//isFootStrike(p_lf,p_legIdx);
 		if (isTouchingGround)
 		{
 			float swing = stepCycle->getSwingPhase(p_phi);
@@ -943,18 +946,18 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 		unsigned int jointId = lf->m_hipJointId[i];
 		if (isInControlledStance(lf, i, p_phi))
 		{
-			tstance += m_jointTorques[jointId];
+			tstance += m_oldJointTorques[jointId];
 			stanceLegBuf[stanceCount] = jointId;
 			stanceCount++;
 		}
 		else
-			tswing += m_jointTorques[jointId];
+			tswing += m_oldJointTorques[jointId];
 	}
 
 	// Spine if it exists
 	int spineIdx = (int)lf->m_spineJointId;
 	if (spineIdx >= 0)
-		tspine = m_jointTorques[(unsigned int)spineIdx];
+		tspine = m_oldJointTorques[(unsigned int)spineIdx];
 
 	// 1. Calculate current torque for leg frame:
 	// tLF = tstance + tswing + tspine.

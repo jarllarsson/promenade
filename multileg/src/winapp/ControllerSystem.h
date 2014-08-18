@@ -61,6 +61,7 @@ private:
 	std::vector<glm::vec3>		m_VFs;
 	// Joint run-time data
 	std::vector<glm::vec3>		m_jointTorques;
+	std::vector<glm::vec3>		m_oldJointTorques;
 	std::vector<btRigidBody*>	m_jointRigidBodies;
 	std::vector<RigidBodyComponent*> m_rigidBodyRefs;
 	std::vector<glm::mat4>		m_jointWorldTransforms;
