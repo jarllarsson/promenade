@@ -7,10 +7,10 @@
 
 ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 {
-	m_fdWeight = 100.0f; // deviation from reference motion
-	m_fvWeight = 5.0f;   // deviation from desired speed
-	m_fhWeight = 0.0f;	 // acceleration of head
-	m_frWeight = 0.0f;	 // whole body rotation
+	m_fdWeight = 1000.0f; // deviation from reference motion
+	m_fvWeight = 50.0f;   // deviation from desired speed
+	m_fhWeight = 0.5f;	 // acceleration of head
+	m_frWeight = 5.0f;	 // whole body rotation
 	m_fpWeight = 0.0f;	 // movement distance
 }
 
@@ -170,7 +170,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	lenDist *= lenDist; // sqr
 	*/
 
-	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.0 * movDistDeviation);
+	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.2 * movDistDeviation);
 }
 
 void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)

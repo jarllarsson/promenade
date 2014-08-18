@@ -145,7 +145,7 @@ void ControllerSystem::applyTorques( float p_dt )
 			glm::vec3 t = m_jointTorques[i];
 			if (glm::length(t)>tLim) 
 				t = glm::normalize(t)*tLim;
-			if (glm::length(t) > 0)
+			if (false && glm::length(t) > 0)
 			{
 				glm::vec3 pos = getJointPos(i);
 				dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
@@ -660,7 +660,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 
 	//// Compute the variants of torque and write to torque array
 	//resetNonFeedbackJointTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	//computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 
 	
