@@ -147,7 +147,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 4000.0f;
+		float tLim = 200.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3 t = m_jointTorques[i];
@@ -763,20 +763,19 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
 	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
-	if (m_useVFTorque)
+	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
-		for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
+		calculateLegFrameNetLegVF(p_controllerIdx, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
+		// Begin calculating Jacobian transpose for each leg in leg frame
+		unsigned int legCount = (unsigned int)lf->m_legs.size();	
+		for (unsigned int n = 0; n < legCount; n++)
 		{
-			ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
-			calculateLegFrameNetLegVF(p_controllerIdx, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
-			// Begin calculating Jacobian transpose for each leg in leg frame
-			unsigned int legCount = (unsigned int)lf->m_legs.size();	
-			for (unsigned int n = 0; n < legCount; n++)
-			{
-				if (m_useVFTorque) computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
-				if (m_useGCVFTorque && isInControlledStance(lf, n, p_phi))
-					computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
-			}
+			if (m_useVFTorque) 
+				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				
+			if (m_useGCVFTorque && isInControlledStance(lf, n, p_phi))
+				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 		}
 	}
 }
@@ -899,7 +898,7 @@ glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, con
 glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up)
 {
 	float hLF = p_lf->m_heightLFTraj.lerpGet(p_phi);
-	glm::vec3 currentHeight = p_locationStat.m_worldPos - p_locationStat.m_currentGroundPos;
+	glm::vec3 currentHeight = p_locationStat.m_currentGroundPos-p_locationStat.m_worldPos;
 	// the current height y only works for up=0,1,0
 	// so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
 	// but for now, a float is OK
@@ -1099,6 +1098,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 		glm::quat currentOrientationQuat = MathHelp::getMatrixRotation(getLegFrameTransform(lf));
 		glm::mat4 currentOrientation = glm::mat4_cast(currentOrientationQuat);
 		unsigned int legCount = (unsigned int)lf->m_legs.size();
+		LocationStat* locationStat = &m_controllerLocationStats[p_controllerIdx];
 		// for each leg
 		for (unsigned int n = 0; n < legCount; n++)
 		{
@@ -1111,7 +1111,9 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			ControllerComponent::PDChain* pdChain = leg->getPDChain();
 			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
+			refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
+			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
 			// Fetch upper- and lower leg length and solve IK
 			IK2Handler* ik = &lf->m_legIK[n];
 			DebugDrawBatch* drawer = NULL;

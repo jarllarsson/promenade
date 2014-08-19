@@ -22725,7 +22725,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11400024, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_usePDTorque
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 15300000, guid: b04916b83cbc8d1468ad9ea9f2b496ca, type: 2}
       propertyPath: m_AngularZMotion
@@ -48847,7 +48847,7 @@ MonoBehaviour:
   m_desiredVelocity: {x: 0, y: 0, z: 0}
   m_debugYOffset: 120
   m_headAcceleration: {x: 0, y: 0, z: 0}
-  m_usePDTorque: 1
+  m_usePDTorque: 0
   m_useVFTorque: 1
   m_optimizePDs: 0
   m_time: 0

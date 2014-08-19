@@ -626,6 +626,7 @@ public class LegFrame : MonoBehaviour, IOptimizable
     {
         float hLF=m_tuneLFHeightTraj.getValAt(p_phi);
         m_Fh = p_up * m_heightForceCalc.drive(hLF - p_currentH, p_dt);
+		int i = 0;
     }
 
     public void calculateFgravcomp(int p_legSegmentId, Rigidbody p_legSegment)
