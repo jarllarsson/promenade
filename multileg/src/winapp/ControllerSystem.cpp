@@ -13,6 +13,14 @@
 #include "RenderComponent.h"
 #include "PositionRefComponent.h"
 
+bool ControllerSystem::m_useVFTorque=true;
+bool ControllerSystem::m_useGCVFTorque=true;
+bool ControllerSystem::m_usePDTorque=true;
+bool ControllerSystem::m_useLFFeedbackTorque = true;
+bool ControllerSystem::m_dbgShowVFVectors = true;
+bool ControllerSystem::m_dbgShowGCVFVectors = true;
+bool ControllerSystem::m_dbgShowTAxes = true;
+
 
 ControllerSystem::~ControllerSystem()
 {
@@ -139,13 +147,13 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 200.0f;
+		float tLim = 4000.0f;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3 t = m_jointTorques[i];
 			if (glm::length(t)>tLim) 
 				t = glm::normalize(t)*tLim;
-			if (false && glm::length(t) > 0)
+			if (m_dbgShowTAxes && glm::length(t) > 0)
 			{
 				glm::vec3 pos = getJointPos(i);
 				dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
@@ -660,18 +668,32 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 
 	//// Compute the variants of torque and write to torque array
 	//resetNonFeedbackJointTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	//computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	if (m_usePDTorque) computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 
 	
 	// Apply them to the leg frames, also
 	// feed back corrections for hip joints
-	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	if (m_useLFFeedbackTorque)
 	{
-		applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
+		for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+		{
+			applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
+		}
 	}
 }
 
+///-----------------------------------------------------------------------------------
+/// Calculate the torque needed for the Leg Frame in order to keep it on its orientation
+/// trajectory. This torque is feedbacked back through the stance legs, so this method
+/// will correct those limbs' torques.
+/// \param p_controllerIdx
+/// \param p_lf
+/// \param p_phi
+/// \param p_dt
+/// \param p_velocityStats
+/// \return void
+///-----------------------------------------------------------------------------------
 void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, 
 										 VelocityStat& p_velocityStats)
 {
@@ -705,8 +727,8 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			glm::vec3 fsw=calculateFsw(p_lf, i, p_phi, p_dt);
 			m_VFs[vfIdx] = calculateSwingLegVF(fsw); // Store force
 			//
-			if (p_controllerIdx == 0)
-				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_PINK], dawnBringerPalRGB[COL_PURPLE]);
+			//if (p_controllerIdx == 0)
+			//	dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_PINK], dawnBringerPalRGB[COL_PURPLE]);
 		}
 		else
 			// Stance force
@@ -719,14 +741,25 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			}	
 			glm::vec3 fd(calculateFd(p_controllerIdx,p_lf, i));
 			m_VFs[vfIdx] = calculateStanceLegVF(stanceLegs, fv, fh, fd); // Store force
-			if (p_controllerIdx == 0)
-				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_NAVALBLUE]);
+			//if (p_controllerIdx == 0)
+			//	dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_NAVALBLUE]);
 		}
 	}
 
 	delete[] legInStance;
 }
 
+///-----------------------------------------------------------------------------------
+/// Method for calculating torque (and adding results to torque-array) from the 
+/// previously defined Virtual Forces.
+/// \param p_outTVF
+/// \param p_controller
+/// \param p_controllerIdx
+/// \param p_torqueIdxOffset
+/// \param p_phi
+/// \param p_dt
+/// \return void
+///-----------------------------------------------------------------------------------
 void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
 	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
@@ -740,8 +773,8 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 			unsigned int legCount = (unsigned int)lf->m_legs.size();	
 			for (unsigned int n = 0; n < legCount; n++)
 			{
-				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
-				if (isInControlledStance(lf, n, p_phi))
+				if (m_useVFTorque) computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				if (m_useGCVFTorque && isInControlledStance(lf, n, p_phi))
 					computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 		}
@@ -766,11 +799,11 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 		&m_jointWorldTransforms);		// All joint world transformations
 	CMatrix Jt = CMatrix::transpose(J);
 
-	glm::mat4 sum(0.0f);
+	/*glm::mat4 sum(0.0f);
 	for (unsigned int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
 	{
 		sum += m_jointWorldTransforms[g];
-	}
+	}*/
 	//DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
 	//DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
 	//DEBUGPRINT(((std::string("\n") + std::string(" VF: ") + ToString(vf)).c_str()));
@@ -781,13 +814,27 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 		// store torque
 		unsigned int localJointIdx = chain->m_jointIdxChain[m];
 		glm::vec3 vf = m_VFs[chain->m_vfIdxList[m]];
-		glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
+
+		// for visual force debug
+		// ========================================================================
+		if ((m_dbgShowGCVFVectors && p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
+			|| (m_dbgShowVFVectors && p_type == ControllerComponent::VFChainType::STANDARD_CHAIN))
+		{
+			glm::vec3 jpos = getJointPos(localJointIdx);
+			Color3f lineCol = dawnBringerPalRGB[COL_LIMEGREEN];
+			if (p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
+				lineCol = dawnBringerPalRGB[COL_PINK];
+			dbgDrawer()->drawLine(jpos, jpos + vf, lineCol);
+		}
+		// ========================================================================
+
+		//glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
 		glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
 		glm::vec3 addT = (chain->m_DOFChain)[m] * glm::dot(JVec, vf);
 		//
-		float ssum = JjVec.x + JjVec.y + JjVec.z;
+		//float ssum = JjVec.x + JjVec.y + JjVec.z;
 		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
-		ssum = JVec.x + JVec.y + JVec.z;
+		//ssum = JVec.x + JVec.y + JVec.z;
 		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
 		//bool vecnanchk = glm::isnan(addT) == glm::bool3(true, true, true);
 		(*p_outTVF)[localJointIdx/* + p_torqueIdxOffset*/] += addT;
@@ -1028,6 +1075,18 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 
 
 
+///-----------------------------------------------------------------------------------
+/// Calculate (and accumulate to torque-array) the torque from each joint's PD-driver. This is the torque that follows
+/// the IK animation movement (the IK drives the PD's). This torque is meant to retain
+/// the internal "shape" of a leg (ie. bent, or straight).
+/// \param p_outTVF
+/// \param p_controller
+/// \param p_controllerIdx
+/// \param p_torqueIdxOffset
+/// \param p_phi
+/// \param p_dt
+/// \return void
+///-----------------------------------------------------------------------------------
 void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
 	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {

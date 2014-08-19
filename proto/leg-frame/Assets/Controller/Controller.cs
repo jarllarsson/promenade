@@ -386,8 +386,9 @@ public class Controller : MonoBehaviour, IOptimizable
                             CMatrix Jt = CMatrix.Transpose(J);
 
                             //Debug.DrawLine(end, end + VF * 0.4f, Color.magenta);
-                            Color idxCol = new Color((float)n / (float)LegFrame.c_legCount, (float)m / (float)LegFrame.c_legSegments, (float)segIdx / (float)(LegFrame.c_legCount * LegFrame.c_legSegments));
-                            //Debug.DrawLine(end, transform.position, idxCol);
+                            /*Color idxCol = new Color((float)n / (float)LegFrame.c_legCount, (float)m / (float)LegFrame.c_legSegments, (float)segIdx / (float)(LegFrame.c_legCount * LegFrame.c_legSegments));
+                            Debug.DrawLine(end, end + VF, idxCol);
+                            Debug.DrawLine(end, end + VF, idxCol);*/
 
                             int jIdx = 0;
                             int extra = 0;
@@ -408,6 +409,7 @@ public class Controller : MonoBehaviour, IOptimizable
 
                                 // store torque
                                 int x = m_dofJointId[g];
+                                Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + VF, new Color(1.0f, 153.0f / 255.0f, 153.0f/ 255.0f));
                                 Vector3 addT = m_dofs[g] * Vector3.Dot(new Vector3(Jt[jIdx, 0], Jt[jIdx, 1], Jt[jIdx, 2]), VF);
                                 newTorques[x] += addT;
                                 jIdx++;
@@ -510,6 +512,7 @@ public class Controller : MonoBehaviour, IOptimizable
                         // store torque
                         int x = m_dofJointId[g];
                         Vector3 addT = m_dofs[g] * Vector3.Dot(new Vector3(Jt[jIdx, 0], Jt[jIdx, 1], Jt[jIdx, 2]), VF);
+                        Debug.DrawLine(m_joints[x].transform.position, m_joints[x].transform.position + VF, new Color(0.0f,153.0f/256.0f,0.0f));
                         newTorques[x] += addT;
                         jIdx++;
                         //Vector3 drawTorque = new Vector3(0.0f, 0.0f, -addT.x);

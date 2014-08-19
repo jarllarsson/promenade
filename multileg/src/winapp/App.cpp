@@ -142,7 +142,22 @@ void App::run()
 	std::vector<ReferenceLegMovementController> baseReferenceMovementControllers;
 #endif
 	double controllerSystemTiming = 0.0;
-	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTiming);
+	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(s)", Toolbar::DOUBLE, &controllerSystemTiming);
+	m_toolBar->addSeparator(Toolbar::PLAYER, "Torques");
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use LF feedbk", Toolbar::BOOL, &ControllerSystem::m_useLFFeedbackTorque);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use VF t", Toolbar::BOOL, &ControllerSystem::m_useVFTorque);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use GCVF t", Toolbar::BOOL, &ControllerSystem::m_useGCVFTorque);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use PD t", Toolbar::BOOL, &ControllerSystem::m_usePDTorque);
+	m_toolBar->addSeparator(Toolbar::PLAYER, "Visual Debug");
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL, &ControllerSystem::m_dbgShowVFVectors);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show GCVF vectors (pnk)", Toolbar::BOOL, &ControllerSystem::m_dbgShowGCVFVectors);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show torque axes (blu)", Toolbar::BOOL, &ControllerSystem::m_dbgShowTAxes);
+
+
+	ControllerSystem::m_useLFFeedbackTorque = true;
+	ControllerSystem::m_useVFTorque = true;
+	ControllerSystem::m_useGCVFTorque = true;
+	ControllerSystem::m_usePDTorque = false;
 	do
 	{
 		m_restart = false;
@@ -268,7 +283,7 @@ void App::run()
 			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset*2.0f);
-			float characterMass = 20.0f;
+			float characterMass = 50.0f;
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
@@ -338,7 +353,7 @@ void App::run()
 					{
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						upperAngleLim = glm::vec3(HALFPI*0.01f, 0.0f, 0.0f);
 						segmentMass = 2.0f;
 						boxSize = glm::vec3(0.25f, lLegHeight, 0.25f);
 #ifdef OPTIMIZATION
@@ -349,7 +364,7 @@ void App::run()
 					{
 						partName = " foot";
 						boxSize = glm::vec3(0.571618f, footHeight, 0.8f);
-						jointZOffsetInChild = (boxSize.z-0.3f)*0.5f;
+						jointZOffsetInChild = 0.0f*(boxSize.z-0.3f)*0.5f;
 						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);

@@ -50,6 +50,17 @@ public:
 		glm::vec3 m_worldPos;
 		glm::vec3 m_currentGroundPos;
 	};
+
+	// global debug
+	static bool m_useVFTorque;
+	static bool m_useGCVFTorque;
+	static bool m_usePDTorque;
+	static bool m_useLFFeedbackTorque;
+
+	static bool m_dbgShowVFVectors;
+	static bool m_dbgShowGCVFVectors;
+	static bool m_dbgShowTAxes;
+
 private:
 	artemis::ComponentMapper<ControllerComponent> controllerComponentMapper;
 	// Controller run-time data
@@ -79,9 +90,6 @@ public:
 		m_steps = 0;
 		//addComponentType<RigidBodyComponent>();
 		//m_dynamicsWorldPtr = p_dynamicsWorld;
-		m_useVFTorque = true;
-		m_useCGVFTorque = true;
-		m_usePDTorque = true;
 		m_perfRecorder = p_perfMeasurer;
 		m_timing = 0;
 	}
@@ -190,9 +198,6 @@ private:
 	// global variables
 	float m_runTime;
 	int m_steps;
-	bool m_useVFTorque;
-	bool m_useCGVFTorque;
-	bool m_usePDTorque;
 
 	// Dbg
 	MeasurementBin<float>* m_perfRecorder;

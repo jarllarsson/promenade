@@ -26,9 +26,9 @@ void Toolbar::init()
 	TwDefine(" GLOBAL contained=true ");
 	TwDefine(" GLOBAL fontsize=1 ");
 	TwDefine(" GLOBAL fontresizable=false ");
-	defineBarParams(PLAYER, dawnBringerPalRGB[COL_DARKBLUE], " position= '0 0' size='150 150' refresh=0.05");
-	defineBarParams(PERFORMANCE, dawnBringerPalRGB[COL_DARKBROWN], " position= '0 150' size='150 150' refresh=0.05");
-	defineBarParams(CHARACTER, dawnBringerPalRGB[COL_DARKPURPLE], " position= '0 300' size='150 400' refresh=0.05");
+	defineBarParams(PLAYER, dawnBringerPalRGB[COL_DARKBLUE], " position= '0 0' size='220 150' refresh=0.05");
+	defineBarParams(PERFORMANCE, dawnBringerPalRGB[COL_DARKBROWN], " position= '0 150' size='220 150' refresh=0.05");
+	defineBarParams(CHARACTER, dawnBringerPalRGB[COL_DARKPURPLE], " position= '0 300' size='220 400' refresh=0.05");
 }
 
 bool Toolbar::processEvent(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
