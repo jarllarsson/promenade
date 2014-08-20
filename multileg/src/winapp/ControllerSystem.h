@@ -56,6 +56,7 @@ public:
 	static bool m_useGCVFTorque;
 	static bool m_usePDTorque;
 	static bool m_useLFFeedbackTorque;
+	static bool m_bufferLFFeedbackTorque;
 
 	static bool m_dbgShowVFVectors;
 	static bool m_dbgShowGCVFVectors;

@@ -17,6 +17,7 @@ bool ControllerSystem::m_useVFTorque=true;
 bool ControllerSystem::m_useGCVFTorque=true;
 bool ControllerSystem::m_usePDTorque=true;
 bool ControllerSystem::m_useLFFeedbackTorque = true;
+bool ControllerSystem::m_bufferLFFeedbackTorque = false;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
@@ -733,10 +734,13 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		else
 			// Stance force
 		{
+			glm::vec3 dbgFootPos = getFootPos(p_lf, i);
 			//if (!stanceForcesCalculated)
 			{
 				fv = calculateFv(p_lf, m_controllerVelocityStats[p_controllerIdx]);
+				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fv, dawnBringerPalRGB[COL_GREY]);
 				fh = calculateFh(p_lf, m_controllerLocationStats[p_controllerIdx], p_phi, p_dt, glm::vec3(0.0f, 1.0f, 0.0));
+				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fh, dawnBringerPalRGB[COL_BEIGE]);
 				stanceForcesCalculated=true;
 			}	
 			glm::vec3 fd(calculateFd(p_controllerIdx,p_lf, i));
@@ -895,7 +899,8 @@ glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, un
 
 glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats)
 {
-	return p_lf->m_velocityRegulatorKv*(p_velocityStats.m_desiredVelocity - p_velocityStats.m_currentVelocity);
+	glm::vec3 fv=p_lf->m_velocityRegulatorKv*(p_velocityStats.m_desiredVelocity - p_velocityStats.m_currentVelocity);
+	return fv;
 }
 
 glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up)
@@ -996,6 +1001,7 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	{
 		unsigned int jointId = lf->m_hipJointId[i];
 		glm::vec3 jTorque=m_jointTorques[jointId];
+		if (m_bufferLFFeedbackTorque) jTorque = m_oldJointTorques[jointId];
 		if (isInControlledStance(lf, i, p_phi))
 		{
 			tstance += jTorque;
@@ -1009,7 +1015,13 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// Spine if it exists
 	int spineIdx = (int)lf->m_spineJointId;
 	if (spineIdx >= 0)
-		tspine = m_jointTorques[(unsigned int)spineIdx];
+	{
+		if (m_bufferLFFeedbackTorque)
+			tspine = m_jointTorques[(unsigned int)spineIdx];
+		else
+			tspine = m_oldJointTorques[(unsigned int)spineIdx];
+
+	}
 
 	// 1. Calculate current torque for leg frame:
 	// tLF = tstance + tswing + tspine.

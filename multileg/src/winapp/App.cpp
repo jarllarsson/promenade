@@ -150,6 +150,7 @@ void App::run()
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use VF t", Toolbar::BOOL, &ControllerSystem::m_useVFTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use GCVF t", Toolbar::BOOL, &ControllerSystem::m_useGCVFTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use PD t", Toolbar::BOOL, &ControllerSystem::m_usePDTorque);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Buffer LF feedbk", Toolbar::BOOL, &ControllerSystem::m_bufferLFFeedbackTorque);
 	m_toolBar->addSeparator(Toolbar::PLAYER, "Visual Debug");
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL, &ControllerSystem::m_dbgShowVFVectors);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show GCVF vectors (pnk)", Toolbar::BOOL, &ControllerSystem::m_dbgShowGCVFVectors);
