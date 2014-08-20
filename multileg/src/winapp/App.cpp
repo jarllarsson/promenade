@@ -142,7 +142,9 @@ void App::run()
 	std::vector<ReferenceLegMovementController> baseReferenceMovementControllers;
 #endif
 	double controllerSystemTiming = 0.0;
+	bool lockLFY_onRestart = false;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(s)", Toolbar::DOUBLE, &controllerSystemTiming);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);
 	m_toolBar->addSeparator(Toolbar::PLAYER, "Torques");
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use LF feedbk", Toolbar::BOOL, &ControllerSystem::m_useLFFeedbackTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use VF t", Toolbar::BOOL, &ControllerSystem::m_useVFTorque);
@@ -294,7 +296,7 @@ void App::run()
 
 			if (lockPos)
 			{
-				lfRB->setLinearFactor(glm::vec3(1,0,1));
+				lfRB->setLinearFactor(glm::vec3(1, lockLFY_onRestart?0:1 , 1));
 				lfRB->setAngularFactor(glm::vec3(1,1,1));
 			}
 
