@@ -146,6 +146,7 @@ void App::run()
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(s)", Toolbar::DOUBLE, &controllerSystemTiming);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);
 	m_toolBar->addSeparator(Toolbar::PLAYER, "Torques");
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "t Limit", Toolbar::FLOAT, &ControllerSystem::m_torqueLim);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use LF feedbk", Toolbar::BOOL, &ControllerSystem::m_useLFFeedbackTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use VF t", Toolbar::BOOL, &ControllerSystem::m_useVFTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use GCVF t", Toolbar::BOOL, &ControllerSystem::m_useGCVFTorque);

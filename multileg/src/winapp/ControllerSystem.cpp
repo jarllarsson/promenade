@@ -21,6 +21,7 @@ bool ControllerSystem::m_bufferLFFeedbackTorque = false;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
+float ControllerSystem::m_torqueLim = 200.0f;
 
 
 ControllerSystem::~ControllerSystem()
@@ -148,7 +149,7 @@ void ControllerSystem::applyTorques( float p_dt )
 {
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
-		float tLim = 200.0f;
+		float tLim = m_torqueLim;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3 t = m_jointTorques[i];
