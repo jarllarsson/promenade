@@ -33,7 +33,7 @@ ControllerSystem::~ControllerSystem()
 
 void ControllerSystem::removed(artemis::Entity &e)
 {
-	DEBUGPRINT(("\nREMOVING CONTROLLER\n"));
+	//DEBUGPRINT(("\nREMOVING CONTROLLER\n"));
 }
 
 void ControllerSystem::added(artemis::Entity &e)
@@ -1136,7 +1136,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
 			refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
-			refDesiredFootPos.z -= 0.4f;
+			refDesiredFootPos.z -= 0.25f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
 			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
 			// Fetch upper- and lower leg length and solve IK

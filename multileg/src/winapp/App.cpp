@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -351,7 +351,7 @@ void App::run()
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 						//lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
-						segmentMass = 5.0f;
+						segmentMass = 3.0f;
 						boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
 #ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(uLegHeight);

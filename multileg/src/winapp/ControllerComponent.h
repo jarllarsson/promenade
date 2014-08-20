@@ -195,8 +195,9 @@ public:
 			m_height = 0.0f;
 			m_lateStrikeOffsetDeltaH = 0.0f;
 			m_velocityRegulatorKv = 3.0f;
-			m_FDHVComponents = glm::vec4(0.0f);
-				//glm::vec4(100.1f, -100.2f, 20000.0f, 10000.1f);
+			m_FDHVComponents = glm::vec4(0.1f, 0.0f, -10.0, -10.0f);
+				glm::vec4(0.0f);
+				
 			//
 			m_legPDsKp = 3.0f;
 			m_legPDsKd = 0.3f;
