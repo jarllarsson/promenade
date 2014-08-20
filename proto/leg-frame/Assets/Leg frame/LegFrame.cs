@@ -619,7 +619,8 @@ public class LegFrame : MonoBehaviour, IOptimizable
 
     public void calculateFv(Vector3 p_currentVelocity, Vector3 p_desiredVelocity)
     {
-        m_Fv=m_tuneVelocityRegulatorKv*(p_desiredVelocity-p_currentVelocity);
+		Vector3 fv=m_tuneVelocityRegulatorKv*(p_desiredVelocity-p_currentVelocity);
+		m_Fv = fv;
     }
 
     public void calculateFh(float p_phi, float p_currentH, float p_dt, Vector3 p_up)
@@ -751,6 +752,11 @@ public class LegFrame : MonoBehaviour, IOptimizable
             {
                 calculateFv(p_currentVelocity, p_desiredVelocity);
                 calculateFh(p_phi, transform.position.y - startH, p_dt, Vector3.up);
+
+				Vector3 dbgFootPos = m_feet[i].transform.position;
+				Debug.DrawLine(dbgFootPos, dbgFootPos + m_Fv, Color.gray);
+				Debug.DrawLine(dbgFootPos, dbgFootPos + m_Fh, new Color(0.6f,0.6f,0.1f));
+
 				Vector3 stanceForce = calculateStanceLegVF(i, stanceLegs);
 				m_netLegBaseVirtualForces[i] = stanceForce;
             }

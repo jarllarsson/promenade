@@ -17,7 +17,7 @@ bool ControllerSystem::m_useVFTorque=true;
 bool ControllerSystem::m_useGCVFTorque=true;
 bool ControllerSystem::m_usePDTorque=true;
 bool ControllerSystem::m_useLFFeedbackTorque = true;
-bool ControllerSystem::m_bufferLFFeedbackTorque = false;
+bool ControllerSystem::m_bufferLFFeedbackTorque = true;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
@@ -175,7 +175,7 @@ void ControllerSystem::buildCheck()
 {
 	for (unsigned int i = 0; i < m_controllersToBuild.size(); i++)
 	{
-		glm::vec3 startGaitVelocity(0.0f, 0.0f, 3.0f);
+		glm::vec3 startGaitVelocity(0.0f, 0.0f, 1.0f);
 		ControllerComponent* controller = m_controllersToBuild[i];
 		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
 		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
@@ -481,27 +481,28 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 	glm::vec3 desiredV = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
 	float goalSqrMag = glm::sqrLength(goalV);
 	float currentSqrMag = glm::sqrLength(currentV);
-	float stepSz = 0.5f/* * p_dt*/;
+	float stepSz = 0.5f * p_dt;
 	// Note the material doesn't mention taking dt into 
 	// account for the step size, they might be running fixed timestep
 	// Here the dt received is the time since we last ran the control logic
 	//
+
 	// If the goal is faster
 	if (goalSqrMag > currentSqrMag)
 	{
 		// Take steps no bigger than 0.5m/s
 		if (goalSqrMag < currentSqrMag + stepSz)
 			desiredV = goalV;
-		else if (goalV != glm::vec3(0.0f))
-			desiredV = currentV + glm::normalize(goalV) * stepSz;
+		else if (currentV != glm::vec3(0.0f))
+			desiredV += glm::normalize(currentV) * stepSz;
 	}
 	else // if the goal is slower
 	{
 		// Take steps no smaller than 0.5
 		if (goalSqrMag > currentSqrMag - stepSz)
 			desiredV = goalV;
-		else if (goalV != glm::vec3(0.0f))
-			desiredV = currentV - glm::normalize(goalV) * stepSz;
+		else if (currentV != glm::vec3(0.0f))
+			desiredV -= glm::normalize(currentV) * stepSz;
 	}
 	m_controllerVelocityStats[p_controllerId].m_desiredVelocity = desiredV;
 	// Location
@@ -841,7 +842,9 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
 		//ssum = JVec.x + JVec.y + JVec.z;
 		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
-		//bool vecnanchk = glm::isnan(addT) == glm::bool3(true, true, true);
+		bool vecnanchk = glm::isnan(addT) == glm::bool3(true, true, true);
+		if (vecnanchk)
+			int bb = 0;
 		(*p_outTVF)[localJointIdx/* + p_torqueIdxOffset*/] += addT;
 		// Do it like this for now, for the sake of readability and debugging.
 	}
@@ -901,6 +904,7 @@ glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, un
 glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, const VelocityStat& p_velocityStats)
 {
 	glm::vec3 fv=p_lf->m_velocityRegulatorKv*(p_velocityStats.m_desiredVelocity - p_velocityStats.m_currentVelocity);
+	fv.y = 0.0f;
 	return fv;
 }
 
@@ -912,7 +916,7 @@ glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, con
 	// the current height y only works for up=0,1,0
 	// so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
 	// but for now, a float is OK
-	float fh = p_lf->m_FhPD.drive(hLF - currentHeightDeviation, p_dt);// PD
+	float fh = p_lf->m_FhPD.drive(max(0.0f,hLF - currentHeightDeviation), p_dt);// PD
 	return p_up * fh;
 }
 
@@ -1207,8 +1211,9 @@ glm::vec3 ControllerSystem::getLegFramePosition(const ControllerComponent::LegFr
 glm::mat4 ControllerSystem::getDesiredWorldOrientation(unsigned int p_controllerId) const
 {
 	glm::vec3 dir = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
+	if (dir.x == 0.0f && dir.z==0.0f) dir += glm::vec3(0.0f, 0.0f, 0.0001f);
 	dir.z *= -1.0f; // as we're using a ogl function below, we flip z
-	return glm::lookAt(glm::vec3(0.0f), dir, glm::vec3(0.0f, 1.0f, 0.0f));
+	return glm::lookAt(glm::vec3(0.0f), glm::normalize(dir), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 bool ControllerSystem::isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
