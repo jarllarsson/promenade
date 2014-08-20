@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -153,15 +153,21 @@ void App::run()
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use PD t", Toolbar::BOOL, &ControllerSystem::m_usePDTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Buffer LF feedbk", Toolbar::BOOL, &ControllerSystem::m_bufferLFFeedbackTorque);
 	m_toolBar->addSeparator(Toolbar::PLAYER, "Visual Debug");
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL, &ControllerSystem::m_dbgShowVFVectors);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show GCVF vectors (pnk)", Toolbar::BOOL, &ControllerSystem::m_dbgShowGCVFVectors);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show torque axes (blu)", Toolbar::BOOL, &ControllerSystem::m_dbgShowTAxes);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowVFVectors);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show GCVF vectors (pnk)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowGCVFVectors);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show torque axes (blu)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowTAxes);
 
 
 	ControllerSystem::m_useLFFeedbackTorque = true;
 	ControllerSystem::m_useVFTorque = true;
 	ControllerSystem::m_useGCVFTorque = true;
-	ControllerSystem::m_usePDTorque = false;
+	ControllerSystem::m_usePDTorque = true;
+#ifdef OPTIMIZATION
+	ControllerSystem::m_usePDTorque = true;
+	ControllerSystem::m_dbgShowVFVectors = false;
+	ControllerSystem::m_dbgShowGCVFVectors = false;
+	ControllerSystem::m_dbgShowTAxes = false;
+#endif
 	do
 	{
 		m_restart = false;
@@ -368,12 +374,12 @@ void App::run()
 					{
 						partName = " foot";
 						boxSize = glm::vec3(0.571618f, footHeight, 0.8f);
-						jointZOffsetInChild = 0.0f*(boxSize.z-0.3f)*0.5f;
+						jointZOffsetInChild = (boxSize.z-0.3f)*0.5f;
 						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 5.2f;
+						segmentMass = 1.2f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");

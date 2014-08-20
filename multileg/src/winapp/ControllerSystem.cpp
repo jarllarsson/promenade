@@ -200,6 +200,7 @@ void ControllerSystem::buildCheck()
 		legFrame->m_spineJointId = -1; // -1 means it doesn't exist
 		//
 		glm::vec3 legFramePos = rootTransform->getPosition(), footPos;
+		unsigned int footJointId = 0;
 		for (unsigned int x = 0; x < legCount; x++)
 		{
 			m_VFs.push_back(glm::vec3(0.0f, 0.0f, 0.0f));	
@@ -240,6 +241,7 @@ void ControllerSystem::buildCheck()
 					legFrame->createFootPlacementModelVarsForNewLeg(footPos);
 					// add rigidbody idx so we can check for collisions and late foot strikes
 					legFrame->m_footRigidBodyIdx.push_back(m_rigidBodyRefs.size() - 1);
+					footJointId = idx;
 					//
 					jointEntity = NULL;
 				}
@@ -278,7 +280,7 @@ void ControllerSystem::buildCheck()
 			legFrame->m_toeOffTime.push_back(0.0f);
 			legFrame->m_tuneFootStrikeTime.push_back(0.0f);
 		}
-		legFrame->m_height = legFramePos.y - footPos.y;
+		legFrame->m_height = legFramePos.y - (footPos.y - m_jointLengths[footJointId]*0.5f);
 		// Calculate number of torques axes in list, store
 		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
@@ -781,7 +783,7 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 			if (m_useVFTorque) 
 				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 				
-			if (m_useGCVFTorque && isInControlledStance(lf, n, p_phi))
+			if (m_useGCVFTorque && !isInControlledStance(lf, n, p_phi))
 				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 		}
 	}
@@ -1134,6 +1136,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
 			refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
+			refDesiredFootPos.z -= 0.4f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
 			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
 			// Fetch upper- and lower leg length and solve IK
