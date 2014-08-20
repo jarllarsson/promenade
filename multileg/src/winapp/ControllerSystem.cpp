@@ -884,6 +884,8 @@ glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, un
 		{
 			int i = 0;
 		}
+		glm::vec3 dbgFootPos = getFootPos(p_lf, p_legIdx);
+		dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + res, dawnBringerPalRGB[COL_YELLOW]);
 	}
 	return res;
 }
