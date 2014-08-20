@@ -186,7 +186,7 @@ public:
 			m_footTrackingGainKp.reset(PieceWiseLinear::LIN_INC,1.0f); // Foot tracking controller for fast gaits. linear(=t) by default
 			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
-			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(1000.0f);
+			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(30.0f);
 			m_FhPD.setKp_KdEQTenPrcntKp(3.0f);
 			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(1.0f);
 			// Vectors and Floats
@@ -198,8 +198,8 @@ public:
 			m_FDHVComponents = glm::vec4(0.0f);
 				//glm::vec4(100.1f, -100.2f, 20000.0f, 10000.1f);
 			//
-			m_legPDsKp = 30.0f;
-			m_legPDsKd = 3.0f;
+			m_legPDsKp = 3.0f;
+			m_legPDsKd = 0.3f;
 			// foot
 			m_tuneToeOffAngle=HALFPI/9.0f;				
 			m_tuneFootStrikeAngle = -HALFPI/9.0f;
