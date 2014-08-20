@@ -743,14 +743,16 @@ public class LegFrame : MonoBehaviour, IOptimizable
             {
                 //calculateFgravcomp(i, p_phi, Vector3.up);
                 calculateFsw(i,p_phi);
-                m_netLegBaseVirtualForces[i] = calculateSwingLegVF(i);
+				Vector3 swingForce = calculateSwingLegVF(i);
+				m_netLegBaseVirtualForces[i] = swingForce;
             }
             else
             // Stance force
             {
                 calculateFv(p_currentVelocity, p_desiredVelocity);
                 calculateFh(p_phi, transform.position.y - startH, p_dt, Vector3.up);
-                m_netLegBaseVirtualForces[i] = calculateStanceLegVF(i, stanceLegs);
+				Vector3 stanceForce = calculateStanceLegVF(i, stanceLegs);
+				m_netLegBaseVirtualForces[i] = stanceForce;
             }
         }
     }

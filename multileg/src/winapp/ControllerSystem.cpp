@@ -277,7 +277,6 @@ void ControllerSystem::buildCheck()
 			legFrame->m_tuneFootStrikeTime.push_back(0.0f);
 		}
 		legFrame->m_height = legFramePos.y - footPos.y;
-		legFrame->m_heightLFTraj.reset(PieceWiseLinear::FULL, legFrame->m_height);
 		// Calculate number of torques axes in list, store
 		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
@@ -725,7 +724,8 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		if (!legInStance[i])
 		{
 			glm::vec3 fsw=calculateFsw(p_lf, i, p_phi, p_dt);
-			m_VFs[vfIdx] = calculateSwingLegVF(fsw); // Store force
+			glm::vec3 swingForce = calculateSwingLegVF(fsw);
+			m_VFs[vfIdx] = swingForce;// Store force
 			//
 			//if (p_controllerIdx == 0)
 			//	dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_PINK], dawnBringerPalRGB[COL_PURPLE]);
@@ -733,14 +733,15 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 		else
 			// Stance force
 		{
-			if (!stanceForcesCalculated)
+			//if (!stanceForcesCalculated)
 			{
 				fv = calculateFv(p_lf, m_controllerVelocityStats[p_controllerIdx]);
 				fh = calculateFh(p_lf, m_controllerLocationStats[p_controllerIdx], p_phi, p_dt, glm::vec3(0.0f, 1.0f, 0.0));
 				stanceForcesCalculated=true;
 			}	
 			glm::vec3 fd(calculateFd(p_controllerIdx,p_lf, i));
-			m_VFs[vfIdx] = calculateStanceLegVF(stanceLegs, fv, fh, fd); // Store force
+			glm::vec3 stanceForce = calculateStanceLegVF(stanceLegs, fv, fh, fd);
+			m_VFs[vfIdx] = stanceForce;// Store force
 			//if (p_controllerIdx == 0)
 			//	dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_NAVALBLUE]);
 		}
@@ -898,11 +899,12 @@ glm::vec3 ControllerSystem::calculateFv(ControllerComponent::LegFrame* p_lf, con
 glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, const LocationStat& p_locationStat, float p_phi, float p_dt, const glm::vec3& p_up)
 {
 	float hLF = p_lf->m_heightLFTraj.lerpGet(p_phi);
-	glm::vec3 currentHeight = p_locationStat.m_currentGroundPos-p_locationStat.m_worldPos;
+	glm::vec3 currentLocalHeight = p_locationStat.m_worldPos-p_locationStat.m_currentGroundPos;
+	float currentHeightDeviation = currentLocalHeight.y-p_lf->m_height;
 	// the current height y only works for up=0,1,0
 	// so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
 	// but for now, a float is OK
-	float fh=p_lf->m_FhPD.drive(max(0.0f,hLF - currentHeight.y), p_dt);// PD
+	float fh = p_lf->m_FhPD.drive(hLF - currentHeightDeviation, p_dt);// PD
 	return p_up * fh;
 }
 
@@ -991,20 +993,21 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	for (unsigned int i = 0; i < legCount; i++)
 	{
 		unsigned int jointId = lf->m_hipJointId[i];
+		glm::vec3 jTorque=m_jointTorques[jointId];
 		if (isInControlledStance(lf, i, p_phi))
 		{
-			tstance += m_oldJointTorques[jointId];
+			tstance += jTorque;
 			stanceLegBuf[stanceCount] = jointId;
 			stanceCount++;
 		}
 		else
-			tswing += m_oldJointTorques[jointId];
+			tswing += jTorque;
 	}
 
 	// Spine if it exists
 	int spineIdx = (int)lf->m_spineJointId;
 	if (spineIdx >= 0)
-		tspine = m_oldJointTorques[(unsigned int)spineIdx];
+		tspine = m_jointTorques[(unsigned int)spineIdx];
 
 	// 1. Calculate current torque for leg frame:
 	// tLF = tstance + tswing + tspine.
