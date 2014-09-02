@@ -25,9 +25,17 @@ public:
 		Color4f m_startColor, m_endColor;
 	};
 
+	struct Sphere
+	{
+		glm::vec3 m_pos;
+		float m_rad;
+		Color4f m_color;
+	};
+
 	DebugDrawBatch() {}
 	virtual ~DebugDrawBatch() {}
 
+	// Lines
 	virtual void drawLine(const glm::vec3& p_start, const glm::vec3& p_end,
 		const Color4f& p_color);
 
@@ -40,14 +48,23 @@ public:
 	virtual void drawLine(const glm::vec3& p_start, const glm::vec3& p_end,
 		const Color4f& p_startColor, const Color4f& p_endColor);
 
+	// Spheres
+	virtual void drawSphere(const glm::vec3& p_pos, float p_rad,
+		const Color4f& p_color);
+
+	virtual void drawSphere(const glm::vec3& p_pos, float p_rad,
+		const Color3f& p_color);
+
 
 	void clearDrawCalls();
 
 	std::vector<Line>* getLineList();
+	std::vector<Sphere>* getSphereList();
 	void clearLineList();
+	void clearSphereList();
 
 protected:
 private:
-
+	std::vector<Sphere> m_sphereList;
 	std::vector<Line> m_lineList;
 };

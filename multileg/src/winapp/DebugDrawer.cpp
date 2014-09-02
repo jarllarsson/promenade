@@ -74,9 +74,17 @@ void DebugDrawer::render(TempController* p_camera)
 		XMLine line = getXMLine((*linelist)[i]);
 		m_primitiveBatch->DrawLine(line.m_start, line.m_end);
 	}
-	m_primitiveBatch->End();
+	// Draw all queued spheres:
+	/* TODO
+	std::vector<DebugDrawBatch::Line>* linelist = m_batch->getLineList();
+	for (int i = 0; i < linelist->size(); i++)
+	{
+		XMLine line = getXMLine((*linelist)[i]);
+		m_primitiveBatch->
+	}
+	*/
 	// End of drawing debug primitives
-
+	m_primitiveBatch->End();
 }
 
 

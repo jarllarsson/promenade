@@ -279,11 +279,11 @@ void App::run()
 				lLegHeight = 1.0f,
 				footHeight = 0.1847207f;
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
-		int chars = 3;
+		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = true;
 #ifdef OPTIMIZATION
-		chars=20;
+		chars=5;
 #endif
 		for (int x = 0; x < chars; x++) // number of characters
 		{
