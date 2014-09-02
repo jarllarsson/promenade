@@ -7,10 +7,10 @@
 
 ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 {
-	m_fdWeight = 100.0f; // deviation from reference motion
-	m_fvWeight = 0.0f;   // deviation from desired speed
-	m_fhWeight = 0.0f;	 // acceleration of head
-	m_frWeight = 5.0f;	 // whole body rotation
+	m_fdWeight = 1000.0f; // deviation from reference motion
+	m_fvWeight = 5.0f;   // deviation from desired speed
+	m_fhWeight = 0.5f;	 // acceleration of head
+	m_frWeight = 50.0f;	 // whole body rotation
 	m_fpWeight = 0.0f;	 // movement distance
 }
 
@@ -39,7 +39,9 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 	if (!restarted && !p_forceStore)
 	{
 		m_temp_currentStrideVelocities.push_back(velocities.m_currentVelocity);
-		m_temp_currentStrideDesiredVelocities.push_back(velocities.m_desiredVelocity);
+		// DESIRED m_temp_currentStrideDesiredVelocities.push_back(velocities.m_desiredVelocity);
+		// GOAL 
+		m_temp_currentStrideDesiredVelocities.push_back(velocities.m_goalVelocity);
 	}
 	else
 	{

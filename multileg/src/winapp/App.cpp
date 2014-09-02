@@ -141,10 +141,12 @@ void App::run()
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 	std::vector<ReferenceLegMovementController> baseReferenceMovementControllers;
 #endif
+	bool dbgDrawOptimized = true;
 	double controllerSystemTimingMs = 0.0;
 	bool lockLFY_onRestart = false;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);	
+
 	m_toolBar->addSeparator(Toolbar::PLAYER, "Torques");
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "t Limit", Toolbar::FLOAT, &ControllerSystem::m_torqueLim);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use LF feedbk", Toolbar::BOOL, &ControllerSystem::m_useLFFeedbackTorque);
@@ -153,9 +155,11 @@ void App::run()
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use PD t", Toolbar::BOOL, &ControllerSystem::m_usePDTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Buffer LF feedbk", Toolbar::BOOL, &ControllerSystem::m_bufferLFFeedbackTorque);
 	m_toolBar->addSeparator(Toolbar::PLAYER, "Visual Debug");
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Enable DbgDraw", Toolbar::BOOL, &m_debugDrawBatch->m_enabled);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowVFVectors);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show GCVF vectors (pnk)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowGCVFVectors);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show torque axes (blu)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowTAxes);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Draw All OptimizeParamPerturbChars", Toolbar::BOOL, &dbgDrawOptimized);
 
 
 	ControllerSystem::m_useLFFeedbackTorque = true;
@@ -271,19 +275,20 @@ void App::run()
 
 
 		// Test of controller
-		float hipCoronalOffset = 0.5f; // coronal distance between hip joints and center
+		float scale = 1.0f;
+		float hipCoronalOffset = scale*0.5f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
 		// size setups
-		float	lfHeight = 1.0f,
-				uLegHeight = 1.0f,
-				lLegHeight = 1.0f,
-				footHeight = 0.1847207f;
+		float	lfHeight = scale*1.0f,
+				uLegHeight = scale*1.0f,
+				lLegHeight = scale*1.0f,
+				footHeight = scale*0.1847207f;
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
-		int chars = 1;
+		int chars = 4;
 		bool lockPos = true;
-		bool drawAll = true;
+		bool drawAll = dbgDrawOptimized;
 #ifdef OPTIMIZATION
-		chars=5;
+		chars=50;
 #endif
 		for (int x = 0; x < chars; x++) // number of characters
 		{
@@ -352,8 +357,8 @@ void App::run()
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 						//lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
-						segmentMass = 3.0f;
-						boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
+						segmentMass = 2.0f;
+						boxSize = glm::vec3(scale*0.25f, uLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(uLegHeight);
 #endif
@@ -366,7 +371,7 @@ void App::run()
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.01f, 0.0f, 0.0f);
 						segmentMass = 2.0f;
-						boxSize = glm::vec3(0.25f, lLegHeight, 0.25f);
+						boxSize = glm::vec3(scale*0.25f, lLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
 #endif
@@ -374,7 +379,7 @@ void App::run()
 					else if (i == 2) // if foot
 					{
 						partName = " foot";
-						boxSize = glm::vec3(0.571618f, footHeight, 0.8f);
+						boxSize = glm::vec3(scale*0.571618f, footHeight, scale*0.8f);
 						jointZOffsetInChild = (boxSize.z-0.3f)*0.5f;
 						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);

@@ -17,6 +17,7 @@
 class DebugDrawBatch
 {
 public:
+	static bool m_enabled;
 	// Line primitive
 	struct Line
 	{

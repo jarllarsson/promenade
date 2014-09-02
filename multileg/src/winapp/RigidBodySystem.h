@@ -91,15 +91,19 @@ public:
 			// your callback code here
 			bool hit = false;
 			btVector3 pt; // will be set to point of collision relative to body
-			if (p_colObj0->m_collisionObject == m_body) 
+			if (checkMaskedCollision(p_colObj0, p_colObj1))
 			{
-				pt = p_cp.m_localPointA;
-				hit = true;
-			}
-			else if (p_colObj1->m_collisionObject == m_body)
-			{
-				pt = p_cp.m_localPointB;
-				hit = true;
+				if (p_colObj0->m_collisionObject == m_body)
+				{
+					//pt = p_cp.m_localPointA;
+					pt = p_cp.getPositionWorldOnA();
+					hit = true;
+				}
+				else if (p_colObj1->m_collisionObject == m_body)
+				{
+					pt = p_cp.getPositionWorldOnB();
+					hit = true;
+				}
 			}
 			m_component->setCollidingStat(hit, glm::vec3(pt.x(),pt.y(),pt.z()));
 			// do stuff with the collision point
@@ -109,9 +113,21 @@ public:
 		btRigidBody* m_body;
 		RigidBodyComponent* m_component;
 		btRigidBody* m_otherBody;
+	private:
+		bool checkMaskedCollision(const btCollisionObjectWrapper* p_colObj0, const btCollisionObjectWrapper* p_colObj1)
+		{
+			CollisionLayer::CollisionLayerType obj0Grp = (CollisionLayer::CollisionLayerType)p_colObj1->m_collisionObject->getBroadphaseHandle()->m_collisionFilterGroup;
+			CollisionLayer::CollisionLayerType obj0Msk = (CollisionLayer::CollisionLayerType)p_colObj1->m_collisionObject->getBroadphaseHandle()->m_collisionFilterMask;
+			CollisionLayer::CollisionLayerType obj1Grp = (CollisionLayer::CollisionLayerType)p_colObj0->m_collisionObject->getBroadphaseHandle()->m_collisionFilterGroup;
+			CollisionLayer::CollisionLayerType obj1Msk = (CollisionLayer::CollisionLayerType)p_colObj0->m_collisionObject->getBroadphaseHandle()->m_collisionFilterMask;
+			bool collides = (obj1Grp & obj0Msk) != 0;
+			collides = collides && (obj0Grp & obj1Msk);
+			return collides;
+		}
 	};
 
 private:
+
 	bool m_measureVelocityAndAcceleration;
 	void checkForNewConstraints(artemis::Entity &e);
 	//void checkForConstraintsToRemove(artemis::Entity &e, RigidBodyComponent* p_rigidBody);
