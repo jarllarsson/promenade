@@ -6,7 +6,7 @@
 
 void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeStep) {
 	PhysicsWorldHandler *w = static_cast<PhysicsWorldHandler *>(world->getWorldUserInfo());
-	w->myProcessCallback(timeStep);
+	w->physProcessCallback(timeStep);
 }
 
 PhysicsWorldHandler::PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSystem* p_controllerSystem)
@@ -17,7 +17,7 @@ PhysicsWorldHandler::PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSys
 	m_internalStepCounter = 0;
 }
 
-void PhysicsWorldHandler::myProcessCallback(btScalar timeStep)
+void PhysicsWorldHandler::physProcessCallback(btScalar timeStep)
 {
 	m_internalStepCounter++;
 	processPreprocessSystemCollection((float)timeStep);

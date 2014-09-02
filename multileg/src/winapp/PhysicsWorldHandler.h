@@ -25,7 +25,7 @@ class PhysicsWorldHandler {
 public:
 	PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSystem* p_controllerSystem);
 
-	void myProcessCallback(btScalar timeStep);
+	void physProcessCallback(btScalar timeStep);
 
 	unsigned int getNumberOfInternalSteps();
 

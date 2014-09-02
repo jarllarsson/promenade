@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -141,9 +141,9 @@ void App::run()
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 	std::vector<ReferenceLegMovementController> baseReferenceMovementControllers;
 #endif
-	double controllerSystemTiming = 0.0;
+	double controllerSystemTimingMs = 0.0;
 	bool lockLFY_onRestart = false;
-	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(s)", Toolbar::DOUBLE, &controllerSystemTiming);
+	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);
 	m_toolBar->addSeparator(Toolbar::PLAYER, "Torques");
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "t Limit", Toolbar::FLOAT, &ControllerSystem::m_torqueLim);
@@ -279,8 +279,9 @@ void App::run()
 				lLegHeight = 1.0f,
 				footHeight = 0.1847207f;
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
-		int chars = 1;
+		int chars = 3;
 		bool lockPos = true;
+		bool drawAll = true;
 #ifdef OPTIMIZATION
 		chars=20;
 #endif
@@ -297,7 +298,7 @@ void App::run()
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
-			if (x==0) legFrame.addComponent(new RenderComponent());
+			if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
 			legFrame.addComponent(new TransformComponent(pos,
 				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 				lfSize));
@@ -385,18 +386,20 @@ void App::run()
 					string dbgGrp = (" group='" + sideName + "'");
 					if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
 					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
-// 					if (foot == true)
-// 					{
-// 						childJoint.addComponent(new RigidBodyComponent(RigidBodyComponent::REGISTER_COLLISIONS,
-// 							new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
-// 							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
-// 					}
-// 					else
+					if (foot == true)
 					{
+						// foot need collision callback properties
+						childJoint.addComponent(new RigidBodyComponent(RigidBodyComponent::REGISTER_COLLISIONS,
+							new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
+							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+					}
+ 					else
+					{
+						// ordinary joint does not need collision callback
 						childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
 							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 					}
-					if (x == 0) childJoint.addComponent(new RenderComponent());
+					if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
 					childJoint.addComponent(new TransformComponent(legpos,
 						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
 						boxSize));					// note scale, so full lengths
@@ -483,7 +486,7 @@ void App::run()
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
 				
 				// update timing debug var
-				controllerSystemTiming = m_controllerSystem->getLatestTiming();
+				controllerSystemTimingMs = m_controllerSystem->getLatestTiming() * 1000.0f;
 
 #ifdef OPTIMIZATION
 				// draw test graph if optimizing

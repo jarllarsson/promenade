@@ -1233,10 +1233,10 @@ void ControllerSystem::writeFeetCollisionStatus(ControllerComponent* p_controlle
 	{
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 		unsigned int legCount = (unsigned int)lf->m_legs.size();
-		for (unsigned int i = 0; i < legCount; i++)
+		for (unsigned int x = 0; x < legCount; x++)
 		{
-			unsigned int footRBIdx = lf->m_footRigidBodyIdx[i];
-			lf->m_footIsColliding[i] = m_rigidBodyRefs[footRBIdx]->isColliding();
+			unsigned int footRBIdx = lf->m_footRigidBodyIdx[x];
+			lf->m_footIsColliding[x] = m_rigidBodyRefs[footRBIdx]->isColliding();
 		}
 	}
 	// phew
