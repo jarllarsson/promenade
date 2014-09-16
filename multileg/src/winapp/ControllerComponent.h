@@ -188,22 +188,24 @@ public:
 			// PD settings
 			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(300.0f);
 			m_FhPD.setKp_KdEQTenPrcntKp(300.0f);
-			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(1.0f);
+			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(0.0f);
 			// Vectors and Floats
 			m_stepLength = glm::vec2(0.5f, 1.0f);
 			m_footPlacementVelocityScale = 1.0f;
 			m_height = 0.0f;
 			m_lateStrikeOffsetDeltaH = 0.0f;
 			m_velocityRegulatorKv = 3.0f;
-			m_FDHVComponents = glm::vec4(0.1f, 0.0f, -10.0, -10.0f);
-				glm::vec4(0.0f);
+			m_FDHVComponents = glm::vec4(0.0f);
+				//glm::vec4(0.1f, 0.0f, -10.0, -10.0f);
+				
 				
 			//
-			m_legPDsKp = 3.0f;
-			m_legPDsKd = 0.3f;
+			m_ulegPDsK = 0.2f*glm::vec2(30.0f, 3.0f);
+			m_llegPDsK = 0.2f*glm::vec2(25.0f, 2.5f);
+			m_flegPDsK = 0.2f*glm::vec2(1.0f, 0.1f);
 			// foot
-			m_tuneToeOffAngle=HALFPI/9.0f;				
-			m_tuneFootStrikeAngle = -HALFPI/9.0f;
+			m_tuneToeOffAngle = -HALFPI*0.2f;
+			m_tuneFootStrikeAngle = HALFPI*0.2f;
 		}
 
 		// Structure ids
@@ -228,8 +230,9 @@ public:
 		std::vector<IK2Handler> m_legIK;				// IK handlers for legs
 
 		// Special for now, define PD gains in these and they'll be used for all segment PDs in build:
-		float			   m_legPDsKp;
-		float			   m_legPDsKd;
+		glm::vec2			   m_ulegPDsK; // Kp,Kd
+		glm::vec2			   m_llegPDsK; // Kp, Kd
+		glm::vec2			   m_flegPDsK; // Kp, Kd
 		// Structure
 		std::vector<Leg> m_legs;								// per leg
 		std::vector<glm::vec3>  m_footStrikePlacement;			// The place on the ground where the foot should strike next, per leg

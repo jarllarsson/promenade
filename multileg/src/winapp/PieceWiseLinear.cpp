@@ -83,6 +83,7 @@ float PieceWiseLinear::lerpGet(float p_phi) const
 
 void PieceWiseLinear::reset(InitType p_initFunction/*=InitType::FLAT*/, float p_scale/*=1.0f*/)
 {
+	m_scale = p_scale;
 	for (unsigned int i = 0; i < getSize(); i++)
 	{
 		float t = getNormalizedIdx(i);
@@ -146,18 +147,18 @@ void PieceWiseLinear::consumeParams(std::vector<float>& p_other)
 		OptimizableHelper::ConsumeParamsTo(p_other, &m_dataPoints[i]);
 }
 
-std::vector<float> PieceWiseLinear::getParamsMax()
+std::vector<float> PieceWiseLinear::getParamsMax( )
 {
 	std::vector<float> paramsmax;
 	for (int i = 0; i < getSize(); i++)
-		paramsmax.push_back(100.0f);
+		paramsmax.push_back(m_scale*2.0f);
 	return paramsmax;
 }
 
-std::vector<float> PieceWiseLinear::getParamsMin()
+std::vector<float> PieceWiseLinear::getParamsMin( )
 {
 	std::vector<float> paramsmin;
 	for (int i = 0; i < getSize(); i++)
-		paramsmin.push_back(-100.0f);
+		paramsmin.push_back(-m_scale*2.0f);
 	return paramsmin;
 }

@@ -141,9 +141,9 @@ void App::run()
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 	std::vector<ReferenceLegMovementController> baseReferenceMovementControllers;
 #endif
-	bool dbgDrawOptimized = true;
+	bool dbgDrawAllChars = true;
 	double controllerSystemTimingMs = 0.0;
-	bool lockLFY_onRestart = false;
+	bool lockLFY_onRestart = true;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);	
 
@@ -159,12 +159,13 @@ void App::run()
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowVFVectors);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show GCVF vectors (pnk)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowGCVFVectors);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show torque axes (blu)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowTAxes);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Draw All OptimizeParamPerturbChars", Toolbar::BOOL, &dbgDrawOptimized);
+	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Draw All Chars", Toolbar::BOOL, &dbgDrawAllChars);
 
 
-	ControllerSystem::m_useLFFeedbackTorque = true;
-	ControllerSystem::m_useVFTorque = true;
-	ControllerSystem::m_useGCVFTorque = true;
+	ControllerSystem::m_useLFFeedbackTorque = false;
+	ControllerSystem::m_bufferLFFeedbackTorque = false;
+	ControllerSystem::m_useVFTorque = false;
+	ControllerSystem::m_useGCVFTorque = false;
 	ControllerSystem::m_usePDTorque = true;
 #ifdef OPTIMIZATION
 	ControllerSystem::m_usePDTorque = true;
@@ -284,11 +285,11 @@ void App::run()
 				lLegHeight = scale*1.0f,
 				footHeight = scale*0.1847207f;
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
-		int chars = 4;
+		int chars = 1;
 		bool lockPos = true;
-		bool drawAll = dbgDrawOptimized;
+		bool drawAll = dbgDrawAllChars;
 #ifdef OPTIMIZATION
-		chars=50;
+		chars=20;
 #endif
 		for (int x = 0; x < chars; x++) // number of characters
 		{
@@ -297,6 +298,10 @@ void App::run()
 #endif
 			artemis::Entity & legFrame = entityManager->create();
 			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
+
+			// if locked, we move down a tiny bit to get traction
+			if (lockLFY_onRestart) pos.y += 0.1f*footHeight;
+
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset*2.0f);
 			float characterMass = 50.0f;
@@ -310,8 +315,9 @@ void App::run()
 
 			if (lockPos)
 			{
-				lfRB->setLinearFactor(glm::vec3(1, lockLFY_onRestart?0:1 , 1));
-				lfRB->setAngularFactor(glm::vec3(1,1,1));
+				float lck = lockLFY_onRestart ? 0 : 1;
+				lfRB->setLinearFactor(glm::vec3(1, lck, 1));
+				lfRB->setAngularFactor(glm::vec3(lck, lck, lck));
 			}
 
 
@@ -385,7 +391,7 @@ void App::run()
 						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 1.2f;
+						segmentMass = 0.1f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
@@ -405,9 +411,18 @@ void App::run()
 							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 					}
 					if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
-					childJoint.addComponent(new TransformComponent(legpos,
-						/*glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)), */
-						boxSize));					// note scale, so full lengths
+					//if (i != 2)
+					{
+						childJoint.addComponent(new TransformComponent(legpos,
+							glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+							boxSize));					// note scale, so full lengths
+					}
+					/*else
+					{
+						childJoint.addComponent(new TransformComponent(legpos,
+							glm::quat(glm::vec3(-HALFPI*0.2f, 0.0f, 0.0f)),
+							boxSize));					// note scale, so full lengths
+					}*/
 					MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
 					childJoint.addComponent(mat);
 					if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
@@ -467,7 +482,7 @@ void App::run()
 
 		// Dry run, so artemis have run before physics first step
 		gameUpdate(0.0f);
-		dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
+		//dynamicsWorld->stepSimulation((btScalar)fixedStep, 1, (btScalar)fixedStep);
 		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		m_time = 0.0;
 		bool shooting = false;
@@ -496,6 +511,7 @@ void App::run()
 #ifdef OPTIMIZATION
 				// draw test graph if optimizing
 				int vals = allResults.size();
+				float grphScale = 20.0f;
 				if (vals > 1)
 				{
 					m_debugDrawBatch->drawLine(glm::vec3(-10.0f, 20.0f, 0.0f), glm::vec3(10.0f, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
@@ -503,8 +519,8 @@ void App::run()
 					for (int i = 0; i < vals - 1; i++)
 					{
 						m_debugDrawBatch->drawLine(
-							glm::vec3(((float)i / (float)vals)*20.0f-10.0f, 20.0f + (allResults[i] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
-							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f-10.0f, 20.0f + (allResults[i + 1] / (0.0001f + maxscoreelem))*10.0f, 0.0f),
+							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, grphScale*2 + (allResults[i] / (0.0001f + maxscoreelem))*grphScale, 0.0f),
+							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, grphScale*2 + (allResults[i + 1] / (0.0001f + maxscoreelem))*grphScale, 0.0f),
 							colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
 					}
 				}
@@ -516,8 +532,8 @@ void App::run()
 					for (int i = 0; i < vals- 1; i++)
 					{
 						m_debugDrawBatch->drawLine(
-							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -20.0f + ((*p)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
-							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -20.0f + ((*p)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
+							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2*grphScale + ((*p)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
+							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2*grphScale + ((*p)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
 							Color3f((float)i/(float)vals, 0.0f, 1.0f-(float)i/(float)vals));
 					}
 				}
@@ -527,8 +543,8 @@ void App::run()
 					for (int i = 0; i < vals - 1; i++)
 					{
 						m_debugDrawBatch->drawLine(
-							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -20.0f + ((*bestParams)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
-							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -20.0f + ((*bestParams)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*10.0f, 0.0f),
+							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*bestParams)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
+							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*bestParams)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
 							Color3f(0.0f, 0.0f, 0.0f));
 					}
 				}
@@ -582,7 +598,7 @@ void App::run()
 					optimizationSystem->stepTime((double)m_timeScale*fixedStep);
 				}
 				debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
-				if (optimizationSystem->isSimCompleted())
+				if (optimizationSystem->isSimCompleted(m_timeScale))
 				{
 					DEBUGPRINT((" NO: "));
 					DEBUGPRINT((ToString(optimizationIterationCount).c_str()));

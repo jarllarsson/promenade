@@ -61,5 +61,5 @@ private:
 
 	// Number of data points, locked for now
 	static const unsigned int c_size = 4;
-
+	float m_scale; // used for optimization
 };

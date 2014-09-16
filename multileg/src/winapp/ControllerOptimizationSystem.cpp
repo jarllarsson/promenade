@@ -48,6 +48,11 @@ int ControllerOptimizationSystem::getCurrentSimTicks()
 	return m_currentSimTicks;
 }
 
+bool ControllerOptimizationSystem::isSimCompleted( float p_scale )
+{
+	return (int)((double)m_currentSimTicks*(double)p_scale) >= m_simTicks;
+}
+
 bool ControllerOptimizationSystem::isSimCompleted()
 {
 	return m_currentSimTicks >= m_simTicks;

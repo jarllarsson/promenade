@@ -46,6 +46,10 @@ void RigidBodySystem::added(artemis::Entity &e)
 		//float test = rigidBodyInstance->getFriction();
 		rigidBodyInstance->setFriction(0.8f); // custom friction, default is 0.5
 		rigidBodyInstance->setActivationState(DISABLE_DEACTIVATION);
+		rigidBodyInstance->setCcdMotionThreshold(10);
+		btVector3 c; float r;
+		collisionShape->getBoundingSphere(c, r);
+		rigidBodyInstance->setCcdSweptSphereRadius(r*0.2f);
 		// If collision registration is activated,
 		// we need to prepare a callback
 		if (rigidBody->isRegisteringCollisions())

@@ -79,7 +79,8 @@ public:
 	int getCurrentSimTicks();
 	void incSimTick();
 	void stepTime(double p_dt);
-	bool isSimCompleted();	
+	bool isSimCompleted(float p_scale);	
+	bool isSimCompleted();
 	void evaluateAll();
 	std::vector<float>& getWinnerParams();
 	double getWinnerScore();

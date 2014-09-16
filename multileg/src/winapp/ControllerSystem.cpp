@@ -115,6 +115,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 #else
 		// Multi threaded CPU implementation
 		//concurrency::combinable<glm::vec3> sumtorques;
+		dbgDrawer()->m_enabled = false;
 		concurrency::parallel_for(0, controllerCount, [&](int n) {
 			ControllerComponent* controller = m_controllers[n];
 			// Run controller code here
@@ -125,8 +126,8 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			glm::vec3 torqueBase = legChain->DOFChain[i];
 			glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
 			m_jointTorques[tIdx] += torqueBase*13.0f;
-		});
-	*/
+		});*/
+	
 
 #endif
 
@@ -224,7 +225,14 @@ void ControllerSystem::buildCheck()
 				// Get DOF on joint to chain
 				addJointToStandardVFChain(standardDOFChain,idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
 				// Register joint for PD (and create PD)
-				addJointToPDChain(legFrame->m_legs[x].getPDChain(), idx, legFrame->m_legPDsKp, legFrame->m_legPDsKd);
+				float kp=0.0f, kd=0.0f;
+				if (jointsAddedForLeg==0)
+				{kp = legFrame->m_ulegPDsK.x; kd = legFrame->m_ulegPDsK.y;} // upper
+				else if (jointsAddedForLeg < 2)
+				{kp = legFrame->m_llegPDsK.x; kd = legFrame->m_llegPDsK.y;} // lower
+				else
+				{kp = legFrame->m_flegPDsK.x; kd = legFrame->m_flegPDsK.y;} // foot
+				addJointToPDChain(legFrame->m_legs[x].getPDChain(), idx, kp, kd);
 				// Get child joint for next iteration				
 				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
 				// Add hip joint if first
