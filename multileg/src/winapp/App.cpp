@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -164,7 +164,7 @@ void App::run()
 
 	ControllerSystem::m_useLFFeedbackTorque = false;
 	ControllerSystem::m_bufferLFFeedbackTorque = false;
-	ControllerSystem::m_useVFTorque = false;
+	ControllerSystem::m_useVFTorque = true;
 	ControllerSystem::m_useGCVFTorque = false;
 	ControllerSystem::m_usePDTorque = true;
 #ifdef OPTIMIZATION
@@ -300,7 +300,7 @@ void App::run()
 			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
 
 			// if locked, we move down a tiny bit to get traction
-			if (lockLFY_onRestart) pos.y += 0.1f*footHeight;
+			if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset*2.0f);
