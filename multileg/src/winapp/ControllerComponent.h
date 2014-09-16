@@ -200,9 +200,9 @@ public:
 				
 				
 			//
-			m_ulegPDsK = 0.2f*glm::vec2(30.0f, 3.0f);
-			m_llegPDsK = 0.2f*glm::vec2(25.0f, 2.5f);
-			m_flegPDsK = 0.2f*glm::vec2(1.0f, 0.1f);
+			m_ulegPDsK = glm::vec2(30.0f, 11.0f);
+			m_llegPDsK = glm::vec2(25.0f, 10.0f); // kd currently 2*sqrt(kp)
+			m_flegPDsK = glm::vec2(1.0f, 0.1f); // here ten prcnt
 			// foot
 			m_tuneToeOffAngle = -HALFPI*0.2f;
 			m_tuneFootStrikeAngle = HALFPI*0.2f;

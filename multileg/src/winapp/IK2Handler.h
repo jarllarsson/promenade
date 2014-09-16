@@ -34,6 +34,7 @@ private:
 	void updateAngles(float p_lowerAngle, float p_upperAngle);
 	float m_upperAngle;
 	float m_lowerAngle;
+	float m_lowerAngleW;
 	glm::vec3 m_hipPos;
 	glm::vec3 m_kneePos;
 	glm::vec3 m_endPos;

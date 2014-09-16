@@ -361,8 +361,8 @@ void App::run()
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
-						//lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
-						//upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
+						upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
 						segmentMass = 2.0f;
 						boxSize = glm::vec3(scale*0.25f, uLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION

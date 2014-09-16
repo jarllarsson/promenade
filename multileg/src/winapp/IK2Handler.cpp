@@ -66,15 +66,14 @@ void IK2Handler::solve(const glm::vec3& p_footPos, const glm::vec3& p_upperLegJo
 		lowerLegAngle = 0.0f;
 	}
 	updateAngles(lowerLegAngle, upperLegAngle);
-	float lowerAngleW = upperLegAngle + lowerLegAngle;
+	m_lowerAngleW = upperLegAngle + lowerLegAngle;
 
 
 	m_upperAngle = upperLegAngle;
-	m_lowerAngle = lowerAngleW;
 
 	// Debug draw bones
 	m_kneePos = glm::vec3(0.0f, uB * std::sin(upperLegAngle), uB * std::cos(upperLegAngle));
-	m_endPos = glm::vec3(0.0f, lB * std::sin(lowerAngleW), lB * std::cos(lowerAngleW));
+	m_endPos = glm::vec3(0.0f, lB * std::sin(m_lowerAngleW), lB * std::cos(m_lowerAngleW));
 	//
 	m_kneePos += upperLegPos;
 	m_endPos += m_kneePos;
@@ -95,7 +94,7 @@ float IK2Handler::getLowerLocalLegAngle() const
 
 float IK2Handler::getLowerWorldLegAngle() const
 {
-	return m_upperAngle + m_lowerAngle;
+	return m_lowerAngleW;
 }
 
 void IK2Handler::updateAngles(float p_lowerAngle, float p_upperAngle)
