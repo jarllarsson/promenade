@@ -303,8 +303,8 @@ void App::run()
 			if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-			float characterMass = scale*10.0f;
+			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset*2.0f);
+			float characterMass = scale*50.0f;
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
@@ -364,7 +364,7 @@ void App::run()
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
 						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-						segmentMass = scale*2.5f;
+						segmentMass = scale*5.0f;
 						boxSize = glm::vec3(scale*0.25f, uLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(uLegHeight);
@@ -375,9 +375,9 @@ void App::run()
 					else if (i == 1) // if knee (lower leg)
 					{
 						partName = " lower";
-						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
+						lowerAngleLim = glm::vec3(-PI*0.75f, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.01f, 0.0f, 0.0f);
-						segmentMass = scale*1.5f;
+						segmentMass = scale*4.0f;
 						boxSize = glm::vec3(scale*0.25f, lLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
@@ -392,7 +392,7 @@ void App::run()
 						upperAngleLim = glm::vec3(HALFPI*0.5f, HALFPI*0.1f, HALFPI*0.1f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = scale*0.7f;
+						segmentMass = scale*1.0f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
