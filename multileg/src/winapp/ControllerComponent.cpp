@@ -5,7 +5,7 @@
 ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame, 
 	std::vector<artemis::Entity*>& p_hipJoints)
 {
-	m_player = GaitPlayer(1.5f);
+	m_player = GaitPlayer(1.0f);
 	//
 	m_buildComplete = false;
 	// for each inputted leg-frame entity...
@@ -27,6 +27,8 @@ ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame,
 	LegFrame legFrame;
 	legFrame.m_stepCycles.resize(legFrameEntityConstruct.m_upperLegEntities.size());
 	legFrame.m_stepCycles[1].m_tuneStepTrigger = 0.5f;
+	//legFrame.m_stepCycles[0].m_tuneDutyFactor=1.0f;
+	//legFrame.m_stepCycles[1].m_tuneDutyFactor=1.0f;
 	m_legFrames.push_back(legFrame);
 }
 

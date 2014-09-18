@@ -196,7 +196,6 @@ private:
 	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	void writeFeetCollisionStatus(ControllerComponent* p_controller);
 	float getDesiredFootAngle(unsigned int p_legIdx, ControllerComponent::LegFrame* p_lf, float p_phi);
-	void resetNonFeedbackJointTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt);
 	// global variables
 	float m_runTime;
 	int m_steps;

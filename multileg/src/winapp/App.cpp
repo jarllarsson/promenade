@@ -143,7 +143,7 @@ void App::run()
 #endif
 	bool dbgDrawAllChars = true;
 	double controllerSystemTimingMs = 0.0;
-	bool lockLFY_onRestart = true;
+	bool lockLFY_onRestart = false;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);	
 
@@ -162,10 +162,10 @@ void App::run()
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Draw All Chars", Toolbar::BOOL, &dbgDrawAllChars);
 
 
-	ControllerSystem::m_useLFFeedbackTorque = false;
-	ControllerSystem::m_bufferLFFeedbackTorque = false;
+	ControllerSystem::m_useLFFeedbackTorque = true;
+	ControllerSystem::m_bufferLFFeedbackTorque = true;
 	ControllerSystem::m_useVFTorque = true;
-	ControllerSystem::m_useGCVFTorque = false;
+	ControllerSystem::m_useGCVFTorque = true;
 	ControllerSystem::m_usePDTorque = true;
 #ifdef OPTIMIZATION
 	ControllerSystem::m_usePDTorque = true;
@@ -282,8 +282,8 @@ void App::run()
 		// size setups
 		float	lfHeight = scale*1.0f,
 				uLegHeight = scale*1.0f,
-				lLegHeight = scale*1.0f,
-				footHeight = scale*0.1847207f;
+				lLegHeight = scale*0.9f,
+				footHeight = scale*0.12;
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
 		int chars = 1;
 		bool lockPos = true;
@@ -303,8 +303,8 @@ void App::run()
 			if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset*2.0f);
-			float characterMass = 50.0f;
+			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
+			float characterMass = scale*10.0f;
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
@@ -317,7 +317,7 @@ void App::run()
 			{
 				float lck = lockLFY_onRestart ? 0 : 1;
 				lfRB->setLinearFactor(glm::vec3(1, lck, 1));
-				lfRB->setAngularFactor(glm::vec3(lck, lck, lck));
+				lfRB->setAngularFactor(glm::vec3(1, 1, 1));
 			}
 
 
@@ -343,16 +343,17 @@ void App::run()
 				float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
 				glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
 				glm::vec3 boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
+				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, boxSize.z);
 				for (int i = 0; i < 3; i++) // number of segments per leg
 				{
 					artemis::Entity & childJoint = entityManager->create();
 					float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
 					float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
-					glm::vec3 parentSz = boxSize;
-					boxSize = glm::vec3(0.25f, uLegHeight, 0.25f); // set new size for current box
+					if (i != 0) parentSz = boxSize;//glm::vec3(boxSize.x, uLegHeight, boxSize.z);
+					//boxSize = glm::vec3(0.25f, uLegHeight, 0.25f); // set new size for current box
 					// segment specific constraint params
-					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.1f, -HALFPI*0.1f);
-					glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.1f, HALFPI*0.1f);
+					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.5f);
+					glm::vec3 upperAngleLim = glm::vec3(HALFPI,  HALFPI*0.5f, HALFPI*0.5f);
 					string partName;
 					float segmentMass = 5.0f;
 					bool foot = false;
@@ -361,9 +362,9 @@ void App::run()
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
-						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
-						segmentMass = 2.0f;
+						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
+						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
+						segmentMass = scale*2.5f;
 						boxSize = glm::vec3(scale*0.25f, uLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(uLegHeight);
@@ -376,7 +377,7 @@ void App::run()
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.01f, 0.0f, 0.0f);
-						segmentMass = 2.0f;
+						segmentMass = scale*1.5f;
 						boxSize = glm::vec3(scale*0.25f, lLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
@@ -385,13 +386,13 @@ void App::run()
 					else if (i == 2) // if foot
 					{
 						partName = " foot";
-						boxSize = glm::vec3(scale*0.571618f, footHeight, scale*0.8f);
-						jointZOffsetInChild = (boxSize.z-0.3f)*0.5f;
-						lowerAngleLim = glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(HALFPI*0.5f, 0.0f, 0.0f);
+						boxSize = glm::vec3(scale*0.4f, footHeight, scale*0.5f);
+						jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
+						lowerAngleLim = glm::vec3(-HALFPI*0.1f, -HALFPI*0.1f, -HALFPI*0.1f);
+						upperAngleLim = glm::vec3(HALFPI*0.5f, HALFPI*0.1f, HALFPI*0.1f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = 0.1f;
+						segmentMass = scale*0.7f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");

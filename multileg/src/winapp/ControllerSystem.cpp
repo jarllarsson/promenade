@@ -21,7 +21,7 @@ bool ControllerSystem::m_bufferLFFeedbackTorque = true;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
-float ControllerSystem::m_torqueLim = 200.0f;
+float ControllerSystem::m_torqueLim = 100.0f;
 
 
 ControllerSystem::~ControllerSystem()
@@ -176,7 +176,7 @@ void ControllerSystem::buildCheck()
 {
 	for (unsigned int i = 0; i < m_controllersToBuild.size(); i++)
 	{
-		glm::vec3 startGaitVelocity(0.0f, 0.0f, 1.0f);
+		glm::vec3 startGaitVelocity(0.0f, 0.0f, 0.5f);
 		ControllerComponent* controller = m_controllersToBuild[i];
 		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
 		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
@@ -491,7 +491,7 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 	glm::vec3 desiredV = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
 	float goalSqrMag = glm::sqrLength(goalV);
 	float currentSqrMag = glm::sqrLength(currentV);
-	float stepSz = 0.5f * p_dt;
+	float stepSz = 0.5f/* * p_dt*/;
 	// Note the material doesn't mention taking dt into 
 	// account for the step size, they might be running fixed timestep
 	// Here the dt received is the time since we last ran the control logic
@@ -750,9 +750,9 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			//if (!stanceForcesCalculated)
 			{
 				fv = calculateFv(p_lf, m_controllerVelocityStats[p_controllerIdx]);
-				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fv, dawnBringerPalRGB[COL_GREY]);
+				//dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fv, dawnBringerPalRGB[COL_GREY]);
 				fh = calculateFh(p_lf, m_controllerLocationStats[p_controllerIdx], p_phi, p_dt, glm::vec3(0.0f, 1.0f, 0.0));
-				dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fh, dawnBringerPalRGB[COL_BEIGE]);
+				//dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fh, dawnBringerPalRGB[COL_BEIGE]);
 				stanceForcesCalculated=true;
 			}	
 			glm::vec3 fd(calculateFd(p_controllerIdx,p_lf, i));
@@ -923,10 +923,16 @@ glm::vec3 ControllerSystem::calculateFh(ControllerComponent::LegFrame* p_lf, con
 	float hLF = p_lf->m_heightLFTraj.lerpGet(p_phi);
 	glm::vec3 currentLocalHeight = p_locationStat.m_worldPos-p_locationStat.m_currentGroundPos;
 	float currentHeightDeviation = currentLocalHeight.y-p_lf->m_height;
+	// NOte that here we differ a little from the source material, as they use the diff between the wanted absolute
+	// height and the current absolute height. Whereas we use the diff between the wanted deviation and the current deviation.
+	// If they have a controller that falls below the wanted, they get hLF(phi)-h. If then h<hLF (below) they'll get positive force, and
+	// if h>hLF they get negative. And that's what we need to keep for our solution, positive when below (to get up) and negative when
+	// above (to get down). Note that this is a stance leg force, so thus the sign is ultimately switched when applied to the foot, in order
+	// for the foot to push the body up (to get up) when h<hLF and thus the foot will itself get -fh.
 	// the current height y only works for up=0,1,0
 	// so in case we are making a space game, i'd reckon we should have the following PD work on vec3's
 	// but for now, a float is OK
-	float fh = p_lf->m_FhPD.drive(max(0.0f,hLF - currentHeightDeviation), p_dt);// PD
+	float fh = p_lf->m_FhPD.drive(hLF - currentHeightDeviation, p_dt);// PD
 	return p_up * fh;
 }
 
@@ -1009,32 +1015,35 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	ControllerComponent::LegFrame* lf = p_controller->getLegFrame(p_legFrameIdx);
 	unsigned int legCount = (unsigned int)lf->m_legs.size();	
 	unsigned int lfJointIdx = lf->m_legFrameJointId;
-	glm::vec3 tstance(0.0f), tswing(0.0f), tspine(0.0f);
+	glm::vec3 tstance(0.0f), tswing(0.0f), tspine(0.0f), // current frame
+		tostance(0.0f), toswing(0.0f), tospine(0.0f); // previous frame
 	unsigned int stanceCount = 0;
 	unsigned int* stanceLegBuf = new unsigned int[legCount];
 	for (unsigned int i = 0; i < legCount; i++)
 	{
 		unsigned int jointId = lf->m_hipJointId[i];
-		glm::vec3 jTorque=m_jointTorques[jointId];
-		if (m_bufferLFFeedbackTorque) jTorque = m_oldJointTorques[jointId];
+		glm::vec3 jTorque=m_jointTorques[jointId], 
+			joTorque = m_oldJointTorques[jointId];
 		if (isInControlledStance(lf, i, p_phi))
 		{
 			tstance += jTorque;
+			tostance += joTorque;
 			stanceLegBuf[stanceCount] = jointId;
 			stanceCount++;
 		}
 		else
+		{
 			tswing += jTorque;
+			toswing += joTorque;
+		}
 	}
 
 	// Spine if it exists
 	int spineIdx = (int)lf->m_spineJointId;
 	if (spineIdx >= 0)
 	{
-		if (m_bufferLFFeedbackTorque)
-			tspine = m_jointTorques[(unsigned int)spineIdx];
-		else
-			tspine = m_oldJointTorques[(unsigned int)spineIdx];
+		tspine = m_jointTorques[(unsigned int)spineIdx];
+		tospine = m_oldJointTorques[(unsigned int)spineIdx];
 
 	}
 
@@ -1044,7 +1053,7 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// stance legs (see 3) as their current torque
 	// is the product of previous desired torque combined
 	// with current real-world scenarios.
-	glm::vec3 tLF = tstance + tswing + tspine;
+	glm::vec3 tLF = tostance + toswing + tospine; // ie. est. what we got now, base don last torque action
 	m_jointTorques[lfJointIdx] = tLF;
 	if (p_controllerId==0)
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tLF, dawnBringerPalRGB[COL_PURPLE], dawnBringerPalRGB[COL_YELLOW]);
@@ -1053,22 +1062,22 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// torque, tLF, and a PD-controller driving towards the 
 	// desired orientation, omegaLF.
 	glm::mat4 dWM = getDesiredWorldOrientation(p_controllerId);
-	glm::vec3 hgr = MathHelp::transformDirection(dWM, glm::vec3(5.0f, 0.0f, 0.0f));
-	glm::vec3 fram = MathHelp::transformDirection(dWM, glm::vec3(0.0f, 0.0f, 5.0f));
+	//glm::vec3 hgr = MathHelp::transformDirection(dWM, glm::vec3(5.0f, 0.0f, 0.0f));
+	//glm::vec3 fram = MathHelp::transformDirection(dWM, glm::vec3(0.0f, 0.0f, 5.0f));
 	//glm::mat4 up = glm::lookAt(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 1.0), glm::vec3(0.0f, 1.0f, 0.0));
 	glm::quat desiredW = glm::quat_cast(dWM/**up*/);
 	glm::quat omegaLF = lf->getCurrentDesiredOrientation(p_phi);
-	omegaLF = desiredW*omegaLF;
+	omegaLF = /*desiredW**/omegaLF;
 	glm::quat currentOrientation = MathHelp::getMatrixRotation(m_jointWorldTransforms[lf->m_legFrameJointId]);
 	glm::mat4 orient = glm::mat4_cast(currentOrientation);
 	glm::vec3 tdLF = lf->getOrientationPDTorque(currentOrientation, omegaLF, p_dt);
 
-	glm::vec3 chgr = MathHelp::transformDirection(orient, glm::vec3(5.0f, 0.0f, 0.0f));
-	glm::vec3 cfram = MathHelp::transformDirection(orient, glm::vec3(0.0f, 0.0f, 5.0f));
+	//glm::vec3 chgr = MathHelp::transformDirection(orient, glm::vec3(5.0f, 0.0f, 0.0f));
+	//glm::vec3 cfram = MathHelp::transformDirection(orient, glm::vec3(0.0f, 0.0f, 5.0f));
 
 	// Draw ORIENTATION distance
-	glm::vec3 wanted = MathHelp::transformDirection(glm::mat4_cast(omegaLF), glm::vec3(0.0f, 10.0f, 0.0f));
-	glm::vec3 current = MathHelp::transformDirection(glm::mat4_cast(currentOrientation), glm::vec3(0.0f, 10.0f, 0.0f));
+	//glm::vec3 wanted = MathHelp::transformDirection(glm::mat4_cast(omegaLF), glm::vec3(0.0f, 10.0f, 0.0f));
+	//glm::vec3 current = MathHelp::transformDirection(glm::mat4_cast(currentOrientation), glm::vec3(0.0f, 10.0f, 0.0f));
 	if (p_controllerId == 0)
 	{
 		/*
@@ -1097,6 +1106,7 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	for (int i = 0; i < N; i++)
 	{
 		unsigned int idx = stanceLegBuf[i];
+		// here we use the wanted tLF and subtract the current swing and spine torques
 		m_jointTorques[idx] = (tdLF - tswing - tspine) / (float)N;
 	}
 	delete[] stanceLegBuf;
@@ -1144,7 +1154,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
 			refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
-			refDesiredFootPos.z -= 0.25f;
+			refDesiredFootPos.z -= 0.2f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
 			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
 			// Fetch upper- and lower leg length and solve IK
@@ -1163,16 +1173,23 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				// 90 forward = -HALFPI (counterclockwise)
 				// 90 deg backward = HALFPI (clockwise)
 				// But the ik has other angle space 
+				glm::quat referenceFrame = currentOrientationQuat;
 				if (x == pdChain->getUpperLegSegmentIdx())
+				{
 					sagittalAngle = -(ik->getUpperLegAngle() + PI*0.5f);
+					referenceFrame = glm::quat_cast(desiredOrientation);
+				}
 				else if (x == pdChain->getLowerLegSegmentIdx())
 					sagittalAngle = -(ik->getLowerWorldLegAngle() + PI*0.5f);
 				else if (x == pdChain->getFootIdx())
+				{
 					sagittalAngle = getDesiredFootAngle(n, lf, p_phi);
+					referenceFrame = glm::quat_cast(desiredOrientation);
+				}
 				//
 				unsigned jointIdx = pdChain->m_jointIdxChain[x];
 				// Calculate angle to leg frame space
-				glm::quat goal = currentOrientationQuat * glm::quat(glm::vec3(sagittalAngle, 0.0f, 0.0f));
+				glm::quat goal = /*desiredOrientationY * */glm::quat(glm::vec3(sagittalAngle, 0.0f, 0.0f));
 				glm::quat current = glm::quat_cast(m_jointWorldTransforms[jointIdx]);
 				// Drive PD using angle
 				glm::vec3 torque = pdChain->m_PDChain[x].drive(current, goal, p_dt);
@@ -1321,32 +1338,3 @@ glm::vec3 ControllerSystem::getJointInnerPos(unsigned int p_jointIdx)
 	return MathHelp::toVec3(m_jointWorldInnerEndpoints[p_jointIdx]);
 }
 
-
-void ControllerSystem::resetNonFeedbackJointTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
-	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
-{
-	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
-	{
-		unsigned int lfIdx = i;
-		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(lfIdx);
-		unsigned int legCount = (unsigned int)lf->m_legs.size();
-		// for each leg
-		for (unsigned int n = 0; n < legCount; n++)
-		{
-			/*Use the PD chain info to find the joints of which to reset the torque*/
-			ControllerComponent::Leg* leg = &lf->m_legs[n];
-			ControllerComponent::PDChain* pdChain = leg->getPDChain();
-			// For each PD in leg
-			for (unsigned int x = 0; x < pdChain->getSize(); x++)
-			{
-				if (x!= pdChain->getUpperLegSegmentIdx())
-				{
-					unsigned jointIdx = pdChain->m_jointIdxChain[x];
-					// Add to torque for joint
-					(*p_outTVF)[jointIdx] = glm::vec3(0.0f);
-				}
-			}
-		}
-	}
-
-}
