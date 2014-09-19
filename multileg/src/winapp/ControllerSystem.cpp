@@ -272,6 +272,7 @@ void ControllerSystem::buildCheck()
 					float mass = m_jointMass[jointId];
 					m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
 					vfIdx = (unsigned int)((int)m_VFs.size() - 1);
+					legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChainOffsets.push_back(m);
 				}
 				legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
 				oldJointGCIdx = jointId;
