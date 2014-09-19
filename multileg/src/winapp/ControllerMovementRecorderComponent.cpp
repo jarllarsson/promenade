@@ -172,7 +172,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	lenDist *= lenDist; // sqr
 	*/
 
-	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.01f * movDistDeviation);
+	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.05f * movDistDeviation);
 }
 
 void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)
