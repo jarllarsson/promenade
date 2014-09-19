@@ -142,8 +142,8 @@ public:
 		// Structure construction:
 		// [R][1][2][F] +
 		//    [1][2][F] +
-		//       [2][F] +
-		//          [F] =
+		//       [2][F] +   // NOTE!
+		//          [F] =   // THIS MIGHT BE THE REVERSE.
 		// Structure:
 		// [R][1][2][F][1][2][F][2][F][F]
 		VFChain m_DOFChainGravityComp;
@@ -192,11 +192,11 @@ public:
 			m_footTrackingGainKp.reset(PieceWiseLinear::LIN_INC,1.0f); // Foot tracking controller for fast gaits. linear(=t) by default
 			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
-			m_desiredLFTorquePD.setKp_KdEQTwoSqrtKp(100.0f);
-			m_FhPD.setKp_KdEQTwoSqrtKp(100.0f);
+			m_desiredLFTorquePD.setKp_KdEQTwoSqrtKp(30.0f);
+			m_FhPD.setKp_KdEQTwoSqrtKp(1000.0f);
 			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(0.0f);
 			// Vectors and Floats
-			m_stepLength = glm::vec2(0.5f, 1.5f);
+			m_stepLength = glm::vec2(0.5f, 2.5f);
 			m_footPlacementVelocityScale = 3.0f;
 			m_height = 0.0f;
 			m_lateStrikeOffsetDeltaH = 0.0f;

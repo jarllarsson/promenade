@@ -805,61 +805,80 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 	// Calculate torques using specified leg chain
 	ControllerComponent::Leg* leg = &p_lf->m_legs[p_legIdx];
 	ControllerComponent::VFChain* chain = leg->getVFChain(p_type);
-	// Get the end effector position
-	// We're using the COM of the foot
-	glm::vec3 end = getJointPos(chain->getEndJointIdx());
-		//getFootPos(p_lf, p_legIdx);
-	// Calculate the matrices
-	CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,						// Chain of DOFs to solve for
-		end,						// Our end effector goal position
-		&m_VFs,							// All virtual forces
-		&m_jointWorldInnerEndpoints,	// All joint rotational axes
-		&m_jointWorldTransforms);		// All joint world transformations
-	CMatrix Jt = CMatrix::transpose(J);
-
-	/*glm::mat4 sum(0.0f);
-	for (unsigned int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
-	{
-		sum += m_jointWorldTransforms[g];
-	}*/
-	//DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
-	//DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
-	//DEBUGPRINT(((std::string("\n") + std::string(" VF: ") + ToString(vf)).c_str()));
-
-	// Use matrix to calculate and store torque
-	for (unsigned int m = 0; m < chain->getSize(); m++)
-	{
-		// store torque
-		unsigned int localJointIdx = chain->m_jointIdxChain[m];
-		glm::vec3 vf = m_VFs[chain->m_vfIdxList[m]];
-
-		// for visual force debug
-		// ========================================================================
-		if ((m_dbgShowGCVFVectors && p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
-			|| (m_dbgShowVFVectors && p_type == ControllerComponent::VFChainType::STANDARD_CHAIN))
+	unsigned int endJointIdx = chain->getEndJointIdx();
+	unsigned int dofsToProcess = chain->getSize();
+	unsigned int subChains = chain->m_jointIdxChainOffsets.size();
+	for (int i = 0; i < max(1, subChains); i++) // always run at least once
+	{		
+		// get next end joint, if we're using subchains
+		if (p_type == ControllerComponent::GRAVITY_COMPENSATION_CHAIN && subChains > 0)
 		{
-			glm::vec3 jpos = getJointPos(localJointIdx);
-			Color3f lineCol = dawnBringerPalRGB[COL_LIMEGREEN];
-			if (p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
-				lineCol = dawnBringerPalRGB[COL_PINK];
-			dbgDrawer()->drawLine(jpos, jpos + vf, lineCol);
+			unsigned int dofOffset = chain->m_jointIdxChainOffsets[i];
+			endJointIdx = chain->m_jointIdxChain[dofOffset];
+			if (i<subChains-1)
+				dofsToProcess = chain->m_jointIdxChainOffsets[i+1];
+			else
+				dofsToProcess = chain->getSize();
 		}
-		// ========================================================================
+		// Get the end effector position
+		// We're using the COM of the end joint in the chain
+		// for a standard chain, this is equivalent to the foot
+		glm::vec3 end = getJointPos(endJointIdx);
+		//getFootPos(p_lf, p_legIdx);
+		// Calculate the matrices
+		CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,						// Chain of DOFs to solve for
+															end,							// Our end effector goal position
+															&m_VFs,							// All virtual forces
+															&m_jointWorldInnerEndpoints,	// All joint rotational axes
+															&m_jointWorldTransforms,		// All joint world transformations
+															dofsToProcess);					// Number of DOFs in list to work through
+		CMatrix Jt = CMatrix::transpose(J);
 
-		//glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
-		glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
-		glm::vec3 addT = (chain->m_DOFChain)[m] * glm::dot(JVec, vf);
-		//
-		//float ssum = JjVec.x + JjVec.y + JjVec.z;
-		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
-		//ssum = JVec.x + JVec.y + JVec.z;
-		//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
-		bool vecnanchk = glm::isnan(addT) == glm::bool3(true, true, true);
-		if (vecnanchk)
-			int bb = 0;
-		(*p_outTVF)[localJointIdx/* + p_torqueIdxOffset*/] += addT;
-		// Do it like this for now, for the sake of readability and debugging.
-	}
+		/*glm::mat4 sum(0.0f);
+		for (unsigned int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
+		{
+		sum += m_jointWorldTransforms[g];
+		}*/
+		//DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
+		//DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
+		//DEBUGPRINT(((std::string("\n") + std::string(" VF: ") + ToString(vf)).c_str()));
+
+		// Use matrix to calculate and store torque
+		for (unsigned int m = 0; m < dofsToProcess; m++)
+		{
+			// store torque
+			unsigned int localJointIdx = chain->m_jointIdxChain[m];
+			glm::vec3 vf = m_VFs[chain->m_vfIdxList[m]];
+
+			// for visual force debug
+			// ========================================================================
+			if ((m_dbgShowGCVFVectors && p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
+				|| (m_dbgShowVFVectors && p_type == ControllerComponent::VFChainType::STANDARD_CHAIN))
+			{
+				glm::vec3 jpos = getJointPos(localJointIdx);
+				Color3f lineCol = dawnBringerPalRGB[COL_LIMEGREEN];
+				if (p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
+					lineCol = dawnBringerPalRGB[COL_PINK];
+				dbgDrawer()->drawLine(jpos, jpos + vf, lineCol);
+			}
+			// ========================================================================
+
+			//glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
+			glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
+			glm::vec3 addT = (chain->m_DOFChain)[m] * glm::dot(JVec, vf);
+			//
+			//float ssum = JjVec.x + JjVec.y + JjVec.z;
+			//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
+			//ssum = JVec.x + JVec.y + JVec.z;
+			//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
+			bool vecnanchk = glm::isnan(addT) == glm::bool3(true, true, true);
+			if (vecnanchk)
+				int bb = 0;
+			(*p_outTVF)[localJointIdx/* + p_torqueIdxOffset*/] += addT;
+			// Do it like this for now, for the sake of readability and debugging.
+		}
+
+	} // next subchain(only used for GCVF chains for now)
 }
 
 bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx, float p_phi)

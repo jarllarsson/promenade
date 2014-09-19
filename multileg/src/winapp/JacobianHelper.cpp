@@ -4,12 +4,13 @@ CMatrix JacobianHelper::calculateVFChainJacobian(const ControllerComponent::VFCh
 												 const glm::vec3& p_currentChainEndpoint, 
 												 const std::vector<glm::vec3>* p_vfList,
 												 const std::vector<glm::vec4>* p_jointWorldAxes,
-												 const std::vector<glm::mat4>* p_jointWorldTransforms)
+												 const std::vector<glm::mat4>* p_jointWorldTransforms,
+												 unsigned int p_dofCount)
 {
 	// calculate size
 	// If a separate root object was specified
 	// we need to account for that extra joint
-	unsigned int dofCount = p_chain.getSize();
+	unsigned int dofCount = p_dofCount;
 	// Prepare Jacobian matrix
 	CMatrix J(3, dofCount); // 3 is position in xyz
 	for (unsigned int i = 0; i < dofCount; i++) // this is then the "thread pool"

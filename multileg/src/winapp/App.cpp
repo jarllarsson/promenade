@@ -364,7 +364,7 @@ void App::run()
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
 						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-						segmentMass = scale*2.5f;
+						segmentMass = scale*4.0f;
 						boxSize = glm::vec3(scale*0.25f, uLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(uLegHeight);
@@ -377,7 +377,7 @@ void App::run()
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.01f, 0.0f, 0.0f);
-						segmentMass = scale*1.5f;
+						segmentMass = scale*3.0f;
 						boxSize = glm::vec3(scale*0.25f, lLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
@@ -392,7 +392,7 @@ void App::run()
 						upperAngleLim = glm::vec3(HALFPI*0.5f, HALFPI*0.1f, HALFPI*0.1f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = scale*0.7f;
+						segmentMass = scale*1.0f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
