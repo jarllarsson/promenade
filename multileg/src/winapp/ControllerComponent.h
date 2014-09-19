@@ -66,6 +66,11 @@ public:
 		{
 			return (unsigned int)m_DOFChain.size();
 		}
+
+		unsigned int getEndJointIdx()
+		{
+			return m_jointIdxChain[getSize() - 1];
+		}
 	};
 	enum VFChainType
 	{

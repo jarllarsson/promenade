@@ -277,11 +277,11 @@ void ControllerSystem::buildCheck()
 				oldJointGCIdx = jointId;
 			}
 			// Now, re-append piece by piece, so we "automatically" get the additive loop later
-			for (unsigned int n = 0; n < (unsigned int)jointsAddedForLeg; n++)
+			/*for (unsigned int n = 0; n < (unsigned int)jointsAddedForLeg; n++)
 			{ 
 				// n+1 to skip re-appending of root:
-				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, (int)n + 1, jointsAddedForLeg - (int)n, origGCDOFsz);
-			}
+				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, (int)n+1, jointsAddedForLeg - (int)n, origGCDOFsz);
+			}*/
 			// Add an IK handler for leg
 			legFrame->m_legIK.push_back(IK2Handler());
 			// add entry for foot rotation timing params in struct
@@ -806,7 +806,8 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 	ControllerComponent::VFChain* chain = leg->getVFChain(p_type);
 	// Get the end effector position
 	// We're using the COM of the foot
-	glm::vec3 end = getFootPos(p_lf, p_legIdx);
+	glm::vec3 end = getJointPos(chain->getEndJointIdx());
+		//getFootPos(p_lf, p_legIdx);
 	// Calculate the matrices
 	CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,						// Chain of DOFs to solve for
 		end,						// Our end effector goal position
