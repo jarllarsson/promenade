@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -304,7 +304,7 @@ void App::run()
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-			float characterMass = scale*10.0f;
+			float characterMass = scale*5.0f;
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
@@ -364,7 +364,7 @@ void App::run()
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
 						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-						segmentMass = scale*4.0f;
+						segmentMass = scale*2.0f;
 						boxSize = glm::vec3(scale*0.25f, uLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(uLegHeight);
@@ -375,9 +375,9 @@ void App::run()
 					else if (i == 1) // if knee (lower leg)
 					{
 						partName = " lower";
-						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
+						lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
 						upperAngleLim = glm::vec3(HALFPI*0.01f, 0.0f, 0.0f);
-						segmentMass = scale*3.0f;
+						segmentMass = scale*1.5f;
 						boxSize = glm::vec3(scale*0.25f, lLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
 						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
@@ -386,13 +386,13 @@ void App::run()
 					else if (i == 2) // if foot
 					{
 						partName = " foot";
-						boxSize = glm::vec3(scale*0.4f, footHeight, scale*0.5f);
+						boxSize = glm::vec3(scale*0.4f, footHeight, scale*0.7f);
 						jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
 						lowerAngleLim = glm::vec3(-HALFPI*0.1f, -HALFPI*0.1f, -HALFPI*0.1f);
 						upperAngleLim = glm::vec3(HALFPI*0.5f, HALFPI*0.1f, HALFPI*0.1f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = scale*1.0f;
+						segmentMass = scale*0.7f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");

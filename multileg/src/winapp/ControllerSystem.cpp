@@ -21,7 +21,7 @@ bool ControllerSystem::m_bufferLFFeedbackTorque = true;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
-float ControllerSystem::m_torqueLim = 100.0f;
+float ControllerSystem::m_torqueLim = 200.0f;
 
 
 ControllerSystem::~ControllerSystem()
@@ -307,7 +307,7 @@ void ControllerSystem::buildCheck()
 			unsigned int vlistpos = m_controllerVelocityStats.size() - 1;
 			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Current velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_currentVelocity, " group='LegFrame'");
 			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Desired velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_desiredVelocity, " group='LegFrame'");
-			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, "Goal velocity", Toolbar::DIR, (void*)&m_controllerVelocityStats[vlistpos].m_goalVelocity, " group='LegFrame'");
+			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, "Goal velocity", Toolbar::DIR, (void*)&m_controllerVelocityStats[vlistpos].getGoalVelocity(), " group='LegFrame'");
 			// Debug, per-leg stuff
 			for (unsigned int x = 0; x < legCount; x++)
 			{
@@ -488,7 +488,7 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 	// velocity from the current velocity
 	// Function for deciding the current desired velocity in order
 	// to reach the goal velocity
-	glm::vec3 goalV = m_controllerVelocityStats[p_controllerId].m_goalVelocity;
+	glm::vec3 goalV = m_controllerVelocityStats[p_controllerId].getGoalVelocity();
 	glm::vec3 desiredV = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
 	float goalSqrMag = glm::sqrLength(goalV);
 	float currentSqrMag = glm::sqrLength(currentV);
@@ -562,7 +562,7 @@ void ControllerSystem::updateFeet( unsigned int p_controllerId, ControllerCompon
 		unsigned int legCount = (unsigned int)lf->m_legs.size();
 		glm::vec3 currentV = m_controllerVelocityStats[p_controllerId].m_currentVelocity;
 		glm::vec3 desiredV = m_controllerVelocityStats[p_controllerId].m_desiredVelocity;
-		glm::vec3 goalV = m_controllerVelocityStats[p_controllerId].m_goalVelocity;
+		glm::vec3 goalV = m_controllerVelocityStats[p_controllerId].getGoalVelocity();
 		glm::vec3 groundPos = m_controllerLocationStats[p_controllerId].m_currentGroundPos;
 		float phi = p_controller->m_player.getPhase();
 		for (unsigned int i = 0; i < legCount; i++)

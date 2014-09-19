@@ -41,6 +41,8 @@ public:
 		glm::vec3 m_oldPos;
 		glm::vec3 m_currentVelocity;
 		glm::vec3 m_desiredVelocity;
+		glm::vec3& getGoalVelocity() { return m_goalVelocity; }
+	private:
 		glm::vec3 m_goalVelocity;
 	};
 

@@ -5,7 +5,7 @@
 ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame, 
 	std::vector<artemis::Entity*>& p_hipJoints)
 {
-	m_player = GaitPlayer(1.0f);
+	m_player = GaitPlayer(2.0f);
 	//
 	m_buildComplete = false;
 	// for each inputted leg-frame entity...

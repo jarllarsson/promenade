@@ -7,9 +7,9 @@
 
 ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 {
-	m_fdWeight = 1000.0f; // deviation from reference motion
-	m_fvWeight = 15.0f;   // deviation from desired speed
-	m_fhWeight = 100.0f;	 // acceleration of head
+	m_fdWeight = 500.0f; // deviation from reference motion
+	m_fvWeight = 5.0f;   // deviation from desired speed
+	m_fhWeight = 0.5f;	 // acceleration of head
 	m_frWeight = 5.0f;	 // whole body rotation
 	m_fpWeight = 0.0f;	 // movement distance
 }
@@ -41,7 +41,7 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 		m_temp_currentStrideVelocities.push_back(velocities.m_currentVelocity);
 		// DESIRED m_temp_currentStrideDesiredVelocities.push_back(velocities.m_desiredVelocity);
 		// GOAL 
-		m_temp_currentStrideDesiredVelocities.push_back(velocities.m_goalVelocity);
+		m_temp_currentStrideDesiredVelocities.push_back(velocities.getGoalVelocity());
 	}
 	else
 	{
@@ -98,7 +98,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	glm::vec3 controllerstart = glm::vec3(0.0f); // for now, always start in origo on optimization
 
 	// Calc global distance deviation
-	double ghostDist = (double)(velstat.m_goalVelocity.z)*p_time;
+	double ghostDist = (double)(velstat.getGoalVelocity().z)*p_time;
 	glm::vec3 ghostDistVec(0.0f, 0.0f, ghostDist);
 	double controllerDist = (double)(p_system->getControllerPosition(p_controller).z - controllerstart.z);
 	movDistDeviation = ghostDist - controllerDist;
@@ -172,13 +172,13 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	lenDist *= lenDist; // sqr
 	*/
 
-	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + 1000.0f*lenBod + lenHd + 0.2f * movDistDeviation);
+	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.01f * movDistDeviation);
 }
 
 void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)
 {
 	m_fpMovementDist.push_back(p_system->getControllerVelocityStat(p_controller).m_currentVelocity);
-	m_fvVelocityGoal = p_system->getControllerVelocityStat(p_controller).m_goalVelocity;
+	m_fvVelocityGoal = p_system->getControllerVelocityStat(p_controller).getGoalVelocity();
 }
 
 double ControllerMovementRecorderComponent::evaluateFV()
