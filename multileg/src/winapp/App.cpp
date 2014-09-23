@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -277,14 +277,14 @@ void App::run()
 
 		// Test of controller
 		float scale = 1.0f;
-		float hipCoronalOffset = scale*0.5f; // coronal distance between hip joints and center
+		float hipCoronalOffset = scale*0.2f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
 		// size setups
-		float	lfHeight = scale*1.0f,
-				uLegHeight = scale*1.0f,
-				lLegHeight = scale*0.9f,
-				footHeight = scale*0.12;
-		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
+		float	lfHeight = scale*0.48f,
+				uLegHeight = scale*0.45f,
+				lLegHeight = scale*0.45f,
+				footHeight = scale*0.04f;
+		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight/*scale*0.2f*/;
 		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
@@ -304,7 +304,7 @@ void App::run()
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-			float characterMass = scale*5.0f;
+			float characterMass = /*scale**/70.0f;
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
@@ -362,10 +362,12 @@ void App::run()
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
-						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
-						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-						segmentMass = scale*2.0f;
-						boxSize = glm::vec3(scale*0.25f, uLegHeight, scale*0.25f);
+						//lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
+						//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
+						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
+						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
+						segmentMass = /*scale**/5.0f;
+						boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION
 						if (n==0) uLegLens.push_back(uLegHeight);
 #endif
@@ -376,9 +378,9 @@ void App::run()
 					{
 						partName = " lower";
 						lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(HALFPI*0.01f, 0.0f, 0.0f);
-						segmentMass = scale*1.5f;
-						boxSize = glm::vec3(scale*0.25f, lLegHeight, scale*0.25f);
+						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+						segmentMass = /*scale**/4.0f;
+						boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION
 						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
 #endif
@@ -386,13 +388,16 @@ void App::run()
 					else if (i == 2) // if foot
 					{
 						partName = " foot";
-						boxSize = glm::vec3(scale*0.4f, footHeight, scale*0.7f);
-						jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
-						lowerAngleLim = glm::vec3(-HALFPI*0.1f, -HALFPI*0.1f, -HALFPI*0.1f);
-						upperAngleLim = glm::vec3(HALFPI*0.5f, HALFPI*0.1f, HALFPI*0.1f);
+						//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
+						boxSize = glm::vec3(scale*0.1f, scale*0.2f, footHeight);
+						//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
+						//lowerAngleLim = glm::vec3(-HALFPI*0.1f, -HALFPI*0.1f, -HALFPI*0.1f);
+						//upperAngleLim = glm::vec3(HALFPI*0.5f, HALFPI*0.1f, HALFPI*0.1f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = scale*0.7f;
+						lowerAngleLim = glm::vec3(HALFPI*0.9f, 0.0f, 0.0f);
+						upperAngleLim = glm::vec3(HALFPI*1.2f, 0.0f, 0.0f);
+						segmentMass = /*scale**/1.0f;
 						foot = true;
 					}
 					string dbgGrp = (" group='" + sideName + "'");
@@ -412,18 +417,18 @@ void App::run()
 							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
 					}
 					if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
-					//if (i != 2)
+					if (i != 2)
 					{
 						childJoint.addComponent(new TransformComponent(legpos,
 							glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 							boxSize));					// note scale, so full lengths
 					}
-					/*else
+					else
 					{
-						childJoint.addComponent(new TransformComponent(legpos,
-							glm::quat(glm::vec3(-HALFPI*0.2f, 0.0f, 0.0f)),
+						childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, scale*0.2f*0.5f, scale*0.2f*0.5f),
+							glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
 							boxSize));					// note scale, so full lengths
-					}*/
+					}
 					MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
 					childJoint.addComponent(mat);
 					if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
@@ -577,7 +582,7 @@ void App::run()
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
 				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1, (btScalar)fixedStep);
 	#else
-				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
+				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)fixedStep);
 	#endif
 				// ========================================================
 

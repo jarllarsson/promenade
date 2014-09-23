@@ -21,7 +21,7 @@ bool ControllerSystem::m_bufferLFFeedbackTorque = true;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
-float ControllerSystem::m_torqueLim = 200.0f;
+float ControllerSystem::m_torqueLim = 300.0f;
 
 
 ControllerSystem::~ControllerSystem()
@@ -1174,8 +1174,8 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			ControllerComponent::PDChain* pdChain = leg->getPDChain();
 			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
-			refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
-			refDesiredFootPos.z -= 0.2f;
+			//refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
+			//refDesiredFootPos.z -= 0.2f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
 			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
 			// Fetch upper- and lower leg length and solve IK
@@ -1184,7 +1184,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			if (p_controllerIdx == 0) drawer = dbgDrawer();
 			ik->solve(refDesiredFootPos, refHipPos,
 				m_jointLengths[pdChain->getUpperJointIdx()],
-				m_jointLengths[pdChain->getLowerJointIdx()] + m_jointLengths[pdChain->getFootJointIdx()], drawer);
+				m_jointLengths[pdChain->getLowerJointIdx()]/* + m_jointLengths[pdChain->getFootJointIdx()]*/, drawer);
 			// For each PD in leg
 			for (unsigned int x = 0; x < pdChain->getSize(); x++)
 			{
