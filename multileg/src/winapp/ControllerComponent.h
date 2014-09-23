@@ -215,7 +215,7 @@ public:
 			//m_ulegPDsK = glm::vec2(20.0f, 8.6f);
 			//m_llegPDsK = glm::vec2(15.0f, 7.7f); // kd currently 2*sqrt(kp)
 			//m_flegPDsK = glm::vec2(0.5f, 0.05f); // here ten prcnt
-			m_flegPDsK = glm::vec2(1.0f, 0.1f); // here ten prcnt
+			m_flegPDsK = glm::vec2(0.0f, 0.0f); // here ten prcnt
 			//m_flegPDsK = glm::vec2(300.0f, 30.0f); // here ten prcnt
 			////m_flegPDsK = glm::vec2(10.0f, 6.32f);
 			// foot

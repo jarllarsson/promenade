@@ -304,7 +304,7 @@ void App::run()
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-			float characterMass = /*scale**/70.0f;
+			float characterMass = /*scale**/20.0f;
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
@@ -426,7 +426,7 @@ void App::run()
 					else
 					{
 						childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, scale*0.2f*0.5f, scale*0.2f*0.5f),
-							glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
+							glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
 							boxSize));					// note scale, so full lengths
 					}
 					MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
