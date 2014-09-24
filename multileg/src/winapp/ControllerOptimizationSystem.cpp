@@ -10,7 +10,7 @@ ControllerOptimizationSystem::ControllerOptimizationSystem()
 	addComponentType<ControllerComponent>();
 	addComponentType<ControllerMovementRecorderComponent>();
 	// settings
-	m_simTicks = 1000;			
+	m_simTicks = 500;			
 	m_warmupTicks = 1;	
 	m_instantEval = false;
 	m_time = 0.0;

@@ -21,7 +21,7 @@ bool ControllerSystem::m_bufferLFFeedbackTorque = true;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
-float ControllerSystem::m_torqueLim = 100.0f;
+float ControllerSystem::m_torqueLim = 200.0f;
 
 
 ControllerSystem::~ControllerSystem()
@@ -176,7 +176,7 @@ void ControllerSystem::buildCheck()
 {
 	for (unsigned int i = 0; i < m_controllersToBuild.size(); i++)
 	{
-		glm::vec3 startGaitVelocity(0.0f, 0.0f, 0.5f);
+		glm::vec3 startGaitVelocity(0.0f, 0.0f, 0.2f);
 		ControllerComponent* controller = m_controllersToBuild[i];
 		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
 		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
@@ -502,18 +502,26 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 	if (goalSqrMag > currentSqrMag)
 	{
 		// Take steps no bigger than 0.5m/s
-		if (goalSqrMag < currentSqrMag + stepSz)
+		if (goalSqrMag < currentSqrMag + stepSz*stepSz)
 			desiredV = goalV;
 		else if (currentV != glm::vec3(0.0f))
-			desiredV += glm::normalize(currentV) * stepSz;
+		{
+			glm::vec3 dir = glm::normalize(currentV);
+			float len = glm::length(dir);
+			desiredV += dir * stepSz;
+		}
 	}
 	else // if the goal is slower
 	{
 		// Take steps no smaller than 0.5
-		if (goalSqrMag > currentSqrMag - stepSz)
+		if (goalSqrMag > currentSqrMag - stepSz*stepSz)
 			desiredV = goalV;
 		else if (currentV != glm::vec3(0.0f))
-			desiredV -= glm::normalize(currentV) * stepSz;
+		{
+			glm::vec3 dir = glm::normalize(currentV);
+			float len = glm::length(dir);
+			desiredV -= dir * stepSz;
+		}
 	}
 	m_controllerVelocityStats[p_controllerId].m_desiredVelocity = desiredV;
 	// Location

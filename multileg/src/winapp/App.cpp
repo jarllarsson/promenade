@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -143,7 +143,7 @@ void App::run()
 #endif
 	bool dbgDrawAllChars = true;
 	double controllerSystemTimingMs = 0.0;
-	bool lockLFY_onRestart = false;
+	bool lockLFY_onRestart = true;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);	
 
@@ -289,7 +289,7 @@ void App::run()
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
 #ifdef OPTIMIZATION
-		chars=20;
+		chars=10;
 #endif
 		for (int x = 0; x < chars; x++) // number of characters
 		{
@@ -300,11 +300,11 @@ void App::run()
 			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
 
 			// if locked, we move down a tiny bit to get traction
-			if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
+			//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-			float characterMass = scale*10.0f;
+			float characterMass = scale*50.0f;
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
@@ -316,8 +316,8 @@ void App::run()
 			if (lockPos)
 			{
 				float lck = lockLFY_onRestart ? 0 : 1;
-				lfRB->setLinearFactor(glm::vec3(1, lck, 1));
-				lfRB->setAngularFactor(glm::vec3(1, 1, 1));
+				lfRB->setLinearFactor(glm::vec3(lck, 1, 1));
+				lfRB->setAngularFactor(glm::vec3(1, lck, lck));
 			}
 
 
@@ -362,8 +362,8 @@ void App::run()
 						partName = " upper";
 						upperLegSegment = &childJoint;
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
-						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
-						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
+						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.0f);
+						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.0f);
 						segmentMass = scale*4.0f;
 						boxSize = glm::vec3(scale*0.25f, uLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
@@ -375,8 +375,8 @@ void App::run()
 					else if (i == 1) // if knee (lower leg)
 					{
 						partName = " lower";
-						lowerAngleLim = glm::vec3(-HALFPI, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(HALFPI*0.01f, 0.0f, 0.0f);
+						lowerAngleLim = glm::vec3(-PI*0.8f, 0.0f, 0.0f);
+						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						segmentMass = scale*3.0f;
 						boxSize = glm::vec3(scale*0.25f, lLegHeight, scale*0.25f);
 #ifdef OPTIMIZATION
@@ -575,7 +575,7 @@ void App::run()
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
-				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1, (btScalar)fixedStep);
+				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 50, (btScalar)(double)m_timeScale*(1.0f / 1000.0f));
 	#else
 				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1/*, (btScalar)fixedStep*/);
 	#endif
