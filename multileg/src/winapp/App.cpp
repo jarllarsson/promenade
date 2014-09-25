@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -143,7 +143,7 @@ void App::run()
 #endif
 	bool dbgDrawAllChars = true;
 	double controllerSystemTimingMs = 0.0;
-	bool lockLFY_onRestart = false;
+	bool lockLFY_onRestart = true;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);	
 
@@ -289,7 +289,7 @@ void App::run()
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
 #ifdef OPTIMIZATION
-		chars=20;
+		chars=10;
 #endif
 		for (int x = 0; x < chars; x++) // number of characters
 		{
@@ -300,7 +300,7 @@ void App::run()
 			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
 
 			// if locked, we move down a tiny bit to get traction
-			if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
+			//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
@@ -316,8 +316,8 @@ void App::run()
 			if (lockPos)
 			{
 				float lck = lockLFY_onRestart ? 0 : 1;
-				lfRB->setLinearFactor(glm::vec3(1, lck, 1));
-				lfRB->setAngularFactor(glm::vec3(1, 1, 1));
+				lfRB->setLinearFactor(glm::vec3(lck, 1, 1));
+				lfRB->setAngularFactor(glm::vec3(1, lck, lck));
 			}
 
 
@@ -580,7 +580,7 @@ void App::run()
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
-				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1, (btScalar)fixedStep);
+				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 50, (btScalar)(double)m_timeScale*(1.0f / 1000.0f));
 	#else
 				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)fixedStep);
 	#endif
