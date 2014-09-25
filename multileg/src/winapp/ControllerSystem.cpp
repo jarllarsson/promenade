@@ -246,6 +246,7 @@ void ControllerSystem::buildCheck()
 				{	// ===FOOT===
 					legFrame->m_feetJointId.push_back(idx);
 					footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
+					legFrame->m_footHeight = jointTransform->getScale().z; // height between dorsum and sole(remember; foot is rotated limb)
 					legFrame->createFootPlacementModelVarsForNewLeg(footPos);
 					// add rigidbody idx so we can check for collisions and late foot strikes
 					legFrame->m_footRigidBodyIdx.push_back(m_rigidBodyRefs.size() - 1);
@@ -289,7 +290,7 @@ void ControllerSystem::buildCheck()
 			legFrame->m_toeOffTime.push_back(0.0f);
 			legFrame->m_tuneFootStrikeTime.push_back(0.0f);
 		}
-		legFrame->m_height = legFramePos.y - (footPos.y - 0.04f*0.5f/*m_jointLengths[footJointId]*0.5f*/);
+		legFrame->m_height = legFramePos.y - (footPos.y - legFrame->m_footHeight*0.5f/*m_jointLengths[footJointId]*0.5f*/);
 		// Calculate number of torques axes in list, store
 		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
@@ -320,21 +321,21 @@ void ControllerSystem::buildCheck()
 				// Foot strike placement visualization
 				artemis::Entity & footPlcmtDbg = world->createEntity();
 				footPlcmtDbg.addComponent(new RenderComponent());
-				footPlcmtDbg.addComponent(new TransformComponent());
+				footPlcmtDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.2f)));
 				footPlcmtDbg.addComponent(new PositionRefComponent(&legFrame->m_footStrikePlacement[x]));
 				footPlcmtDbg.addComponent(new MaterialComponent(col));
 				footPlcmtDbg.refresh();
 				// Foot lift placement visualization
 				artemis::Entity & footLiftDbg = world->createEntity();
 				footLiftDbg.addComponent(new RenderComponent());
-				footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.5f, 2.0f, 0.5f)));
+				footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f, 0.3f, 0.1f)));
 				footLiftDbg.addComponent(new PositionRefComponent(&legFrame->m_footLiftPlacement[x]));
 				footLiftDbg.addComponent(new MaterialComponent(col*0.7f));
 				footLiftDbg.refresh();
 				// Foot target placement visualization
 				artemis::Entity & footTargetDbg = world->createEntity();
 				footTargetDbg.addComponent(new RenderComponent());
-				footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.5f, 0.5f, 0.5f), glm::quat(glm::vec3((float)HALFPI, 0.0f, 0.0f))));
+				footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f), glm::quat(glm::vec3((float)HALFPI, 0.0f, 0.0f))));
 				footTargetDbg.addComponent(new PositionRefComponent(&legFrame->m_footTarget[x]));
 				footTargetDbg.addComponent(new MaterialComponent(col*0.25f));
 				footTargetDbg.refresh();
@@ -502,18 +503,18 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 	if (goalSqrMag > currentSqrMag)
 	{
 		// Take steps no bigger than 0.5m/s
-		if (goalSqrMag < currentSqrMag + stepSz)
+		if (goalSqrMag < currentSqrMag + stepSz*stepSz)
 			desiredV = goalV;
 		else if (currentV != glm::vec3(0.0f))
-			desiredV += glm::normalize(currentV) * stepSz;
+			desiredV += glm::normalize(currentV) * stepSz*p_dt;
 	}
 	else // if the goal is slower
 	{
 		// Take steps no smaller than 0.5
-		if (goalSqrMag > currentSqrMag - stepSz)
+		if (goalSqrMag > currentSqrMag - stepSz*stepSz)
 			desiredV = goalV;
 		else if (currentV != glm::vec3(0.0f))
-			desiredV -= glm::normalize(currentV) * stepSz;
+			desiredV -= glm::normalize(currentV) * stepSz*p_dt;
 	}
 	m_controllerVelocityStats[p_controllerId].m_desiredVelocity = desiredV;
 	// Location
@@ -659,7 +660,9 @@ glm::vec3 ControllerSystem::projectFootPosToGround(const glm::vec3& p_footPosLF,
 glm::vec3 ControllerSystem::calculateVelocityScaledFootPos(const ControllerComponent::LegFrame* p_lf, const glm::vec3& p_footPosLF,
 	const glm::vec3& p_velocity,const glm::vec3& p_desiredVelocity) const
 {
-	return p_footPosLF + (p_velocity - p_desiredVelocity) * p_lf->m_footPlacementVelocityScale;
+	glm::vec3 v = (p_velocity - p_desiredVelocity);
+	v = glm::vec3(v.x, v.y, v.z);
+	return p_footPosLF + v * p_lf->m_footPlacementVelocityScale;
 }
 
 // Get the phase value in the foot transition based on
@@ -1175,7 +1178,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
 			//refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
-			refDesiredFootPos.y -= 0.04f*0.5f;
+			refDesiredFootPos.y -= lf->m_footHeight*0.5f;
 			refDesiredFootPos.z -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
 			//refDesiredFootPos.z -= 0.2f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD

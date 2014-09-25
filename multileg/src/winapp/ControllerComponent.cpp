@@ -169,17 +169,17 @@ std::vector<float> ControllerComponent::LegFrame::getParamsMax()
 	for (int i = 0; i < 3; i++)
 	for (int x = 0; x < m_orientationLFTraj[i].getSize(); x++)
 		paramsmax.push_back(TWOPI);		// m_orientationLFTraj
-	for (int i = 0; i < m_heightLFTraj.getSize(); i++)			paramsmax.push_back(5.0f);		// heightLFTraj
-	for (int i = 0; i < m_footTrackingGainKp.getSize(); i++)	paramsmax.push_back(10.0f);		// footTrackingGainKp
-	for (int i = 0; i < m_stepHeighTraj.getSize(); i++)			paramsmax.push_back(5.5f);		// stepHeighTraj
+	for (int i = 0; i < m_heightLFTraj.getSize(); i++)			paramsmax.push_back(1.0f);		// heightLFTraj
+	for (int i = 0; i < m_footTrackingGainKp.getSize(); i++)	paramsmax.push_back(1.0f);		// footTrackingGainKp
+	for (int i = 0; i < m_stepHeighTraj.getSize(); i++)			paramsmax.push_back(1.5f);		// stepHeighTraj
 	for (int i = 0; i < m_footTransitionEase.getSize(); i++)	paramsmax.push_back(1.0f);		// footTransitionEase
 	/*OptimizableHelper::addRange(params,m_desiredLFTorquePD;		//*/
-	paramsmax.push_back(200.0f); paramsmax.push_back(20.0f); // FhPD (kp, kd), optimizable height force pd
+	paramsmax.push_back(100.0f); paramsmax.push_back(10.0f); // FhPD (kp, kd), optimizable height force pd
 	/*paramsmax.push_back(m_lateStrikeOffsetDeltaH);*/
-	paramsmax.push_back(100.0f); // velocityRegulatorKv
-	for (int i=0;i<4;i++) paramsmax.push_back(200.0f);	// FDHVComponents;
-	paramsmax.push_back(10.0f);	// footPlacementVelocityScale
-	paramsmax.push_back(3.0f); paramsmax.push_back(3.0f);// step length
+	paramsmax.push_back(3.0f); // velocityRegulatorKv
+	for (int i=0;i<4;i++) paramsmax.push_back(2.0f);	// FDHVComponents;
+	paramsmax.push_back(2.0f);	// footPlacementVelocityScale
+	paramsmax.push_back(0.2f); paramsmax.push_back(3.3f);// step length
 	paramsmax.push_back(TWOPI); // toe off angle
 	paramsmax.push_back(TWOPI); // foot strike angle
 	// All per leg data
@@ -207,7 +207,7 @@ std::vector<float> ControllerComponent::LegFrame::getParamsMin()
 	paramsmin.push_back(0.0f); paramsmin.push_back(0.0f); // FhPD (kp, kd), optimizable height force pd
 	/*paramsmax.push_back(m_lateStrikeOffsetDeltaH);*/
 	paramsmin.push_back(0.0f); // velocityRegulatorKv
-	for (int i = 0; i<4; i++) paramsmin.push_back(-200.0f);	// FDHVComponents;
+	for (int i = 0; i<4; i++) paramsmin.push_back(-2.0f);	// FDHVComponents;
 	paramsmin.push_back(0.0f);	// footPlacementVelocityScale
 	paramsmin.push_back(0.0f); paramsmin.push_back(0.0f);// step length
 	paramsmin.push_back(0.0f); // toe off angle

@@ -39,9 +39,10 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 	if (!restarted && !p_forceStore)
 	{
 		m_temp_currentStrideVelocities.push_back(velocities.m_currentVelocity);
-		// DESIRED m_temp_currentStrideDesiredVelocities.push_back(velocities.m_desiredVelocity);
+		// DESIRED 
+		m_temp_currentStrideDesiredVelocities.push_back(velocities.m_desiredVelocity);
 		// GOAL 
-		m_temp_currentStrideDesiredVelocities.push_back(velocities.getGoalVelocity());
+		//m_temp_currentStrideDesiredVelocities.push_back(velocities.getGoalVelocity());
 	}
 	else
 	{
