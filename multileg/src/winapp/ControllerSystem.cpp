@@ -289,7 +289,7 @@ void ControllerSystem::buildCheck()
 			legFrame->m_toeOffTime.push_back(0.0f);
 			legFrame->m_tuneFootStrikeTime.push_back(0.0f);
 		}
-		legFrame->m_height = legFramePos.y - (footPos.y - m_jointLengths[footJointId]*0.5f);
+		legFrame->m_height = legFramePos.y - (footPos.y - 0.04f*0.5f/*m_jointLengths[footJointId]*0.5f*/);
 		// Calculate number of torques axes in list, store
 		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
@@ -1175,6 +1175,8 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
 			//refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
+			refDesiredFootPos.y -= 0.04f*0.5f;
+			refDesiredFootPos.z -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
 			//refDesiredFootPos.z -= 0.2f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
 			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
