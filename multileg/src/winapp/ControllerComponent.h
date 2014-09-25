@@ -192,11 +192,11 @@ public:
 			m_footTrackingGainKp.reset(PieceWiseLinear::LIN_INC,1.0f); // Foot tracking controller for fast gaits. linear(=t) by default
 			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
-			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(30.0f);
-			m_FhPD.setKp_KdEQTenPrcntKp(10.0f);
+			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(300.0f);
+			m_FhPD.setKp_KdEQTenPrcntKp(100.0f);
 			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(0.0f);
 			// Vectors and Floats
-			m_stepLength = glm::vec2(0.1f, 0.1f);
+			m_stepLength = glm::vec2(0.1f, 0.1f)*2.0f;
 			m_footPlacementVelocityScale = 1.0f;
 			m_height = 0.0f;
 			m_lateStrikeOffsetDeltaH = 0.0f;
@@ -208,10 +208,10 @@ public:
 			//
 			//m_ulegPDsK = glm::vec2(300.0f, 30.0f);
 			//m_llegPDsK = glm::vec2(300.0f, 30.0f);
-			m_ulegPDsK = glm::vec2(3.0f, 0.3f);
-			m_llegPDsK = glm::vec2(2.0f, 0.2f);
-			//m_ulegPDsK = glm::vec2(50.0f, 14.0f);
-			//m_llegPDsK = glm::vec2(40.0f, 12.0f);
+			//m_ulegPDsK = glm::vec2(3.0f, 0.3f);
+			//m_llegPDsK = glm::vec2(2.0f, 0.2f);
+			m_ulegPDsK = glm::vec2(50.0f, 14.0f);
+			m_llegPDsK = glm::vec2(40.0f, 12.0f);
 			//m_ulegPDsK = glm::vec2(20.0f, 8.6f);
 			//m_llegPDsK = glm::vec2(15.0f, 7.7f); // kd currently 2*sqrt(kp)
 			//m_flegPDsK = glm::vec2(0.5f, 0.05f); // here ten prcnt
@@ -219,8 +219,8 @@ public:
 			//m_flegPDsK = glm::vec2(300.0f, 30.0f); // here ten prcnt
 			////m_flegPDsK = glm::vec2(10.0f, 6.32f);
 			// foot
-			m_tuneToeOffAngle = HALFPI;
-			m_tuneFootStrikeAngle = HALFPI;
+			m_tuneToeOffAngle = 0;
+			m_tuneFootStrikeAngle = -HALFPI;
 		}
 
 		// Structure ids

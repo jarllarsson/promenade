@@ -143,7 +143,7 @@ void App::run()
 #endif
 	bool dbgDrawAllChars = true;
 	double controllerSystemTimingMs = 0.0;
-	bool lockLFY_onRestart = true;
+	bool lockLFY_onRestart = false;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);	
 
@@ -165,7 +165,7 @@ void App::run()
 	ControllerSystem::m_useLFFeedbackTorque = true;
 	ControllerSystem::m_bufferLFFeedbackTorque = true;
 	ControllerSystem::m_useVFTorque = true;
-	ControllerSystem::m_useGCVFTorque = false;
+	ControllerSystem::m_useGCVFTorque = true;
 	ControllerSystem::m_usePDTorque = true;
 #ifdef OPTIMIZATION
 	ControllerSystem::m_usePDTorque = true;
@@ -276,7 +276,7 @@ void App::run()
 
 
 		// Test of controller
-		float scale = 1.0f;
+		float scale = 2.0f;
 		float hipCoronalOffset = scale*0.2f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
 		// size setups
@@ -305,7 +305,7 @@ void App::run()
 
 			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-			float characterMass = /*scale**/30.0f;
+			float characterMass = /*scale**/10.0f;
 			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 			legFrame.addComponent(lfRB);
@@ -366,8 +366,8 @@ void App::run()
 						jointXOffsetFromParent = currentHipJointCoronalOffset;
 						//lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
 						//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.1f);
-						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.1f);
+						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
+						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
 						segmentMass = /*scale**/5.0f;
 						boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION
@@ -394,12 +394,12 @@ void App::run()
 						boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
 						jointYOffsetInChild = footLen*0.2f;
 						//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
-						//lowerAngleLim = glm::vec3(-HALFPI*0.1f, -HALFPI*0.1f, -HALFPI*0.1f);
-						//upperAngleLim = glm::vec3(HALFPI*0.5f, HALFPI*0.1f, HALFPI*0.1f);
+						lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
+						upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
 						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
-						upperAngleLim = glm::vec3(HALFPI*1.8f, HALFPI*0.1f, HALFPI*0.1f);
+						//lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
+						//upperAngleLim = glm::vec3(HALFPI*1.8f, HALFPI*0.1f, HALFPI*0.1f);
 						segmentMass = /*scale**/1.0f;
 						foot = true;
 					}
@@ -558,6 +558,8 @@ void App::run()
 					}
 				}
 #endif
+
+
 				
 				// Start by rendering
 				render();
@@ -583,7 +585,7 @@ void App::run()
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
-				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 50, (btScalar)(double)m_timeScale*(1.0f / 1000.0f));
+				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1, (btScalar)fixedStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
 	#else
 				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)fixedStep);
 	#endif
@@ -666,6 +668,7 @@ void App::run()
 				// ========================================================
 				oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 				m_oldGravityStat = m_gravityStat;
+				//
 			}
 		}
 
