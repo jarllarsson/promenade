@@ -299,7 +299,7 @@ public:
 	// This is the artemis based input
 	struct LegFrameEntityConstruct
 	{
-		artemis::Entity* m_legFrameEntity;
+		std::vector<artemis::Entity*> m_legFrameEntities;
 		std::vector<artemis::Entity*> m_upperLegEntities;
 	};
 

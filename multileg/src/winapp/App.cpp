@@ -294,157 +294,160 @@ void App::run()
 #endif
 		for (int x = 0; x < chars; x++) // number of characters
 		{
-#ifdef OPTIMIZATION
-			std::vector<float> uLegLens; std::vector<float> lLegLens;
-#endif
-			artemis::Entity & legFrame = entityManager->create();
-			glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, 0.0f);
-
-			// if locked, we move down a tiny bit to get traction
-			//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
-
-			//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-			glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-			float characterMass = /*scale**/10.0f;
-			RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
-				CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
-			legFrame.addComponent(lfRB);
-			if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
-			legFrame.addComponent(new TransformComponent(pos,
-				glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-				lfSize));
-
-			if (lockPos)
+			for (int y = 0; y < 2; y++) // number of leg frames
 			{
-				float lck = lockLFY_onRestart ? 0 : 1;
-				lfRB->setLinearFactor(glm::vec3(lck, 1, 1));
-				lfRB->setAngularFactor(glm::vec3(1, lck, lck));
-			}
+	#ifdef OPTIMIZATION
+				std::vector<float> uLegLens; std::vector<float> lLegLens;
+	#endif
+				artemis::Entity & legFrame = entityManager->create();
+				glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, (float)-y);
+
+				// if locked, we move down a tiny bit to get traction
+				//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
+
+				//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+				glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
+				float characterMass = /*scale**/10.0f;
+				RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
+					CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
+				legFrame.addComponent(lfRB);
+				if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
+				legFrame.addComponent(new TransformComponent(pos,
+					glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+					lfSize));
+
+				if (lockPos)
+				{
+					float lck = lockLFY_onRestart ? 0 : 1;
+					lfRB->setLinearFactor(glm::vec3(lck, 1, 1));
+					lfRB->setAngularFactor(glm::vec3(1, lck, lck));
+				}
 
 
-			//legFrame.addComponent(new ConstantForceComponent(glm::vec3(0, characterMass*12.0f, 0)));
-			legFrame.refresh();
-			string legFrameName = "LegFrame";
-			/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
-			if (x == 0) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
-			//
-			vector<artemis::Entity*> hipJoints;
-			// Number of leg frames per character
-			for (int n = 0; n < 2; n++) // number of legs per frame
-			{
-				string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
-				if (x == 0)
+				//legFrame.addComponent(new ConstantForceComponent(glm::vec3(0, characterMass*12.0f, 0)));
+				legFrame.refresh();
+				string legFrameName = "LegFrame";
+				/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
+				if (x == 0) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
+				//
+				vector<artemis::Entity*> hipJoints;
+				// Number of leg frames per character
+				for (int n = 0; n < 2; n++) // number of legs per frame
 				{
-					m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
-					m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
+					string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
+					if (x == 0)
+					{
+						m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
+						m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
+					}
+					//m_toolBar->addLabel(Toolbar::CHARACTER, sideName.c_str(),"");
+					artemis::Entity* prev = &legFrame;
+					artemis::Entity* upperLegSegment = NULL;
+					float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
+					glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
+					glm::vec3 boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
+					glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, boxSize.z);
+					for (int i = 0; i < 3; i++) // number of segments per leg
+					{
+						artemis::Entity & childJoint = entityManager->create();
+						float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
+						float jointYOffsetInChild = 0.0f; // for sagittal displacement for feet
+						float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
+						if (i != 0) parentSz = boxSize;//glm::vec3(boxSize.x, uLegHeight, boxSize.z);
+						//boxSize = glm::vec3(0.25f, uLegHeight, 0.25f); // set new size for current box
+						// segment specific constraint params
+						glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.5f);
+						glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.5f);
+						string partName;
+						float segmentMass = 5.0f;
+						bool foot = false;
+						if (i == 0) // if hip joint (upper leg)
+						{
+							partName = " upper";
+							upperLegSegment = &childJoint;
+							jointXOffsetFromParent = currentHipJointCoronalOffset;
+							//lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
+							//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
+							lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
+							upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
+							segmentMass = /*scale**/5.0f;
+							boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
+	#ifdef OPTIMIZATION
+							if (n == 0) uLegLens.push_back(uLegHeight);
+	#endif
+							//lowerAngleLim = glm::vec3(1, 1, 1);
+							//upperAngleLim = glm::vec3(0,0,0);
+						}
+						else if (i == 1) // if knee (lower leg)
+						{
+							partName = " lower";
+							lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
+							upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+							segmentMass = /*scale**/4.0f;
+							boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
+	#ifdef OPTIMIZATION
+							if (n == 0) lLegLens.push_back(lLegHeight + footHeight);
+	#endif
+						}
+						else if (i == 2) // if foot
+						{
+							partName = " foot";
+							//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
+							boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
+							jointYOffsetInChild = footLen*0.2f;
+							//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
+							lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
+							upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
+							//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+							//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+							//lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
+							//upperAngleLim = glm::vec3(HALFPI*1.8f, HALFPI*0.1f, HALFPI*0.1f);
+							segmentMass = /*scale**/1.0f;
+							foot = true;
+						}
+						string dbgGrp = (" group='" + sideName + "'");
+						if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
+						legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
+						if (foot == true)
+						{
+							// foot need collision callback properties
+							childJoint.addComponent(new RigidBodyComponent(RigidBodyComponent::REGISTER_COLLISIONS,
+								new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
+								CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+						}
+						else
+						{
+							// ordinary joint does not need collision callback
+							childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
+								CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+						}
+						if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
+						if (i != 2)
+						{
+							childJoint.addComponent(new TransformComponent(legpos,
+								glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+								boxSize));					// note scale, so full lengths
+						}
+						else // foot
+						{
+							childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
+								glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
+								boxSize));					// note scale, so full lengths
+						}
+						MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
+						childJoint.addComponent(mat);
+						if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
+						ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, -jointZOffsetInChild),	  // child (this)
+							glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
+							{ lowerAngleLim, upperAngleLim },
+							false };
+						childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
+						childJoint.refresh();
+						prev = &childJoint;
+					}
+					hipJoints.push_back(upperLegSegment);
 				}
-				//m_toolBar->addLabel(Toolbar::CHARACTER, sideName.c_str(),"");
-				artemis::Entity* prev = &legFrame;
-				artemis::Entity* upperLegSegment = NULL;
-				float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
-				glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
-				glm::vec3 boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
-				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, boxSize.z);
-				for (int i = 0; i < 3; i++) // number of segments per leg
-				{
-					artemis::Entity & childJoint = entityManager->create();
-					float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
-					float jointYOffsetInChild = 0.0f; // for sagittal displacement for feet
-					float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
-					if (i != 0) parentSz = boxSize;//glm::vec3(boxSize.x, uLegHeight, boxSize.z);
-					//boxSize = glm::vec3(0.25f, uLegHeight, 0.25f); // set new size for current box
-					// segment specific constraint params
-					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.5f);
-					glm::vec3 upperAngleLim = glm::vec3(HALFPI,  HALFPI*0.5f, HALFPI*0.5f);
-					string partName;
-					float segmentMass = 5.0f;
-					bool foot = false;
-					if (i == 0) // if hip joint (upper leg)
-					{
-						partName = " upper";
-						upperLegSegment = &childJoint;
-						jointXOffsetFromParent = currentHipJointCoronalOffset;
-						//lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
-						//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-						lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
-						upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
-						segmentMass = /*scale**/5.0f;
-						boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
-#ifdef OPTIMIZATION
-						if (n==0) uLegLens.push_back(uLegHeight);
-#endif
-						//lowerAngleLim = glm::vec3(1, 1, 1);
-						//upperAngleLim = glm::vec3(0,0,0);
-					}
-					else if (i == 1) // if knee (lower leg)
-					{
-						partName = " lower";
-						lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
-						upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						segmentMass = /*scale**/4.0f;
-						boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
-#ifdef OPTIMIZATION
-						if (n == 0) lLegLens.push_back(lLegHeight+footHeight);
-#endif
-					}
-					else if (i == 2) // if foot
-					{
-						partName = " foot";
-						//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
-						boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
-						jointYOffsetInChild = footLen*0.2f;
-						//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
-						lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
-						upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
-						//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-						//lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
-						//upperAngleLim = glm::vec3(HALFPI*1.8f, HALFPI*0.1f, HALFPI*0.1f);
-						segmentMass = /*scale**/1.0f;
-						foot = true;
-					}
-					string dbgGrp = (" group='" + sideName + "'");
-					if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
-					legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
-					if (foot == true)
-					{
-						// foot need collision callback properties
-						childJoint.addComponent(new RigidBodyComponent(RigidBodyComponent::REGISTER_COLLISIONS,
-							new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
-							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
-					}
- 					else
-					{
-						// ordinary joint does not need collision callback
-						childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
-							CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
-					}
-					if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
-					if (i != 2)
-					{
-						childJoint.addComponent(new TransformComponent(legpos,
-							glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-							boxSize));					// note scale, so full lengths
-					}
-					else // foot
-					{
-						childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
-							glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
-							boxSize));					// note scale, so full lengths
-					}
-					MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
-					childJoint.addComponent(mat);
-					if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
-					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, -jointZOffsetInChild),	  // child (this)
-						glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
-						{ lowerAngleLim, upperAngleLim },
-						false };
-					childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
-					childJoint.refresh();
-					prev = &childJoint;
-				}
-				hipJoints.push_back(upperLegSegment);
-			}
+			} // leg frames
 			// Controller
 			artemis::Entity & controller = entityManager->create();
 			ControllerComponent* controllerComp = new ControllerComponent(&legFrame, hipJoints);
