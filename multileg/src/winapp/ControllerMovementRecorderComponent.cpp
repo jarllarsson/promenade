@@ -46,17 +46,20 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 	}
 	else
 	{
-		glm::vec3 totalVelocities(0.0f), totalDesiredVelocities(0.0f);
+		glm::vec3 totalVelocities(0.0f), totalDesiredVelocities(0.0f), totalGoalVelocities(0.0f);
 		for (int i = 0; i < m_temp_currentStrideVelocities.size(); i++)
 		{
 			totalVelocities += m_temp_currentStrideVelocities[i];
 			// force straight movement behavior from tests, set desired coronal velocity to constant zero:
 			totalDesiredVelocities += glm::vec3(0.0f, 0.0f, m_temp_currentStrideDesiredVelocities[i].z);
 		}
+		totalGoalVelocities = velocities.getGoalVelocity();
 		totalVelocities /= max(1.0f, (float)m_temp_currentStrideVelocities.size());
 		totalDesiredVelocities /= max(1.0f, (float)m_temp_currentStrideDesiredVelocities.size());
 		// add to lists
-		m_fvVelocityDeviations.push_back((double)glm::length(totalVelocities - totalDesiredVelocities));
+		double desiredDiff = (double)glm::length(totalVelocities - totalDesiredVelocities),
+			goalDiff = (double)glm::length(totalVelocities - totalGoalVelocities);
+		m_fvVelocityDeviations.push_back(0.0f*desiredDiff+goalDiff);
 		//
 		m_temp_currentStrideVelocities.clear();
 		m_temp_currentStrideDesiredVelocities.clear();

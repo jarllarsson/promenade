@@ -174,171 +174,180 @@ void ControllerSystem::applyTorques( float p_dt )
 
 void ControllerSystem::buildCheck()
 {
-	for (unsigned int i = 0; i < m_controllersToBuild.size(); i++)
+	for (unsigned int i = 0; i < m_controllersToBuild.size(); i++) // controllers
 	{
 		glm::vec3 startGaitVelocity(0.0f, 0.0f, 0.5f);
 		ControllerComponent* controller = m_controllersToBuild[i];
-		ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(0);
-		ControllerComponent::LegFrame* legFrame = controller->getLegFrame(0);
-		// start by storing the current torque list size as offset, this'll be where we'll begin this
-		// controller's chunk of the torque list
-		unsigned int torqueListOffset = (unsigned int)m_jointTorques.size();
-		// Build the controller (Temporary code)
-		// The below should be done for each leg (even the root)
-		// Create ROOT
-		RigidBodyComponent* rootRB = (RigidBodyComponent*)legFrameEntities->m_legFrameEntity->getComponent<RigidBodyComponent>();
-		TransformComponent* rootTransform = (TransformComponent*)legFrameEntities->m_legFrameEntity->getComponent<TransformComponent>();
-		unsigned int rootIdx = addJoint(rootRB, rootTransform);
-		m_rigidBodyRefs.push_back(rootRB);
-		m_dbgJointEntities.push_back(legFrameEntities->m_legFrameEntity); // for easy debugging options
-		//
-		legFrame->m_legFrameJointId = rootIdx; // store idx to root for leg frame
-		// prepare legs			
-		unsigned int legCount = legFrameEntities->m_upperLegEntities.size();
-		legFrame->m_legs.resize(legCount); // Allocate the number of specified legs
-		// when and if we have a spine, add it here and store its id to leg frame
-		// Might have to do this after all leg frames instead, due to the link being at different ends of spine
-		legFrame->m_spineJointId = -1; // -1 means it doesn't exist
-		//
-		glm::vec3 legFramePos = rootTransform->getPosition(), footPos;
-		unsigned int footJointId = 0;
-		for (unsigned int x = 0; x < legCount; x++)
+		for (int n = 0; n < controller->getLegFrameCount(); n++) // leg frames
 		{
-			m_VFs.push_back(glm::vec3(0.0f, 0.0f, 0.0f));	
-			unsigned int vfIdx = (unsigned int)((int)m_VFs.size()-1);
-			ControllerComponent::VFChain* standardDOFChain = legFrame->m_legs[x].getVFChain(ControllerComponent::VFChainType::STANDARD_CHAIN);
-			// start by adding the already existing root id (needed in all leg chains)
-			addJointToStandardVFChain(standardDOFChain, rootIdx, vfIdx);
-			// Traverse the segment structure for the leg to get the rest
-			artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
-			int jointsAddedForLeg = 0;
-			while (jointEntity != NULL) // read all joints
-			{
-				// Get joint data
-				TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
-				RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
-				ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
-				// Add the joint
-				unsigned int idx = addJoint(jointRB, jointTransform);
-				m_rigidBodyRefs.push_back(jointRB);
-				m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
-				// Get DOF on joint to chain
-				addJointToStandardVFChain(standardDOFChain,idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
-				// Register joint for PD (and create PD)
-				float kp=0.0f, kd=0.0f;
-				if (jointsAddedForLeg==0)
-				{kp = legFrame->m_ulegPDsK.x; kd = legFrame->m_ulegPDsK.y;} // upper
-				else if (jointsAddedForLeg < 2)
-				{kp = legFrame->m_llegPDsK.x; kd = legFrame->m_llegPDsK.y;} // lower
-				else
-				{kp = legFrame->m_flegPDsK.x; kd = legFrame->m_flegPDsK.y;} // foot
-				addJointToPDChain(legFrame->m_legs[x].getPDChain(), idx, kp, kd);
-				// Get child joint for next iteration				
-				ConstraintComponent* childLink = jointRB->getChildConstraint(0);
-				// Add hip joint if first
-				if (jointsAddedForLeg == 0) legFrame->m_hipJointId.push_back(idx);
-				// find out what to do next time
-				if (childLink != NULL)
-				{	// ===LEG SEGMENT===
-					jointEntity = childLink->getOwnerEntity();
-				}
-				else // we are at the foot, so trigger termination add foot id to the leg frame
-				{	// ===FOOT===
-					legFrame->m_feetJointId.push_back(idx);
-					footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
-					legFrame->m_footHeight = jointTransform->getScale().z; // height between dorsum and sole(remember; foot is rotated limb)
-					legFrame->createFootPlacementModelVarsForNewLeg(footPos);
-					// add rigidbody idx so we can check for collisions and late foot strikes
-					legFrame->m_footRigidBodyIdx.push_back(m_rigidBodyRefs.size() - 1);
-					footJointId = idx;
-					//
-					jointEntity = NULL;
-				}
-				jointsAddedForLeg++;
-			}
-			// Copy all DOFs for ordinary VF-chain to the gravity compensation chain,
-			// Then re-append a copy of decreasing size (of one) for each segment.
-			// So that we get the structure of that chain as described in struct Leg
-			legFrame->m_legs[x].m_DOFChainGravityComp = legFrame->m_legs[x].m_DOFChain;			
-			unsigned int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
-			// Change the VFs for this list, as they need to be used to counter gravity
-			// They're also static, so we only need to do this once
-			int oldJointGCIdx = -1;
-			vfIdx = 0;
-			for (unsigned int m = 0; m < origGCDOFsz; m++)
-			{
-				unsigned int jointId = legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChain[m];
-				if (jointId != oldJointGCIdx)
-				{
-					float mass = m_jointMass[jointId];
-					m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
-					vfIdx = (unsigned int)((int)m_VFs.size() - 1);
-					legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChainOffsets.push_back(m);
-				}
-				legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
-				oldJointGCIdx = jointId;
-			}
-			// Now, re-append piece by piece, so we "automatically" get the additive loop later
-			/*for (unsigned int n = 0; n < (unsigned int)jointsAddedForLeg; n++)
-			{ 
-				// n+1 to skip re-appending of root:
-				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, (int)n+1, jointsAddedForLeg - (int)n, origGCDOFsz);
-			}*/
-			// Add an IK handler for leg
-			legFrame->m_legIK.push_back(IK2Handler());
-			// add entry for foot rotation timing params in struct
-			legFrame->m_toeOffTime.push_back(0.0f);
-			legFrame->m_tuneFootStrikeTime.push_back(0.0f);
-		}
-		legFrame->m_height = legFramePos.y - (footPos.y - legFrame->m_footHeight*0.5f/*m_jointLengths[footJointId]*0.5f*/);
-		// Calculate number of torques axes in list, store
-		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
-		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
-		// Add
-		controller->setToBuildComplete();
-		controller->m_sysIdx = m_controllers.size();
-		m_controllers.push_back(controller);
-		initControllerLocationAndVelocityStat((int)m_controllers.size() - 1, startGaitVelocity);
-		// Finally, when all vars and lists have been built, add debug data
-		// Add debug tracking for leg frame
-		if (i == 0)
-		{
-			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
-			// Velocity debug
-			unsigned int vlistpos = m_controllerVelocityStats.size() - 1;
-			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Current velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_currentVelocity, " group='LegFrame'");
-			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Desired velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_desiredVelocity, " group='LegFrame'");
-			dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, "Goal velocity", Toolbar::DIR, (void*)&m_controllerVelocityStats[vlistpos].getGoalVelocity(), " group='LegFrame'");
-			// Debug, per-leg stuff
+			ControllerComponent::LegFrameEntityConstruct* legFrameEntities = controller->getLegFrameEntityConstruct(n);
+			ControllerComponent::LegFrame* legFrame = controller->getLegFrame(n);
+			// start by storing the current torque list size as offset, this'll be where we'll begin this
+			// controller's chunk of the torque list
+			unsigned int torqueListOffset = (unsigned int)m_jointTorques.size();
+			// Build the controller (Temporary code)
+			// The below should be done for each leg (even the root)
+			// Create ROOT
+			RigidBodyComponent* rootRB = (RigidBodyComponent*)legFrameEntities->m_legFrameEntity->getComponent<RigidBodyComponent>();
+			TransformComponent* rootTransform = (TransformComponent*)legFrameEntities->m_legFrameEntity->getComponent<TransformComponent>();
+			unsigned int rootIdx = addJoint(rootRB, rootTransform);
+			m_rigidBodyRefs.push_back(rootRB);
+			m_dbgJointEntities.push_back(legFrameEntities->m_legFrameEntity); // for easy debugging options
+			//
+			legFrame->m_legFrameJointId = rootIdx; // store idx to root for leg frame
+			// prepare legs			
+			unsigned int legCount = legFrameEntities->m_upperLegEntities.size();
+			legFrame->m_legs.resize(legCount); // Allocate the number of specified legs
+			// when and if we have a spine, add it here and store its id to leg frame
+			// Might have to do this after all leg frames instead, due to the link being at different ends of spine
+			legFrame->m_spineJointId = -1; // -1 means it doesn't exist
+			//
+			glm::vec3 legFramePos = rootTransform->getPosition(), footPos;
+			unsigned int footJointId = 0;
 			for (unsigned int x = 0; x < legCount; x++)
 			{
-				bool isLeft = x == 0;
-				Color3f col = (isLeft ? Color3f(1.0f, 0.0f, 0.0f) : Color3f(0.0f, 1.0f, 0.0f));
-				// Add debug tracking for leg
-				std::string sideName = (std::string(isLeft ? "Left" : "Right") + "Leg");
-				dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
-				dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
-				// Foot strike placement visualization
-				artemis::Entity & footPlcmtDbg = world->createEntity();
-				footPlcmtDbg.addComponent(new RenderComponent());
-				footPlcmtDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.2f)));
-				footPlcmtDbg.addComponent(new PositionRefComponent(&legFrame->m_footStrikePlacement[x]));
-				footPlcmtDbg.addComponent(new MaterialComponent(col));
-				footPlcmtDbg.refresh();
-				// Foot lift placement visualization
-				artemis::Entity & footLiftDbg = world->createEntity();
-				footLiftDbg.addComponent(new RenderComponent());
-				footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f, 0.3f, 0.1f)));
-				footLiftDbg.addComponent(new PositionRefComponent(&legFrame->m_footLiftPlacement[x]));
-				footLiftDbg.addComponent(new MaterialComponent(col*0.7f));
-				footLiftDbg.refresh();
-				// Foot target placement visualization
-				artemis::Entity & footTargetDbg = world->createEntity();
-				footTargetDbg.addComponent(new RenderComponent());
-				footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f), glm::quat(glm::vec3((float)HALFPI, 0.0f, 0.0f))));
-				footTargetDbg.addComponent(new PositionRefComponent(&legFrame->m_footTarget[x]));
-				footTargetDbg.addComponent(new MaterialComponent(col*0.25f));
-				footTargetDbg.refresh();
+				m_VFs.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
+				unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
+				ControllerComponent::VFChain* standardDOFChain = legFrame->m_legs[x].getVFChain(ControllerComponent::VFChainType::STANDARD_CHAIN);
+				// start by adding the already existing root id (needed in all leg chains)
+				addJointToStandardVFChain(standardDOFChain, rootIdx, vfIdx);
+				// Traverse the segment structure for the leg to get the rest
+				artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
+				int jointsAddedForLeg = 0;
+				while (jointEntity != NULL) // read all joints
+				{
+					// Get joint data
+					TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
+					RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
+					ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
+					// Add the joint
+					unsigned int idx = addJoint(jointRB, jointTransform);
+					m_rigidBodyRefs.push_back(jointRB);
+					m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
+					// Get DOF on joint to chain
+					addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+					// Register joint for PD (and create PD)
+					float kp = 0.0f, kd = 0.0f;
+					if (jointsAddedForLeg == 0)
+					{
+						kp = legFrame->m_ulegPDsK.x; kd = legFrame->m_ulegPDsK.y;
+					} // upper
+					else if (jointsAddedForLeg < 2)
+					{
+						kp = legFrame->m_llegPDsK.x; kd = legFrame->m_llegPDsK.y;
+					} // lower
+					else
+					{
+						kp = legFrame->m_flegPDsK.x; kd = legFrame->m_flegPDsK.y;
+					} // foot
+					addJointToPDChain(legFrame->m_legs[x].getPDChain(), idx, kp, kd);
+					// Get child joint for next iteration				
+					ConstraintComponent* childLink = jointRB->getChildConstraint(0);
+					// Add hip joint if first
+					if (jointsAddedForLeg == 0) legFrame->m_hipJointId.push_back(idx);
+					// find out what to do next time
+					if (childLink != NULL)
+					{	// ===LEG SEGMENT===
+						jointEntity = childLink->getOwnerEntity();
+					}
+					else // we are at the foot, so trigger termination add foot id to the leg frame
+					{	// ===FOOT===
+						legFrame->m_feetJointId.push_back(idx);
+						footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
+						legFrame->m_footHeight = jointTransform->getScale().z; // height between dorsum and sole(remember; foot is rotated limb)
+						legFrame->createFootPlacementModelVarsForNewLeg(footPos);
+						// add rigidbody idx so we can check for collisions and late foot strikes
+						legFrame->m_footRigidBodyIdx.push_back(m_rigidBodyRefs.size() - 1);
+						footJointId = idx;
+						//
+						jointEntity = NULL;
+					}
+					jointsAddedForLeg++;
+				}
+				// Copy all DOFs for ordinary VF-chain to the gravity compensation chain,
+				// Then re-append a copy of decreasing size (of one) for each segment.
+				// So that we get the structure of that chain as described in struct Leg
+				legFrame->m_legs[x].m_DOFChainGravityComp = legFrame->m_legs[x].m_DOFChain;
+				unsigned int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
+				// Change the VFs for this list, as they need to be used to counter gravity
+				// They're also static, so we only need to do this once
+				int oldJointGCIdx = -1;
+				vfIdx = 0;
+				for (unsigned int m = 0; m < origGCDOFsz; m++)
+				{
+					unsigned int jointId = legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChain[m];
+					if (jointId != oldJointGCIdx)
+					{
+						float mass = m_jointMass[jointId];
+						m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
+						vfIdx = (unsigned int)((int)m_VFs.size() - 1);
+						legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChainOffsets.push_back(m);
+					}
+					legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
+					oldJointGCIdx = jointId;
+				}
+				// Now, re-append piece by piece, so we "automatically" get the additive loop later
+				/*for (unsigned int n = 0; n < (unsigned int)jointsAddedForLeg; n++)
+				{
+				// n+1 to skip re-appending of root:
+				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, (int)n+1, jointsAddedForLeg - (int)n, origGCDOFsz);
+				}*/
+				// Add an IK handler for leg
+				legFrame->m_legIK.push_back(IK2Handler());
+				// add entry for foot rotation timing params in struct
+				legFrame->m_toeOffTime.push_back(0.0f);
+				legFrame->m_tuneFootStrikeTime.push_back(0.0f);
+			}
+			legFrame->m_height = legFramePos.y - (footPos.y - legFrame->m_footHeight*0.5f/*m_jointLengths[footJointId]*0.5f*/);
+			// Calculate number of torques axes in list, store
+			unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
+			controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
+			// Add
+			controller->setToBuildComplete();
+			controller->m_sysIdx = m_controllers.size();
+			m_controllers.push_back(controller);
+			initControllerLocationAndVelocityStat((int)m_controllers.size() - 1, startGaitVelocity);
+			// Finally, when all vars and lists have been built, add debug data
+			// Add debug tracking for leg frame
+			if (i == 0)
+			{
+				dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
+				// Velocity debug
+				unsigned int vlistpos = m_controllerVelocityStats.size() - 1;
+				dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Current velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_currentVelocity, " group='LegFrame'");
+				dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Desired velocity", Toolbar::DIR, (const void*)&m_controllerVelocityStats[vlistpos].m_desiredVelocity, " group='LegFrame'");
+				dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, "Goal velocity", Toolbar::DIR, (void*)&m_controllerVelocityStats[vlistpos].getGoalVelocity(), " group='LegFrame'");
+				// Debug, per-leg stuff
+				for (unsigned int x = 0; x < legCount; x++)
+				{
+					bool isLeft = x == 0;
+					Color3f col = (isLeft ? Color3f(1.0f, 0.0f, 0.0f) : Color3f(0.0f, 1.0f, 0.0f));
+					// Add debug tracking for leg
+					std::string sideName = (std::string(isLeft ? "Left" : "Right") + "Leg");
+					dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
+					dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (ToString(sideName[0]) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
+					// Foot strike placement visualization
+					artemis::Entity & footPlcmtDbg = world->createEntity();
+					footPlcmtDbg.addComponent(new RenderComponent());
+					footPlcmtDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.2f)));
+					footPlcmtDbg.addComponent(new PositionRefComponent(&legFrame->m_footStrikePlacement[x]));
+					footPlcmtDbg.addComponent(new MaterialComponent(col));
+					footPlcmtDbg.refresh();
+					// Foot lift placement visualization
+					artemis::Entity & footLiftDbg = world->createEntity();
+					footLiftDbg.addComponent(new RenderComponent());
+					footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f, 0.3f, 0.1f)));
+					footLiftDbg.addComponent(new PositionRefComponent(&legFrame->m_footLiftPlacement[x]));
+					footLiftDbg.addComponent(new MaterialComponent(col*0.7f));
+					footLiftDbg.refresh();
+					// Foot target placement visualization
+					artemis::Entity & footTargetDbg = world->createEntity();
+					footTargetDbg.addComponent(new RenderComponent());
+					footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f), glm::quat(glm::vec3((float)HALFPI, 0.0f, 0.0f))));
+					footTargetDbg.addComponent(new PositionRefComponent(&legFrame->m_footTarget[x]));
+					footTargetDbg.addComponent(new MaterialComponent(col*0.25f));
+					footTargetDbg.refresh();
+				}
 			}
 		}
 	}

@@ -32,6 +32,42 @@ ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame,
 	m_legFrames.push_back(legFrame);
 }
 
+ControllerComponent::ControllerComponent(std::vector<artemis::Entity*>& p_legFrames, 
+	std::vector<artemis::Entity*>& p_hipJoints)
+{
+	m_player = GaitPlayer(2.0f);
+	//
+	m_buildComplete = false;
+	// for each inputted leg-frame entity...
+
+	// Set up the entity-based leg frame representation
+	// This is simply a struct of pointers to the artemis equivalents of
+	// what the controller system will work with as joints and decomposed DOF-chains
+	int hipJointsIdx = 0;
+	for (int i = 0; i < p_legFrames.size(); i++)
+	{
+		LegFrameEntityConstruct legFrameEntityConstruct;
+		legFrameEntityConstruct.m_legFrameEntity = p_legFrames[i];
+		// Add all legs to it
+		for (int n=0; n<2; n++)
+		{
+			legFrameEntityConstruct.m_upperLegEntities.push_back(p_hipJoints[hipJointsIdx]);
+			hipJointsIdx++;
+		}
+		// add to our list of constructs
+		m_legFrameEntityConstructs.push_back(legFrameEntityConstruct);
+		// Create the leg frame data struct as well
+		// Allocate it according to number of leg entities that was inputted
+		LegFrame legFrame;
+		legFrame.m_stepCycles.resize(legFrameEntityConstruct.m_upperLegEntities.size());
+		legFrame.m_stepCycles[0].m_tuneStepTrigger = (i==0?0.0f:0.5f); // flip offset, on step trigger based on whether
+		legFrame.m_stepCycles[1].m_tuneStepTrigger = (i==0?0.5f:0.0f); // it is a front- or back LF
+		//legFrame.m_stepCycles[0].m_tuneDutyFactor=1.0f;
+		//legFrame.m_stepCycles[1].m_tuneDutyFactor=1.0f;
+		m_legFrames.push_back(legFrame);
+	}
+}
+
 std::vector<float> ControllerComponent::getParams()
 {
 	//DEBUGPRINT(("\nCONTROLLER COMP GETPARAMS\n"));

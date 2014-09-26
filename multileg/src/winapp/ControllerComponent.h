@@ -46,6 +46,7 @@ public:
 	// Specify entry points on construction, during build
 	// the chains(lists) will be constructed by walking the pointer chain(double linked list)
 	ControllerComponent(artemis::Entity* p_legFrame, std::vector<artemis::Entity*>& p_hipJoints);
+	ControllerComponent(std::vector<artemis::Entity*>& p_legFrames, std::vector<artemis::Entity*>& p_hipJoints);
 
 	virtual ~ControllerComponent() {}
 	
@@ -193,7 +194,7 @@ public:
 			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
 			m_desiredLFTorquePD.setKp_KdEQTenPrcntKp(300.0f);
-			m_FhPD.setKp_KdEQTenPrcntKp(100.0f);
+			m_FhPD.setKp_KdEQTenPrcntKp(300.0f);
 			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(0.0f);
 			// Vectors and Floats
 			m_stepLength = glm::vec2(0.1f, 0.1f)*2.0f;
@@ -206,12 +207,12 @@ public:
 				
 				
 			//
-			//m_ulegPDsK = glm::vec2(300.0f, 30.0f);
-			//m_llegPDsK = glm::vec2(300.0f, 30.0f);
+			m_ulegPDsK = glm::vec2(300.0f, 30.0f);
+			m_llegPDsK = glm::vec2(300.0f, 30.0f);
 			//m_ulegPDsK = glm::vec2(3.0f, 0.3f);
 			//m_llegPDsK = glm::vec2(2.0f, 0.2f);
-			m_ulegPDsK = glm::vec2(50.0f, 14.0f);
-			m_llegPDsK = glm::vec2(40.0f, 12.0f);
+			//m_ulegPDsK = glm::vec2(50.0f, 14.0f);
+			//m_llegPDsK = glm::vec2(40.0f, 12.0f);
 			//m_ulegPDsK = glm::vec2(20.0f, 8.6f);
 			//m_llegPDsK = glm::vec2(15.0f, 7.7f); // kd currently 2*sqrt(kp)
 			//m_flegPDsK = glm::vec2(0.5f, 0.05f); // here ten prcnt
@@ -299,7 +300,7 @@ public:
 	// This is the artemis based input
 	struct LegFrameEntityConstruct
 	{
-		std::vector<artemis::Entity*> m_legFrameEntities;
+		artemis::Entity* m_legFrameEntity;
 		std::vector<artemis::Entity*> m_upperLegEntities;
 	};
 

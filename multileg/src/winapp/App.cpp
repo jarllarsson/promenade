@@ -172,6 +172,9 @@ void App::run()
 	ControllerSystem::m_dbgShowVFVectors = false;
 	ControllerSystem::m_dbgShowGCVFVectors = false;
 	ControllerSystem::m_dbgShowTAxes = false;
+
+
+	bool tmpSimulOff = false;
 #endif
 	do
 	{
@@ -294,12 +297,14 @@ void App::run()
 #endif
 		for (int x = 0; x < chars; x++) // number of characters
 		{
-			for (int y = 0; y < 2; y++) // number of leg frames
+			vector<artemis::Entity*> charLFs;
+			vector<artemis::Entity*> hipJoints;
+#ifdef OPTIMIZATION
+			std::vector<float> uLegLens; std::vector<float> lLegLens;
+#endif
+			for (int y = 0; y < 1; y++) // number of leg frames
 			{
-	#ifdef OPTIMIZATION
-				std::vector<float> uLegLens; std::vector<float> lLegLens;
-	#endif
-				artemis::Entity & legFrame = entityManager->create();
+				artemis::Entity& legFrame = entityManager->create();
 				glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, (float)-y);
 
 				// if locked, we move down a tiny bit to get traction
@@ -330,7 +335,6 @@ void App::run()
 				/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
 				if (x == 0) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
 				//
-				vector<artemis::Entity*> hipJoints;
 				// Number of leg frames per character
 				for (int n = 0; n < 2; n++) // number of legs per frame
 				{
@@ -447,10 +451,11 @@ void App::run()
 					}
 					hipJoints.push_back(upperLegSegment);
 				}
+				charLFs.push_back(&legFrame);
 			} // leg frames
 			// Controller
 			artemis::Entity & controller = entityManager->create();
-			ControllerComponent* controllerComp = new ControllerComponent(&legFrame, hipJoints);
+			ControllerComponent* controllerComp = new ControllerComponent(charLFs, hipJoints);
 			controller.addComponent(controllerComp);
 #ifdef OPTIMIZATION
 			ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
@@ -491,6 +496,7 @@ void App::run()
 		bool run = true;
 
 		double fixedStep = 1.0 / 60.0;
+		double physicsStep = 1.0 / 100.0;
 
 		// Dry run, so artemis have run before physics first step
 		gameUpdate(0.0f);
@@ -588,9 +594,12 @@ void App::run()
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
-				dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1, (btScalar)fixedStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
+				if (!tmpSimulOff)
+					dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1, (btScalar)physicsStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
+				else
+					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)physicsStep);
 	#else
-				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)fixedStep);
+				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)physicsStep);
 	#endif
 				// ========================================================
 
@@ -606,6 +615,8 @@ void App::run()
 		#endif
 	#endif
 	#ifdef OPTIMIZATION
+			if (!tmpSimulOff)
+			{
 				if (m_timeScale > 0)
 				{
 					optimizationSystem->incSimTick();
@@ -616,18 +627,23 @@ void App::run()
 				{
 					DEBUGPRINT((" NO: "));
 					DEBUGPRINT((ToString(optimizationIterationCount).c_str()));
-					run=false;
+					run = false;
 					m_restart = true;
 				}
+			}
 	#endif
 				//DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
+				double dt=0.0;
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
-				double dt = fixedStep;
+				if (!tmpSimulOff)
+					dt = fixedStep;
+				else
+					dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
 	#else
-				double dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
+				dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
 	#endif
 				// Game clock based updates
 				while (dt >= gameTickS)
@@ -663,6 +679,8 @@ void App::run()
 					else
 						shooting = false;
 
+
+					tmpSimulOff = m_input->g_kb->isKeyDown(KC_P);
 
 					handleContext(interval, phys_dt, steps - oldSteps);
 					gameUpdate(interval);
