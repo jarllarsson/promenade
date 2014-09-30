@@ -680,8 +680,9 @@ void App::run()
 					else
 						shooting = false;
 
-
+#ifdef OPTIMIZATION
 					optRealTimeMode = m_input->g_kb->isKeyDown(KC_P);
+#endif
 
 					handleContext(interval, phys_dt, steps - oldSteps);
 					gameUpdate(interval);

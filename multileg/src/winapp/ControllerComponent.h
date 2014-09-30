@@ -189,7 +189,7 @@ public:
 			// Trajectory settings
 			m_orientationLFTraj[(unsigned int)Orientation::PITCH].reset(PieceWiseLinear::FLAT,TWOPI); // try to stay upside down
 			m_heightLFTraj.reset(PieceWiseLinear::FULL,0.0f); // the allowed height deviation trajectory from the starting height for LF
-			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 0.2f); // Stepping is defaulted to an arc
+			m_stepHeighTraj.reset(PieceWiseLinear::COS_INV_NORM, 0.25f); // Stepping is defaulted to an arc
 			m_footTrackingGainKp.reset(PieceWiseLinear::LIN_INC,1.0f); // Foot tracking controller for fast gaits. linear(=t) by default
 			m_footTransitionEase.reset(PieceWiseLinear::LIN_INC,1.0f); // Easing on sagittal movement is linear(=t) by default	
 			// PD settings
@@ -197,7 +197,7 @@ public:
 			m_FhPD.setKp_KdEQTenPrcntKp(300.0f);
 			m_footTrackingSpringDamper.setKp_KdEQTenPrcntKp(0.0f);
 			// Vectors and Floats
-			m_stepLength = glm::vec2(0.1f, 0.1f)*2.0f;
+			m_stepLength = glm::vec2(0.4f, 0.3f);
 			m_footPlacementVelocityScale = 1.0f;
 			m_height = 0.0f;
 			m_lateStrikeOffsetDeltaH = 0.0f;
@@ -205,6 +205,7 @@ public:
 			m_FDHVComponents = glm::vec4(0.0f);
 				//glm::vec4(0.1f, 0.0f, -10.0, -10.0f);
 				
+			// for smaller walk, try step height 0.2, and step length 0.3
 				
 			//
 			m_ulegPDsK = glm::vec2(300.0f, 30.0f);
