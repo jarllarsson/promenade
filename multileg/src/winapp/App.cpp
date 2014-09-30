@@ -174,7 +174,7 @@ void App::run()
 	ControllerSystem::m_dbgShowTAxes = false;
 
 
-	bool tmpSimulOff = false;
+	bool optRealTimeMode = false;
 #endif
 	do
 	{
@@ -496,7 +496,7 @@ void App::run()
 		bool run = true;
 
 		double fixedStep = 1.0 / 60.0;
-		double physicsStep = 1.0 / 100.0;
+		double physicsStep = 1.0 / 120.0;
 
 		// Dry run, so artemis have run before physics first step
 		gameUpdate(0.0f);
@@ -593,13 +593,14 @@ void App::run()
 				}
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
+				// timeStep < maxSubSteps * fixedTimeStep
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
-				if (!tmpSimulOff)
-					dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1, (btScalar)physicsStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
+				if (!optRealTimeMode)
+					dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1+(physicsStep / (m_timeScale*fixedStep)), (btScalar)physicsStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
 				else
-					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)physicsStep);
+					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 10, (btScalar)physicsStep);
 	#else
-				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)physicsStep);
+				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/,  2, (btScalar)physicsStep);
 	#endif
 				// ========================================================
 
@@ -615,7 +616,7 @@ void App::run()
 		#endif
 	#endif
 	#ifdef OPTIMIZATION
-			if (!tmpSimulOff)
+			if (!optRealTimeMode)
 			{
 				if (m_timeScale > 0)
 				{
@@ -638,7 +639,7 @@ void App::run()
 				// ========================================================
 				double dt=0.0;
 	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
-				if (!tmpSimulOff)
+				if (!optRealTimeMode)
 					dt = fixedStep;
 				else
 					dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
@@ -680,7 +681,7 @@ void App::run()
 						shooting = false;
 
 
-					tmpSimulOff = m_input->g_kb->isKeyDown(KC_P);
+					optRealTimeMode = m_input->g_kb->isKeyDown(KC_P);
 
 					handleContext(interval, phys_dt, steps - oldSteps);
 					gameUpdate(interval);

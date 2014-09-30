@@ -21,7 +21,7 @@ bool ControllerSystem::m_bufferLFFeedbackTorque = true;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
-float ControllerSystem::m_torqueLim = 300.0f;
+float ControllerSystem::m_torqueLim = 400.0f;
 
 
 ControllerSystem::~ControllerSystem()
@@ -525,6 +525,8 @@ void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, Contro
 		else if (currentV != glm::vec3(0.0f))
 			desiredV -= glm::normalize(currentV) * stepSz*p_dt;
 	}
+	if (glm::length(desiredV) < 0.0f)
+		DEBUGPRINT(( (string("dv: ")+ToString(desiredV.z)+"\n").c_str() ));
 	m_controllerVelocityStats[p_controllerId].m_desiredVelocity = desiredV;
 	// Location
 	m_controllerLocationStats[p_controllerId].m_worldPos = pos;

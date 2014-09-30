@@ -7,7 +7,7 @@
 
 ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 {
-	m_fdWeight = 100.0f; // deviation from reference motion
+	m_fdWeight = 1000.0f; // deviation from reference motion
 	m_fvWeight = 5.0f;   // deviation from desired speed
 	m_fhWeight = 0.5f;	 // acceleration of head
 	m_frWeight = 5.0f;	 // whole body rotation
@@ -54,6 +54,8 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 			totalDesiredVelocities += glm::vec3(0.0f, 0.0f, m_temp_currentStrideDesiredVelocities[i].z);
 		}
 		totalGoalVelocities = velocities.getGoalVelocity();
+		if (glm::length(totalGoalVelocities) <= 0.1f)
+			DEBUGPRINT(("zero\n"));
 		totalVelocities /= max(1.0f, (float)m_temp_currentStrideVelocities.size());
 		totalDesiredVelocities /= max(1.0f, (float)m_temp_currentStrideDesiredVelocities.size());
 		// add to lists
@@ -176,7 +178,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	lenDist *= lenDist; // sqr
 	*/
 
-	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.05f * movDistDeviation);
+	m_fdBodyHeightSqrDiffs.push_back(lenFt * 0.4 + lenKnees + lenHips + lenBod + lenHd + 0.4f * movDistDeviation);
 }
 
 void ControllerMovementRecorderComponent::fp_calcMovementDistance(ControllerComponent* p_controller, ControllerSystem* p_system)
