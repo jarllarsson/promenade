@@ -461,7 +461,7 @@ void App::run()
 				} // leg frames
 				//
 				int spineParts = 3;
-				glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, -hipCoronalOffset*0.5f);
+				glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY+lfHeight*0.5f, -hipCoronalOffset*0.5f);
 				artemis::Entity* prev = charLFs[0];
 				glm::vec3 spinepos = pos + glm::vec3(0.0f, 0.0f, 0.0f);
 				float boxHeight = lfDist / (float)spineParts;
@@ -469,7 +469,7 @@ void App::run()
 				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, hipCoronalOffset);
 				float jointYOffsetInChild = 0.0f; // for sagittal displacement
 				float jointZOffsetInChild = 0.0f; // for sagittal displacment
-				for (int s = 0; s < 3; s++)
+				for (int s = 0; s < 1; s++)
 				{
 					// Create the spine
 					// ----------------------------
@@ -477,9 +477,9 @@ void App::run()
 					// ----------------------------
 					artemis::Entity & spineJoint = entityManager->create();
 					if (s != 0) parentSz = boxSize;//glm::vec3(boxSize.x, uLegHeight, boxSize.z);
-					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.5f);
-					glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.5f);
-					float segmentMass = 5.0f;
+					glm::vec3 lowerAngleLim = glm::vec3(HALFPI, 0, 0);
+					glm::vec3 upperAngleLim = glm::vec3(-HALFPI, 0, 0);
+					float segmentMass = 2.0f;
 
 					if (s>0) spinepos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
 					
@@ -494,7 +494,7 @@ void App::run()
 							glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
 							boxSize));					// note scale, so full lengths
 					}
-					else // foot
+					else // other spines
 					{
 						spineJoint.addComponent(new TransformComponent(spinepos + glm::vec3(0.0f, boxHeight*0.5f, boxHeight*0.5f - jointYOffsetInChild),
 							glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
@@ -504,7 +504,7 @@ void App::run()
 					spineJoint.addComponent(mat);
 					
 					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, 0.0f),	  // child (this)
-						glm::vec3(0.0f, -parentSz.y*0.5f, 0.0f),													  // parent
+						glm::vec3(0.0f, 0.0f, -parentSz.z*0.5f),													  // parent
 						{ lowerAngleLim, upperAngleLim },
 						false };
 					spineJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
