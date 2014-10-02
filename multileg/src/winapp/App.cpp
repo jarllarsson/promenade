@@ -491,20 +491,20 @@ void App::run()
 					if (s == 0) // first spine joint is child to leg frame
 					{
 						spineJoint.addComponent(new TransformComponent(spinepos,
-							glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+							glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
 							boxSize));					// note scale, so full lengths
 					}
 					else // foot
 					{
-						spineJoint.addComponent(new TransformComponent(spinepos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
-							glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
+						spineJoint.addComponent(new TransformComponent(spinepos + glm::vec3(0.0f, boxHeight*0.5f, boxHeight*0.5f - jointYOffsetInChild),
+							glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
 							boxSize));					// note scale, so full lengths
 					}
-					MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
+					MaterialComponent* mat = new MaterialComponent(colarr[s+3]);
 					spineJoint.addComponent(mat);
 					
 					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, 0.0f),	  // child (this)
-						glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
+						glm::vec3(0.0f, -parentSz.y*0.5f, 0.0f),													  // parent
 						{ lowerAngleLim, upperAngleLim },
 						false };
 					spineJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
