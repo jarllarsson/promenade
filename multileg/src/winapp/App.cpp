@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -293,6 +293,7 @@ void App::run()
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
 		bool quadruped = true;
+		float lfDist=1.0f;
 #ifdef OPTIMIZATION
 		chars = 10;
 #endif
@@ -306,10 +307,11 @@ void App::run()
 #ifdef OPTIMIZATION
 				std::vector<float> uLegLens; std::vector<float> lLegLens;
 #endif
-				for (int y = 0; y < 1; y++) // number of leg frames
+				int legFrames = 2;
+				for (int y = 0; y < legFrames; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, (float)-y);
+					glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, (float)-y*lfDist);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
@@ -457,6 +459,61 @@ void App::run()
 					}
 					charLFs.push_back(&legFrame);
 				} // leg frames
+				//
+				int spineParts = 3;
+				glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, -hipCoronalOffset*0.5f);
+				artemis::Entity* prev = charLFs[0];
+				glm::vec3 spinepos = pos + glm::vec3(0.0f, 0.0f, 0.0f);
+				float boxHeight = lfDist / (float)spineParts;
+				glm::vec3 boxSize = glm::vec3(hipCoronalOffset, boxHeight, lfHeight*0.5f);
+				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, hipCoronalOffset);
+				float jointYOffsetInChild = 0.0f; // for sagittal displacement
+				float jointZOffsetInChild = 0.0f; // for sagittal displacment
+				for (int s = 0; s < 3; s++)
+				{
+					// Create the spine
+					// ----------------------------
+					// SPINE
+					// ----------------------------
+					artemis::Entity & spineJoint = entityManager->create();
+					if (s != 0) parentSz = boxSize;//glm::vec3(boxSize.x, uLegHeight, boxSize.z);
+					glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.5f);
+					glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.5f);
+					float segmentMass = 5.0f;
+
+					if (s>0) spinepos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
+					
+					// no need collision callback
+					spineJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
+						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+					
+					if (drawAll || x == 0) spineJoint.addComponent(new RenderComponent());
+					if (s == 0) // first spine joint is child to leg frame
+					{
+						spineJoint.addComponent(new TransformComponent(spinepos,
+							glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+							boxSize));					// note scale, so full lengths
+					}
+					else // foot
+					{
+						spineJoint.addComponent(new TransformComponent(spinepos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
+							glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
+							boxSize));					// note scale, so full lengths
+					}
+					MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
+					spineJoint.addComponent(mat);
+					
+					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, 0.0f),	  // child (this)
+						glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
+						{ lowerAngleLim, upperAngleLim },
+						false };
+					spineJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
+					spineJoint.refresh();
+					prev = &spineJoint;
+				}
+
+				// ------------------
+
 				// Controller
 				artemis::Entity & controller = entityManager->create();
 				ControllerComponent* controllerComp = new ControllerComponent(charLFs, hipJoints);
