@@ -206,11 +206,15 @@ void ControllerSystem::buildCheck()
 			unsigned int footJointId = 0;
 			for (unsigned int x = 0; x < legCount; x++)
 			{
+				// ROOT
+				// ---------------------------------------------
 				m_VFs.push_back(glm::vec3(0.0f, 0.0f, 0.0f));
 				unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
 				ControllerComponent::VFChain* standardDOFChain = legFrame->m_legs[x].getVFChain(ControllerComponent::VFChainType::STANDARD_CHAIN);
 				// start by adding the already existing root id (needed in all leg chains)
 				addJointToStandardVFChain(standardDOFChain, rootIdx, vfIdx);
+				// LEGS
+				// ---------------------------------------------
 				// Traverse the segment structure for the leg to get the rest
 				artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
 				int jointsAddedForLeg = 0;
@@ -264,9 +268,7 @@ void ControllerSystem::buildCheck()
 					}
 					jointsAddedForLeg++;
 				}
-				// Copy all DOFs for ordinary VF-chain to the gravity compensation chain,
-				// Then re-append a copy of decreasing size (of one) for each segment.
-				// So that we get the structure of that chain as described in struct Leg
+				// Copy all DOFs for ordinary VF-chain to the gravity compensation chain
 				legFrame->m_legs[x].m_DOFChainGravityComp = legFrame->m_legs[x].m_DOFChain;
 				unsigned int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
 				// Change the VFs for this list, as they need to be used to counter gravity
@@ -286,12 +288,71 @@ void ControllerSystem::buildCheck()
 					legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
 					oldJointGCIdx = jointId;
 				}
-				// Now, re-append piece by piece, so we "automatically" get the additive loop later
-				/*for (unsigned int n = 0; n < (unsigned int)jointsAddedForLeg; n++)
+				// SPINE
+				// ---------------------------------------------
+				int spineJoints = legFrameEntities->m_spineJointEntities.size();
+				for (int s = 0; s < spineJoints;s++) // read all joints
 				{
-				// n+1 to skip re-appending of root:
-				repeatAppendChainPart(&legFrame->m_legs[x].m_DOFChainGravityComp, (int)n+1, jointsAddedForLeg - (int)n, origGCDOFsz);
-				}*/
+					artemis::Entity* jointEntity = legFrameEntities->m_spineJointEntities[x];
+					// Get joint data
+					TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
+					RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
+					ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
+					// Add the joint
+					unsigned int idx = addJoint(jointRB, jointTransform);
+					m_rigidBodyRefs.push_back(jointRB);
+					m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
+					// Get DOF on joint to chain
+					// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+					// Register joint for PD (and create PD)
+					float kp = 0.0f, kd = 0.0f;
+					kp = legFrame->m_ulegPDsK.x; kd = legFrame->m_ulegPDsK.y;
+					addJointToPDChain(legFrame->m_spine.getPDChain(), idx, kp, kd);
+					// Get child joint for next iteration				
+					/*ConstraintComponent* childLink = jointRB->getChildConstraint(0);
+					// Add hip joint if first
+					//if (jointsAddedForLeg == 0) legFrame->m_hipJointId.push_back(idx);
+					// find out what to do next time
+					if (childLink != NULL)
+					{	// ===LEG SEGMENT===
+						jointEntity = childLink->getOwnerEntity();
+					}
+					else // we are at the end, so trigger termination
+					{	// ===FOOT===
+						//legFrame->m_feetJointId.push_back(idx);
+						footPos = jointTransform->getPosition(); // store foot position (only used to determine character height, so doesn't matter which one)
+						legFrame->m_footHeight = jointTransform->getScale().z; // height between dorsum and sole(remember; foot is rotated limb)
+						legFrame->createFootPlacementModelVarsForNewLeg(footPos);
+						// add rigidbody idx so we can check for collisions and late foot strikes
+						legFrame->m_footRigidBodyIdx.push_back(m_rigidBodyRefs.size() - 1);
+						footJointId = idx;
+						//
+						jointEntity = NULL;
+					}
+					jointsAddedForLeg++;*/
+				}
+				// Copy all DOFs for ordinary VF-chain to the gravity compensation chain
+				legFrame->m_legs[x].m_DOFChainGravityComp = legFrame->m_legs[x].m_DOFChain;
+				unsigned int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
+				// Change the VFs for this list, as they need to be used to counter gravity
+				// They're also static, so we only need to do this once
+				int oldJointGCIdx = -1;
+				vfIdx = 0;
+				for (unsigned int m = 0; m < origGCDOFsz; m++)
+				{
+					unsigned int jointId = legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChain[m];
+					if (jointId != oldJointGCIdx)
+					{
+						float mass = m_jointMass[jointId];
+						m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
+						vfIdx = (unsigned int)((int)m_VFs.size() - 1);
+						legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChainOffsets.push_back(m);
+					}
+					legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
+					oldJointGCIdx = jointId;
+				}
+				// ANGLE TARGETS; IK- AND FOOT
+				// ---------------------------------------------
 				// Add an IK handler for leg
 				legFrame->m_legIK.push_back(IK2Handler());
 				// add entry for foot rotation timing params in struct
