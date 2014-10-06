@@ -174,6 +174,25 @@ public:
 		}
 	};
 
+	// Spine
+	// Contains info for applying torques on spine joints
+	struct Spine
+	{
+		VFChain m_DOFChainGravityComp;
+		PDChain m_PDChain;
+
+		// ==============================================================================
+		VFChain* getGCVFChain()
+		{
+			return &m_DOFChainGravityComp;
+		}
+
+		PDChain* getPDChain()
+		{
+			return &m_PDChain;
+		}
+	};
+
 	// Leg frame
 	// ==============================================================================
 	// As our systems will interface with artemis, the leg frame structure has been
@@ -253,6 +272,7 @@ public:
 		glm::vec2			   m_flegPDsK; // Kp, Kd
 		// Structure
 		std::vector<Leg> m_legs;								// per leg
+		Spine		     m_spine;								// per leg frame
 		std::vector<glm::vec3>  m_footStrikePlacement;			// The place on the ground where the foot should strike next, per leg
 		std::vector<glm::vec3>	m_footLiftPlacement;			// From where the foot was lifted, per leg
 		std::vector<bool>		m_footLiftPlacementPerformed;	// If foot just took off (and the "old" pos should be updated), per leg

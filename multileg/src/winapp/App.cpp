@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -478,8 +478,10 @@ void App::run()
 				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, hipCoronalOffset);
 				float jointYOffsetInParent = 0.0f; // for sagittal displacement
 				float jointZOffsetInParent = -parentSz.z*0.5f; // for sagittal displacment
-				glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, 0, 0);
-				glm::vec3 upperAngleLim = glm::vec3(-HALFPI, 0, 0);
+				glm::vec3 lowerAngleLim = glm::vec3(-HALFPI*0.1f, -HALFPI*0.1f, -HALFPI*0.1f);
+				glm::vec3 upperAngleLim = glm::vec3(HALFPI*0.1f, HALFPI*0.1f, HALFPI*0.1f);
+				glm::vec3 lowerAngleLimBase = glm::vec3(-HALFPI, 0, 0);
+				glm::vec3 upperAngleLimBase = glm::vec3(-HALFPI, 0, 0);
 				std::vector<artemis::Entity*> spines;
 				for (int s = 0; s < spineParts; s++)
 				{
@@ -496,8 +498,8 @@ void App::run()
 						// as the non-root spines are children to the root spine, which is rotated,
 						// we're working from another coordinate system for joint offsets and angle limits:
 						spinepos += glm::vec3(glm::vec3(0.0f, 0.0f, -boxHeight));
-						lowerAngleLim = glm::vec3(0.0f, 0, 0);
-						upperAngleLim = glm::vec3(0.0f, 0, 0);
+						lowerAngleLimBase = glm::vec3(0.0f, 0, 0);
+						upperAngleLimBase = glm::vec3(0.0f, 0, 0);
 						jointYOffsetInParent = -parentSz.y*0.5f; // for sagittal displacement
 						jointZOffsetInParent = 0.0f; // for sagittal displacment
 					}
@@ -517,7 +519,7 @@ void App::run()
 					
 					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, 0.0f),	  // child (this)
 						glm::vec3(0.0f, jointYOffsetInParent, jointZOffsetInParent),													  // parent
-						{ lowerAngleLim, upperAngleLim },
+						{ lowerAngleLimBase + lowerAngleLim, upperAngleLimBase+upperAngleLim },
 						false };
 					spineJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
 					spineJoint.refresh();
