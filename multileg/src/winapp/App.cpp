@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -295,7 +295,7 @@ void App::run()
 		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = true;
+		bool quadruped = false;
 		float lfDist=2.5f;
 #ifdef OPTIMIZATION
 		chars = 10;
@@ -472,7 +472,7 @@ void App::run()
 				// The distance between the LFs minus the h-length of a LFs, times two; divided 
 				// by number of wanted spines:
 				float boxHeight = (lfDist - (hipCoronalOffset*0.5f * 2)) / (float)spineParts;
-				glm::vec3 boxSize = glm::vec3(hipCoronalOffset, boxHeight, lfHeight*0.15f);
+				glm::vec3 boxSize = glm::vec3(hipCoronalOffset, boxHeight, lfHeight*0.75f);
 				glm::vec3 spinepos = pos + glm::vec3(0.0f, 0.0f, -boxHeight*0.5f);
 				// first spine joint is child to leg frame
 				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, hipCoronalOffset);
@@ -488,7 +488,7 @@ void App::run()
 					// ----------------------------
 					artemis::Entity & spineJoint = entityManager->create();
 					if (s != 0) parentSz = boxSize;//glm::vec3(boxSize.x, uLegHeight, boxSize.z);
-					float segmentMass = 2.0f;
+					float segmentMass = 1.0f;
 
 					if (s > 0)
 					{
@@ -522,15 +522,14 @@ void App::run()
 					spineJoint.refresh();
 					prev = &spineJoint;
 				}				
-				// finish by constraint the last spine to the end LF
-				// these following values then becomes the "opposite" values from the first spine,
-				// as this end is the other way(front instead of back on LF)
+				// finish by constraint the back LF to the last spine
+				// the back LF become the child of the last spine joint
 				jointYOffsetInParent = -boxSize.y*0.5f; // for sagittal displacement
 				jointZOffsetInParent = 0.0f; // for sagittal displacment
 				lowerAngleLim = glm::vec3(HALFPI, 0, 0); 
 				upperAngleLim = glm::vec3(HALFPI, 0, 0); 
-				ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 0.0f, parentSz.z*0.5f),	  // child (this)
-					glm::vec3(0.0f, jointYOffsetInParent, jointZOffsetInParent),													  // parent
+				ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 0.0f, hipCoronalOffset*0.5f),	  // child (this) ie. the LF
+					glm::vec3(0.0f, jointYOffsetInParent, jointZOffsetInParent),							 // parent ie. the last spine joint
 					{ lowerAngleLim, upperAngleLim },
 					false };
 				// parent to the last leg frame that was added

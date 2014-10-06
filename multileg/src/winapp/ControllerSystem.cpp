@@ -21,7 +21,7 @@ bool ControllerSystem::m_bufferLFFeedbackTorque = true;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
-float ControllerSystem::m_torqueLim = 400.0f;
+float ControllerSystem::m_torqueLim = 100.0f;
 
 
 ControllerSystem::~ControllerSystem()
