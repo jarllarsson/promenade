@@ -97,6 +97,9 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_restart = false;
 	//
 	m_triggerPause = true;
+#ifdef OPTIMIZATION
+	m_triggerPause = false;
+#endif
 	//
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 	m_gravityStat = true;

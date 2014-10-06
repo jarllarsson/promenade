@@ -1115,15 +1115,6 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	//glm::vec3 current = MathHelp::transformDirection(glm::mat4_cast(currentOrientation), glm::vec3(0.0f, 10.0f, 0.0f));
 	if (p_controllerId == 0)
 	{
-		/*
-		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
-		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + current, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_MOSSGREEN]);
-		dbgDrawer()->drawLine(getLegFramePosition(lf) + current, getLegFramePosition(lf) + wanted, dawnBringerPalRGB[COL_MOSSGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
-		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + hgr, dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
-		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + fram, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
-		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + chgr, dawnBringerPalRGB[COL_RED] * 0.8f, dawnBringerPalRGB[COL_RED] * 0.8f);
-		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + cfram, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f, dawnBringerPalRGB[COL_LIGHTBLUE] * 0.8f);
-		*/
 		// torque
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tdLF, dawnBringerPalRGB[COL_ORANGE], dawnBringerPalRGB[COL_YELLOW]);
 
@@ -1142,7 +1133,10 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	{
 		unsigned int idx = stanceLegBuf[i];
 		// here we use the wanted tLF and subtract the current swing and spine torques
-		m_jointTorques[idx] = (tdLF - tswing - tspine) / (float)N;
+		m_jointTorques[idx] = 0.5f*((tdLF - tswing - tspine) / (float)N);
+		// We multiply by 0.5f here as the quadruped model will assume
+		// 50% of the required torque and the stance legs will take the remainding
+		// torque. I'm currently trying this for both the quadruped and biped models.
 	}
 	delete[] stanceLegBuf;
 	// The vector reference to the torques, now contains the new LF torque
