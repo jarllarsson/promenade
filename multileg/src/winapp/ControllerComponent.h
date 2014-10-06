@@ -46,7 +46,8 @@ public:
 	// Specify entry points on construction, during build
 	// the chains(lists) will be constructed by walking the pointer chain(double linked list)
 	ControllerComponent(artemis::Entity* p_legFrame, std::vector<artemis::Entity*>& p_hipJoints);
-	ControllerComponent(std::vector<artemis::Entity*>& p_legFrames, std::vector<artemis::Entity*>& p_hipJoints);
+	ControllerComponent(std::vector<artemis::Entity*>& p_legFrames, std::vector<artemis::Entity*>& p_hipJoints,
+						std::vector<artemis::Entity*>* p_spineJoints=NULL); // listed in order, front LF-to-back LF
 
 	virtual ~ControllerComponent() {}
 	
@@ -303,10 +304,7 @@ public:
 	{
 		artemis::Entity* m_legFrameEntity;
 		std::vector<artemis::Entity*> m_upperLegEntities;
-		artemis::Entity* m_spineJoint;
-		// whether to build spine chain forwards or backwards
-		enum SpineTraverseMode {CHILD,PARENT} m_spineTraverseMode;
-		int m_numberOfSpineJoints;
+		std::vector<artemis::Entity*> m_spineJointEntities;
 	};
 
 	unsigned int m_sysIdx;

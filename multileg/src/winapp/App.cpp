@@ -295,7 +295,7 @@ void App::run()
 		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = false;
+		bool quadruped = true;
 		float lfDist=2.5f;
 #ifdef OPTIMIZATION
 		chars = 10;
@@ -480,6 +480,7 @@ void App::run()
 				float jointZOffsetInParent = -parentSz.z*0.5f; // for sagittal displacment
 				glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, 0, 0);
 				glm::vec3 upperAngleLim = glm::vec3(-HALFPI, 0, 0);
+				std::vector<artemis::Entity*> spines;
 				for (int s = 0; s < spineParts; s++)
 				{
 					// Create the spine
@@ -520,6 +521,7 @@ void App::run()
 						false };
 					spineJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
 					spineJoint.refresh();
+					spines.push_back(&spineJoint);
 					prev = &spineJoint;
 				}				
 				// finish by constraint the back LF to the last spine
@@ -541,7 +543,7 @@ void App::run()
 
 				// Controller
 				artemis::Entity & controller = entityManager->create();
-				ControllerComponent* controllerComp = new ControllerComponent(charLFs, hipJoints);
+				ControllerComponent* controllerComp = new ControllerComponent(charLFs, hipJoints,&spines);
 				controller.addComponent(controllerComp);
 #ifdef OPTIMIZATION
 				ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();

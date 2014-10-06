@@ -33,7 +33,7 @@ ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame,
 }
 
 ControllerComponent::ControllerComponent(std::vector<artemis::Entity*>& p_legFrames, 
-	std::vector<artemis::Entity*>& p_hipJoints)
+	std::vector<artemis::Entity*>& p_hipJoints, std::vector<artemis::Entity*>* p_spineJoints/*=NULL*/)
 {
 	m_player = GaitPlayer(2.0f);
 	//
@@ -53,6 +53,11 @@ ControllerComponent::ControllerComponent(std::vector<artemis::Entity*>& p_legFra
 		{
 			legFrameEntityConstruct.m_upperLegEntities.push_back(p_hipJoints[hipJointsIdx]);
 			hipJointsIdx++;
+		}
+		// Add spine information, if possible
+		if (p_spineJoints != NULL)
+		{
+			legFrameEntityConstruct.m_spineJointEntities = *p_spineJoints;
 		}
 		// add to our list of constructs
 		m_legFrameEntityConstructs.push_back(legFrameEntityConstruct);
