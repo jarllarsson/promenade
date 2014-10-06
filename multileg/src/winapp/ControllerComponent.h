@@ -303,6 +303,10 @@ public:
 	{
 		artemis::Entity* m_legFrameEntity;
 		std::vector<artemis::Entity*> m_upperLegEntities;
+		artemis::Entity* m_spineJoint;
+		// whether to build spine chain forwards or backwards
+		enum SpineTraverseMode {CHILD,PARENT} m_spineTraverseMode;
+		int m_numberOfSpineJoints;
 	};
 
 	unsigned int m_sysIdx;
