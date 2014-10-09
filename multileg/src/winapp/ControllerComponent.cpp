@@ -40,6 +40,12 @@ ControllerComponent::ControllerComponent(std::vector<artemis::Entity*>& p_legFra
 	m_buildComplete = false;
 	// for each inputted leg-frame entity...
 
+	// Add spine information, if possible
+	if (p_spineJoints != NULL)
+	{
+		setSpineJointEntitiesConstruct(*p_spineJoints);
+	}
+
 	// Set up the entity-based leg frame representation
 	// This is simply a struct of pointers to the artemis equivalents of
 	// what the controller system will work with as joints and decomposed DOF-chains
@@ -54,11 +60,7 @@ ControllerComponent::ControllerComponent(std::vector<artemis::Entity*>& p_legFra
 			legFrameEntityConstruct.m_upperLegEntities.push_back(p_hipJoints[hipJointsIdx]);
 			hipJointsIdx++;
 		}
-		// Add spine information, if possible
-		if (p_spineJoints != NULL)
-		{
-			legFrameEntityConstruct.m_spineJointEntities = *p_spineJoints;
-		}
+
 		// add to our list of constructs
 		m_legFrameEntityConstructs.push_back(legFrameEntityConstruct);
 		// Create the leg frame data struct as well

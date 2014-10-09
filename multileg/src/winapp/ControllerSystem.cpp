@@ -77,7 +77,6 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 
 void ControllerSystem::fixedUpdate(float p_dt)
 {
-	//DEBUGPRINT(( (std::string("\nDT=") + ToString(p_dt) + "\n").c_str() ));
 	m_runTime += p_dt;
 	m_steps++;
 
@@ -304,6 +303,50 @@ void ControllerSystem::buildCheck()
 #pragma endregion legs
 			legFrame->m_height = legFramePos.y - (footPos.y - legFrame->m_footHeight*0.5f/*m_jointLengths[footJointId]*0.5f*/);
 		}
+		//
+		// SPINE
+		// ---------------------------------------------
+		int spineJoints = legFrameEntities->m_spineJointEntities.size();
+		for (int s = 0; s < spineJoints; s++) // read all joints
+		{
+			artemis::Entity* jointEntity = legFrameEntities->m_spineJointEntities[x];
+			// Get joint data
+			TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
+			RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
+			ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
+			// Add the joint
+			unsigned int idx = addJoint(jointRB, jointTransform);
+			m_rigidBodyRefs.push_back(jointRB);
+			m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
+			// Get DOF on joint to chain
+			// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+			// Register joint for PD (and create PD)
+			float kp = 0.0f, kd = 0.0f;
+			kp = 300.0f; kd = 30.0f;
+			addJointToPDChain(legFrame->m_spine.getPDChain(), idx, kp, kd);
+		}
+		// Copy all DOFs for ordinary VF-chain to the gravity compensation chain
+		legFrame->m_legs[x].m_DOFChainGravityComp = legFrame->m_legs[x].m_DOFChain;
+		int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
+		// Change the VFs for this list, as they need to be used to counter gravity
+		// They're also static, so we only need to do this once
+		int oldJointGCIdx = -1;
+		vfIdx = 0;
+		for (unsigned int m = 0; m < origGCDOFsz; m++)
+		{
+			unsigned int jointId = legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChain[m];
+			if (jointId != oldJointGCIdx)
+			{
+				float mass = m_jointMass[jointId];
+				m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
+				vfIdx = (unsigned int)((int)m_VFs.size() - 1);
+				legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChainOffsets.push_back(m);
+			}
+			legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
+			oldJointGCIdx = jointId;
+		}
+		// FINALIZE
+		// ------------------------------------------
 		// Calculate number of torques axes in list, store
 		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);

@@ -325,7 +325,6 @@ public:
 	{
 		artemis::Entity* m_legFrameEntity;
 		std::vector<artemis::Entity*> m_upperLegEntities;
-		std::vector<artemis::Entity*> m_spineJointEntities;
 	};
 
 	unsigned int m_sysIdx;
@@ -334,6 +333,9 @@ public:
 	const unsigned int getLegFrameCount() const {return (unsigned int)m_legFrames.size();}
 	LegFrame* getLegFrame(unsigned int p_idx)								{return &m_legFrames[p_idx];}
 	LegFrameEntityConstruct* getLegFrameEntityConstruct(unsigned int p_idx) {return &m_legFrameEntityConstructs[p_idx];}
+	void setSpineJointEntitiesConstruct(std::vector<artemis::Entity*>& p_list) { m_spineJointEntitiesConstruct=p_list; }
+	unsigned int getSpineJointEntitiesConstructSize() { return m_spineJointEntitiesConstruct.size(); }
+	artemis::Entity* getSpineJointEntitiesConstruct(unsigned int p_idx) { return m_spineJointEntitiesConstruct[p_idx]; }
 	void setToBuildComplete() { m_buildComplete = true; }
 	bool isBuildComplete() { return m_buildComplete; }
 	// ==============================================================================
@@ -358,6 +360,7 @@ private:
 	// ==============================================================================
 	std::vector<LegFrame> m_legFrames;
 	std::vector<LegFrameEntityConstruct> m_legFrameEntityConstructs;
+	std::vector<artemis::Entity*> m_spineJointEntitiesConstruct;
 
 	// Torque list nav
 	unsigned int m_torqueListOffset;
