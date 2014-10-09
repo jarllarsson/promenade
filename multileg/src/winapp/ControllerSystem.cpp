@@ -307,40 +307,43 @@ void ControllerSystem::buildCheck()
 		// SPINE
 		// ---------------------------------------------
 		int spineJoints = controller->getSpineJointEntitiesConstructSize();
-		for (int s = 0; s < spineJoints; s++) // read all joints
+		if (spineJoints>0)
 		{
-			artemis::Entity* jointEntity = controller->getSpineJointEntitiesConstruct(s);
-			// Get joint data
-			TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
-			RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
-			ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
-			// Add the joint
-			unsigned int idx = addJoint(jointRB, jointTransform);
-			m_rigidBodyRefs.push_back(jointRB);
-			m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
-			// Get DOF on joint to GCVF chain, the spine does not use ordinary VFs, so we have to set up the base here
-			float mass = m_jointMass[idx];
-			m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
-			unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
-			addJointToVFChain(controller->m_spine.getGCVFChain(), idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
-			// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
-			// Register joint for PD (and create PD)
-			float kp = 0.0f, kd = 0.0f;
-			kp = 300.0f; kd = 30.0f;
-			addJointToPDChain(controller->m_spine.getPDChain(), idx, kp, kd);
-		}
-		// Fix the sub chains for our GCVF chain, count dof offsets
-		int origGCDOFsz = controller->m_spine.m_DOFChainGravityComp.getSize();
-		int oldJointGCIdx = -1;
-		unsigned int vfIdx = 0;
-		for (unsigned int m = 0; m < origGCDOFsz; m++)
-		{
-			unsigned int jointId = controller->m_spine.getGCVFChain()->m_jointIdxChain[m];
-			if (jointId != oldJointGCIdx)
+			for (int s = 0; s < spineJoints; s++) // read all joints
 			{
-				controller->m_spine.getGCVFChain()->m_jointIdxChainOffsets.push_back(m);
+				artemis::Entity* jointEntity = controller->getSpineJointEntitiesConstruct(s);
+				// Get joint data
+				TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
+				RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
+				ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
+				// Add the joint
+				unsigned int idx = addJoint(jointRB, jointTransform);
+				m_rigidBodyRefs.push_back(jointRB);
+				m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
+				// Get DOF on joint to GCVF chain, the spine does not use ordinary VFs, so we have to set up the base here
+				float mass = m_jointMass[idx];
+				m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
+				unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
+				addJointToVFChain(controller->m_spine.getGCVFChain(), idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+				// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+				// Register joint for PD (and create PD)
+				float kp = 0.0f, kd = 0.0f;
+				kp = 300.0f; kd = 30.0f;
+				addJointToPDChain(controller->m_spine.getPDChain(), idx, kp, kd);
 			}
-			oldJointGCIdx = jointId;
+			// Fix the sub chains for our GCVF chain, count dof offsets
+			int origGCDOFsz = controller->m_spine.m_DOFChainGravityComp.getSize();
+			int oldJointGCIdx = -1;
+			unsigned int vfIdx = 0;
+			for (unsigned int m = 0; m < origGCDOFsz; m++)
+			{
+				unsigned int jointId = controller->m_spine.getGCVFChain()->m_jointIdxChain[m];
+				if (jointId != oldJointGCIdx)
+				{
+					controller->m_spine.getGCVFChain()->m_jointIdxChainOffsets.push_back(m);
+				}
+				oldJointGCIdx = jointId;
+			}
 		}
 		// FINALIZE
 		// ------------------------------------------
