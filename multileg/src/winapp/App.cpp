@@ -348,7 +348,7 @@ void App::run()
 					// Number of leg frames per character
 					for (int n = 0; n < 2; n++) // number of legs per frame
 					{
-						string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
+						string sideName = ToString(y)+(string(n == 0 ? "Left" : "Right") + "Leg");
 						if (x == 0)
 						{
 							m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
@@ -420,7 +420,7 @@ void App::run()
 								foot = true;
 							}
 							string dbgGrp = (" group='" + sideName + "'");
-							if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
+							if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName.substr(0, 2) + partName).c_str(), dbgGrp.c_str());
 							legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
 							if (foot == true)
 							{
@@ -448,9 +448,9 @@ void App::run()
 									glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
 									boxSize));					// note scale, so full lengths
 							}
-							MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
+							MaterialComponent* mat = new MaterialComponent(colarr[(y+n) * 3 + i]);
 							childJoint.addComponent(mat);
-							if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
+							if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (sideName.substr(0, 2) + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
 							ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, -jointZOffsetInChild),	  // child (this)
 								glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
 								{ lowerAngleLim, upperAngleLim },
