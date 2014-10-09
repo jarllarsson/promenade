@@ -137,7 +137,7 @@ public:
 private:
 	// build helpers
 	// Add a joint's all DOFs to chain
-	void addJointToStandardVFChain(ControllerComponent::VFChain* p_legVFChain, unsigned int p_idx, 
+	void addJointToVFChain(ControllerComponent::VFChain* p_VFChain, unsigned int p_idx, 
 		unsigned int p_vfIdx, const glm::vec3* p_angularLims = NULL);
 	void addJointToPDChain(ControllerComponent::PDChain* p_legChain, unsigned int p_idx, float p_kp, float p_kd);
 	// Add chain DOFs to list again, from Joint-offset ( this functions skips the appropriate number of DOFs)

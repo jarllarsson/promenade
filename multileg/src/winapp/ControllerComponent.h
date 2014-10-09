@@ -61,7 +61,7 @@ public:
 	public:
 		std::vector<glm::vec3> m_DOFChain;
 		std::vector<unsigned int> m_jointIdxChain;
-		std::vector<unsigned int> m_jointIdxChainOffsets;
+		std::vector<unsigned int> m_jointIdxChainOffsets; // sub chains (offsets for each new chain)
 		// vector with indices to global virtual force list
 		std::vector<unsigned int> m_vfIdxList;
 		//

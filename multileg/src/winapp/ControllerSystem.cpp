@@ -216,7 +216,7 @@ void ControllerSystem::buildCheck()
 				unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
 				ControllerComponent::VFChain* standardDOFChain = legFrame->m_legs[x].getVFChain(ControllerComponent::VFChainType::STANDARD_CHAIN);
 				// start by adding the already existing root id (needed in all leg chains)
-				addJointToStandardVFChain(standardDOFChain, rootIdx, vfIdx);
+				addJointToVFChain(standardDOFChain, rootIdx, vfIdx);
 				// LEGS
 				// ---------------------------------------------
 				// Traverse the segment structure for the leg to get the rest
@@ -233,7 +233,7 @@ void ControllerSystem::buildCheck()
 					m_rigidBodyRefs.push_back(jointRB);
 					m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
 					// Get DOF on joint to chain
-					addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+					addJointToVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
 					// Register joint for PD (and create PD)
 					float kp = 0.0f, kd = 0.0f;
 					if (jointsAddedForLeg == 0)
@@ -306,10 +306,10 @@ void ControllerSystem::buildCheck()
 		//
 		// SPINE
 		// ---------------------------------------------
-		int spineJoints = legFrameEntities->m_spineJointEntities.size();
+		int spineJoints = controller->getSpineJointEntitiesConstructSize();
 		for (int s = 0; s < spineJoints; s++) // read all joints
 		{
-			artemis::Entity* jointEntity = legFrameEntities->m_spineJointEntities[x];
+			artemis::Entity* jointEntity = controller->getSpineJointEntitiesConstruct(s);
 			// Get joint data
 			TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
 			RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
@@ -318,31 +318,28 @@ void ControllerSystem::buildCheck()
 			unsigned int idx = addJoint(jointRB, jointTransform);
 			m_rigidBodyRefs.push_back(jointRB);
 			m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
-			// Get DOF on joint to chain
+			// Get DOF on joint to GCVF chain, the spine does not use ordinary VFs, so we have to set up the base here
+			float mass = m_jointMass[idx];
+			m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
+			unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
+			addJointToVFChain(controller->m_spine.getGCVFChain(), idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
 			// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
 			// Register joint for PD (and create PD)
 			float kp = 0.0f, kd = 0.0f;
 			kp = 300.0f; kd = 30.0f;
-			addJointToPDChain(legFrame->m_spine.getPDChain(), idx, kp, kd);
+			addJointToPDChain(controller->m_spine.getPDChain(), idx, kp, kd);
 		}
-		// Copy all DOFs for ordinary VF-chain to the gravity compensation chain
-		legFrame->m_legs[x].m_DOFChainGravityComp = legFrame->m_legs[x].m_DOFChain;
-		int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
-		// Change the VFs for this list, as they need to be used to counter gravity
-		// They're also static, so we only need to do this once
+		// Fix the sub chains for our GCVF chain, count dof offsets
+		int origGCDOFsz = controller->m_spine.m_DOFChainGravityComp.getSize();
 		int oldJointGCIdx = -1;
-		vfIdx = 0;
+		unsigned int vfIdx = 0;
 		for (unsigned int m = 0; m < origGCDOFsz; m++)
 		{
-			unsigned int jointId = legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChain[m];
+			unsigned int jointId = controller->m_spine.getGCVFChain()->m_jointIdxChain[m];
 			if (jointId != oldJointGCIdx)
 			{
-				float mass = m_jointMass[jointId];
-				m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
-				vfIdx = (unsigned int)((int)m_VFs.size() - 1);
-				legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChainOffsets.push_back(m);
+				controller->m_spine.getGCVFChain()->m_jointIdxChainOffsets.push_back(m);
 			}
-			legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
 			oldJointGCIdx = jointId;
 		}
 		// FINALIZE
@@ -410,9 +407,9 @@ void ControllerSystem::buildCheck()
 	m_controllersToBuild.clear();
 }
 
-void ControllerSystem::addJointToStandardVFChain(ControllerComponent::VFChain* p_legVFChain, unsigned int p_idx, unsigned int p_vfIdx, const glm::vec3* p_angularLims /*= NULL*/)
+void ControllerSystem::addJointToVFChain(ControllerComponent::VFChain* p_VFChain, unsigned int p_idx, unsigned int p_vfIdx, const glm::vec3* p_angularLims /*= NULL*/)
 {
-	ControllerComponent::VFChain* legChain = p_legVFChain;
+	ControllerComponent::VFChain* legChain = p_VFChain;
 	// root has 3DOF (for now, to not over-optimize, we add three vec3's)
 	for (int n = 0; n < 3; n++)
 	{
@@ -426,11 +423,11 @@ void ControllerSystem::addJointToStandardVFChain(ControllerComponent::VFChain* p
 }
 
 
-void ControllerSystem::addJointToPDChain(ControllerComponent::PDChain* p_legChain, unsigned int p_idx, float p_kp, float p_kd)
+void ControllerSystem::addJointToPDChain(ControllerComponent::PDChain* p_pdChain, unsigned int p_idx, float p_kp, float p_kd)
 {
-	ControllerComponent::PDChain* legPDChain = p_legChain;
-	legPDChain->m_PDChain.push_back(PDn(p_kp,p_kd));
-	legPDChain->m_jointIdxChain.push_back(p_idx);
+	ControllerComponent::PDChain* PDChain = p_pdChain;
+	PDChain->m_PDChain.push_back(PDn(p_kp,p_kd));
+	PDChain->m_jointIdxChain.push_back(p_idx);
 }
 
 
