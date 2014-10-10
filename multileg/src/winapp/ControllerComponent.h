@@ -178,6 +178,8 @@ public:
 	// Contains info for applying torques on spine joints
 	struct Spine
 	{
+		unsigned int m_joints;
+		bool m_lfJointsUsedPD; // if true, then we have two joints in back of pd chain that are LFs
 		VFChain m_DOFChainGravityComp;
 		PDChain m_PDChain;
 
@@ -249,7 +251,7 @@ public:
 
 		// Structure ids
 		unsigned int m_legFrameJointId;				// per leg frame
-		int m_spineJointId;				// per leg frame
+		int m_spineJointId;				// per leg frame (! Might not be needed)
 		std::vector<unsigned int> m_feetJointId;	// per leg
 		std::vector<unsigned int> m_hipJointId;		// per leg		
 		std::vector<unsigned int> m_footRigidBodyIdx;	// Idx to foot rigidbody in foot list in system for special collision check, per leg	

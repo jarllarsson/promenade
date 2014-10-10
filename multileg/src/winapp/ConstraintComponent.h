@@ -59,6 +59,8 @@ public:
 
 
 	const ConstraintDesc* getDesc() const;
+	glm::vec3 getLowerLim() { return m_desc->m_angularDOF_LULimits[0]; }
+	glm::vec3 getUpperLim() { return m_desc->m_angularDOF_LULimits[1]; }
 
 	bool isInited();
 	void init(btGeneric6DofConstraint* p_constraint, artemis::Entity* p_ownerEntity);

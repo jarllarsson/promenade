@@ -323,7 +323,7 @@ void App::run()
 
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 					glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-					float characterMass = /*scale**/10.0f;
+					float characterMass = /*scale**/4.5f;
 					RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 					legFrame.addComponent(lfRB);
@@ -396,8 +396,16 @@ void App::run()
 							else if (i == 1) // if knee (lower leg)
 							{
 								partName = " lower";
-								lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
-								upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+								if (y == 1)
+								{
+									lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+								}
+								else // front legs have "flipped" knees, for digitigrade anatomy
+								{
+									lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(PI*0.7f, 0.0f, 0.0f);
+								}
 								segmentMass = /*scale**/4.0f;
 								boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION

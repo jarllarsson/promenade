@@ -4,8 +4,9 @@
 #include <algorithm> 
 
 
-IK2Handler::IK2Handler()
+IK2Handler::IK2Handler(int p_kneeFlip/* = 1*/)
 {
+	m_kneeFlip = p_kneeFlip;
 	float m_upperAngle=0.0f;
 	float m_lowerAngle=0.0f;
 }
@@ -18,7 +19,7 @@ IK2Handler::~IK2Handler()
 
 void IK2Handler::solve(const glm::vec3& p_footPos, const glm::vec3& p_upperLegJointPos, float p_upperLegLen, float p_lowerLegLen, DebugDrawBatch* p_drawer)
 {
-	int kneeFlip = 1;
+	int kneeFlip = m_kneeFlip;
 	// Retrieve the current wanted foot position
 	glm::vec3 footPos = p_footPos;
 	glm::vec3 upperLegPos = p_upperLegJointPos;

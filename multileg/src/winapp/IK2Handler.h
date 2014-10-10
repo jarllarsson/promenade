@@ -15,7 +15,7 @@ class DebugDrawBatch;
 class IK2Handler
 {
 public:
-	IK2Handler();
+	IK2Handler(int p_kneeFlip=1);
 	~IK2Handler();
 
 
@@ -31,6 +31,7 @@ public:
 protected:
 	void debugDraw(DebugDrawBatch* p_drawer);
 private:
+	int m_kneeFlip;
 	void updateAngles(float p_lowerAngle, float p_upperAngle);
 	float m_upperAngle;
 	float m_lowerAngle;

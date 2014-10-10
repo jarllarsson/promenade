@@ -222,6 +222,7 @@ void ControllerSystem::buildCheck()
 				// Traverse the segment structure for the leg to get the rest
 				artemis::Entity* jointEntity = legFrameEntities->m_upperLegEntities[x];
 				int jointsAddedForLeg = 0;
+				int kneeFlip = 1;
 				while (jointEntity != NULL) // read all joints
 				{
 					// Get joint data
@@ -238,16 +239,18 @@ void ControllerSystem::buildCheck()
 					float kp = 0.0f, kd = 0.0f;
 					if (jointsAddedForLeg == 0)
 					{
-						kp = legFrame->m_ulegPDsK.x; kd = legFrame->m_ulegPDsK.y;
-					} // upper
+						kp = legFrame->m_ulegPDsK.x; kd = legFrame->m_ulegPDsK.y;// upper
+					} 
 					else if (jointsAddedForLeg < 2)
 					{
-						kp = legFrame->m_llegPDsK.x; kd = legFrame->m_llegPDsK.y;
-					} // lower
+						kp = legFrame->m_llegPDsK.x; kd = legFrame->m_llegPDsK.y;// lower
+						if (parentLink->getUpperLim().x>PI*0.01f) // if we have a upper lim over 0, we have a "digitigrade knee"
+							kneeFlip = -1; // and we need to reflect this for the IK solver
+					} 
 					else
 					{
-						kp = legFrame->m_flegPDsK.x; kd = legFrame->m_flegPDsK.y;
-					} // foot
+						kp = legFrame->m_flegPDsK.x; kd = legFrame->m_flegPDsK.y;// foot
+					} 
 					addJointToPDChain(legFrame->m_legs[x].getPDChain(), idx, kp, kd);
 					// Get child joint for next iteration				
 					ConstraintComponent* childLink = jointRB->getChildConstraint(0);
@@ -295,7 +298,7 @@ void ControllerSystem::buildCheck()
 				// ANGLE TARGETS; IK- AND FOOT
 				// ---------------------------------------------
 				// Add an IK handler for leg
-				legFrame->m_legIK.push_back(IK2Handler());
+				legFrame->m_legIK.push_back(IK2Handler(kneeFlip));
 				// add entry for foot rotation timing params in struct
 				legFrame->m_toeOffTime.push_back(0.0f);
 				legFrame->m_tuneFootStrikeTime.push_back(0.0f);
@@ -331,11 +334,13 @@ void ControllerSystem::buildCheck()
 				// Register joint for PD (and create PD)
 				addJointToPDChain(controller->m_spine.getPDChain(), idx, skp, skd);
 			}
+			controller->m_spine.m_joints = spineJoints;
 			// if we want the spine to use the leg frames for PD movement as well, do this:
 			for (int s = 0; s < controller->getLegFrameCount(); s++)
 			{
 				addJointToPDChain(controller->m_spine.getPDChain(), controller->getLegFrame(s)->m_legFrameJointId, skp, skd);
 			}
+			controller->m_spine.m_lfJointsUsedPD = true;
 			// Fix the sub chains for our GCVF chain, count dof offsets
 			int origGCDOFsz = controller->m_spine.m_DOFChainGravityComp.getSize();
 			int oldJointGCIdx = -1;
@@ -1175,12 +1180,15 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	}
 
 	// Spine if it exists
-	int spineIdx = (int)lf->m_spineJointId;
-	if (spineIdx >= 0)
+	ControllerComponent::Spine* spine = &p_controller->m_spine;
+	// Note that the last two joints might be LFs, check the flag in spine to check for this wheter they should be used in this calculation or not
+	unsigned int spineCount = spine->m_joints; 
+	spineCount -= spine->m_lfJointsUsedPD ? 2 : 0; // dec with 2 if last two are LFs, assume for now we aren't counting those
+	for (unsigned int i = 0; i < spineCount;i++)
 	{
-		tspine = m_jointTorques[(unsigned int)spineIdx];
-		tospine = m_oldJointTorques[(unsigned int)spineIdx];
-
+		unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
+		tspine += m_jointTorques[spineIdx];
+		tospine += m_oldJointTorques[spineIdx];
 	}
 
 	// 1. Calculate current torque for leg frame:
@@ -1223,22 +1231,44 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// test code
 	//rigidbody.AddTorque(tdLF);
 
+	// How much torque should be assumed by the LF?
+	// The remainder will be assumed by the spine.
+	bool spineWork = p_legFrameIdx == 0;
+	float percentage = 1.0f;
+	if (spineWork) percentage = 0.5f;
+	// For the front LF we want only 50% (as per the document)
+
+
 	// 3. Now loop through all legs in stance (N) and
 	// modify their torques in the vector according
 	// to tstancei = (tdLF-tswing-tspine)/N
 	// This is to try to make the stance legs compensate
 	// for current errors in order to make the leg frame
 	// reach its desired torque.
+
 	int N = stanceCount;
+	glm::vec3 work = percentage*((tdLF - tswing - tspine) / (float)N);
+	// We multiply by 0.5f here if we're at the front LF (see above) as the quadruped model will assume
+	// 50% of the required torque and the stance legs will take the remainding
+	// torque. I'm currently trying this for both the quadruped and biped models.
+	// Apply to stance legs
 	for (int i = 0; i < N; i++)
 	{
 		unsigned int idx = stanceLegBuf[i];
 		// here we use the wanted tLF and subtract the current swing and spine torques
-		m_jointTorques[idx] = 0.5f*((tdLF - tswing - tspine) / (float)N);
-		// We multiply by 0.5f here as the quadruped model will assume
-		// 50% of the required torque and the stance legs will take the remainding
-		// torque. I'm currently trying this for both the quadruped and biped models.
+		m_jointTorques[idx] = work;
 	}
+
+	// If we're at the front LF, and we have a spine, add remainder work to the spine joints
+	if (spineWork)
+	{
+		for (unsigned int i = 0; i < spineCount; i++)
+		{
+			unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
+			m_jointTorques[spineIdx] += work/(float)spineCount; // NOTE! Not sure if we should divide here? Or all joints assume the full torque?
+		}
+	}
+
 	delete[] stanceLegBuf;
 	// The vector reference to the torques, now contains the new LF torque
 	// as well as any corrected stance-leg torques.
