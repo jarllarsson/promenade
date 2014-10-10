@@ -517,7 +517,9 @@ void ControllerSystem::saveJointWorldEndpoints(unsigned int p_idx, glm::mat4& p_
 }
 
 
-
+// =================================================
+// CONTROLLER UPDATE
+// =================================================
 void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 {
 	float dt = p_dt;
