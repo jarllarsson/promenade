@@ -21,7 +21,7 @@ class ReferenceLegMovementController
 {
 public:
 	ReferenceLegMovementController(ControllerComponent* p_controller, ControllerComponent::LegFrame* p_lf, 
-		unsigned int p_legCount=2)
+		unsigned int p_legCount=2, int p_kneeFlip=1)
 	{
 		unsigned int legs = p_legCount;
 		for (int i = 0; i < legs; i++)
@@ -33,6 +33,7 @@ public:
 			m_stepCycles.push_back(p_lf->m_stepCycles[i]);
 			m_stepLength = p_lf->m_stepLength;
 		}
+		m_IK = IK2Handler(p_kneeFlip);
 		m_lfStartOffset = p_lf->m_startPosOffset;
 		m_stepHeightTraj = p_lf->m_stepHeighTraj;
 		m_player = p_controller->m_player;
@@ -48,6 +49,7 @@ public:
 		m_stepLength		= p_copy.m_stepLength;
 		m_stepHeightTraj	= p_copy.m_stepHeightTraj;
 		m_liftPos			= p_copy.m_liftPos;
+		m_IK				= IK2Handler(p_copy.m_IK.getKneeFlip());
 	}
 
 	virtual ~ReferenceLegMovementController() {}

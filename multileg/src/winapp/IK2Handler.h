@@ -24,6 +24,7 @@ public:
 	float getUpperLegAngle() const;
 	float getLowerLocalLegAngle() const;
 	float getLowerWorldLegAngle() const;
+	int getKneeFlip() const;
 
 	glm::vec3& getHipPos();
 	glm::vec3& getKneePos();

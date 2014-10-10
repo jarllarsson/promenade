@@ -38,8 +38,8 @@ void IK2Handler::solve(const glm::vec3& p_footPos, const glm::vec3& p_upperLegJo
 	float toFootLen = glm::length(topToFoot);
 	float upperLegAngle = 0.0f;
 	float lowerLegAngle = 0.0f;
-	float uB = p_upperLegLen; // the length of the legs
-	float lB = p_lowerLegLen;
+	float uB = p_upperLegLen*1.0f; // the length of the legs
+	float lB = p_lowerLegLen*1.0f;
 	// first get offset angle beetween foot and axis
 	float offsetAngle = MathHelp::satan2(topToFoot.y, topToFoot.z);
 	// If dist to foot is shorter than combined leg length
@@ -127,4 +127,9 @@ void IK2Handler::debugDraw(DebugDrawBatch* p_drawer)
 	p_drawer->drawLine(m_endPos + 0.1f*glm::vec3(1, 0, 1), m_endPos +	 0.1f*glm::vec3(1, 0, -1), dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
 	p_drawer->drawLine(m_endPos + 0.1f*glm::vec3(1, 0, -1), m_endPos +	 0.1f*glm::vec3(-1, 0, -1), dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
 	p_drawer->drawLine(m_endPos + 0.1f*glm::vec3(-1, 0, -1), m_endPos +  0.1f*glm::vec3(-1, 0, 1), dawnBringerPalRGB[COL_SLIMEGREEN], dawnBringerPalRGB[COL_SLIMEGREEN]);
+}
+
+int IK2Handler::getKneeFlip() const
+{
+	return m_kneeFlip;
 }

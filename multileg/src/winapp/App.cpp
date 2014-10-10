@@ -310,6 +310,7 @@ void App::run()
 				vector<artemis::Entity*> hipJoints;
 #ifdef OPTIMIZATION
 				std::vector<float> uLegLens; std::vector<float> lLegLens;
+				std::vector<int> kneeFlip;
 #endif
 				int legFrames = 2;
 				artemis::Entity* prevlegFrame = NULL;
@@ -323,7 +324,7 @@ void App::run()
 
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 					glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-					float characterMass = /*scale**/4.5f;
+					float characterMass = /*scale**/10.0f;
 					RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 					legFrame.addComponent(lfRB);
@@ -409,7 +410,11 @@ void App::run()
 								segmentMass = /*scale**/4.0f;
 								boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION
-								if (n == 0) lLegLens.push_back(lLegHeight + footHeight);
+								if (n == 0) 
+								{
+									lLegLens.push_back(lLegHeight + footHeight);
+									kneeFlip.push_back(y == 1 ? 1 : -1);
+								}
 #endif
 							}
 							else if (i == 2) // if foot
@@ -567,7 +572,7 @@ void App::run()
 				{
 					if (x == 0 && r >= baseReferenceMovementControllers.size())
 					{
-						baseReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r)));
+						baseReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r), 2, kneeFlip[r]));
 					}
 					recComp->addLegReferenceController(baseReferenceMovementControllers[r]);
 				}

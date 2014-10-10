@@ -311,6 +311,7 @@ void ControllerSystem::buildCheck()
 		// SPINE
 		// ---------------------------------------------
 		int spineJoints = controller->getSpineJointEntitiesConstructSize();
+		controller->m_spine.m_joints = spineJoints;
 		if (spineJoints>0)
 		{
 			float skp = 0.0f, skd = 0.0f;
@@ -335,7 +336,6 @@ void ControllerSystem::buildCheck()
 				// Register joint for PD (and create PD)
 				addJointToPDChain(controller->m_spine.getPDChain(), idx, skp, skd);
 			}
-			controller->m_spine.m_joints = spineJoints;
 			// if we want the spine to use the leg frames for PD movement as well, do this:
 			for (int s = 0; s < controller->getLegFrameCount(); s++)
 			{
@@ -814,11 +814,11 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 		glm::vec3 tspine, tospine;
 		ControllerComponent::Spine* spine = &p_controller->m_spine;
 		// Note that the last two joints might be LFs, check the flag in spine to check for this wheter they should be used in this calculation or not
-		unsigned int spineCount = spine->m_joints;
+		int spineCount = (int)spine->m_joints;
 		if (spineCount>0)
 		{
 			spineCount -= spine->m_lfJointsUsedPD ? 2 : 0; // dec with 2 if last two are LFs, assume for now we aren't counting those
-			for (unsigned int i = 0; i < spineCount; i++)
+			for (unsigned int i = 0; i < (unsigned int)spineCount; i++)
 			{
 				unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
 				tspine += m_jointTorques[spineIdx];
@@ -839,7 +839,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 		{
 			for (unsigned int i = 0; i < spineCount; i++)
 			{
-				unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
+				unsigned int spineIdx = (unsigned int)spine->getPDChain()->m_jointIdxChain[i];
 				m_jointTorques[spineIdx] += tLFremainder / (float)spineCount; // NOTE! Not sure if we should divide here? Or all joints assume the full torque?
 			}
 		}
@@ -1334,7 +1334,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			refDesiredFootPos.z -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
 			//refDesiredFootPos.z -= 0.2f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
-			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
+			//refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
 			// Fetch upper- and lower leg length and solve IK
 			IK2Handler* ik = &lf->m_legIK[n];
 			DebugDrawBatch* drawer = NULL;
