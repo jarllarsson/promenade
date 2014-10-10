@@ -424,8 +424,17 @@ void App::run()
 								boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
 								jointYOffsetInChild = footLen*0.2f;
 								//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
-								lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
-								upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
+								// TODO!
+// 								if (y==0)
+// 								{
+// 									lowerAngleLim = glm::vec3(HALFPI*0.5f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
+// 									upperAngleLim = glm::vec3(HALFPI*0.8f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
+// 								}
+// 								else
+								{
+									lowerAngleLim = glm::vec3(HALFPI*0.5f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
+									upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
+								}
 								//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								//lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
@@ -458,9 +467,19 @@ void App::run()
 							}
 							else // foot
 							{
-								childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
-									glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
-									boxSize));					// note scale, so full lengths
+								// TODO! digitigrade feet
+// 								if (y == 0)
+// 								{
+// 									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
+// 										glm::quat(glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f)),
+// 										boxSize));					// note scale, so full lengths
+// 								}
+// 								else
+								{
+									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
+										glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
+										boxSize));					// note scale, so full lengths
+								}
 							}
 							MaterialComponent* mat = new MaterialComponent(colarr[(y+n) * 3 + i]);
 							childJoint.addComponent(mat);
