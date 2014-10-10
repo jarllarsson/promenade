@@ -536,7 +536,7 @@ void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 	// update feet positions
 	updateFeet(p_controllerId, controller);
 
-	updateSpine(&m_jointTorques, p_controllerId, controller, p_dt);
+	updateSpine(&m_jointTorques, p_controllerId, controller,p_dt);
 
 	// Recalculate all torques for this frame
 	updateTorques(p_controllerId, controller, dt);
@@ -649,22 +649,32 @@ void ControllerSystem::updateFeet( unsigned int p_controllerId, ControllerCompon
 void ControllerSystem::updateSpine(std::vector<glm::vec3>* p_outTVF, int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
 	ControllerComponent::Spine* spine = &p_controller->m_spine;
-	//for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	if (spine->getPDChain()->getSize()>0 && p_controller->getLegFrameCount()>1)
 	{
+		float phi = p_controller->m_player.getPhase();
+		glm::quat orientationDiff;
+		// First, calculate the orientation diff between leg frames
+		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(0);
+		glm::quat a = lf->getCurrentDesiredOrientation(phi);
+		lf = p_controller->getLegFrame(1);
+		glm::quat b = lf->getCurrentDesiredOrientation(phi);
+		// The difference, ie. what will turn a into b
+		orientationDiff = b*glm::inverse(a);
+
+		// Then, apply this diff as the goal for the spines, divided by the amount of spines
 		ControllerComponent::PDChain* pdChain = spine->getPDChain();
-		for (unsigned int x = 0; x < pdChain->getSize(); x++)
+		int spineJoints = pdChain->getSize();
+		for (unsigned int x = 0; x < spineJoints; x++)
 		{
-			float sagittalAngle = -HALFPI;
 			unsigned jointIdx = pdChain->m_jointIdxChain[x];
 			// Calculate angle to leg frame space
-			glm::quat goal = glm::quat(glm::vec3(0.0f, sagittalAngle, 0.0f));
 			glm::quat current = glm::quat_cast(m_jointWorldTransforms[jointIdx]);
 			// Drive PD using angle
-			glm::vec3 torque = pdChain->m_PDChain[x].drive(current, goal, p_dt);
+			glm::vec3 torque = pdChain->m_PDChain[x].drive(current, orientationDiff / (float)spineJoints, p_dt);
 			// Add to torque for joint
 			(*p_outTVF)[jointIdx] += torque;
 			glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
-			dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x*5], dawnBringerPalRGB[COL_LIGHTRED]);
+			dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x * 5], dawnBringerPalRGB[COL_LIGHTRED]);
 		}
 	}
 	////////////////////
