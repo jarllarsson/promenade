@@ -198,6 +198,7 @@ void ControllerSystem::buildCheck()
 			m_dbgJointEntities.push_back(legFrameEntities->m_legFrameEntity); // for easy debugging options
 			//
 			legFrame->m_legFrameJointId = rootIdx; // store idx to root for leg frame
+			legFrame->m_startPosOffset = rootTransform->getPosition();
 			// prepare legs			
 			unsigned int legCount = legFrameEntities->m_upperLegEntities.size();
 			legFrame->m_legs.resize(legCount); // Allocate the number of specified legs
@@ -809,9 +810,38 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 	// feed back corrections for hip joints
 	if (m_useLFFeedbackTorque)
 	{
-		for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+		// Spine if it exists (calculated before leg frame loop)
+		glm::vec3 tspine, tospine;
+		ControllerComponent::Spine* spine = &p_controller->m_spine;
+		// Note that the last two joints might be LFs, check the flag in spine to check for this wheter they should be used in this calculation or not
+		unsigned int spineCount = spine->m_joints;
+		if (spineCount>0)
 		{
-			applyNetLegFrameTorque(p_controllerId, p_controller, i, phi, p_dt);
+			spineCount -= spine->m_lfJointsUsedPD ? 2 : 0; // dec with 2 if last two are LFs, assume for now we aren't counting those
+			for (unsigned int i = 0; i < spineCount; i++)
+			{
+				unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
+				tspine += m_jointTorques[spineIdx];
+				tospine += m_oldJointTorques[spineIdx];
+			}
+		}
+
+		glm::vec3 tLFremainder;
+		// loop backwards, so the last remaining torque (ie. the front LF) returned is the one applied to the spine
+		for (int i = ((int)p_controller->getLegFrameCount())-1; i>=0; i--)
+		{
+			tLFremainder=applyNetLegFrameTorque(p_controllerId, p_controller, i, tspine, tospine, phi, p_dt);
+		}
+
+
+		// If we're at the front LF, and we have a spine, add remainder work to the spine joints
+		if (spineCount>0)
+		{
+			for (unsigned int i = 0; i < spineCount; i++)
+			{
+				unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
+				m_jointTorques[spineIdx] += tLFremainder / (float)spineCount; // NOTE! Not sure if we should divide here? Or all joints assume the full torque?
+			}
 		}
 	}
 }
@@ -1148,7 +1178,8 @@ glm::vec3 ControllerSystem::calculateStanceLegVF(unsigned int p_stanceLegCount,
 }
 
 
-void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt)
+glm::vec3 ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, 
+	glm::vec3& p_tspine, glm::vec3& p_tospine, float p_phi, float p_dt)
 {
 	// Preparations, get a hold of all legs in stance,
 	// all legs in swing. And get a hold of their and the 
@@ -1178,18 +1209,9 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 			toswing += joTorque;
 		}
 	}
+	tspine = p_tspine;
+	tospine = p_tospine;
 
-	// Spine if it exists
-	ControllerComponent::Spine* spine = &p_controller->m_spine;
-	// Note that the last two joints might be LFs, check the flag in spine to check for this wheter they should be used in this calculation or not
-	unsigned int spineCount = spine->m_joints; 
-	spineCount -= spine->m_lfJointsUsedPD ? 2 : 0; // dec with 2 if last two are LFs, assume for now we aren't counting those
-	for (unsigned int i = 0; i < spineCount;i++)
-	{
-		unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
-		tspine += m_jointTorques[spineIdx];
-		tospine += m_oldJointTorques[spineIdx];
-	}
 
 	// 1. Calculate current torque for leg frame:
 	// tLF = tstance + tswing + tspine.
@@ -1247,9 +1269,10 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 	// reach its desired torque.
 
 	int N = stanceCount;
-	glm::vec3 work = percentage*((tdLF - tswing - tspine) / (float)N);
+	glm::vec3 ntLF = tdLF - tswing - tspine; // the new TLF we're striving for
+	glm::vec3 work = percentage*((ntLF) / (float)N);
 	// We multiply by 0.5f here if we're at the front LF (see above) as the quadruped model will assume
-	// 50% of the required torque and the stance legs will take the remainding
+	// 50% of the required torque and the stance legs will take the remaining
 	// torque. I'm currently trying this for both the quadruped and biped models.
 	// Apply to stance legs
 	for (int i = 0; i < N; i++)
@@ -1259,19 +1282,12 @@ void ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, Contr
 		m_jointTorques[idx] = work;
 	}
 
-	// If we're at the front LF, and we have a spine, add remainder work to the spine joints
-	if (spineWork)
-	{
-		for (unsigned int i = 0; i < spineCount; i++)
-		{
-			unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
-			m_jointTorques[spineIdx] += work/(float)spineCount; // NOTE! Not sure if we should divide here? Or all joints assume the full torque?
-		}
-	}
-
 	delete[] stanceLegBuf;
 	// The vector reference to the torques, now contains the new LF torque
 	// as well as any corrected stance-leg torques.
+	return (1.0f - percentage)*ntLF; // return the remaining new TLF we want to achieve
+									 // by returning we can let an optional spine be adjusted
+									 // to supply the remainder
 }
 
 

@@ -319,6 +319,7 @@ public:
 		virtual void consumeParams(std::vector<float>& p_other);
 		virtual std::vector<float> getParamsMax();
 		virtual std::vector<float> getParamsMin();
+		glm::vec3 m_startPosOffset;
 	};
 
 	// Construction description struct for leg frames

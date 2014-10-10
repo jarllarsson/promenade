@@ -126,6 +126,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	for (unsigned int i = 0; i < legFrames; i++)
 	{
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
+		glm::vec3 lfOffset = lf->m_startPosOffset - controllerstart;
 		glm::vec3 lfPos = p_system->getLegFramePosition(lf);
 		double tlenBod = (double)lfPos.y - (double)lf->m_height; // assuming ground is 0!!
 		tlenBod *= tlenBod; // sqr
@@ -139,7 +140,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 		// Legs
 		//Vector3 wantedWPos = new Vector3(m_myController.transform.position.x, m_origBodyHeight, m_ghostController.position.z - m_ghostStart.z + m_mycontrollerStart.z);
 		//glm::vec3 wantedWPos(lfPos.x, lf->m_height, lfPos.z);
-		glm::vec3 wantedWPos(0.0f, lf->m_height, ghostDistVec.z);
+		glm::vec3 wantedWPos(0.0f, lf->m_height, ghostDistVec.z + lfOffset.z);
 		glm::vec3 lfPosOptHeight(lfPos.x, lf->m_height, lfPos.z);
 		unsigned int numLegs = lf->m_legs.size();
 		ReferenceLegMovementController* refLegMovement = &m_referenceControllers[i];

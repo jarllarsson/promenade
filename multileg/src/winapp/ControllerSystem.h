@@ -173,7 +173,7 @@ private:
 		ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx,
 		ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, 
 		float p_phi, float p_dt);
-	void applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, float p_phi, float p_dt);
+	glm::vec3 applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, glm::vec3& p_tspine, glm::vec3& p_tospine, float p_phi, float p_dt);
 	// PD calculation for legs
 	void computePDTorques(std::vector<glm::vec3>* p_outTVF, 
 		ControllerComponent* p_controller, unsigned int p_controllerIdx, 

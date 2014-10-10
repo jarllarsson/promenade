@@ -33,6 +33,7 @@ public:
 			m_stepCycles.push_back(p_lf->m_stepCycles[i]);
 			m_stepLength = p_lf->m_stepLength;
 		}
+		m_lfStartOffset = p_lf->m_startPosOffset;
 		m_stepHeightTraj = p_lf->m_stepHeighTraj;
 		m_player = p_controller->m_player;
 	}
@@ -57,6 +58,7 @@ public:
 	std::vector<glm::vec3>	m_oldFeetPos;
 	std::vector<StepCycle>	m_stepCycles;
 	GaitPlayer				m_player;
+	glm::vec3				m_lfStartOffset;
 
 	// PLF, the coronal(x) and sagittal(y) step distance
 	glm::vec2 m_stepLength;
