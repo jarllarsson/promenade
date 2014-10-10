@@ -295,7 +295,7 @@ void App::run()
 		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = true;
+		bool quadruped = false;
 		float lfDist=1.5f;
 		int spineParts = 4;
 #ifdef OPTIMIZATION

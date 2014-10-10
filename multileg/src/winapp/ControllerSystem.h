@@ -170,7 +170,7 @@ private:
 		unsigned int p_torqueIdxOffset, 
 		float p_phi, float p_dt);
 	void computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, 
-		ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx,
+		ControllerComponent::VFChain* p_vfChain,
 		ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, 
 		float p_phi, float p_dt);
 	glm::vec3 applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, glm::vec3& p_tspine, glm::vec3& p_tospine, float p_phi, float p_dt);

@@ -316,7 +316,26 @@ void ControllerSystem::buildCheck()
 		{
 			float skp = 0.0f, skd = 0.0f;
 			skp = 300.0f; skd = 30.0f;
-			for (int s = 0; s < spineJoints; s++) // read all joints
+			// begin with LF as base
+			// TODO! Two chains, one with front LF as base
+			// and the other with the back LF. The spine needs two "runs",
+			// in order to use both LFs as bases. The consecutive forces are
+			// thus weighted, as you can see below in the following pushes 
+			// of constant-vectors to m_VFs
+			// =======================================
+			// The virtual force is shared across the front and rear leg frames with respective weights
+			// of w and 1 - w, where w E[0, 1] is the fractional distance along the spine of the given link, 
+			// with w = 1 at the front leg frame and w = 0 at the rear leg frame.
+			float spineGC_w = 1.0f;
+			ControllerComponent::LegFrame* lf = controller->getLegFrame(0);
+			unsigned int rootIdx = lf->m_legFrameJointId;
+			float rootmass = m_jointMass[rootIdx];
+			m_VFs.push_back(-rootmass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f)*spineGC_w);
+			unsigned int rootvfIdx = (unsigned int)((int)m_VFs.size() - 1);
+			addJointToVFChain(controller->m_spine.getGCVFChain(), rootIdx, rootvfIdx);
+			// then the rest of the spine joints (except the other end LF
+			for (int s = 0; s < spineJoints; s++) // read all joints TODO! right now this works, as we're constructing only one chain, 
+											      // but when we're making two later on, we must iterate backwards the second time, to get the correct order
 			{
 				artemis::Entity* jointEntity = controller->getSpineJointEntitiesConstruct(s);
 				// Get joint data
@@ -329,7 +348,9 @@ void ControllerSystem::buildCheck()
 				m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
 				// Get DOF on joint to GCVF chain, the spine does not use ordinary VFs, so we have to set up the base here
 				float mass = m_jointMass[idx];
-				m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
+				spineGC_w = 1.0f - ((float)(s+1) / (float)(spineJoints + 2)); // get the spine fractional distance, here we count the LFs as spine joints as well.
+																			  // Thus we get start offset of 1(LF/root is spine 0), and a size of +2 (front- and back LF)
+				m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f)*spineGC_w);
 				unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
 				addJointToVFChain(controller->m_spine.getGCVFChain(), idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
 				// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
@@ -931,6 +952,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
 	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
+	int spineCount = (int)p_controller->m_spine.m_joints;
 	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
@@ -938,23 +960,37 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 		// Begin calculating Jacobian transpose for each leg in leg frame
 		unsigned int legCount = (unsigned int)lf->m_legs.size();	
 		for (unsigned int n = 0; n < legCount; n++)
-		{
-			if (m_useVFTorque) 
-				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+		{				
+			ControllerComponent::Leg* leg = &lf->m_legs[n];
+			if (m_useVFTorque)
+			{
+				ControllerComponent::VFChain* chain = leg->getVFChain(ControllerComponent::STANDARD_CHAIN);
+				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			}
 				
 			if (m_useGCVFTorque && !isInControlledStance(lf, n, p_phi))
-				computeVFTorquesFromChain(p_outTVF, lf, n, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			{
+				ControllerComponent::VFChain* chain = leg->getVFChain(ControllerComponent::GRAVITY_COMPENSATION_CHAIN);
+				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			}
+		}	
+		// also compute GCVF for spine joints
+		// even though spine doesn't "belong" to a certain LF
+		// we still have to compute the torque using both LFs as base
+		// and weight based on distance
+		if (m_useGCVFTorque && spineCount > 0)
+		{
+			ControllerComponent::VFChain* chain = p_controller->m_spine.getGCVFChain();
+			computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 		}
 	}
 }
 
-void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx,
+void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, ControllerComponent::VFChain* p_vfChain,
 	ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
-	// calculating Jacobian transpose for specified leg in leg frame
-	// Calculate torques using specified leg chain
-	ControllerComponent::Leg* leg = &p_lf->m_legs[p_legIdx];
-	ControllerComponent::VFChain* chain = leg->getVFChain(p_type);
+	// Calculate torques using specified VF chain
+	ControllerComponent::VFChain* chain = p_vfChain;
 	unsigned int endJointIdx = chain->getEndJointIdx();
 	unsigned int dofsToProcess = chain->getSize();
 	unsigned int subChains = chain->m_jointIdxChainOffsets.size();
@@ -1255,7 +1291,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, 
 
 	// How much torque should be assumed by the LF?
 	// The remainder will be assumed by the spine.
-	bool spineWork = p_legFrameIdx == 0;
+	bool spineWork = p_legFrameIdx == 0 /*&& (p_controller->getLegFrameCount()>1)*/;
 	float percentage = 1.0f;
 	if (spineWork) percentage = 0.5f;
 	// For the front LF we want only 50% (as per the document)
@@ -1334,7 +1370,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			refDesiredFootPos.z -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
 			//refDesiredFootPos.z -= 0.2f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
-			//refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
+			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
 			// Fetch upper- and lower leg length and solve IK
 			IK2Handler* ik = &lf->m_legIK[n];
 			DebugDrawBatch* drawer = NULL;
