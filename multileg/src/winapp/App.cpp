@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -296,7 +296,8 @@ void App::run()
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
 		bool quadruped = true;
-		float lfDist=2.5f;
+		float lfDist=1.5f;
+		int spineParts = 4;
 #ifdef OPTIMIZATION
 		chars = 10;
 #endif
@@ -465,7 +466,6 @@ void App::run()
 					prevlegFrame = &legFrame;
 				} // leg frames
 				//
-				int spineParts = 4;
 				glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, -hipCoronalOffset*0.5f);
 				artemis::Entity* prev = charLFs[0]; // the first parent is the first leg frame
 				// The length of a spine (the height of its rotated segment) is the same as=

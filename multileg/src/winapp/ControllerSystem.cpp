@@ -309,6 +309,8 @@ void ControllerSystem::buildCheck()
 		int spineJoints = controller->getSpineJointEntitiesConstructSize();
 		if (spineJoints>0)
 		{
+			float skp = 0.0f, skd = 0.0f;
+			skp = 300.0f; skd = 30.0f;
 			for (int s = 0; s < spineJoints; s++) // read all joints
 			{
 				artemis::Entity* jointEntity = controller->getSpineJointEntitiesConstruct(s);
@@ -327,9 +329,12 @@ void ControllerSystem::buildCheck()
 				addJointToVFChain(controller->m_spine.getGCVFChain(), idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
 				// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
 				// Register joint for PD (and create PD)
-				float kp = 0.0f, kd = 0.0f;
-				kp = 300.0f; kd = 30.0f;
-				addJointToPDChain(controller->m_spine.getPDChain(), idx, kp, kd);
+				addJointToPDChain(controller->m_spine.getPDChain(), idx, skp, skd);
+			}
+			// if we want the spine to use the leg frames for PD movement as well, do this:
+			for (int s = 0; s < controller->getLegFrameCount(); s++)
+			{
+				addJointToPDChain(controller->m_spine.getPDChain(), controller->getLegFrame(s)->m_legFrameJointId, skp, skd);
 			}
 			// Fix the sub chains for our GCVF chain, count dof offsets
 			int origGCDOFsz = controller->m_spine.m_DOFChainGravityComp.getSize();
@@ -661,7 +666,7 @@ void ControllerSystem::updateSpine(std::vector<glm::vec3>* p_outTVF, int p_contr
 		// The difference, ie. what will turn a into b
 		orientationDiff = b*glm::inverse(a);
 
-		// Then, apply this diff as the goal for the spines, divided by the amount of spines
+		// Then, apply this diff as the goal for the spines, divided by the amount of spine s
 		ControllerComponent::PDChain* pdChain = spine->getPDChain();
 		int spineJoints = pdChain->getSize();
 		for (unsigned int x = 0; x < spineJoints; x++)
