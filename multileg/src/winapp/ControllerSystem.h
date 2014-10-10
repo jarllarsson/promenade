@@ -148,6 +148,7 @@ private:
 	void controllerUpdate(unsigned int p_controllerId, float p_dt);
 	void updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt);
 	void updateFeet(unsigned int p_controllerId, ControllerComponent* p_controller);
+	void updateSpine(std::vector<glm::vec3>* p_outTVF, int p_controllerId, ControllerComponent* p_controller, float p_dt);
 	void updateTorques(unsigned int p_controllerId, ControllerComponent* p_controller, float p_dt);
 
 	// Leg frame logic functions
