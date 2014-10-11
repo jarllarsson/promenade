@@ -178,15 +178,26 @@ public:
 	// Contains info for applying torques on spine joints
 	struct Spine
 	{
+	public:
+		Spine()
+		{
+			m_PDsK = glm::vec2(30.0f, 3.0f);
+		}
 		unsigned int m_joints;
 		bool m_lfJointsUsedPD; // if true, then we have two joints in back of pd chain that are LFs
-		VFChain m_DOFChainGravityComp;
+		VFChain m_DOFChainGravityCompForward;
+		VFChain m_DOFChainGravityCompBackward;
 		PDChain m_PDChain;
+		glm::vec2			   m_PDsK; // Kp, Kd
 
 		// ==============================================================================
-		VFChain* getGCVFChain()
+		VFChain* getGCVFChainFwd()
 		{
-			return &m_DOFChainGravityComp;
+			return &m_DOFChainGravityCompForward;
+		}
+		VFChain* getGCVFChainBwd()
+		{
+			return &m_DOFChainGravityCompBackward;
 		}
 
 		PDChain* getPDChain()

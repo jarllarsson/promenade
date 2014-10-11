@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
+#define OPTIMIZATION
 
 using namespace std;
 
@@ -299,13 +299,13 @@ void App::run()
 		{
 			lLegHeight = scale*0.4f,
 			footHeight = scale*0.05f;
-			footLen = scale*0.15f;
+			footLen = scale*0.2f;
 		}
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + /*1.5f**/footHeight/*scale*0.2f*/;
-		float lfDist=1.5f;
+		float lfDist=2.0f;
 		int spineParts = 4;
 #ifdef OPTIMIZATION
-		chars = 20;
+		chars = 10;
 #endif
 		if (quadruped)
 		{
@@ -329,8 +329,8 @@ void App::run()
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
 
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-					glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-					float characterMass = /*scale**/10.0f;
+					glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, (float)(2-y)*hipCoronalOffset);
+					float characterMass = /*scale**/6.0f;
 					RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 					legFrame.addComponent(lfRB);
@@ -392,7 +392,7 @@ void App::run()
 								//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
 								lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
 								upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
-								segmentMass = /*scale**/5.0f;
+								segmentMass = /*scale**/3.0f;
 								boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION
 								if (n == 0) uLegLens.push_back(uLegHeight);
@@ -411,9 +411,9 @@ void App::run()
 								else // front legs have "flipped" knees, for digitigrade anatomy
 								{
 									lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-									upperAngleLim = glm::vec3(PI*0.7f, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(PI*0.5f, 0.0f, 0.0f);
 								}
-								segmentMass = /*scale**/4.0f;
+								segmentMass = /*scale**/2.0f;
 								boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION
 								if (n == 0) 
@@ -434,13 +434,14 @@ void App::run()
 								// TODO!
 								if (y == 0) // digitigrade front feet
 								{
-									lowerAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
-									upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+									lowerAngleLim = glm::vec3(HALFPI/*0.5f*/, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(HALFPI/*1.2f*/, 0.0f, 0.0f);
 								}
 								else // digitigrade back feet
 								{
+									boxSize.y = 1.5f*footLen;
 									lowerAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
-									upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(HALFPI*1.2f, 0.0f, 0.0f);
 									//lowerAngleLim = glm::vec3(HALFPI*0.5f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
 									//upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
 								}
@@ -515,11 +516,12 @@ void App::run()
 				// The distance between the LFs minus the h-length of a LFs, times two; divided 
 				// by number of wanted spines:
 				float boxHeight = (lfDist - (hipCoronalOffset*0.5f * 2)) / (float)spineParts;
-				glm::vec3 boxSize = glm::vec3(hipCoronalOffset, boxHeight, lfHeight*0.75f);
-				glm::vec3 spinepos = pos + glm::vec3(0.0f, 0.0f, -boxHeight*0.5f);
+				float spineHeight = lfHeight*0.75f;
+				glm::vec3 boxSize = glm::vec3(hipCoronalOffset, boxHeight, spineHeight); // note, we rotate it
+				glm::vec3 spinepos = pos + glm::vec3(0.0f, (lfHeight - spineHeight)*0.5f, -boxHeight*0.5f);
 				// first spine joint is child to leg frame
 				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, hipCoronalOffset);
-				float jointYOffsetInParent = 0.0f; // for sagittal displacement
+				float jointYOffsetInParent = lfHeight*0.5f; // for sagittal displacement
 				float jointZOffsetInParent = -parentSz.z*0.5f; // for sagittal displacment
 				glm::vec3 lowerAngleLim = glm::vec3(-HALFPI*0.1f, -HALFPI*0.1f, -HALFPI*0.1f);
 				glm::vec3 upperAngleLim = glm::vec3(HALFPI*0.1f, HALFPI*0.1f, HALFPI*0.1f);
@@ -544,7 +546,7 @@ void App::run()
 						lowerAngleLimBase = glm::vec3(0.0f, 0, 0);
 						upperAngleLimBase = glm::vec3(0.0f, 0, 0);
 						jointYOffsetInParent = -parentSz.y*0.5f; // for sagittal displacement
-						jointZOffsetInParent = 0.0f; // for sagittal displacment
+						jointZOffsetInParent = -spineHeight*0.5f; // for sagittal displacment
 					}
 					
 					// no need collision callback
@@ -560,8 +562,8 @@ void App::run()
 					MaterialComponent* mat = new MaterialComponent(colarr[s+3]);
 					spineJoint.addComponent(mat);
 					
-					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, 0.0f),	  // child (this)
-						glm::vec3(0.0f, jointYOffsetInParent, jointZOffsetInParent),													  // parent
+					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, -spineHeight*0.5f),	  // child (this)
+						glm::vec3(0.0f, jointYOffsetInParent, jointZOffsetInParent),							  // parent
 						{ lowerAngleLimBase + lowerAngleLim, upperAngleLimBase+upperAngleLim },
 						false };
 					spineJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
@@ -572,10 +574,10 @@ void App::run()
 				// finish by constraint the back LF to the last spine
 				// the back LF become the child of the last spine joint
 				jointYOffsetInParent = -boxSize.y*0.5f; // for sagittal displacement
-				jointZOffsetInParent = 0.0f; // for sagittal displacment
+				jointZOffsetInParent = -spineHeight*0.5f; // for sagittal displacment
 				lowerAngleLim = glm::vec3(HALFPI, 0, 0); 
 				upperAngleLim = glm::vec3(HALFPI, 0, 0); 
-				ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, 0.0f, hipCoronalOffset*0.5f),	  // child (this) ie. the LF
+				ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, lfHeight*0.5f, hipCoronalOffset*0.5f),	  // child (this) ie. the LF
 					glm::vec3(0.0f, jointYOffsetInParent, jointZOffsetInParent),							 // parent ie. the last spine joint
 					{ lowerAngleLim, upperAngleLim },
 					false };

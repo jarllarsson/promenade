@@ -15,7 +15,8 @@
 /// \brief	The specialized controller system that builds the controllers and
 ///			inits the kernels and gathers their results
 ///			This contains the run-time logic and data for the controllers.
-///			The controller components themselves only contain structural data (info on how to handle the run-time data)
+///			The controller components themselves only contain structural data 
+///			(info on how to handle the run-time data)
 ///        
 /// # ControllerSystem
 /// 

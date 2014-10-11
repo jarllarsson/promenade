@@ -314,8 +314,7 @@ void ControllerSystem::buildCheck()
 		controller->m_spine.m_joints = spineJoints;
 		if (spineJoints>0)
 		{
-			float skp = 0.0f, skd = 0.0f;
-			skp = 300.0f; skd = 30.0f;
+			float skp = controller->m_spine.m_PDsK.x, skd = controller->m_spine.m_PDsK.y;
 			// begin with LF as base
 			// TODO! Two chains, one with front LF as base
 			// and the other with the back LF. The spine needs two "runs",
@@ -332,30 +331,48 @@ void ControllerSystem::buildCheck()
 			float rootmass = m_jointMass[rootIdx];
 			m_VFs.push_back(-rootmass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f)*spineGC_w);
 			unsigned int rootvfIdx = (unsigned int)((int)m_VFs.size() - 1);
-			addJointToVFChain(controller->m_spine.getGCVFChain(), rootIdx, rootvfIdx);
+			addJointToVFChain(controller->m_spine.getGCVFChainFwd(), rootIdx, rootvfIdx);
+			// Now add back LF to back-chain (same procedure)
+			lf = controller->getLegFrame(1); rootIdx = lf->m_legFrameJointId; rootmass = m_jointMass[rootIdx];
+			m_VFs.push_back(-rootmass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f)*spineGC_w);
+			rootvfIdx = (unsigned int)((int)m_VFs.size() - 1);
+			addJointToVFChain(controller->m_spine.getGCVFChainBwd(), rootIdx, rootvfIdx);
 			// then the rest of the spine joints (except the other end LF
-			for (int s = 0; s < spineJoints; s++) // read all joints TODO! right now this works, as we're constructing only one chain, 
-											      // but when we're making two later on, we must iterate backwards the second time, to get the correct order
+			for (int si = 0; si < controller->getLegFrameCount();si++)
 			{
-				artemis::Entity* jointEntity = controller->getSpineJointEntitiesConstruct(s);
-				// Get joint data
-				TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
-				RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
-				ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
-				// Add the joint
-				unsigned int idx = addJoint(jointRB, jointTransform);
-				m_rigidBodyRefs.push_back(jointRB);
-				m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
-				// Get DOF on joint to GCVF chain, the spine does not use ordinary VFs, so we have to set up the base here
-				float mass = m_jointMass[idx];
-				spineGC_w = 1.0f - ((float)(s+1) / (float)(spineJoints + 2)); // get the spine fractional distance, here we count the LFs as spine joints as well.
-																			  // Thus we get start offset of 1(LF/root is spine 0), and a size of +2 (front- and back LF)
-				m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f)*spineGC_w);
-				unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
-				addJointToVFChain(controller->m_spine.getGCVFChain(), idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
-				// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
-				// Register joint for PD (and create PD)
-				addJointToPDChain(controller->m_spine.getPDChain(), idx, skp, skd);
+				int start = 0, iter = 1, end = spineJoints;
+				if (si > 0) { start = spineJoints - 1; iter = -1; end = -1; } // reverse on second
+				for (int s = start; s != end; s+=iter) // read all joints TODO! right now this works, as we're constructing only one chain, 
+					// but when we're making two later on, we must iterate backwards the second time, to get the correct order
+				{
+					artemis::Entity* jointEntity = controller->getSpineJointEntitiesConstruct(s);
+					// Get joint data
+					TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
+					RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
+					ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
+					// Add the joint
+					unsigned int idx = addJoint(jointRB, jointTransform);
+					m_rigidBodyRefs.push_back(jointRB);
+					m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
+					// Get DOF on joint to GCVF chain, the spine does not use ordinary VFs, so we have to set up the base here
+					float mass = m_jointMass[idx];
+					if (si==0)
+						spineGC_w = 1.0f - ((float)(s + 1) / (float)(spineJoints + 2)); // get the spine fractional distance, here we count the LFs as spine joints as well.
+					else
+						spineGC_w = 1.0f - ((float)(spineJoints - (s + 1)) / (float)(spineJoints + 2)); // backwards, still need "first" to have highest score
+					// Thus we get start offset of 1(LF/root is spine 0), and a size of +2 (front- and back LF)
+					m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f)*spineGC_w);
+					unsigned int vfIdx = (unsigned int)((int)m_VFs.size() - 1);
+					ControllerComponent::VFChain* vfchain = NULL;
+					if (si == 0)
+						vfchain = controller->m_spine.getGCVFChainFwd();
+					else
+						vfchain = controller->m_spine.getGCVFChainBwd();
+					addJointToVFChain(vfchain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+					// addJointToStandardVFChain(standardDOFChain, idx, vfIdx, parentLink->getDesc()->m_angularDOF_LULimits);
+					// Register joint for PD (and create PD)
+					if (si==0) addJointToPDChain(controller->m_spine.getPDChain(), idx, skp, skd);
+				}
 			}
 			// if we want the spine to use the leg frames for PD movement as well, do this:
 			for (int s = 0; s < controller->getLegFrameCount(); s++)
@@ -364,15 +381,15 @@ void ControllerSystem::buildCheck()
 			}
 			controller->m_spine.m_lfJointsUsedPD = true;
 			// Fix the sub chains for our GCVF chain, count dof offsets
-			int origGCDOFsz = controller->m_spine.m_DOFChainGravityComp.getSize();
+			int origGCDOFsz = controller->m_spine.m_DOFChainGravityCompForward.getSize();
 			int oldJointGCIdx = -1;
 			unsigned int vfIdx = 0;
 			for (unsigned int m = 0; m < origGCDOFsz; m++)
 			{
-				unsigned int jointId = controller->m_spine.getGCVFChain()->m_jointIdxChain[m];
+				unsigned int jointId = controller->m_spine.getGCVFChainFwd()->m_jointIdxChain[m];
 				if (jointId != oldJointGCIdx)
 				{
-					controller->m_spine.getGCVFChain()->m_jointIdxChainOffsets.push_back(m);
+					controller->m_spine.getGCVFChainFwd()->m_jointIdxChainOffsets.push_back(m);
 				}
 				oldJointGCIdx = jointId;
 			}
@@ -955,6 +972,7 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 	int spineCount = (int)p_controller->m_spine.m_joints;
 	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
+		ControllerComponent::VFChain* chain = NULL;
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 		calculateLegFrameNetLegVF(p_controllerIdx, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
 		// Begin calculating Jacobian transpose for each leg in leg frame
@@ -964,13 +982,13 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 			ControllerComponent::Leg* leg = &lf->m_legs[n];
 			if (m_useVFTorque)
 			{
-				ControllerComponent::VFChain* chain = leg->getVFChain(ControllerComponent::STANDARD_CHAIN);
+				chain = leg->getVFChain(ControllerComponent::STANDARD_CHAIN);
 				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 				
 			if (m_useGCVFTorque && !isInControlledStance(lf, n, p_phi))
 			{
-				ControllerComponent::VFChain* chain = leg->getVFChain(ControllerComponent::GRAVITY_COMPENSATION_CHAIN);
+				chain = leg->getVFChain(ControllerComponent::GRAVITY_COMPENSATION_CHAIN);
 				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 		}	
@@ -980,7 +998,9 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 		// and weight based on distance
 		if (m_useGCVFTorque && spineCount > 0)
 		{
-			ControllerComponent::VFChain* chain = p_controller->m_spine.getGCVFChain();
+			chain = p_controller->m_spine.getGCVFChainFwd(); // front
+			computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			chain = p_controller->m_spine.getGCVFChainBwd(); // back
 			computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 		}
 	}
@@ -1345,7 +1365,8 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 {
 	glm::mat4 desiredOrientation = getDesiredWorldOrientation(p_controllerIdx);
 	glm::mat4 invDesiredOrientation = glm::inverse(desiredOrientation);
-	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
+	int lfCount = p_controller->getLegFrameCount();
+	for (unsigned int i = 0; i < lfCount; i++)
 	{
 		unsigned int lfIdx = i;
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(lfIdx);
@@ -1361,24 +1382,26 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				acts is defined by a normal that is fixed in the leg - frame coordinate
 				system, and the location of the relevant shoulder or hip joint.
 				*/
+			IK2Handler* ik = &lf->m_legIK[n];
 			ControllerComponent::Leg* leg = &lf->m_legs[n];
 			ControllerComponent::PDChain* pdChain = leg->getPDChain();
 			// Fetch foot and hip reference pos
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
 			//refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
-			refDesiredFootPos.y -= lf->m_footHeight*0.5f;
-			refDesiredFootPos.z -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
+			float dist = 1.0f;
+			if (ik->getKneeFlip() < 0) dist = -1.0f;
+			refDesiredFootPos.y -= lf->m_footHeight*0.5f*ik->getKneeFlip();
+			refDesiredFootPos.z -= dist*m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
 			//refDesiredFootPos.z -= 0.2f;
 			glm::vec3 refHipPos = MathHelp::toVec3(m_jointWorldInnerEndpoints[lf->m_hipJointId[n]]); // TODO TRANSFORM FROM WORLD SPACE TO LOCAL AND THEN BACK AGAIN FOR PD
-			refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId]*0.5f;
+			/*if (lfCount<=1) */refHipPos.y = locationStat->m_currentGroundPos.y + lf->m_height - m_jointLengths[lf->m_legFrameJointId] * 0.5f;
 			// Fetch upper- and lower leg length and solve IK
-			IK2Handler* ik = &lf->m_legIK[n];
 			DebugDrawBatch* drawer = NULL;
 			if (p_controllerIdx == 0) drawer = dbgDrawer();
 			ik->solve(refDesiredFootPos, refHipPos,
 				1.05f*m_jointLengths[pdChain->getUpperJointIdx()],
 				1.05f*m_jointLengths[pdChain->getLowerJointIdx()] /*+ lf->m_footHeight*/, drawer);
-			// For each PD in leg
+			// For each PD in legb
 			for (unsigned int x = 0; x < pdChain->getSize(); x++)
 			{
 				float sagittalAngle = 0.0f;
