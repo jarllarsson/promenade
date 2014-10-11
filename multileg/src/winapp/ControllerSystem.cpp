@@ -1377,7 +1377,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			if (p_controllerIdx == 0) drawer = dbgDrawer();
 			ik->solve(refDesiredFootPos, refHipPos,
 				1.05f*m_jointLengths[pdChain->getUpperJointIdx()],
-				1.05f*m_jointLengths[pdChain->getLowerJointIdx()]/* + m_jointLengths[pdChain->getFootJointIdx()]*/, drawer);
+				1.05f*m_jointLengths[pdChain->getLowerJointIdx()] /*+ lf->m_footHeight*/, drawer);
 			// For each PD in leg
 			for (unsigned int x = 0; x < pdChain->getSize(); x++)
 			{

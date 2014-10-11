@@ -45,7 +45,7 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
@@ -291,15 +291,21 @@ void App::run()
 			lLegHeight = scale*0.45f,
 			footHeight = scale*0.05f,
 			footLen = scale*0.3f;
-		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight/*scale*0.2f*/;
 		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = false;
+		bool quadruped = true;
+		if (quadruped)
+		{
+			lLegHeight = scale*0.4f,
+			footHeight = scale*0.05f;
+			footLen = scale*0.15f;
+		}
+		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + /*1.5f**/footHeight/*scale*0.2f*/;
 		float lfDist=1.5f;
 		int spineParts = 4;
 #ifdef OPTIMIZATION
-		chars = 10;
+		chars = 20;
 #endif
 		if (quadruped)
 		{
@@ -423,17 +429,20 @@ void App::run()
 								//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
 								boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
 								jointYOffsetInChild = footLen*0.2f;
-								//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
+								//jointYOffsetInChild = footLen*0.5f;
+								jointZOffsetInChild = -footHeight*0.5f;
 								// TODO!
-// 								if (y==0)
-// 								{
-// 									lowerAngleLim = glm::vec3(HALFPI*0.5f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
-// 									upperAngleLim = glm::vec3(HALFPI*0.8f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
-// 								}
-// 								else
+								if (y == 0) // digitigrade front feet
 								{
-									lowerAngleLim = glm::vec3(HALFPI*0.5f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
-									upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
+									lowerAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+								}
+								else // digitigrade back feet
+								{
+									lowerAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+									//lowerAngleLim = glm::vec3(HALFPI*0.5f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
+									//upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
 								}
 								//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -444,7 +453,7 @@ void App::run()
 							}
 							string dbgGrp = (" group='" + sideName + "'");
 							if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName.substr(0, 2) + partName).c_str(), dbgGrp.c_str());
-							legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
+							legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, 0.0f/*jointZOffsetInChild*/));
 							if (foot == true)
 							{
 								// foot need collision callback properties
@@ -468,16 +477,18 @@ void App::run()
 							else // foot
 							{
 								// TODO! digitigrade feet
-// 								if (y == 0)
-// 								{
-// 									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
-// 										glm::quat(glm::vec3(-HALFPI*0.5f, 0.0f, 0.0f)),
-// 										boxSize));					// note scale, so full lengths
-// 								}
-// 								else
+ 								if (y == 0)// digitigrade front feet
+ 								{
+									glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
+									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
+										rot,
+ 										boxSize));					// note scale, so full lengths
+ 								}
+ 								else// digitigrade back feet
 								{
-									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
-										glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
+									glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
+									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
+										rot,
 										boxSize));					// note scale, so full lengths
 								}
 							}
@@ -709,6 +720,7 @@ void App::run()
 							//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
 							boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
 							jointYOffsetInChild = footLen*0.2f;
+							jointZOffsetInChild = 0.0f*-footHeight*0.5f;
 							//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
 							lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
 							upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
@@ -721,7 +733,7 @@ void App::run()
 						}
 						string dbgGrp = (" group='" + sideName + "'");
 						if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
-						legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, jointZOffsetInChild));
+						legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, 0.0f/*jointZOffsetInChild*/));
 						if (foot == true)
 						{
 							// foot need collision callback properties
@@ -744,7 +756,7 @@ void App::run()
 						}
 						else // foot
 						{
-							childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f, footLen*0.5f - jointYOffsetInChild),
+							childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
 								glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
 								boxSize));					// note scale, so full lengths
 						}
