@@ -294,7 +294,7 @@ void App::run()
 		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = true;
+		bool quadruped = false;
 		if (quadruped)
 		{
 			lLegHeight = scale*0.4f,
@@ -305,7 +305,7 @@ void App::run()
 		float lfDist=2.0f;
 		int spineParts = 4;
 #ifdef OPTIMIZATION
-		chars = 10;
+		if (quadruped) chars = 3; else chars = 10;
 #endif
 		if (quadruped)
 		{
