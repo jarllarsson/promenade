@@ -478,14 +478,14 @@ void App::run()
 							else // foot
 							{
 								// TODO! digitigrade feet
- 								if (y == 0)// digitigrade front feet
- 								{
-									glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
-									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
-										rot,
- 										boxSize));					// note scale, so full lengths
- 								}
- 								else// digitigrade back feet
+								//if (y == 0)// digitigrade front feet
+								//{
+								//	glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
+								//	childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
+								//		rot,
+								//		boxSize));					// note scale, so full lengths
+								//}
+ 								//else// digitigrade back feet
 								{
 									glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
 									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
