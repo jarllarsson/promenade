@@ -294,7 +294,7 @@ void App::run()
 		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = false;
+		bool quadruped = true;
 		if (quadruped)
 		{
 			lLegHeight = scale*0.4f,
@@ -408,11 +408,11 @@ void App::run()
 									lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
 									upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								}
-								else // front legs have "flipped" knees, for digitigrade anatomy
-								{
-									lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-									upperAngleLim = glm::vec3(PI*0.5f, 0.0f, 0.0f);
-								}
+								//else // front legs have "flipped" knees, for digitigrade anatomy
+								//{
+								//	lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+								//	upperAngleLim = glm::vec3(PI*0.5f, 0.0f, 0.0f);
+								//}
 								segmentMass = /*scale**/2.0f;
 								boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION
@@ -432,12 +432,12 @@ void App::run()
 								//jointYOffsetInChild = footLen*0.5f;
 								jointZOffsetInChild = -footHeight*0.5f;
 								// TODO!
-								if (y == 0) // digitigrade front feet
-								{
-									lowerAngleLim = glm::vec3(HALFPI/*0.5f*/, 0.0f, 0.0f);
-									upperAngleLim = glm::vec3(HALFPI/*1.2f*/, 0.0f, 0.0f);
-								}
-								else // digitigrade back feet
+								//if (y == 0) // digitigrade front feet
+								//{
+								//	lowerAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
+								//	upperAngleLim = glm::vec3(HALFPI*1.2f, 0.0f, 0.0f);
+								//}
+								//else // digitigrade back feet
 								{
 									boxSize.y = 1.5f*footLen;
 									lowerAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
