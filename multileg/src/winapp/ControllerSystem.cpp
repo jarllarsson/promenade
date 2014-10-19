@@ -665,6 +665,12 @@ glm::vec3 ControllerSystem::getControllerPosition(ControllerComponent* p_control
 	return getLegFramePosition(p_controller->getLegFrame(0));
 }
 
+glm::vec3 ControllerSystem::getControllerStartPos(ControllerComponent* p_controller)
+{
+	return p_controller->getLegFrame(0)->m_startPosOffset;
+}
+
+
 glm::vec3 ControllerSystem::DOFAxisByVecCompId(unsigned int p_id)
 {
 	if (p_id == 0)
@@ -1389,7 +1395,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 			glm::vec3 refDesiredFootPos = lf->m_footTarget[n];
 			//refDesiredFootPos.y -= m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
 			float dist = 1.0f;
-			if (ik->getKneeFlip() < 0) dist = -1.0f;
+			if (ik->getKneeFlip() < 0) dist = -2.0f;
 			refDesiredFootPos.y -= lf->m_footHeight*0.5f*ik->getKneeFlip();
 			refDesiredFootPos.z -= dist*m_jointLengths[pdChain->getFootJointIdx()] * 0.5f;
 			//refDesiredFootPos.z -= 0.2f;

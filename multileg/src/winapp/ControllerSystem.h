@@ -130,6 +130,7 @@ public:
 	double getLatestTiming();
 	glm::vec3 getControllerPosition(unsigned int p_controllerId);
 	glm::vec3 getControllerPosition(ControllerComponent* p_controller);
+	glm::vec3 getControllerStartPos(ControllerComponent* p_controller);
 	glm::vec3 getLegFramePosition(const ControllerComponent::LegFrame* p_lf) const;
 	glm::vec3 getFootPos(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	glm::vec3 getJointPos(unsigned int p_jointIdx);
@@ -200,6 +201,7 @@ private:
 	bool isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx);
 	void writeFeetCollisionStatus(ControllerComponent* p_controller);
 	float getDesiredFootAngle(unsigned int p_legIdx, ControllerComponent::LegFrame* p_lf, float p_phi);
+
 	// global variables
 	float m_runTime;
 	int m_steps;

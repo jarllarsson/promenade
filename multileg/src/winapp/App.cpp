@@ -305,7 +305,7 @@ void App::run()
 		float lfDist=2.0f;
 		int spineParts = 4;
 #ifdef OPTIMIZATION
-		if (quadruped) chars = 3; else chars = 10;
+		if (quadruped) chars = 5; else chars = 10;
 #endif
 		if (quadruped)
 		{
@@ -330,7 +330,7 @@ void App::run()
 
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
 					glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, (float)(2-y)*hipCoronalOffset);
-					float characterMass = /*scale**/6.0f;
+					float characterMass = /*scale**/10.0f;
 					RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 					legFrame.addComponent(lfRB);
@@ -383,6 +383,9 @@ void App::run()
 							string partName;
 							float segmentMass = 5.0f;
 							bool foot = false;
+							float thisFootHeight = footHeight;
+							/*if (y == 0) // digitigrade front feet
+								thisFootHeight = footHeight * 4;*/
 							if (i == 0) // if hip joint (upper leg)
 							{
 								partName = " upper";
@@ -390,12 +393,15 @@ void App::run()
 								jointXOffsetFromParent = currentHipJointCoronalOffset;
 								//lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
 								//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-								lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
+								lowerAngleLim = glm::vec3(-HALFPI*0.2f, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
 								upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
-								segmentMass = /*scale**/3.0f;
-								boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
+								segmentMass = /*scale**/5.0f;
+								float height = uLegHeight;
+								/*if (y == 0) // front legs
+									height = height*0.8f;*/
+								boxSize = glm::vec3(scale*0.1f, height, scale*0.1f);
 #ifdef OPTIMIZATION
-								if (n == 0) uLegLens.push_back(uLegHeight);
+								if (n == 0) uLegLens.push_back(height);
 #endif
 								//lowerAngleLim = glm::vec3(1, 1, 1);
 								//upperAngleLim = glm::vec3(0,0,0);
@@ -403,22 +409,25 @@ void App::run()
 							else if (i == 1) // if knee (lower leg)
 							{
 								partName = " lower";
-								if (y == 1)
+								if (y == 0) // front legs have "flipped" knees, for digitigrade anatomy
+								{
+									lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(PI*0.5f, 0.0f, 0.0f);
+								}
+								else
 								{
 									lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
 									upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								}
-								//else // front legs have "flipped" knees, for digitigrade anatomy
-								//{
-								//	lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-								//	upperAngleLim = glm::vec3(PI*0.5f, 0.0f, 0.0f);
-								//}
-								segmentMass = /*scale**/2.0f;
+								segmentMass = /*scale**/4.0f;
+								float height = lLegHeight;
+								/*if (y == 0) // front legs
+									height = height*0.8f;*/
 								boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
 #ifdef OPTIMIZATION
 								if (n == 0) 
 								{
-									lLegLens.push_back(lLegHeight + footHeight);
+									lLegLens.push_back(height + thisFootHeight);
 									kneeFlip.push_back(y == 1 ? 1 : -1);
 								}
 #endif
@@ -427,30 +436,33 @@ void App::run()
 							{
 								partName = " foot";
 								//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
-								boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
-								jointYOffsetInChild = footLen*0.2f;
-								//jointYOffsetInChild = footLen*0.5f;
-								jointZOffsetInChild = -footHeight*0.5f;
+								float thisFootLen = footLen;
 								// TODO!
-								//if (y == 0) // digitigrade front feet
-								//{
-								//	lowerAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
-								//	upperAngleLim = glm::vec3(HALFPI*1.2f, 0.0f, 0.0f);
-								//}
-								//else // digitigrade back feet
+								if (y == 0) // digitigrade front feet
 								{
-									boxSize.y = 1.5f*footLen;
+									lowerAngleLim = glm::vec3(HALFPI*0.3f, 0.0f, 0.0f);
+									upperAngleLim = glm::vec3(HALFPI*1.01f, 0.0f, 0.0f);
+									thisFootLen = 1.5f*footLen;
+									//thisFootLen = footLen*0.5f;
+								}
+								else // digitigrade back feet
+								{
+									thisFootLen = 1.5f*footLen;
 									lowerAngleLim = glm::vec3(HALFPI, 0.0f, 0.0f);
 									upperAngleLim = glm::vec3(HALFPI*1.2f, 0.0f, 0.0f);
 									//lowerAngleLim = glm::vec3(HALFPI*0.5f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
 									//upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
 								}
+								jointYOffsetInChild = thisFootLen*0.2f;
+								//jointYOffsetInChild = footLen*0.5f;
+								jointZOffsetInChild = -thisFootHeight*0.5f;
 								//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								//lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
 								//upperAngleLim = glm::vec3(HALFPI*1.8f, HALFPI*0.1f, HALFPI*0.1f);
 								segmentMass = /*scale**/1.0f;
 								foot = true;
+								boxSize = glm::vec3(scale*0.2f, thisFootLen, thisFootHeight);
 							}
 							string dbgGrp = (" group='" + sideName + "'");
 							if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName.substr(0, 2) + partName).c_str(), dbgGrp.c_str());

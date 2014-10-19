@@ -7,7 +7,7 @@
 
 ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 {
-	m_fdWeight = 100.0f; // deviation from reference motion (1000 for biped)
+	m_fdWeight = 1000.0f; // deviation from reference motion
 	m_fvWeight = 0.1f;   // deviation from desired speed
 	m_fhWeight = 0.0f;	 // acceleration of head
 	m_frWeight = 0.1f;	 // whole body rotation
@@ -101,7 +101,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	unsigned int idx = p_controller->m_sysIdx;
 	ControllerSystem::VelocityStat velstat = p_system->getControllerVelocityStat(p_controller);
 	unsigned int legFrames = p_controller->getLegFrameCount();
-	glm::vec3 controllerstart = glm::vec3(0.0f); // for now, always start in origo on optimization
+	glm::vec3 controllerstart = p_system->getControllerStartPos(p_controller);
 
 	// Calc global distance deviation
 	double ghostDist = (double)(velstat.getGoalVelocity().z)*p_time;
