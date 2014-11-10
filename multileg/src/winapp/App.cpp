@@ -294,7 +294,7 @@ void App::run()
 		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = true;
+		bool quadruped = false;
 		if (quadruped)
 		{
 			lLegHeight = scale*0.4f,
