@@ -146,6 +146,7 @@
     <ClInclude Include="CMatrix.h" />
     <ClInclude Include="ColorPalettes.h" />
     <ClInclude Include="DebugPrint.h" />
+    <ClInclude Include="FileHandler.h" />
     <ClInclude Include="IOptimizable.h" />
     <ClInclude Include="MathHelp.h" />
     <ClInclude Include="MeasurementBin.h" />

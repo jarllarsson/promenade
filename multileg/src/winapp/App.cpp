@@ -41,6 +41,7 @@
 #include "ConstraintSystem.h"
 #include "ControllerOptimizationSystem.h"
 #include "ReferenceLegMovementController.h"
+#include <FileHandler.h>
 
 
 
@@ -1144,6 +1145,8 @@ void App::run()
 
 
 #ifdef OPTIMIZATION
+	saveFloatArray((const float*)&(bestParams[0]), bestParams->size(), "../output/sav/arrtest.txt");
+	loadFloatArray((float*)&(bestParams[0]), "../output/sav/arrtest.txt");
 	SAFE_DELETE(bestParams);
 #endif
 }
