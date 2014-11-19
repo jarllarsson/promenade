@@ -177,6 +177,7 @@ void App::run()
 	ControllerSystem::m_dbgShowGCVFVectors = false;
 	ControllerSystem::m_dbgShowTAxes = false;
 
+	
 
 	bool optRealTimeMode = false;
 #endif
@@ -819,6 +820,9 @@ void App::run()
 #pragma endregion biped
 		}
 	#ifdef OPTIMIZATION
+		if (bestParams == NULL)
+			bestParams = new std::vector<float>();
+		loadFloatArrayPrompt(bestParams);
 		optimizationSystem->initSim(bestScore,bestParams);
 	#endif
 
@@ -965,6 +969,8 @@ void App::run()
 				debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
 				if (optimizationSystem->isSimCompleted(m_timeScale))
 				{
+					if (bestParams!=NULL)
+						saveFloatArrayPrompt((const float*)&(bestParams[0]), bestParams->size());
 					DEBUGPRINT((" NO: "));
 					DEBUGPRINT((ToString(optimizationIterationCount).c_str()));
 					run = false;
@@ -1145,8 +1151,8 @@ void App::run()
 
 
 #ifdef OPTIMIZATION
-	saveFloatArray((const float*)&(bestParams[0]), bestParams->size(), "../output/sav/arrtest.txt");
-	loadFloatArray((float*)&(bestParams[0]), "../output/sav/arrtest.txt");
+	//saveFloatArray((const float*)&(bestParams[0]), bestParams->size(), "../output/sav/arrtest.txt");
+	//loadFloatArray((float*)&(bestParams[0]), "../output/sav/arrtest.txt");
 	SAFE_DELETE(bestParams);
 #endif
 }

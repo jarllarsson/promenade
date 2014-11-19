@@ -30,7 +30,7 @@ bool saveFloatArray(const float* p_inData, size_t length,
 	return true;
 }
 
-bool loadFloatArray(float* p_outData, 
+bool loadFloatArray(std::vector<float>* p_outData,
 	const std::string& file_path)
 {
 	size_t length = 0;
@@ -41,9 +41,77 @@ bool loadFloatArray(float* p_outData,
 	is>>length; // read size
 	if (length>0)
 	{
-		is.read(reinterpret_cast<char*>(p_outData),
+		p_outData->resize(length);
+		float* tArr = new float[length];
+		is.read(reinterpret_cast<char*>(tArr),
 			std::streamsize(length*sizeof(float))); // read data
+		for (int i = 0; i < length; i++)
+		{
+			(*p_outData)[i] = tArr[i];
+		}
+		delete[] p_outData;
 	}
 	is.close();
 	return true;
+}
+
+
+void saveFloatArrayPrompt(const float* p_inData, size_t length)
+{
+	string path = "../output/sav/debugDat.txt";
+#ifndef _DEBUG
+	OPENFILENAME ofn;
+	char szFile[255];
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	bool hasFileName = GetSaveFileName(&ofn);
+	if (hasFileName)
+	{
+		path = ofn.lpstrFile;
+		saveFloatArray(p_inData, length, path);
+	}
+#else
+	saveFloatArray(p_inData, length, path);
+#endif
+	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
+}
+
+void loadFloatArrayPrompt(std::vector<float>* p_outData)
+{
+	string path = "../output/sav/debugDat.txt";
+#ifndef _DEBUG
+	OPENFILENAME ofn;
+	char szFile[255];
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+	bool hasFileName = GetOpenFileName(&ofn);
+	if (hasFileName)
+	{
+		path = ofn.lpstrFile;
+		loadFloatArray(p_outData, path);
+	}
+#else
+	loadFloatArray(p_outData, path);
+#endif
+	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
 }
