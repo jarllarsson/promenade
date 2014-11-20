@@ -16,15 +16,16 @@ bool write_file_binary (std::string const & filename,
 	return false;
 }
 
-bool saveFloatArray(const float* p_inData, size_t length, 
+bool saveFloatArray(std::vector<float>* p_inData,
 	const std::string& file_path)
 {
 	std::ofstream os;
 	os.open(file_path, std::ios::binary | std::ios::out);
 	if (!os.good() || !os.is_open())
 		return false;
-	os<<length; // write size
-	os.write(reinterpret_cast<const char*>(p_inData), 
+	//os<<length; // write size
+	size_t length = p_inData->size();
+	os.write(reinterpret_cast<char*>(&(*p_inData)[0]), 
 		std::streamsize(length*sizeof(float))); // write data
 	os.close();
 	return true;
@@ -33,32 +34,34 @@ bool saveFloatArray(const float* p_inData, size_t length,
 bool loadFloatArray(std::vector<float>* p_outData,
 	const std::string& file_path)
 {
-	size_t length = 0;
+	size_t bytelength = 0;
 	std::ifstream is;
-	is.open(file_path.c_str(), std::ios::binary | std::ios::in);
+	is.open(file_path.c_str(), std::ios::binary | std::ios::in | ios::ate); // ate, place at end to read size
 	if (!is.good() || !is.is_open())
 		return false;
-	is>>length; // read size
-	if (length>0)
+	//is>>length; // read size
+	bytelength = is.tellg(); // byteLen
+	if (bytelength>0)
 	{
-		p_outData->resize(length);
-		float* tArr = new float[length];
-		is.read(reinterpret_cast<char*>(tArr),
-			std::streamsize(length*sizeof(float))); // read data
-		for (int i = 0; i < length; i++)
+		int members = bytelength / sizeof(float);
+		p_outData->resize(members);
+		float* tArr = new float[members]; // temp buffer array
+		is.seekg(0, ios::beg); // place at start
+		is.read(reinterpret_cast<char*>(tArr), bytelength); // read data to buffer
+		for (int i = 0; i < members; i++) // copy to vector
 		{
 			(*p_outData)[i] = tArr[i];
 		}
-		delete[] p_outData;
+		delete[] tArr;
 	}
 	is.close();
 	return true;
 }
 
 
-void saveFloatArrayPrompt(const float* p_inData, size_t length)
+void saveFloatArrayPrompt(std::vector<float>* p_inData)
 {
-	string path = "../output/sav/debugDat.txt";
+	string path = "../output/sav/biptest";
 #ifndef _DEBUG
 	OPENFILENAME ofn;
 	char szFile[255];
@@ -78,17 +81,17 @@ void saveFloatArrayPrompt(const float* p_inData, size_t length)
 	if (hasFileName)
 	{
 		path = ofn.lpstrFile;
-		saveFloatArray(p_inData, length, path);
+		saveFloatArray(p_inData, path);
 	}
 #else
-	saveFloatArray(p_inData, length, path);
+	saveFloatArray(p_inData, path);
 #endif
 	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
 }
 
-void loadFloatArrayPrompt(std::vector<float>* p_outData)
+void loadFloatArrayPrompt(std::vector<float>*& p_outData)
 {
-	string path = "../output/sav/debugDat.txt";
+	string path = "../output/sav/biptest";
 #ifndef _DEBUG
 	OPENFILENAME ofn;
 	char szFile[255];
@@ -107,10 +110,14 @@ void loadFloatArrayPrompt(std::vector<float>* p_outData)
 	bool hasFileName = GetOpenFileName(&ofn);
 	if (hasFileName)
 	{
+		if (p_outData == NULL)
+			p_outData = new std::vector<float>();
 		path = ofn.lpstrFile;
 		loadFloatArray(p_outData, path);
 	}
 #else
+	if (p_outData == NULL)
+		p_outData = new std::vector<float>();
 	loadFloatArray(p_outData, path);
 #endif
 	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);

@@ -83,6 +83,9 @@ private:
 	bool m_triggerPause;
 	bool m_gravityStat, m_oldGravityStat;
 	bool m_restart;
+	bool m_saveParams;
+
+	std::vector<float>* m_bestParams;
 
 	// Resource managers
 	//ResourceManager<btCollisionShape> m_collisionShapes;

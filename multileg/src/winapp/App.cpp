@@ -86,6 +86,8 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 		(void*)m_graphicsDevice->getDeviceContextPointer(),m_debugDrawBatch);
 	m_debugDrawer->setDrawArea(p_width, p_height);
 
+	m_bestParams = NULL;
+
 	m_fpsUpdateTick=0.0f;
 	m_controller = new TempController(-8.0f,2.5f,0.0f,0.0f);
 	m_controller->rotate(glm::vec3(0.0f, -HALFPI, 0.0f));
@@ -96,6 +98,7 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_timePauseStepToggle = false;
 	m_time = 0.0;
 	m_restart = false;
+	m_saveParams = false;
 	//
 	m_triggerPause = true;
 #ifdef OPTIMIZATION
@@ -111,6 +114,7 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Physics time scale", Toolbar::FLOAT, &m_timeScale);
 	m_toolBar->addButton(Toolbar::PLAYER, "Play/Pause", boolButton,(void*)&m_triggerPause);
 	m_toolBar->addButton(Toolbar::PLAYER, "Restart", boolButton, (void*)&m_restart);
+	m_toolBar->addButton(Toolbar::PLAYER, "Save", boolButton, (void*)&m_saveParams);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Gravity", Toolbar::BOOL, &m_gravityStat);
 }
 
@@ -134,7 +138,8 @@ App::~App()
 void App::run()
 {
 #ifdef OPTIMIZATION
-	std::vector<float>* bestParams = NULL;
+	loadFloatArrayPrompt(m_bestParams);
+
 	int optimizationIterationCount = 0;
 	double bestScore = FLT_MAX;
 	double oldfirstscore = FLT_MAX;
@@ -820,10 +825,7 @@ void App::run()
 #pragma endregion biped
 		}
 	#ifdef OPTIMIZATION
-		if (bestParams == NULL)
-			bestParams = new std::vector<float>();
-		loadFloatArrayPrompt(bestParams);
-		optimizationSystem->initSim(bestScore,bestParams);
+		optimizationSystem->initSim(bestScore,m_bestParams);
 	#endif
 
 	#ifdef MEASURE_RBODIES
@@ -850,10 +852,10 @@ void App::run()
 #ifdef OPTIMIZATION
 		double maxscoreelem = 1.0f, bparamsmaxelem=1.0f,bparamsminelem=0.0f;
 		if (allResults.size()>1) maxscoreelem=*std::max_element(allResults.begin(), allResults.end());
-		if (bestParams!=NULL && bestParams->size() > 1)
+		if (m_bestParams!=NULL && m_bestParams->size() > 1)
 		{
-			bparamsmaxelem = *std::max_element(bestParams->begin(), bestParams->end());
-			bparamsminelem = *std::min_element(bestParams->begin(), bestParams->end());
+			bparamsmaxelem = *std::max_element(m_bestParams->begin(), m_bestParams->end());
+			bparamsminelem = *std::min_element(m_bestParams->begin(), m_bestParams->end());
 		}
 #endif
 
@@ -898,14 +900,14 @@ void App::run()
 							Color3f((float)i/(float)vals, 0.0f, 1.0f-(float)i/(float)vals));
 					}
 				}
-				if (bestParams != NULL)
+				if (m_bestParams != NULL)
 				{
-					vals = bestParams->size();
+					vals = m_bestParams->size();
 					for (int i = 0; i < vals - 1; i++)
 					{
 						m_debugDrawBatch->drawLine(
-							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*bestParams)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
-							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*bestParams)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
+							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
+							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
 							Color3f(0.0f, 0.0f, 0.0f));
 					}
 				}
@@ -969,8 +971,6 @@ void App::run()
 				debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
 				if (optimizationSystem->isSimCompleted(m_timeScale))
 				{
-					if (bestParams!=NULL)
-						saveFloatArrayPrompt((const float*)&(bestParams[0]), bestParams->size());
 					DEBUGPRINT((" NO: "));
 					DEBUGPRINT((ToString(optimizationIterationCount).c_str()));
 					run = false;
@@ -1069,8 +1069,8 @@ void App::run()
 			DEBUGPRINT((("\nbestscore: " + ToString(bestScore)).c_str()));
 			optimizationIterationCount++;
 			debugTicker = 0;
-			SAFE_DELETE(bestParams);
-			bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
+			SAFE_DELETE(m_bestParams);
+			m_bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
 			allResults.push_back(bestScore);
 			oldfirstscore = firstScore;
 		}
@@ -1153,7 +1153,7 @@ void App::run()
 #ifdef OPTIMIZATION
 	//saveFloatArray((const float*)&(bestParams[0]), bestParams->size(), "../output/sav/arrtest.txt");
 	//loadFloatArray((float*)&(bestParams[0]), "../output/sav/arrtest.txt");
-	SAFE_DELETE(bestParams);
+	SAFE_DELETE(m_bestParams);
 #endif
 }
 
@@ -1269,6 +1269,13 @@ void App::gameUpdate( double p_dt )
 	float dt = (float)p_dt;
 	float game_dt = m_timeScale*(float)p_dt;
 
+	// Handle saving
+	if (m_saveParams)
+	{
+		if (m_bestParams != NULL)
+			saveFloatArrayPrompt(m_bestParams);
+		m_saveParams = false;
+	}
 
 	// temp controller update code
 	updateController(dt);
