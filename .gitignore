@@ -74,4 +74,3 @@ bin/x64/*.txt
 *.vspx
 *.lastcodeanalysissucceeded
 *.vsp
-/multileg/bin/output/sav
