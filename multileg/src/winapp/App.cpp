@@ -103,7 +103,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	//
 	m_triggerPause = false;
 	if (m_runOptimization)
-		m_triggerPause = false;
+		m_triggerPause = true;
 
 	//
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
@@ -153,7 +153,7 @@ void App::run()
 		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 	}
 	// Normal inits
-	bool dbgDrawAllChars = true;
+	bool dbgDrawAllChars = false;
 	double controllerSystemTimingMs = 0.0;
 	bool lockLFY_onRestart = false;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
@@ -309,10 +309,10 @@ void App::run()
 			lLegHeight = scale*0.45f,
 			footHeight = scale*0.05f,
 			footLen = scale*0.3f;
-		int chars = 1;
+		int chars = 10;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = false;
+		bool quadruped = true;
 		if (quadruped)
 		{
 			lLegHeight = scale*0.4f,
@@ -997,7 +997,7 @@ void App::run()
 						dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 10, (btScalar)physicsStep);
 				}
 				else
-					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/,  10, (btScalar)physicsStep);
+					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/,  1, (btScalar)physicsStep);
 	#endif
 				// ========================================================
 
