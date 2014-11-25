@@ -32,8 +32,13 @@ OPT_STEPS					(optimization, number of steps)
 800
 
 OPT_WEIGHTS					(optimization, weights: fd fv fh fr fp)
-fd 1000.0
-fv 0.1
-fh 0.0
-fr 0.1
-fp 0.0
+fd
+1000.0
+fv
+0.1
+fh
+0.0
+fr
+0.1
+fp
+0.0
