@@ -366,6 +366,11 @@ public:
 	virtual std::vector<float> getParamsMin();
 	unsigned int getHeadJointId();
 
+	// in run-time mode we can set a param list 
+	// here, from a file, for deferred consumption
+	void setInitParams(std::vector<float>& p_paramList);
+	void handleInternalInitParamsConsume();
+
 protected:
 private:
 	bool m_buildComplete;
@@ -375,6 +380,8 @@ private:
 	std::vector<LegFrame> m_legFrames;
 	std::vector<LegFrameEntityConstruct> m_legFrameEntityConstructs;
 	std::vector<artemis::Entity*> m_spineJointEntitiesConstruct;
+
+	std::vector<float> m_initConsumableParamList;
 
 	// Torque list nav
 	unsigned int m_torqueListOffset;

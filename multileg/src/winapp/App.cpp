@@ -101,7 +101,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_restart = false;
 	m_saveParams = false;
 	//
-	m_triggerPause = true;
+	m_triggerPause = false;
 	if (m_runOptimization)
 		m_triggerPause = false;
 
@@ -261,10 +261,10 @@ void App::run()
 		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
 		PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
-		ControllerOptimizationSystem* optimizationSystem = NULL;
+		m_optimizationSystem = NULL;
 		if (m_runOptimization)
 		{
-			optimizationSystem = (ControllerOptimizationSystem*)sysManager->setSystem(new ControllerOptimizationSystem());
+			m_optimizationSystem = (ControllerOptimizationSystem*)sysManager->setSystem(new ControllerOptimizationSystem());
 		}
 
 		ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
@@ -276,7 +276,7 @@ void App::run()
 		addOrderIndependentSystem(posRefSystem);
 		if (m_runOptimization)
 		{
-			addOrderIndependentSystem(optimizationSystem);
+			addOrderIndependentSystem(m_optimizationSystem);
 		}
 
 		// Combine Physics with our stuff!
@@ -645,6 +645,10 @@ void App::run()
 					controller.addComponent(recComp);
 
 				}
+				else if (m_bestParams!=NULL)// normal run and we have new param list loaded from file
+				{
+					controllerComp->setInitParams(*m_bestParams);
+				}
 				controller.refresh();
 			}
 #pragma endregion quadruped
@@ -837,6 +841,10 @@ void App::run()
 					controller.addComponent(recComp);
 
 				}
+				else if (m_bestParams != NULL)// normal run and we have new param list loaded from file
+				{
+					controllerComp->setInitParams(*m_bestParams);
+				}
 				controller.refresh();
 			}
 
@@ -844,7 +852,7 @@ void App::run()
 		}
 		if (m_runOptimization)
 		{
-			optimizationSystem->initSim(bestOptimizationScore, m_bestParams);
+			m_optimizationSystem->initSim(bestOptimizationScore, m_bestParams);
 		}
 
 #ifdef MEASURE_RBODIES
@@ -921,9 +929,9 @@ void App::run()
 						}
 					}
 					// params	
-					for (int i = 0; i < optimizationSystem->getEntityCount(); i++)
+					for (int i = 0; i < m_optimizationSystem->getEntityCount(); i++)
 					{
-						std::vector<float>* p = optimizationSystem->getCurrentParamsOf(i);
+						std::vector<float>* p = m_optimizationSystem->getCurrentParamsOf(i);
 						vals = p->size();
 						for (int i = 0; i < vals - 1; i++)
 						{
@@ -989,7 +997,7 @@ void App::run()
 						dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 10, (btScalar)physicsStep);
 				}
 				else
-					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/,  2, (btScalar)physicsStep);
+					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/,  10, (btScalar)physicsStep);
 	#endif
 				// ========================================================
 
@@ -1013,11 +1021,11 @@ void App::run()
 					{
 						if (m_timeScale > 0)
 						{
-							optimizationSystem->incSimTick();
-							optimizationSystem->stepTime((double)m_timeScale*fixedStep);
+							m_optimizationSystem->incSimTick();
+							m_optimizationSystem->stepTime((double)m_timeScale*fixedStep);
 						}
-						debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
-						if (optimizationSystem->isSimCompleted(m_timeScale))
+						debugTicker = m_optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
+						if (m_optimizationSystem->isSimCompleted(m_timeScale))
 						{
 							DEBUGPRINT((" NO: "));
 							DEBUGPRINT((ToString(optimizationIterationCount).c_str()));
@@ -1107,11 +1115,11 @@ void App::run()
 		{
 			if (m_restart)
 			{
-				optimizationSystem->evaluateAll();
-				optimizationSystem->findCurrentBestCandidate();
+				m_optimizationSystem->evaluateAll();
+				m_optimizationSystem->findCurrentBestCandidate();
 				double oldbestscore = bestOptimizationScore;
-				double firstScore = optimizationSystem->getScoreOf(0);
-				bestOptimizationScore = optimizationSystem->getWinnerScore();
+				double firstScore = m_optimizationSystem->getScoreOf(0);
+				bestOptimizationScore = m_optimizationSystem->getWinnerScore();
 				//if (firstScore!=oldbestscore)
 				{
 					DEBUGPRINT(("\n========================================================================"));
@@ -1120,7 +1128,7 @@ void App::run()
 					else
 						DEBUGPRINT((("\nnew best=" + ToString(bestOptimizationScore) + "\n").c_str()));
 					DEBUGPRINT((("\nold best=" + ToString(oldbestscore) + "\nold first=" + ToString(oldFirstOptimizationScore) + " new first=" + ToString(firstScore) + "\n").c_str()));
-					std::vector<float> parms = optimizationSystem->getParamsOf(0);
+					std::vector<float> parms = m_optimizationSystem->getParamsOf(0);
 					for (int i = 0; i < parms.size(); i++)
 					{
 						DEBUGPRINT(((ToString(parms[i]) + " ").c_str()));
@@ -1131,7 +1139,7 @@ void App::run()
 				optimizationIterationCount++;
 				debugTicker = 0;
 				SAFE_DELETE(m_bestParams);
-				m_bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
+				m_bestParams = new std::vector<float>(m_optimizationSystem->getWinnerParams());
 				allOptimizationResults.push_back(bestOptimizationScore);
 				oldFirstOptimizationScore = firstScore;
 			}
@@ -1183,6 +1191,7 @@ void App::run()
 		m_rigidBodySystem=NULL;
 		m_renderSystem=NULL;
 		m_controllerSystem=NULL;
+		m_optimizationSystem = NULL;
 
 		// bullet
 		//cleanup in the reverse order of creation/initialization

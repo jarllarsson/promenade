@@ -124,6 +124,21 @@ unsigned int ControllerComponent::getHeadJointId()
 	return m_legFrames[0].m_legFrameJointId; // currently no head exist, so check the frame itself
 }
 
+void ControllerComponent::setInitParams(std::vector<float>& p_paramList)
+{
+	m_initConsumableParamList = p_paramList;
+}
+
+void ControllerComponent::handleInternalInitParamsConsume()
+{
+	if (m_initConsumableParamList.size()>0)
+	{
+		DEBUGPRINT(("Init using internal params\n"));
+		consumeParams(m_initConsumableParamList);
+		m_initConsumableParamList.clear();
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////
 // LEG-FRAME
 

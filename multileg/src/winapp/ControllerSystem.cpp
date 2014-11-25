@@ -399,6 +399,7 @@ void ControllerSystem::buildCheck()
 		// Calculate number of torques axes in list, store
 		unsigned int torqueListChunkSize = m_jointTorques.size() - torqueListOffset;
 		controller->setTorqueListProperties(torqueListOffset, torqueListChunkSize);
+		controller->handleInternalInitParamsConsume();
 		// Add
 		controller->setToBuildComplete();
 		controller->m_sysIdx = m_controllers.size();

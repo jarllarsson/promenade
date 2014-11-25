@@ -18,6 +18,7 @@ class Input;
 class RenderSystem;
 class RigidBodySystem;
 class ControllerSystem;
+class ControllerOptimizationSystem;
 class Toolbar;
 class DebugDrawer;
 class DebugDrawBatch;
@@ -75,6 +76,7 @@ private:
 	RigidBodySystem*		m_rigidBodySystem;
 	RenderSystem*			m_renderSystem;
 	ControllerSystem*		m_controllerSystem;
+	ControllerOptimizationSystem*		m_optimizationSystem;
 
 	double m_time;
 	float m_timeScale;
