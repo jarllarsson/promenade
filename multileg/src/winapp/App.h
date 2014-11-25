@@ -84,6 +84,7 @@ private:
 	bool m_gravityStat, m_oldGravityStat;
 	bool m_restart;
 	bool m_saveParams;
+	bool m_runOptimization;
 
 	std::vector<float>* m_bestParams;
 

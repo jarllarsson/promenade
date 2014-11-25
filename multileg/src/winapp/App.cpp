@@ -46,32 +46,33 @@
 
 
 //#define MEASURE_RBODIES
-#define OPTIMIZATION
+//#define OPTIMIZATION
 
 using namespace std;
 
 
 const double App::DTCAP=0.5;
 
-App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_height/*=1024*/ )
+App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_height/*=1024*/)
 {
-	int width=p_width,
-		height=p_height;
-	bool windowMode=true;
+	int width = p_width,
+		height = p_height;
+	m_runOptimization = false;
+	bool windowMode = true;
 	// Context
 	try
 	{
-		m_context = new Context(p_hInstance,"multileg",width,height);
+		m_context = new Context(p_hInstance, "multileg", width, height);
 	}
 	catch (ContextException& e)
 	{
 		DEBUGWARNING((e.what()));
-	}	
-	
+	}
+
 	// Graphics
 	try
 	{
-		m_graphicsDevice = new GraphicsDevice(m_context->getWindowHandle(),width,height,windowMode);
+		m_graphicsDevice = new GraphicsDevice(m_context->getWindowHandle(), width, height, windowMode);
 	}
 	catch (GraphicsException& e)
 	{
@@ -83,13 +84,13 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
 	m_debugDrawBatch = new DebugDrawBatch();
 	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),
-		(void*)m_graphicsDevice->getDeviceContextPointer(),m_debugDrawBatch);
+		(void*)m_graphicsDevice->getDeviceContextPointer(), m_debugDrawBatch);
 	m_debugDrawer->setDrawArea(p_width, p_height);
 
 	m_bestParams = NULL;
 
-	m_fpsUpdateTick=0.0f;
-	m_controller = new TempController(-8.0f,2.5f,0.0f,0.0f);
+	m_fpsUpdateTick = 0.0f;
+	m_controller = new TempController(-8.0f, 2.5f, 0.0f, 0.0f);
 	m_controller->rotate(glm::vec3(0.0f, -HALFPI, 0.0f));
 	m_input = new Input();
 	m_input->doStartup(m_context->getWindowHandle());
@@ -101,9 +102,9 @@ App::App( HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_h
 	m_saveParams = false;
 	//
 	m_triggerPause = true;
-#ifdef OPTIMIZATION
-	m_triggerPause = false;
-#endif
+	if (m_runOptimization)
+		m_triggerPause = false;
+
 	//
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 	m_gravityStat = true;
@@ -137,19 +138,21 @@ App::~App()
 
 void App::run()
 {
-#ifdef OPTIMIZATION
-	loadFloatArrayPrompt(m_bestParams);
-
+	if (m_bestParams==NULL) loadFloatArrayPrompt(m_bestParams);
+	// Optimization init
 	int optimizationIterationCount = 0;
-	double bestScore = FLT_MAX;
-	double oldfirstscore = FLT_MAX;
-	std::vector<double> allResults;
+	double bestOptimizationScore = FLT_MAX;
+	double oldFirstOptimizationScore = FLT_MAX;
+	std::vector<double> allOptimizationResults;
 	int debugTicker = 0;
-	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Tick", Toolbar::INT, &debugTicker);
-	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestScore);
-	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
-	std::vector<ReferenceLegMovementController> baseReferenceMovementControllers;
-#endif
+	std::vector<ReferenceLegMovementController> baseOptimizationReferenceMovementControllers;
+	if (m_runOptimization)
+	{
+		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Tick", Toolbar::INT, &debugTicker);
+		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestOptimizationScore);
+		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
+	}
+	// Normal inits
 	bool dbgDrawAllChars = true;
 	double controllerSystemTimingMs = 0.0;
 	bool lockLFY_onRestart = false;
@@ -176,16 +179,22 @@ void App::run()
 	ControllerSystem::m_useVFTorque = true;
 	ControllerSystem::m_useGCVFTorque = true;
 	ControllerSystem::m_usePDTorque = true;
-#ifdef OPTIMIZATION
-	ControllerSystem::m_usePDTorque = true;
-	ControllerSystem::m_dbgShowVFVectors = false;
-	ControllerSystem::m_dbgShowGCVFVectors = false;
-	ControllerSystem::m_dbgShowTAxes = false;
-
-	
-
 	bool optRealTimeMode = false;
-#endif
+	if (m_runOptimization)
+	{
+		ControllerSystem::m_usePDTorque = true;
+		ControllerSystem::m_dbgShowVFVectors = false;
+		ControllerSystem::m_dbgShowGCVFVectors = false;
+		ControllerSystem::m_dbgShowTAxes = false;
+		optRealTimeMode = false;
+	}
+
+	// ===========================================================
+	// 
+	//					  MAIN APP RESTART LOOP
+	//
+	// ===========================================================
+#pragma region mainrestartloop
 	do
 	{
 		m_restart = false;
@@ -237,26 +246,27 @@ void App::run()
 		//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 		//addGameLogic(movementsys);
 #ifdef MEASURE_RBODIES
-#ifdef OPTIMIZATION
-		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld,&rigidBodyStateDbgRecorder,true));
+		if (m_runOptimization)
+			m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld,&rigidBodyStateDbgRecorder,true));
+		else
+			m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
 #else
-		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, &rigidBodyStateDbgRecorder));
-#endif
-#else
-#ifdef OPTIMIZATION
-		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, NULL, true));
-#else
-		m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
-#endif
+		if (m_runOptimization)
+			m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld, NULL, true));
+		else
+			m_rigidBodySystem = (RigidBodySystem*)sysManager->setSystem(new RigidBodySystem(dynamicsWorld));
 #endif
 		ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
 		//ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
 		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
 		PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
-#ifdef OPTIMIZATION
-		ControllerOptimizationSystem* optimizationSystem = (ControllerOptimizationSystem*)sysManager->setSystem(new ControllerOptimizationSystem());
-#endif
+		ControllerOptimizationSystem* optimizationSystem = NULL;
+		if (m_runOptimization)
+		{
+			optimizationSystem = (ControllerOptimizationSystem*)sysManager->setSystem(new ControllerOptimizationSystem());
+		}
+
 		ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
 		sysManager->initializeAll();
 
@@ -264,9 +274,10 @@ void App::run()
 		// Order independent
 		addOrderIndependentSystem(constraintSystem);
 		addOrderIndependentSystem(posRefSystem);
-#ifdef OPTIMIZATION
-		addOrderIndependentSystem(optimizationSystem);
-#endif
+		if (m_runOptimization)
+		{
+			addOrderIndependentSystem(optimizationSystem);
+		}
 
 		// Combine Physics with our stuff!
 		PhysicsWorldHandler physicsWorldHandler(dynamicsWorld, m_controllerSystem);
@@ -305,15 +316,17 @@ void App::run()
 		if (quadruped)
 		{
 			lLegHeight = scale*0.4f,
-			footHeight = scale*0.05f;
+				footHeight = scale*0.05f;
 			footLen = scale*0.2f;
 		}
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + /*1.5f**/footHeight/*scale*0.2f*/;
-		float lfDist=2.0f;
+		float lfDist = 2.0f;
 		int spineParts = 4;
-#ifdef OPTIMIZATION
-		if (quadruped) chars = 5; else chars = 10;
-#endif
+		if (m_runOptimization)
+		{
+			if (quadruped) chars = 5; else chars = 10;
+		}
+
 		if (quadruped)
 		{
 #pragma region quadruped
@@ -321,10 +334,10 @@ void App::run()
 			{
 				vector<artemis::Entity*> charLFs;
 				vector<artemis::Entity*> hipJoints;
-#ifdef OPTIMIZATION
+
 				std::vector<float> uLegLens; std::vector<float> lLegLens;
 				std::vector<int> kneeFlip;
-#endif
+
 				int legFrames = 2;
 				artemis::Entity* prevlegFrame = NULL;
 				for (int y = 0; y < legFrames; y++) // number of leg frames
@@ -336,7 +349,7 @@ void App::run()
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
 
 					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-					glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, (float)(2-y)*hipCoronalOffset);
+					glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, (float)(2 - y)*hipCoronalOffset);
 					float characterMass = /*scale**/10.0f;
 					RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
@@ -363,7 +376,7 @@ void App::run()
 					// Number of leg frames per character
 					for (int n = 0; n < 2; n++) // number of legs per frame
 					{
-						string sideName = ToString(y)+(string(n == 0 ? "Left" : "Right") + "Leg");
+						string sideName = ToString(y) + (string(n == 0 ? "Left" : "Right") + "Leg");
 						if (x == 0)
 						{
 							m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
@@ -407,9 +420,10 @@ void App::run()
 								/*if (y == 0) // front legs
 									height = height*0.8f;*/
 								boxSize = glm::vec3(scale*0.1f, height, scale*0.1f);
-#ifdef OPTIMIZATION
-								if (n == 0) uLegLens.push_back(height);
-#endif
+								if (m_runOptimization)
+								{
+									if (n == 0) uLegLens.push_back(height);
+								}
 								//lowerAngleLim = glm::vec3(1, 1, 1);
 								//upperAngleLim = glm::vec3(0,0,0);
 							}
@@ -431,20 +445,20 @@ void App::run()
 								/*if (y == 0) // front legs
 									height = height*0.8f;*/
 								boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
-#ifdef OPTIMIZATION
-								if (n == 0) 
+								if (m_runOptimization)
 								{
-									lLegLens.push_back(height + thisFootHeight);
-									kneeFlip.push_back(y == 1 ? 1 : -1);
+									if (n == 0)
+									{
+										lLegLens.push_back(height + thisFootHeight);
+										kneeFlip.push_back(y == 1 ? 1 : -1);
+									}
 								}
-#endif
 							}
 							else if (i == 2) // if foot
 							{
 								partName = " foot";
 								//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
 								float thisFootLen = footLen;
-								// TODO!
 								if (y == 0) // digitigrade front feet
 								{
 									lowerAngleLim = glm::vec3(HALFPI*0.3f, 0.0f, 0.0f);
@@ -504,7 +518,7 @@ void App::run()
 								//		rot,
 								//		boxSize));					// note scale, so full lengths
 								//}
- 								//else// digitigrade back feet
+								//else// digitigrade back feet
 								{
 									glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
 									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
@@ -512,7 +526,7 @@ void App::run()
 										boxSize));					// note scale, so full lengths
 								}
 							}
-							MaterialComponent* mat = new MaterialComponent(colarr[(y+n) * 3 + i]);
+							MaterialComponent* mat = new MaterialComponent(colarr[(y + n) * 3 + i]);
 							childJoint.addComponent(mat);
 							if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (sideName.substr(0, 2) + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
 							ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, -jointZOffsetInChild),	  // child (this)
@@ -567,35 +581,35 @@ void App::run()
 						jointYOffsetInParent = -parentSz.y*0.5f; // for sagittal displacement
 						jointZOffsetInParent = -spineHeight*0.5f; // for sagittal displacment
 					}
-					
+
 					// no need collision callback
 					spineJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
-					
+
 					if (drawAll || x == 0) spineJoint.addComponent(new RenderComponent());
 
 					spineJoint.addComponent(new TransformComponent(spinepos,
 						glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
 						boxSize));					// note scale, so full lengths
 
-					MaterialComponent* mat = new MaterialComponent(colarr[s+3]);
+					MaterialComponent* mat = new MaterialComponent(colarr[s + 3]);
 					spineJoint.addComponent(mat);
-					
+
 					ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f, -spineHeight*0.5f),	  // child (this)
 						glm::vec3(0.0f, jointYOffsetInParent, jointZOffsetInParent),							  // parent
-						{ lowerAngleLimBase + lowerAngleLim, upperAngleLimBase+upperAngleLim },
+						{ lowerAngleLimBase + lowerAngleLim, upperAngleLimBase + upperAngleLim },
 						false };
 					spineJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
 					spineJoint.refresh();
 					spines.push_back(&spineJoint);
 					prev = &spineJoint;
-				}				
+				}
 				// finish by constraint the back LF to the last spine
 				// the back LF become the child of the last spine joint
 				jointYOffsetInParent = -boxSize.y*0.5f; // for sagittal displacement
 				jointZOffsetInParent = -spineHeight*0.5f; // for sagittal displacment
-				lowerAngleLim = glm::vec3(HALFPI, 0, 0); 
-				upperAngleLim = glm::vec3(HALFPI, 0, 0); 
+				lowerAngleLim = glm::vec3(HALFPI, 0, 0);
+				upperAngleLim = glm::vec3(HALFPI, 0, 0);
 				ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, lfHeight*0.5f, hipCoronalOffset*0.5f),	  // child (this) ie. the LF
 					glm::vec3(0.0f, jointYOffsetInParent, jointZOffsetInParent),							 // parent ie. the last spine joint
 					{ lowerAngleLim, upperAngleLim },
@@ -609,27 +623,28 @@ void App::run()
 
 				// Controller
 				artemis::Entity & controller = entityManager->create();
-				ControllerComponent* controllerComp = new ControllerComponent(charLFs, hipJoints,&spines);
+				ControllerComponent* controllerComp = new ControllerComponent(charLFs, hipJoints, &spines);
 				controller.addComponent(controllerComp);
-#ifdef OPTIMIZATION
-				ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
-				recComp->setLowerLegLengths(lLegLens);
-				recComp->setUpperLegLengths(uLegLens);
-				// If first optimization run, and controller 0, add the current settings
-				// as the "ghost" reference to measure for leg movements (measure physics result to kinematic target)
-				// If this is another iteration, or another controller, add the reference ghost that we saved in the beginning.
-				// The ghost is thus not changed between runs or controllers, everyone measures to the same reference.
-				for (int r = 0; r < controllerComp->getLegFrameCount(); r++)
+				if (m_runOptimization)
 				{
-					if (x == 0 && r >= baseReferenceMovementControllers.size())
+					ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
+					recComp->setLowerLegLengths(lLegLens);
+					recComp->setUpperLegLengths(uLegLens);
+					// If first optimization run, and controller 0, add the current settings
+					// as the "ghost" reference to measure for leg movements (measure physics result to kinematic target)
+					// If this is another iteration, or another controller, add the reference ghost that we saved in the beginning.
+					// The ghost is thus not changed between runs or controllers, everyone measures to the same reference.
+					for (int r = 0; r < controllerComp->getLegFrameCount(); r++)
 					{
-						baseReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r), 2, kneeFlip[r]));
+						if (x == 0 && r >= baseOptimizationReferenceMovementControllers.size())
+						{
+							baseOptimizationReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r), 2, kneeFlip[r]));
+						}
+						recComp->addLegReferenceController(baseOptimizationReferenceMovementControllers[r]);
 					}
-					recComp->addLegReferenceController(baseReferenceMovementControllers[r]);
-				}
-				controller.addComponent(recComp);
+					controller.addComponent(recComp);
 
-#endif
+				}
 				controller.refresh();
 			}
 #pragma endregion quadruped
@@ -637,200 +652,204 @@ void App::run()
 		else
 		{
 #pragma region biped
-		for (int x = 0; x < chars; x++) // number of characters
-		{
-			vector<artemis::Entity*> charLFs;
-			vector<artemis::Entity*> hipJoints;
-#ifdef OPTIMIZATION
-			std::vector<float> uLegLens; std::vector<float> lLegLens;
-#endif
-			for (int y = 0; y < 1; y++) // number of leg frames
+			for (int x = 0; x < chars; x++) // number of characters
 			{
-				artemis::Entity& legFrame = entityManager->create();
-				glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, (float)-y);
+				vector<artemis::Entity*> charLFs;
+				vector<artemis::Entity*> hipJoints;
 
-				// if locked, we move down a tiny bit to get traction
-				//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
+				std::vector<float> uLegLens; std::vector<float> lLegLens;
 
-				//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
-				glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
-				float characterMass = /*scale**/10.0f;
-				RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
-					CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
-				legFrame.addComponent(lfRB);
-				if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
-				legFrame.addComponent(new TransformComponent(pos,
-					glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-					lfSize));
-
-				if (lockPos)
+				for (int y = 0; y < 1; y++) // number of leg frames
 				{
-					float lck = lockLFY_onRestart ? 0 : 1;
-					lfRB->setLinearFactor(glm::vec3(lck, 1, 1));
-					lfRB->setAngularFactor(glm::vec3(1, lck, lck));
-				}
+					artemis::Entity& legFrame = entityManager->create();
+					glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, (float)-y);
 
+					// if locked, we move down a tiny bit to get traction
+					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
 
-				//legFrame.addComponent(new ConstantForceComponent(glm::vec3(0, characterMass*12.0f, 0)));
-				legFrame.refresh();
-				string legFrameName = "LegFrame";
-				/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
-				if (x == 0) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
-				//
-				// Number of leg frames per character
-				for (int n = 0; n < 2; n++) // number of legs per frame
-				{
-					string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
-					if (x == 0)
+					//(float(i) - 50, 10.0f+float(i)*4.0f, float(i)*0.2f-50.0f);
+					glm::vec3 lfSize = glm::vec3(hipCoronalOffset*2.0f, lfHeight, hipCoronalOffset);
+					float characterMass = /*scale**/10.0f;
+					RigidBodyComponent* lfRB = new RigidBodyComponent(new btBoxShape(btVector3(lfSize.x, lfSize.y, lfSize.z)*0.5f), characterMass,
+						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
+					legFrame.addComponent(lfRB);
+					if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
+					legFrame.addComponent(new TransformComponent(pos,
+						glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+						lfSize));
+
+					if (lockPos)
 					{
-						m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
-						m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
+						float lck = lockLFY_onRestart ? 0 : 1;
+						lfRB->setLinearFactor(glm::vec3(lck, 1, 1));
+						lfRB->setAngularFactor(glm::vec3(1, lck, lck));
 					}
-					//m_toolBar->addLabel(Toolbar::CHARACTER, sideName.c_str(),"");
-					artemis::Entity* prev = &legFrame;
-					artemis::Entity* upperLegSegment = NULL;
-					float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
-					glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
-					glm::vec3 boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
-					glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, boxSize.z);
-					for (int i = 0; i < 3; i++) // number of segments per leg
+
+
+					//legFrame.addComponent(new ConstantForceComponent(glm::vec3(0, characterMass*12.0f, 0)));
+					legFrame.refresh();
+					string legFrameName = "LegFrame";
+					/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
+					if (x == 0) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
+					//
+					// Number of leg frames per character
+					for (int n = 0; n < 2; n++) // number of legs per frame
 					{
-						artemis::Entity & childJoint = entityManager->create();
-						float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
-						float jointYOffsetInChild = 0.0f; // for sagittal displacement for feet
-						float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
-						if (i != 0) parentSz = boxSize;//glm::vec3(boxSize.x, uLegHeight, boxSize.z);
-						//boxSize = glm::vec3(0.25f, uLegHeight, 0.25f); // set new size for current box
-						// segment specific constraint params
-						glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.5f);
-						glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.5f);
-						string partName;
-						float segmentMass = 5.0f;
-						bool foot = false;
-						if (i == 0) // if hip joint (upper leg)
+						string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
+						if (x == 0)
 						{
-							partName = " upper";
-							upperLegSegment = &childJoint;
-							jointXOffsetFromParent = currentHipJointCoronalOffset;
-							//lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
-							//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-							lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
-							upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
-							segmentMass = /*scale**/5.0f;
-							boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
-#ifdef OPTIMIZATION
-							if (n == 0) uLegLens.push_back(uLegHeight);
-#endif
-							//lowerAngleLim = glm::vec3(1, 1, 1);
-							//upperAngleLim = glm::vec3(0,0,0);
+							m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
+							m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
 						}
-						else if (i == 1) // if knee (lower leg)
+						//m_toolBar->addLabel(Toolbar::CHARACTER, sideName.c_str(),"");
+						artemis::Entity* prev = &legFrame;
+						artemis::Entity* upperLegSegment = NULL;
+						float currentHipJointCoronalOffset = (float)(n * 2 - 1)*hipCoronalOffset;
+						glm::vec3 legpos = pos + glm::vec3(currentHipJointCoronalOffset, 0.0f, 0.0f);
+						glm::vec3 boxSize = glm::vec3(0.25f, uLegHeight, 0.25f);
+						glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, boxSize.z);
+						for (int i = 0; i < 3; i++) // number of segments per leg
 						{
-							partName = " lower";
-							lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
-							upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-							segmentMass = /*scale**/4.0f;
-							boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
-#ifdef OPTIMIZATION
-							if (n == 0) lLegLens.push_back(lLegHeight + footHeight);
-#endif
+							artemis::Entity & childJoint = entityManager->create();
+							float jointXOffsetFromParent = 0.0f; // for coronal displacement for hip joints
+							float jointYOffsetInChild = 0.0f; // for sagittal displacement for feet
+							float jointZOffsetInChild = 0.0f; // for sagittal displacment for feet
+							if (i != 0) parentSz = boxSize;//glm::vec3(boxSize.x, uLegHeight, boxSize.z);
+							//boxSize = glm::vec3(0.25f, uLegHeight, 0.25f); // set new size for current box
+							// segment specific constraint params
+							glm::vec3 lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.5f);
+							glm::vec3 upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.5f);
+							string partName;
+							float segmentMass = 5.0f;
+							bool foot = false;
+							if (i == 0) // if hip joint (upper leg)
+							{
+								partName = " upper";
+								upperLegSegment = &childJoint;
+								jointXOffsetFromParent = currentHipJointCoronalOffset;
+								//lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
+								//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
+								lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
+								upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
+								segmentMass = /*scale**/5.0f;
+								boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
+								if (m_runOptimization)
+								{
+									if (n == 0) uLegLens.push_back(uLegHeight);
+								}
+								//lowerAngleLim = glm::vec3(1, 1, 1);
+								//upperAngleLim = glm::vec3(0,0,0);
+							}
+							else if (i == 1) // if knee (lower leg)
+							{
+								partName = " lower";
+								lowerAngleLim = glm::vec3(-PI*0.7f/*-HALFPI*/, 0.0f, 0.0f);
+								upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+								segmentMass = /*scale**/4.0f;
+								boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
+								if (m_runOptimization)
+								{
+									if (n == 0) lLegLens.push_back(lLegHeight + footHeight);
+								}
+							}
+							else if (i == 2) // if foot
+							{
+								partName = " foot";
+								//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
+								boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
+								jointYOffsetInChild = footLen*0.2f;
+								jointZOffsetInChild = 0.0f*-footHeight*0.5f;
+								//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
+								lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
+								upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
+								//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+								//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
+								//lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
+								//upperAngleLim = glm::vec3(HALFPI*1.8f, HALFPI*0.1f, HALFPI*0.1f);
+								segmentMass = /*scale**/1.0f;
+								foot = true;
+							}
+							string dbgGrp = (" group='" + sideName + "'");
+							if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
+							legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, 0.0f/*jointZOffsetInChild*/));
+							if (foot == true)
+							{
+								// foot need collision callback properties
+								childJoint.addComponent(new RigidBodyComponent(RigidBodyComponent::REGISTER_COLLISIONS,
+									new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
+									CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+							}
+							else
+							{
+								// ordinary joint does not need collision callback
+								childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
+									CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
+							}
+							if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
+							if (i != 2)
+							{
+								childJoint.addComponent(new TransformComponent(legpos,
+									glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
+									boxSize));					// note scale, so full lengths
+							}
+							else // foot
+							{
+								childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
+									glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
+									boxSize));					// note scale, so full lengths
+							}
+							MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
+							childJoint.addComponent(mat);
+							if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
+							ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, -jointZOffsetInChild),	  // child (this)
+								glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
+								{ lowerAngleLim, upperAngleLim },
+								false };
+							childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
+							childJoint.refresh();
+							prev = &childJoint;
 						}
-						else if (i == 2) // if foot
-						{
-							partName = " foot";
-							//boxSize = glm::vec3(scale*0.08f, footHeight, scale*0.2f);
-							boxSize = glm::vec3(scale*0.2f, footLen, footHeight);
-							jointYOffsetInChild = footLen*0.2f;
-							jointZOffsetInChild = 0.0f*-footHeight*0.5f;
-							//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
-							lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
-							upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
-							//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-							//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
-							//lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
-							//upperAngleLim = glm::vec3(HALFPI*1.8f, HALFPI*0.1f, HALFPI*0.1f);
-							segmentMass = /*scale**/1.0f;
-							foot = true;
-						}
-						string dbgGrp = (" group='" + sideName + "'");
-						if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
-						legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, 0.0f/*jointZOffsetInChild*/));
-						if (foot == true)
-						{
-							// foot need collision callback properties
-							childJoint.addComponent(new RigidBodyComponent(RigidBodyComponent::REGISTER_COLLISIONS,
-								new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
-								CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
-						}
-						else
-						{
-							// ordinary joint does not need collision callback
-							childJoint.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(boxSize.x, boxSize.y, boxSize.z)*0.5f), segmentMass, // note, h-lengths
-								CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT));
-						}
-						if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
-						if (i != 2)
-						{
-							childJoint.addComponent(new TransformComponent(legpos,
-								glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-								boxSize));					// note scale, so full lengths
-						}
-						else // foot
-						{
-							childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
-								glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
-								boxSize));					// note scale, so full lengths
-						}
-						MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
-						childJoint.addComponent(mat);
-						if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
-						ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, -jointZOffsetInChild),	  // child (this)
-							glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
-							{ lowerAngleLim, upperAngleLim },
-							false };
-						childJoint.addComponent(new ConstraintComponent(prev, constraintDesc));
-						childJoint.refresh();
-						prev = &childJoint;
+						hipJoints.push_back(upperLegSegment);
 					}
-					hipJoints.push_back(upperLegSegment);
-				}
-				charLFs.push_back(&legFrame);
-			} // leg frames
-			// Controller
-			artemis::Entity & controller = entityManager->create();
-			ControllerComponent* controllerComp = new ControllerComponent(charLFs, hipJoints);
-			controller.addComponent(controllerComp);
-#ifdef OPTIMIZATION
-			ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
-			recComp->setLowerLegLengths(lLegLens);
-			recComp->setUpperLegLengths(uLegLens);
-			// If first optimization run, and controller 0, add the current settings
-			// as the "ghost" reference to measure for leg movements (measure physics result to kinematic target)
-			// If this is another iteration, or another controller, add the reference ghost that we saved in the beginning.
-			// The ghost is thus not changed between runs or controllers, everyone measures to the same reference.
-			for (int r = 0; r < controllerComp->getLegFrameCount(); r++)
-			{
-				if (x == 0 && r >= baseReferenceMovementControllers.size())
+					charLFs.push_back(&legFrame);
+				} // leg frames
+				// Controller
+				artemis::Entity & controller = entityManager->create();
+				ControllerComponent* controllerComp = new ControllerComponent(charLFs, hipJoints);
+				controller.addComponent(controllerComp);
+				if (m_runOptimization)
 				{
-					baseReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r)));
+					ControllerMovementRecorderComponent* recComp = new ControllerMovementRecorderComponent();
+					recComp->setLowerLegLengths(lLegLens);
+					recComp->setUpperLegLengths(uLegLens);
+					// If first optimization run, and controller 0, add the current settings
+					// as the "ghost" reference to measure for leg movements (measure physics result to kinematic target)
+					// If this is another iteration, or another controller, add the reference ghost that we saved in the beginning.
+					// The ghost is thus not changed between runs or controllers, everyone measures to the same reference.
+					for (int r = 0; r < controllerComp->getLegFrameCount(); r++)
+					{
+						if (x == 0 && r >= baseOptimizationReferenceMovementControllers.size())
+						{
+							baseOptimizationReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r)));
+						}
+						recComp->addLegReferenceController(baseOptimizationReferenceMovementControllers[r]);
+					}
+					controller.addComponent(recComp);
+
 				}
-				recComp->addLegReferenceController(baseReferenceMovementControllers[r]);
+				controller.refresh();
 			}
-			controller.addComponent(recComp);
-
-#endif
-			controller.refresh();
-		}
 
 #pragma endregion biped
 		}
-	#ifdef OPTIMIZATION
-		optimizationSystem->initSim(bestScore,m_bestParams);
-	#endif
+		if (m_runOptimization)
+		{
+			optimizationSystem->initSim(bestOptimizationScore, m_bestParams);
+		}
 
-	#ifdef MEASURE_RBODIES
+#ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.activate();
-	#endif
+#endif
 
 
 		// Message pump struct
@@ -849,16 +868,27 @@ void App::run()
 		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		m_time = 0.0;
 		bool shooting = false;
-#ifdef OPTIMIZATION
-		double maxscoreelem = 1.0f, bparamsmaxelem=1.0f,bparamsminelem=0.0f;
-		if (allResults.size()>1) maxscoreelem=*std::max_element(allResults.begin(), allResults.end());
-		if (m_bestParams!=NULL && m_bestParams->size() > 1)
-		{
-			bparamsmaxelem = *std::max_element(m_bestParams->begin(), m_bestParams->end());
-			bparamsminelem = *std::min_element(m_bestParams->begin(), m_bestParams->end());
+		double optimizationDbgMaxscoreelem = 1.0f, 
+			optimizationDbgBparamsmaxelem = 1.0f, 
+			optimizationDbgBparamsminelem = 0.0f;
+		if (m_runOptimization)
+		{			
+			if (allOptimizationResults.size() > 1) optimizationDbgMaxscoreelem = *std::max_element(allOptimizationResults.begin(), allOptimizationResults.end());
+			if (m_bestParams != NULL && m_bestParams->size() > 1)
+			{
+				optimizationDbgBparamsmaxelem = *std::max_element(m_bestParams->begin(), m_bestParams->end());
+				optimizationDbgBparamsminelem = *std::min_element(m_bestParams->begin(), m_bestParams->end());
+			}
 		}
-#endif
 
+		// ===========================================================
+		// 
+		//
+		//					    MAIN GAME LOOP
+		//
+		//
+		// ===========================================================
+#pragma region mainloop
 		while (!m_context->closeRequested() && run && !m_restart)
 		{
 			if (!pumpMessage(msg))
@@ -871,58 +901,64 @@ void App::run()
 				// update timing debug var
 				controllerSystemTimingMs = m_controllerSystem->getLatestTiming() * 1000.0f;
 
-#ifdef OPTIMIZATION
-				// draw test graph if optimizing
-				int vals = allResults.size();
-				float grphScale = 20.0f;
-				if (vals > 1)
+				// ====================================
+				//    Draw test graph if optimizing
+				// ====================================
+				if (m_runOptimization)
 				{
-					m_debugDrawBatch->drawLine(glm::vec3(-10.0f, 20.0f, 0.0f), glm::vec3(10.0f, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
+					int vals = allOptimizationResults.size();
+					float grphScale = 20.0f;
+					if (vals > 1)
+					{
+						m_debugDrawBatch->drawLine(glm::vec3(-10.0f, 20.0f, 0.0f), glm::vec3(10.0f, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
 
-					for (int i = 0; i < vals - 1; i++)
+						for (int i = 0; i < vals - 1; i++)
+						{
+							m_debugDrawBatch->drawLine(
+								glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, grphScale * 2 + (allOptimizationResults[i] / (0.0001f + optimizationDbgMaxscoreelem))*grphScale, 0.0f),
+								glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, grphScale * 2 + (allOptimizationResults[i + 1] / (0.0001f + optimizationDbgMaxscoreelem))*grphScale, 0.0f),
+								colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
+						}
+					}
+					// params	
+					for (int i = 0; i < optimizationSystem->getEntityCount(); i++)
 					{
-						m_debugDrawBatch->drawLine(
-							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, grphScale*2 + (allResults[i] / (0.0001f + maxscoreelem))*grphScale, 0.0f),
-							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, grphScale*2 + (allResults[i + 1] / (0.0001f + maxscoreelem))*grphScale, 0.0f),
-							colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
+						std::vector<float>* p = optimizationSystem->getCurrentParamsOf(i);
+						vals = p->size();
+						for (int i = 0; i < vals - 1; i++)
+						{
+							m_debugDrawBatch->drawLine(
+								glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*p)[i] / (0.0001f + optimizationDbgBparamsmaxelem - optimizationDbgBparamsminelem))*grphScale, 0.0f),
+								glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*p)[i + 1] / (0.0001f + optimizationDbgBparamsmaxelem - optimizationDbgBparamsminelem))*grphScale, 0.0f),
+								Color3f((float)i / (float)vals, 0.0f, 1.0f - (float)i / (float)vals));
+						}
+					}
+					if (m_bestParams != NULL)
+					{
+						vals = m_bestParams->size();
+						for (int i = 0; i < vals - 1; i++)
+						{
+							m_debugDrawBatch->drawLine(
+								glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i] / (0.0001f + optimizationDbgBparamsmaxelem - optimizationDbgBparamsminelem))*grphScale, 0.0f),
+								glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i + 1] / (0.0001f + optimizationDbgBparamsmaxelem - optimizationDbgBparamsminelem))*grphScale, 0.0f),
+								Color3f(0.0f, 0.0f, 0.0f));
+						}
 					}
 				}
-				// params	
-				for (int i = 0; i < optimizationSystem->getEntityCount(); i++)
-				{
-					std::vector<float>* p = optimizationSystem->getCurrentParamsOf(i);
-					vals = p->size();
-					for (int i = 0; i < vals- 1; i++)
-					{
-						m_debugDrawBatch->drawLine(
-							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2*grphScale + ((*p)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
-							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2*grphScale + ((*p)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
-							Color3f((float)i/(float)vals, 0.0f, 1.0f-(float)i/(float)vals));
-					}
-				}
-				if (m_bestParams != NULL)
-				{
-					vals = m_bestParams->size();
-					for (int i = 0; i < vals - 1; i++)
-					{
-						m_debugDrawBatch->drawLine(
-							glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
-							glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i + 1] / (0.0001f + bparamsmaxelem - bparamsminelem))*grphScale, 0.0f),
-							Color3f(0.0f, 0.0f, 0.0f));
-					}
-				}
-#endif
 
 
 				
-				// Start by rendering
+				// ====================================
+				//			   Render 3D
+				// ====================================
 				render();
 
 
 				m_time = (double)Time::getTimeStamp().QuadPart*secondsPerTick - timeStart;
 
-				// Physics handling part of the loop
-				// ========================================================
+				// ====================================
+				//		   Physics update step
+				// ====================================
 				/* This, like the rendering, ticks every time around.
 				Bullet does the interpolation for us. */
 				currTimeStamp = Time::getTimeStamp();
@@ -939,13 +975,21 @@ void App::run()
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
 				// timeStep < maxSubSteps * fixedTimeStep
-	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
+	#if defined(MEASURE_RBODIES)
 				if (!optRealTimeMode)
 					dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1+(physicsStep / (m_timeScale*fixedStep)), (btScalar)physicsStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
 				else
 					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 10, (btScalar)physicsStep);
 	#else
-				dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/,  2, (btScalar)physicsStep);
+				if (m_runOptimization)
+				{
+					if (!optRealTimeMode)
+						dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1 + (physicsStep / (m_timeScale*fixedStep)), (btScalar)physicsStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
+					else
+						dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 10, (btScalar)physicsStep);
+				}
+				else
+					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/,  2, (btScalar)physicsStep);
 	#endif
 				// ========================================================
 
@@ -954,42 +998,56 @@ void App::run()
 				prevTimeStamp = currTimeStamp;
 
 	#ifdef MEASURE_RBODIES
-		#ifdef OPTIMIZATION
-			if (optimizationIterationCount >= 5) run = false;
-		#else
-			if (steps >= 600) run = false;
-		#endif
-	#endif
-	#ifdef OPTIMIZATION
-			if (!optRealTimeMode)
-			{
-				if (m_timeScale > 0)
+				if (m_runOptimization)
 				{
-					optimizationSystem->incSimTick();
-					optimizationSystem->stepTime((double)m_timeScale*fixedStep);
+					if (optimizationIterationCount >= 5) run = false;
 				}
-				debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
-				if (optimizationSystem->isSimCompleted(m_timeScale))
+				else
 				{
-					DEBUGPRINT((" NO: "));
-					DEBUGPRINT((ToString(optimizationIterationCount).c_str()));
-					run = false;
-					m_restart = true;
+					if (steps >= 600) run = false;
 				}
-			}
 	#endif
+				if (m_runOptimization)
+				{
+					if (!optRealTimeMode)
+					{
+						if (m_timeScale > 0)
+						{
+							optimizationSystem->incSimTick();
+							optimizationSystem->stepTime((double)m_timeScale*fixedStep);
+						}
+						debugTicker = optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
+						if (optimizationSystem->isSimCompleted(m_timeScale))
+						{
+							DEBUGPRINT((" NO: "));
+							DEBUGPRINT((ToString(optimizationIterationCount).c_str()));
+							run = false;
+							m_restart = true;
+						}
+					}
+				}
 				//DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
 				double dt=0.0;
-	#if defined(MEASURE_RBODIES) || defined(OPTIMIZATION)
+	#if defined(MEASURE_RBODIES)
 				if (!optRealTimeMode)
 					dt = fixedStep;
 				else
 					dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
 	#else
-				dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
+				if (m_runOptimization)
+				{
+					if (!optRealTimeMode)
+						dt = fixedStep;
+					else
+						dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
+				}
+				else
+				{
+					dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
+				}
 	#endif
 				// Game clock based updates
 				while (dt >= gameTickS)
@@ -1025,9 +1083,10 @@ void App::run()
 					else
 						shooting = false;
 
-#ifdef OPTIMIZATION
-					optRealTimeMode = m_input->g_kb->isKeyDown(KC_P);
-#endif
+					if (m_runOptimization)
+					{
+						optRealTimeMode = m_input->g_kb->isKeyDown(KC_P);
+					}
 
 					handleContext(interval, phys_dt, steps - oldSteps);
 					gameUpdate(interval);
@@ -1038,43 +1097,45 @@ void App::run()
 				m_oldGravityStat = m_gravityStat;
 				//
 			}
-		}
+		} // endwhile mainloop
+#pragma endregion mainloop
 
 		if (!m_restart)
 			DEBUGPRINT(("\n\nSTOPPING APPLICATION\n\n"));
 
-	#ifdef OPTIMIZATION
-		if (m_restart)
+		if (m_runOptimization)
 		{
-			optimizationSystem->evaluateAll();
-			optimizationSystem->findCurrentBestCandidate();
-			double oldbestscore = bestScore;
-			double firstScore = optimizationSystem->getScoreOf(0);
-			bestScore = optimizationSystem->getWinnerScore();
-			//if (firstScore!=oldbestscore)
+			if (m_restart)
 			{
-				DEBUGPRINT(("\n========================================================================"));
-				if (firstScore != oldbestscore)
-					DEBUGPRINT((("\nNot deterministic!: new best=" + ToString(bestScore) + "\n").c_str()));
-				else
-					DEBUGPRINT((("\nnew best=" + ToString(bestScore) + "\n").c_str()));
-				DEBUGPRINT((("\nold best=" + ToString(oldbestscore) + "\nold first=" + ToString(oldfirstscore) + " new first=" + ToString(firstScore) + "\n").c_str()));
-				std::vector<float> parms = optimizationSystem->getParamsOf(0);
-				for (int i = 0; i < parms.size(); i++)
+				optimizationSystem->evaluateAll();
+				optimizationSystem->findCurrentBestCandidate();
+				double oldbestscore = bestOptimizationScore;
+				double firstScore = optimizationSystem->getScoreOf(0);
+				bestOptimizationScore = optimizationSystem->getWinnerScore();
+				//if (firstScore!=oldbestscore)
 				{
-					DEBUGPRINT(((ToString(parms[i]) + " ").c_str()));
+					DEBUGPRINT(("\n========================================================================"));
+					if (firstScore != oldbestscore)
+						DEBUGPRINT((("\nNot deterministic!: new best=" + ToString(bestOptimizationScore) + "\n").c_str()));
+					else
+						DEBUGPRINT((("\nnew best=" + ToString(bestOptimizationScore) + "\n").c_str()));
+					DEBUGPRINT((("\nold best=" + ToString(oldbestscore) + "\nold first=" + ToString(oldFirstOptimizationScore) + " new first=" + ToString(firstScore) + "\n").c_str()));
+					std::vector<float> parms = optimizationSystem->getParamsOf(0);
+					for (int i = 0; i < parms.size(); i++)
+					{
+						DEBUGPRINT(((ToString(parms[i]) + " ").c_str()));
+					}
+					DEBUGPRINT(("\n========================================================================\n"));
 				}
-				DEBUGPRINT(("\n========================================================================\n"));
+				DEBUGPRINT((("\nbestscore: " + ToString(bestOptimizationScore)).c_str()));
+				optimizationIterationCount++;
+				debugTicker = 0;
+				SAFE_DELETE(m_bestParams);
+				m_bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
+				allOptimizationResults.push_back(bestOptimizationScore);
+				oldFirstOptimizationScore = firstScore;
 			}
-			DEBUGPRINT((("\nbestscore: " + ToString(bestScore)).c_str()));
-			optimizationIterationCount++;
-			debugTicker = 0;
-			SAFE_DELETE(m_bestParams);
-			m_bestParams = new std::vector<float>(optimizationSystem->getWinnerParams());
-			allResults.push_back(bestScore);
-			oldfirstscore = firstScore;
 		}
-	#endif
 
 
 	#ifdef MEASURE_RBODIES
@@ -1148,13 +1209,9 @@ void App::run()
 		// debug
 		m_toolBar->clearBar(Toolbar::CHARACTER);
 	} while (m_restart);
+#pragma endregion mainrestartloop
 
-
-#ifdef OPTIMIZATION
-	//saveFloatArray((const float*)&(bestParams[0]), bestParams->size(), "../output/sav/arrtest.txt");
-	//loadFloatArray((float*)&(bestParams[0]), "../output/sav/arrtest.txt");
 	SAFE_DELETE(m_bestParams);
-#endif
 }
 
 
@@ -1361,7 +1418,7 @@ void App::render()
 // Add a system for game logic processing
 void App::addOrderIndependentSystem(artemis::EntityProcessingSystem* p_system)
 {
-	m_orderIndependentSystems.push_back(p_system);
+	if (p_system!=NULL) m_orderIndependentSystems.push_back(p_system);
 }
 
 
