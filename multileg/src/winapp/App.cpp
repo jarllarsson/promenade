@@ -57,7 +57,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 {
 	int width = p_width,
 		height = p_height;
-	m_runOptimization = true;
+	m_runOptimization = false;
 	bool windowMode = true;
 	// Context
 	try
@@ -309,11 +309,11 @@ void App::run()
 			lLegHeight = scale*0.45f,
 			footHeight = scale*0.05f,
 			footLen = scale*0.3f;
-		int chars = 10;
+		int chars = 4;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = false;
-		float charOffsetX = 0.0f;
+		bool quadruped = true;
+		float charOffsetX = 10.0f;
 		if (quadruped)
 		{
 			lLegHeight = scale*0.4f,
@@ -325,6 +325,7 @@ void App::run()
 		int spineParts = 4;
 		if (m_runOptimization)
 		{
+			charOffsetX = 0.0f;
 			if (quadruped) chars = 5; else chars = 10;
 		}
 
@@ -344,7 +345,7 @@ void App::run()
 				for (int y = 0; y < legFrames; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, (float)-y*lfDist);
+					glm::vec3 pos = bodOffset + glm::vec3(0.0f, charPosY, (float)-y*lfDist);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
@@ -356,9 +357,11 @@ void App::run()
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 					legFrame.addComponent(lfRB);
 					if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
-					legFrame.addComponent(new TransformComponent(pos,
+					TransformComponent* tc = new TransformComponent(pos,
 						glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-						lfSize));
+						lfSize);
+					tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+					legFrame.addComponent(tc);
 
 					if (lockPos)
 					{
@@ -504,10 +507,12 @@ void App::run()
 							}
 							if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
 							if (i != 2)
-							{
-								childJoint.addComponent(new TransformComponent(legpos,
+							{			
+								tc = new TransformComponent(legpos,
 									glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-									boxSize));					// note scale, so full lengths
+									boxSize);// note scale, so full lengths
+								tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+								childJoint.addComponent(tc);
 							}
 							else // foot
 							{
@@ -522,9 +527,11 @@ void App::run()
 								//else// digitigrade back feet
 								{
 									glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
-									childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
+									tc = new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
 										rot,
-										boxSize));					// note scale, so full lengths
+										boxSize);					// note scale, so full lengths
+									tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+									childJoint.addComponent(tc);
 								}
 							}
 							MaterialComponent* mat = new MaterialComponent(colarr[(y + n) * 3 + i]);
@@ -552,7 +559,7 @@ void App::run()
 				float boxHeight = (lfDist - (hipCoronalOffset*0.5f * 2)) / (float)spineParts;
 				float spineHeight = lfHeight*0.75f;
 				glm::vec3 boxSize = glm::vec3(hipCoronalOffset, boxHeight, spineHeight); // note, we rotate it
-				glm::vec3 spinepos = pos + glm::vec3(x*charOffsetX, (lfHeight - spineHeight)*0.5f, -boxHeight*0.5f);
+				glm::vec3 spinepos = pos + glm::vec3(0.0f, (lfHeight - spineHeight)*0.5f, -boxHeight*0.5f);
 				// first spine joint is child to leg frame
 				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, hipCoronalOffset);
 				float jointYOffsetInParent = lfHeight*0.5f; // for sagittal displacement
@@ -589,9 +596,12 @@ void App::run()
 
 					if (drawAll || x == 0) spineJoint.addComponent(new RenderComponent());
 
-					spineJoint.addComponent(new TransformComponent(spinepos,
+
+					TransformComponent* tc = new TransformComponent(spinepos,
 						glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
-						boxSize));					// note scale, so full lengths
+						boxSize);
+					tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+					spineJoint.addComponent(tc);
 
 					MaterialComponent* mat = new MaterialComponent(colarr[s + 3]);
 					spineJoint.addComponent(mat);
@@ -667,7 +677,7 @@ void App::run()
 				for (int y = 0; y < 1; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, (float)-y);
+					glm::vec3 pos = bodOffset + glm::vec3(0.0f, charPosY, (float)-y);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
@@ -679,9 +689,12 @@ void App::run()
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 					legFrame.addComponent(lfRB);
 					if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
-					legFrame.addComponent(new TransformComponent(pos,
+
+					TransformComponent* tc = new TransformComponent(pos,
 						glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-						lfSize));
+						lfSize);
+					tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+					legFrame.addComponent(tc);
 
 					if (lockPos)
 					{
@@ -793,15 +806,20 @@ void App::run()
 							if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
 							if (i != 2)
 							{
-								childJoint.addComponent(new TransformComponent(legpos,
+								tc = new TransformComponent(legpos,
 									glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
-									boxSize));					// note scale, so full lengths
+									boxSize);// note scale, so full lengths
+								tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+								childJoint.addComponent(tc);
 							}
 							else // foot
 							{
-								childJoint.addComponent(new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
-									glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f)),
-									boxSize));					// note scale, so full lengths
+								glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
+								tc = new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
+									rot,
+									boxSize);					// note scale, so full lengths
+								tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+								childJoint.addComponent(tc);
 							}
 							MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
 							childJoint.addComponent(mat);

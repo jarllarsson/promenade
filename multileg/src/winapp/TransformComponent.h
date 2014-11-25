@@ -35,6 +35,7 @@ public:
 	void setPositionToMatrix(const glm::vec3& p_position);
 	void setRotationToMatrix(const glm::quat& p_rotation);
 	void setScaleToMatrix(const glm::vec3& p_scale);
+	void setPositionOffset(const glm::vec3& p_offset);
 
 	void setPosRotToMatrix(const glm::vec3& p_position, const glm::quat& p_rotation);
 	void setPosScaleToMatrix(const glm::vec3& p_position, const glm::vec3& p_scale);
@@ -50,6 +51,7 @@ public:
 
 	const glm::vec3& getPosition() { updateComponentsOnMatrixDirty(); return m_position; }
 	const glm::quat& getRotation() { updateComponentsOnMatrixDirty(); return m_rotation; }
+	const glm::vec3& getPositionOffset() { return m_positionOffset; }
 	const glm::vec3& getScale() { updateComponentsOnMatrixDirty(); return m_scale; }
 	const glm::mat4& getMatrix() const { return m_transform; }
 	const glm::mat4* getMatrixPtr() const { return &m_transform; }
@@ -68,6 +70,7 @@ public:
 	void unsetTransformRenderDirty();
 
 private:
+	glm::vec3 m_positionOffset;
 	glm::vec3 m_position;
 	glm::quat m_rotation;
 	glm::vec3 m_scale;

@@ -187,3 +187,8 @@ glm::vec3 TransformComponent::getBackward() const
 {
 	return MathHelp::transformDirection(getMatrixPosRot(), glm::vec3(0.0f, 0.0f, -1.0f));
 }
+
+void TransformComponent::setPositionOffset(const glm::vec3& p_offset)
+{
+	m_positionOffset = p_offset;
+}

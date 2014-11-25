@@ -992,13 +992,13 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 			if (m_useVFTorque)
 			{
 				chain = leg->getVFChain(ControllerComponent::STANDARD_CHAIN);
-				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				computeVFTorquesFromChain(p_outTVF,chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 				
 			if (m_useGCVFTorque && !isInControlledStance(lf, n, p_phi))
 			{
 				chain = leg->getVFChain(ControllerComponent::GRAVITY_COMPENSATION_CHAIN);
-				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				computeVFTorquesFromChain(p_outTVF,chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 		}	
 		// also compute GCVF for spine joints
@@ -1008,9 +1008,9 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 		if (m_useGCVFTorque && spineCount > 0)
 		{
 			chain = p_controller->m_spine.getGCVFChainFwd(); // front
-			computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			computeVFTorquesFromChain(p_outTVF,chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			chain = p_controller->m_spine.getGCVFChainBwd(); // back
-			computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			computeVFTorquesFromChain(p_outTVF,chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 		}
 	}
 }
@@ -1041,7 +1041,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 		glm::vec3 end = getJointPos(endJointIdx);
 		//getFootPos(p_lf, p_legIdx);
 		// Calculate the matrices
-		CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,						// Chain of DOFs to solve for
+		CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,// Chain of DOFs to solve for
 															end,							// Our end effector goal position
 															&m_VFs,							// All virtual forces
 															&m_jointWorldInnerEndpoints,	// All joint rotational axes

@@ -132,7 +132,7 @@ public:
 				const glm::mat4* readMat = transform->getMatrixPtr();
 				if (writeInstanceDat != NULL)
 				{
-					writeInstanceDat->m_transform = glm::transpose(*readMat);
+					writeInstanceDat->m_transform = glm::transpose(glm::translate(glm::mat4(), transform->getPositionOffset()) * (*readMat));
 			
 					// Optionals
 					if (materialIsDirty)
