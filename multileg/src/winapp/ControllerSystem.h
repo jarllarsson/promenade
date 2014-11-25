@@ -81,6 +81,7 @@ private:
 	std::vector<btRigidBody*>	m_jointRigidBodies;
 	std::vector<RigidBodyComponent*> m_rigidBodyRefs;
 	std::vector<glm::mat4>		m_jointWorldTransforms;
+	std::vector<ControllerComponent*>	m_jointControllerParent;
 	std::vector<float>			m_jointLengths;
 	std::vector<float>			m_jointMass;
 	std::vector<glm::vec4>		m_jointWorldInnerEndpoints;
@@ -192,7 +193,7 @@ private:
 	float getFootTransitionPhase(ControllerComponent::LegFrame* p_lf, float p_swingPhi);
 
 	// Internal helper functions
-	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform);
+	unsigned int addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform, ControllerComponent* p_controllerParent);
 	void saveJointMatrix(unsigned int p_rigidBodyIdx);
 	void saveJointWorldEndpoints(unsigned int p_idx, glm::mat4& p_worldMatPosRot);
 	void initControllerLocationAndVelocityStat(unsigned int p_idx, const glm::vec3& p_gaitGoalVelocity);

@@ -94,6 +94,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 		m_oldJointTorques[i] = m_jointTorques[i];
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
+
 	int controllerCount = (int)m_controllers.size();
 	if (m_controllers.size()>0)
 	{
@@ -193,7 +194,7 @@ void ControllerSystem::buildCheck()
 			// Create ROOT
 			RigidBodyComponent* rootRB = (RigidBodyComponent*)legFrameEntities->m_legFrameEntity->getComponent<RigidBodyComponent>();
 			TransformComponent* rootTransform = (TransformComponent*)legFrameEntities->m_legFrameEntity->getComponent<TransformComponent>();
-			unsigned int rootIdx = addJoint(rootRB, rootTransform);
+			unsigned int rootIdx = addJoint(rootRB, rootTransform, controller);
 			m_rigidBodyRefs.push_back(rootRB);
 			m_dbgJointEntities.push_back(legFrameEntities->m_legFrameEntity); // for easy debugging options
 			//
@@ -231,7 +232,7 @@ void ControllerSystem::buildCheck()
 					RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
 					ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
 					// Add the joint
-					unsigned int idx = addJoint(jointRB, jointTransform);
+					unsigned int idx = addJoint(jointRB, jointTransform, controller);
 					m_rigidBodyRefs.push_back(jointRB);
 					m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
 					// Get DOF on joint to chain
@@ -351,7 +352,7 @@ void ControllerSystem::buildCheck()
 					RigidBodyComponent* jointRB = (RigidBodyComponent*)jointEntity->getComponent<RigidBodyComponent>();
 					ConstraintComponent* parentLink = (ConstraintComponent*)jointEntity->getComponent<ConstraintComponent>();
 					// Add the joint
-					unsigned int idx = addJoint(jointRB, jointTransform);
+					unsigned int idx = addJoint(jointRB, jointTransform, controller);
 					m_rigidBodyRefs.push_back(jointRB);
 					m_dbgJointEntities.push_back(jointEntity); // for easy debugging options
 					// Get DOF on joint to GCVF chain, the spine does not use ordinary VFs, so we have to set up the base here
@@ -514,7 +515,7 @@ void ControllerSystem::repeatAppendChainPart(ControllerComponent::VFChain* p_leg
 	// stops adding when we have all specified joints AND have catched all its DOFs
 }
 
-unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform)
+unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform, ControllerComponent* p_controllerParent)
 {
 	m_jointRigidBodies.push_back(p_jointRigidBody->getRigidBody());
 	m_jointTorques.push_back(glm::vec3(0.0f));
@@ -523,6 +524,7 @@ unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, Tr
 	m_jointWorldTransforms.push_back(matPosRot);
 	m_jointLengths.push_back(p_jointTransform->getScale().y);
 	m_jointMass.push_back(p_jointRigidBody->getMass());
+	m_jointControllerParent.push_back(p_controllerParent);
 	// m_jointWorldTransforms.resize(m_jointRigidBodies.size());
 	// m_jointLengths.resize(m_jointRigidBodies.size());
 	m_jointWorldOuterEndpoints.resize(m_jointRigidBodies.size());

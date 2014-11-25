@@ -57,7 +57,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 {
 	int width = p_width,
 		height = p_height;
-	m_runOptimization = false;
+	m_runOptimization = true;
 	bool windowMode = true;
 	// Context
 	try
@@ -103,7 +103,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	//
 	m_triggerPause = false;
 	if (m_runOptimization)
-		m_triggerPause = true;
+		m_triggerPause = false;
 
 	//
 	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
@@ -153,7 +153,7 @@ void App::run()
 		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 	}
 	// Normal inits
-	bool dbgDrawAllChars = false;
+	bool dbgDrawAllChars = true;
 	double controllerSystemTimingMs = 0.0;
 	bool lockLFY_onRestart = false;
 	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
@@ -312,7 +312,8 @@ void App::run()
 		int chars = 10;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = true;
+		bool quadruped = false;
+		float charOffsetX = 0.0f;
 		if (quadruped)
 		{
 			lLegHeight = scale*0.4f,
@@ -343,7 +344,7 @@ void App::run()
 				for (int y = 0; y < legFrames; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, (float)-y*lfDist);
+					glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, (float)-y*lfDist);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
@@ -551,7 +552,7 @@ void App::run()
 				float boxHeight = (lfDist - (hipCoronalOffset*0.5f * 2)) / (float)spineParts;
 				float spineHeight = lfHeight*0.75f;
 				glm::vec3 boxSize = glm::vec3(hipCoronalOffset, boxHeight, spineHeight); // note, we rotate it
-				glm::vec3 spinepos = pos + glm::vec3(0.0f, (lfHeight - spineHeight)*0.5f, -boxHeight*0.5f);
+				glm::vec3 spinepos = pos + glm::vec3(x*charOffsetX, (lfHeight - spineHeight)*0.5f, -boxHeight*0.5f);
 				// first spine joint is child to leg frame
 				glm::vec3 parentSz = glm::vec3(boxSize.x, lfHeight, hipCoronalOffset);
 				float jointYOffsetInParent = lfHeight*0.5f; // for sagittal displacement
@@ -666,7 +667,7 @@ void App::run()
 				for (int y = 0; y < 1; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(/*x*3*/0.0f, charPosY, (float)-y);
+					glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, (float)-y);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;

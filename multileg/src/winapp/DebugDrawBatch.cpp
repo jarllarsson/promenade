@@ -1,7 +1,7 @@
 #include "DebugDrawBatch.h"
 
 
-bool DebugDrawBatch::m_enabled = true;
+bool DebugDrawBatch::m_enabled = false;
 
 void DebugDrawBatch::drawLine(const glm::vec3& p_start, const glm::vec3& p_end,
 	const Color4f& p_color)

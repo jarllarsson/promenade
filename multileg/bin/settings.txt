@@ -1,0 +1,39 @@
+FULLSCREEN					(0 for windowed, 1 for fullscreen)
+0
+
+WND_WIDTH					(window width in pixels)
+800
+
+WND_HEIGHT					(window height in pixels)
+600
+
+MODE							(optimization, run or measure)
+optimization
+
+POD								(biped or quadruped)
+biped
+
+CORE								(single or multi)
+single
+
+CHARCOUNT_SERIAL			(character count when executing serially)
+1
+
+CORE_COUNTS				(number of parallel invocations: when multi, character count=CORE_COUNTS*CHARCOUNT_SERIAL)
+1
+
+CHAR_OFFSET_X				(position offset along x axis between characters)
+10.0
+
+START_PAUSED				(0 start in play mode, 1 start paused)
+0
+
+OPT_STEPS					(optimization, number of steps)
+800
+
+OPT_WEIGHTS					(optimization, weights: fd fv fh fr fp)
+fd 1000.0
+fv 0.1
+fh 0.0
+fr 0.1
+fp 0.0
