@@ -336,13 +336,10 @@ void App::run()
 		
 
 		float charOffsetX = 10.0f;
-		//if (quadruped)
-		//{
-		//	lLegHeight = scale*0.4f;
-		//	footHeight = scale*0.05f;
-		//	footLen	= scale*0.2f;
-		//}
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
+
+		DEBUGPRINT((ToString(charPosY).c_str()));
+
 		float lfDist = 2.0f;
 		int spineParts = 4;
 		if (m_runOptimization)
