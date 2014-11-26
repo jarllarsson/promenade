@@ -23,7 +23,6 @@
 /// 20-5-2014 Jarl Larsson
 ///---------------------------------------------------------------------------------------
 
-//#define MULTI
 
 
 class ControllerSystem : public AdvancedEntitySystem
@@ -54,6 +53,7 @@ public:
 		glm::vec3 m_currentGroundPos;
 	};
 
+	static bool m_multithread;
 	// global debug
 	static bool m_useVFTorque;
 	static bool m_useGCVFTorque;
