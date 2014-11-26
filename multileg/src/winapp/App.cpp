@@ -100,6 +100,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_time = 0.0;
 	m_restart = false;
 	m_saveParams = false;
+	m_characterCreateType = BIPED;
 	//
 	m_triggerPause = false;
 	if (m_runOptimization)
@@ -138,7 +139,11 @@ App::~App()
 
 void App::run()
 {
-	if (m_bestParams==NULL) loadFloatArrayPrompt(m_bestParams);
+	if (m_bestParams == NULL)
+	{
+		loadFloatArrayPrompt(m_bestParams, 
+			m_characterCreateType == BIPED ? 2:3);
+	}
 	// Optimization init
 	int optimizationIterationCount = 0;
 	double bestOptimizationScore = FLT_MAX;
@@ -309,12 +314,11 @@ void App::run()
 			lLegHeight = scale*0.45f,
 			footHeight = scale*0.05f,
 			footLen = scale*0.3f;
-		int chars = 4;
+		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = true;
 		float charOffsetX = 10.0f;
-		if (quadruped)
+		if (m_characterCreateType == QUADRUPED)
 		{
 			lLegHeight = scale*0.4f,
 				footHeight = scale*0.05f;
@@ -326,10 +330,10 @@ void App::run()
 		if (m_runOptimization)
 		{
 			charOffsetX = 0.0f;
-			if (quadruped) chars = 5; else chars = 10;
+			if (m_characterCreateType == QUADRUPED) chars = 5; else chars = 10;
 		}
 
-		if (quadruped)
+		if (m_characterCreateType == QUADRUPED)
 		{
 #pragma region quadruped
 			for (int x = 0; x < chars; x++) // number of characters
@@ -507,7 +511,7 @@ void App::run()
 							}
 							if (drawAll || x == 0) childJoint.addComponent(new RenderComponent());
 							if (i != 2)
-							{			
+							{
 								tc = new TransformComponent(legpos,
 									glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 									boxSize);// note scale, so full lengths
@@ -656,7 +660,7 @@ void App::run()
 					controller.addComponent(recComp);
 
 				}
-				else if (m_bestParams!=NULL)// normal run and we have new param list loaded from file
+				else if (m_bestParams != NULL)// normal run and we have new param list loaded from file
 				{
 					controllerComp->setInitParams(*m_bestParams);
 				}
@@ -895,11 +899,11 @@ void App::run()
 		unsigned int oldSteps = physicsWorldHandler.getNumberOfInternalSteps();
 		m_time = 0.0;
 		bool shooting = false;
-		double optimizationDbgMaxscoreelem = 1.0f, 
-			optimizationDbgBparamsmaxelem = 1.0f, 
+		double optimizationDbgMaxscoreelem = 1.0f,
+			optimizationDbgBparamsmaxelem = 1.0f,
 			optimizationDbgBparamsminelem = 0.0f;
 		if (m_runOptimization)
-		{			
+		{
 			if (allOptimizationResults.size() > 1) optimizationDbgMaxscoreelem = *std::max_element(allOptimizationResults.begin(), allOptimizationResults.end());
 			if (m_bestParams != NULL && m_bestParams->size() > 1)
 			{
@@ -924,7 +928,7 @@ void App::run()
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(10.0f, 0.0f, 0.0f), colarr[0], colarr[1]);
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 10.0f, 0.0f), colarr[3], colarr[4]);
 				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
-				
+
 				// update timing debug var
 				controllerSystemTimingMs = m_controllerSystem->getLatestTiming() * 1000.0f;
 
@@ -974,7 +978,7 @@ void App::run()
 				}
 
 
-				
+
 				// ====================================
 				//			   Render 3D
 				// ====================================
@@ -1002,12 +1006,12 @@ void App::run()
 
 				// Tick the bullet world. Keep in mind that bullet takes seconds
 				// timeStep < maxSubSteps * fixedTimeStep
-	#if defined(MEASURE_RBODIES)
+#if defined(MEASURE_RBODIES)
 				if (!optRealTimeMode)
 					dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1+(physicsStep / (m_timeScale*fixedStep)), (btScalar)physicsStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
 				else
 					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 10, (btScalar)physicsStep);
-	#else
+#else
 				if (m_runOptimization)
 				{
 					if (!optRealTimeMode)
@@ -1016,15 +1020,15 @@ void App::run()
 						dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 10, (btScalar)physicsStep);
 				}
 				else
-					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/,  1, (btScalar)physicsStep);
-	#endif
+					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 1, (btScalar)physicsStep);
+#endif
 				// ========================================================
 
 				unsigned int steps = physicsWorldHandler.getNumberOfInternalSteps();
 
 				prevTimeStamp = currTimeStamp;
 
-	#ifdef MEASURE_RBODIES
+#ifdef MEASURE_RBODIES
 				if (m_runOptimization)
 				{
 					if (optimizationIterationCount >= 5) run = false;
@@ -1033,7 +1037,7 @@ void App::run()
 				{
 					if (steps >= 600) run = false;
 				}
-	#endif
+#endif
 				if (m_runOptimization)
 				{
 					if (!optRealTimeMode)
@@ -1057,13 +1061,13 @@ void App::run()
 				//if (steps >= 1000) run = false;
 				// Game Clock part of the loop
 				// ========================================================
-				double dt=0.0;
-	#if defined(MEASURE_RBODIES)
+				double dt = 0.0;
+#if defined(MEASURE_RBODIES)
 				if (!optRealTimeMode)
 					dt = fixedStep;
 				else
 					dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
-	#else
+#else
 				if (m_runOptimization)
 				{
 					if (!optRealTimeMode)
@@ -1075,7 +1079,7 @@ void App::run()
 				{
 					dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
 				}
-	#endif
+#endif
 				// Game clock based updates
 				while (dt >= gameTickS)
 				{
@@ -1165,39 +1169,45 @@ void App::run()
 		}
 
 
-	#ifdef MEASURE_RBODIES
+#ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.saveMeasurement("Time: "+ToString(time));
 		rigidBodyStateDbgRecorder.saveMeasurement("Steps: "+ToString(physicsWorldHandler.getNumberOfInternalSteps()));
-	#ifndef MULTI
-	#ifdef _DEBUG
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
-	#else
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_STCPU");
-	#endif
-	#else
-	#ifdef _DEBUG
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_MTCPU");
-	#else
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_MTCPU");
-	#endif
-	#endif
-	#endif
+		if (!ControllerSystem::m_multithread)
+		{
+#ifdef _DEBUG
+			rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
+#else
+			rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_STCPU");
+#endif
+		}
+		else
+		{
+#ifdef _DEBUG
+			rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_MTCPU");
+#else
+			rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_MTCPU");
+#endif
+		}
+#endif
 		///////////////////////////////////
 
 		controllerPerfRecorder.finishRound();
-	#ifndef MULTI
-	#ifdef _DEBUG
-		controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_STCPU");
-	#else
-		controllerPerfRecorder.saveResults("../output/controllerPerf_Release_STCPU");
-	#endif
-	#else
-	#ifdef _DEBUG
-		controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_MTCPU");
-	#else
-		controllerPerfRecorder.saveResults("../output/controllerPerf_Release_MTCPU");
-	#endif
-	#endif
+		if (!ControllerSystem::m_multithread)
+		{
+			#ifdef _DEBUG
+			controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_STCPU");
+			#else
+			controllerPerfRecorder.saveResults("../output/controllerPerf_Release_STCPU");
+			#endif
+		}
+		else
+		{
+			#ifdef _DEBUG
+			controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_MTCPU");
+			#else
+			controllerPerfRecorder.saveResults("../output/controllerPerf_Release_MTCPU");
+			#endif
+		}
 
 
 		// Clean up

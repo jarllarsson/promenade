@@ -20,7 +20,7 @@ CMatrix JacobianHelper::calculateVFChainJacobian(const ControllerComponent::VFCh
 		// Start calculating the jacobian for the current DOF
 		glm::vec3 jointAxisPos = MathHelp::toVec3((*p_jointWorldAxes)[jointIdx]);
 		glm::vec3 vf = (*p_vfList)[p_chain.m_vfIdxList[i]];
-		glm::vec3 dir = (p_currentChainEndpointGoalPos + vf) - jointAxisPos;
+		glm::vec3 dir = p_currentChainEndpointGoalPos + vf - jointAxisPos;
 		//Debug.Log(linkPos.ToString());
 		const glm::vec3* dof = &p_chain.m_DOFChain[i];
 		// Solve for given axis
