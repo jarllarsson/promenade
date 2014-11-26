@@ -52,6 +52,7 @@
       <Filter>Optimization</Filter>
     </ClInclude>
     <ClInclude Include="FileHandler.h" />
+    <ClInclude Include="SettingsData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />
@@ -75,5 +76,6 @@
     <ClCompile Include="ParamChanger.cpp">
       <Filter>Optimization</Filter>
     </ClCompile>
+    <ClCompile Include="SettingsData.cpp" />
   </ItemGroup>
 </Project>

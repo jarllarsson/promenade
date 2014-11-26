@@ -121,3 +121,8 @@ void loadFloatArrayPrompt(std::vector<float>*& p_outData, int p_fileTypeIdx)
 #endif
 	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
 }
+
+void loadSettings(SettingsData& p_settingsfile)
+{
+	loadFloatArray(p_outData, path);
+}

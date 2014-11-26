@@ -13,13 +13,13 @@ optimization
 POD								(biped or quadruped)
 biped
 
-CORE								(single or multi)
-single
+EXEC_MODE								(serial or parallel)
+serial
 
 CHARCOUNT_SERIAL			(character count when executing serially)
 1
 
-CORE_COUNTS				(number of parallel invocations: when multi, character count=CORE_COUNTS*CHARCOUNT_SERIAL)
+PARA_INVOC				(number of parallel invocations: when parallel, character count=PARA_INVOC*CHARCOUNT_SERIAL)
 1
 
 CHAR_OFFSET_X				(position offset along x axis between characters)
