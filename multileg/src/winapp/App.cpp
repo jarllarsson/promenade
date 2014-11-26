@@ -326,13 +326,6 @@ void App::run()
 		{	
 			quadruped = false;
 		}
-
-// 		if (quadruped)
-// 			DEBUGPRINT(("qQUADRUPED"));
-// 		else if (!quadruped)
-// 			DEBUGPRINT(("qBIPED"));
-// 		else
-// 			DEBUGPRINT(("qWTF"));
 		
 
 		float charOffsetX = 10.0f;
