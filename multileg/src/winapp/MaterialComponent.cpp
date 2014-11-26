@@ -35,7 +35,7 @@ const Color4f& MaterialComponent::getColorRGBA()
 	return m_highLightFac?dawnBringerPalRGBA[COL_YELLOW]:m_color; 
 }
 
-const Color3f& MaterialComponent::getColorRGB()
+const Color3f MaterialComponent::getColorRGB()
 { 
 	return m_highLightFac?dawnBringerPalRGB[COL_YELLOW]:toColor3f(m_color); 
 }

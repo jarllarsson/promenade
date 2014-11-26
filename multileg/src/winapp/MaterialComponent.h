@@ -25,7 +25,7 @@ public:
 	void setColorRGBA(const Color4f& p_color);
 
 	const Color4f& getColorRGBA();
-	const Color3f& getColorRGB();
+	const Color3f getColorRGB();
 
 	bool isMaterialRenderDirty();
 	void unsetMaterialRenderDirty();
