@@ -58,6 +58,11 @@ protected:
 
 	void render();
 private:
+	enum CharCreateType
+	{
+		BIPED = 0, QUADRUPED = 1
+	};
+
 	bool pumpMessage(MSG& p_msg);
 	void processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_systemCollection);
 
@@ -78,6 +83,7 @@ private:
 	ControllerSystem*		m_controllerSystem;
 	ControllerOptimizationSystem*		m_optimizationSystem;
 
+	CharCreateType m_characterCreateType;
 	double m_time;
 	float m_timeScale;
 	bool m_timeScaleToggle;

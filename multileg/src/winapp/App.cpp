@@ -85,10 +85,11 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_debugDrawBatch = new DebugDrawBatch();
 	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),
 		(void*)m_graphicsDevice->getDeviceContextPointer(), m_debugDrawBatch);
-	m_debugDrawer->setDrawArea(p_width, p_height);
+	m_debugDrawer->setDrawArea((float)p_width, (float)p_height);
 
 	m_bestParams = NULL;
 
+	m_characterCreateType = CharCreateType::BIPED;
 	m_fpsUpdateTick = 0.0f;
 	m_controller = new TempController(-8.0f, 2.5f, 0.0f, 0.0f);
 	m_controller->rotate(glm::vec3(0.0f, -HALFPI, 0.0f));
@@ -138,7 +139,11 @@ App::~App()
 
 void App::run()
 {
-	if (m_bestParams==NULL) loadFloatArrayPrompt(m_bestParams);
+	if (m_bestParams == NULL)
+	{
+		int filetype = m_characterCreateType == BIPED ? 2 : 3;
+		loadFloatArrayPrompt(m_bestParams,filetype);
+	}
 	// Optimization init
 	int optimizationIterationCount = 0;
 	double bestOptimizationScore = FLT_MAX;
@@ -165,7 +170,6 @@ void App::run()
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use VF t", Toolbar::BOOL, &ControllerSystem::m_useVFTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use GCVF t", Toolbar::BOOL, &ControllerSystem::m_useGCVFTorque);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use PD t", Toolbar::BOOL, &ControllerSystem::m_usePDTorque);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Buffer LF feedbk", Toolbar::BOOL, &ControllerSystem::m_bufferLFFeedbackTorque);
 	m_toolBar->addSeparator(Toolbar::PLAYER, "Visual Debug");
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Enable DbgDraw", Toolbar::BOOL, &m_debugDrawBatch->m_enabled);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowVFVectors);
@@ -175,7 +179,6 @@ void App::run()
 
 
 	ControllerSystem::m_useLFFeedbackTorque = true;
-	ControllerSystem::m_bufferLFFeedbackTorque = true;
 	ControllerSystem::m_useVFTorque = true;
 	ControllerSystem::m_useGCVFTorque = true;
 	ControllerSystem::m_usePDTorque = true;
@@ -259,7 +262,8 @@ void App::run()
 		ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
 		//ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
 		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
-		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(&controllerPerfRecorder));
+		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(ControllerSystem::SERIAL,
+																						   &controllerPerfRecorder));
 		PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
 		m_optimizationSystem = NULL;
 		if (m_runOptimization)
@@ -304,23 +308,41 @@ void App::run()
 		float hipCoronalOffset = scale*0.2f; // coronal distance between hip joints and center
 		glm::vec3 bodOffset;
 		// size setups
-		float	lfHeight = scale*0.48f,
-			uLegHeight = scale*0.45f,
-			lLegHeight = scale*0.45f,
-			footHeight = scale*0.05f,
-			footLen = scale*0.3f;
-		int chars = 4;
+		float	lfHeight	= scale*0.48f;
+		float	uLegHeight	= scale*0.45f;
+		float	lLegHeight	= scale*0.45f;
+		float	footHeight	= scale*0.05f;
+		float	footLen		= scale*0.3f;
+		int chars = 1;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
-		bool quadruped = true;
-		float charOffsetX = 10.0f;
-		if (quadruped)
+		bool quadruped = false;
+		
+		if (m_characterCreateType == CharCreateType::QUADRUPED) 
 		{
-			lLegHeight = scale*0.4f,
-				footHeight = scale*0.05f;
-			footLen = scale*0.2f;
+			quadruped = true;
 		}
-		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + /*1.5f**/footHeight/*scale*0.2f*/;
+		else if (m_characterCreateType == CharCreateType::BIPED) 
+		{	
+			quadruped = false;
+		}
+
+// 		if (quadruped)
+// 			DEBUGPRINT(("qQUADRUPED"));
+// 		else if (!quadruped)
+// 			DEBUGPRINT(("qBIPED"));
+// 		else
+// 			DEBUGPRINT(("qWTF"));
+		
+
+		float charOffsetX = 10.0f;
+		//if (quadruped)
+		//{
+		//	lLegHeight = scale*0.4f;
+		//	footHeight = scale*0.05f;
+		//	footLen	= scale*0.2f;
+		//}
+		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
 		float lfDist = 2.0f;
 		int spineParts = 4;
 		if (m_runOptimization)
@@ -331,7 +353,11 @@ void App::run()
 
 		if (quadruped)
 		{
-#pragma region quadruped
+			lLegHeight = scale*0.4f;
+			footHeight = scale*0.05f;
+			footLen = scale*0.2f;
+			charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
+#pragma region quadrupedtype
 			for (int x = 0; x < chars; x++) // number of characters
 			{
 				vector<artemis::Entity*> charLFs;
@@ -365,7 +391,7 @@ void App::run()
 
 					if (lockPos)
 					{
-						float lck = lockLFY_onRestart ? 0 : 1;
+						float lck = lockLFY_onRestart ? 0.0f : 1.0f;
 						lfRB->setLinearFactor(glm::vec3(lck, 1, 1));
 						lfRB->setAngularFactor(glm::vec3(1, lck, lck));
 					}
@@ -445,7 +471,7 @@ void App::run()
 									upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								}
 								segmentMass = /*scale**/4.0f;
-								float height = lLegHeight;
+								float kneeheight = lLegHeight;
 								/*if (y == 0) // front legs
 									height = height*0.8f;*/
 								boxSize = glm::vec3(scale*0.1f, lLegHeight, scale*0.1f);
@@ -453,7 +479,7 @@ void App::run()
 								{
 									if (n == 0)
 									{
-										lLegLens.push_back(height + thisFootHeight);
+										lLegLens.push_back(kneeheight + thisFootHeight);
 										kneeFlip.push_back(y == 1 ? 1 : -1);
 									}
 								}
@@ -645,9 +671,9 @@ void App::run()
 					// as the "ghost" reference to measure for leg movements (measure physics result to kinematic target)
 					// If this is another iteration, or another controller, add the reference ghost that we saved in the beginning.
 					// The ghost is thus not changed between runs or controllers, everyone measures to the same reference.
-					for (int r = 0; r < controllerComp->getLegFrameCount(); r++)
+					for (unsigned int r = 0; r < controllerComp->getLegFrameCount(); r++)
 					{
-						if (x == 0 && r >= baseOptimizationReferenceMovementControllers.size())
+						if (x == 0 && r >= (unsigned int)baseOptimizationReferenceMovementControllers.size())
 						{
 							baseOptimizationReferenceMovementControllers.push_back(ReferenceLegMovementController(controllerComp, controllerComp->getLegFrame(r), 2, kneeFlip[r]));
 						}
@@ -662,7 +688,7 @@ void App::run()
 				}
 				controller.refresh();
 			}
-#pragma endregion quadruped
+#pragma endregion quadrupedtype
 		}
 		else
 		{
@@ -698,7 +724,7 @@ void App::run()
 
 					if (lockPos)
 					{
-						float lck = lockLFY_onRestart ? 0 : 1;
+						float lck = lockLFY_onRestart ? 0.0f : 1.0f;
 						lfRB->setLinearFactor(glm::vec3(lck, 1, 1));
 						lfRB->setAngularFactor(glm::vec3(1, lck, lck));
 					}
@@ -1336,7 +1362,7 @@ void App::handleContext(double p_dt, double p_physDt, unsigned int p_physSteps)
 		int width = sz.first, height = sz.second;
 		m_graphicsDevice->updateResolution(width,height);
 		m_toolBar->setWindowSize(width, height);
-		m_debugDrawer->setDrawArea(width, height);
+		m_debugDrawer->setDrawArea((float)width, (float)height);
 	}
 	// Print fps in window head border
 	m_fpsUpdateTick -= (float)p_dt;
@@ -1358,7 +1384,8 @@ void App::gameUpdate( double p_dt )
 	if (m_saveParams)
 	{
 		if (m_bestParams != NULL)
-			saveFloatArrayPrompt(m_bestParams);
+			saveFloatArrayPrompt(m_bestParams, 
+								 m_characterCreateType == BIPED ? 2 : 3);
 		m_saveParams = false;
 	}
 

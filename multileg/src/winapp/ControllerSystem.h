@@ -59,7 +59,6 @@ public:
 	static bool m_useGCVFTorque;
 	static bool m_usePDTorque;
 	static bool m_useLFFeedbackTorque;
-	static bool m_bufferLFFeedbackTorque;
 	static float m_torqueLim;
 
 	static bool m_dbgShowVFVectors;
@@ -89,9 +88,15 @@ private:
 	// Other joint run time data, for debugging
 	std::vector<artemis::Entity*>	m_dbgJointEntities;
 public:
-	ControllerSystem(MeasurementBin<float>* p_perfMeasurer=NULL)
+	enum ExecutionLayout
+	{
+		SERIAL, PARALLEL
+	};
+	ControllerSystem(ExecutionLayout p_execLayout,
+					MeasurementBin<float>* p_perfMeasurer=NULL)
 	{
 		addComponentType<ControllerComponent>();
+		m_executionSetup = p_execLayout;
 		m_runTime = 0.0f;
 		m_steps = 0;
 		//addComponentType<RigidBodyComponent>();
@@ -206,6 +211,7 @@ private:
 	// global variables
 	float m_runTime;
 	int m_steps;
+	ExecutionLayout m_executionSetup;
 
 	// Dbg
 	MeasurementBin<float>* m_perfRecorder;

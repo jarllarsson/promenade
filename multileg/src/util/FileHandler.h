@@ -59,7 +59,7 @@ bool loadFloatArray(std::vector<float>* p_outData,
 }
 
 
-void saveFloatArrayPrompt(std::vector<float>* p_inData)
+void saveFloatArrayPrompt(std::vector<float>* p_inData, int p_fileTypeIdx)
 {
 	string path = "../output/sav/biptest";
 #ifndef _DEBUG
@@ -71,8 +71,8 @@ void saveFloatArrayPrompt(std::vector<float>* p_inData)
 	ofn.lpstrFile = szFile;
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
-	ofn.nFilterIndex = 1;
+	ofn.lpstrFilter = "All\0*.*\0Biped Gait\0*.bgait\0Quadruped Gait\0*.qgait\0";
+	ofn.nFilterIndex = p_fileTypeIdx;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;
@@ -88,8 +88,7 @@ void saveFloatArrayPrompt(std::vector<float>* p_inData)
 #endif
 	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
 }
-
-void loadFloatArrayPrompt(std::vector<float>*& p_outData)
+void loadFloatArrayPrompt(std::vector<float>*& p_outData, int p_fileTypeIdx)
 {
 	string path = "../output/sav/biptest";
 #ifndef _DEBUG
@@ -101,8 +100,8 @@ void loadFloatArrayPrompt(std::vector<float>*& p_outData)
 	ofn.lpstrFile = szFile;
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);
-	ofn.lpstrFilter = "All\0*.*\0Text\0*.TXT\0";
-	ofn.nFilterIndex = 1;
+	ofn.lpstrFilter = "All\0*.*\0Biped Gait\0*.bgait\0Quadruped Gait\0*.qgait\0";
+	ofn.nFilterIndex = p_fileTypeIdx;
 	ofn.lpstrFileTitle = NULL;
 	ofn.nMaxFileTitle = 0;
 	ofn.lpstrInitialDir = NULL;

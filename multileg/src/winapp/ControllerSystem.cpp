@@ -17,7 +17,6 @@ bool ControllerSystem::m_useVFTorque=true;
 bool ControllerSystem::m_useGCVFTorque=true;
 bool ControllerSystem::m_usePDTorque=true;
 bool ControllerSystem::m_useLFFeedbackTorque = true;
-bool ControllerSystem::m_bufferLFFeedbackTorque = true;
 bool ControllerSystem::m_dbgShowVFVectors = true;
 bool ControllerSystem::m_dbgShowGCVFVectors = true;
 bool ControllerSystem::m_dbgShowTAxes = true;
@@ -107,32 +106,34 @@ void ControllerSystem::fixedUpdate(float p_dt)
 
 		// Start with making the controllers parallel only.
 		// They still write to a global torque list, but without collisions.
-#ifndef MULTI
-		// Single threaded implementation
-		for (int n = 0; n < controllerCount; n++)
+		if (m_executionSetup==SERIAL)
 		{
-			ControllerComponent* controller = m_controllers[(unsigned int)n];
-			// Run controller code here
-			controllerUpdate((unsigned int)n, p_dt);
+			// Single threaded implementation
+			for (int n = 0; n < controllerCount; n++)
+			{
+				ControllerComponent* controller = m_controllers[(unsigned int)n];
+				// Run controller code here
+				controllerUpdate((unsigned int)n, p_dt);
+			}
 		}
-#else
-		// Multi threaded CPU implementation
-		//concurrency::combinable<glm::vec3> sumtorques;
-		dbgDrawer()->m_enabled = false;
-		concurrency::parallel_for(0, controllerCount, [&](int n) {
-			ControllerComponent* controller = m_controllers[n];
-			// Run controller code here
-			controllerUpdate(n, p_dt);
-		});
-		/*concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
-			unsigned int tIdx = legChain->jointIDXChain[i];
-			glm::vec3 torqueBase = legChain->DOFChain[i];
-			glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
-			m_jointTorques[tIdx] += torqueBase*13.0f;
-		});*/
-	
+		else
+		{
+			// Multi threaded CPU implementation
+			//concurrency::combinable<glm::vec3> sumtorques;
+			dbgDrawer()->m_enabled = false;
+			concurrency::parallel_for(0, controllerCount, [&](int n) {
+				ControllerComponent* controller = m_controllers[n];
+				// Run controller code here
+				controllerUpdate(n, p_dt);
+			});
+			/*concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
+				unsigned int tIdx = legChain->jointIDXChain[i];
+				glm::vec3 torqueBase = legChain->DOFChain[i];
+				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
+				m_jointTorques[tIdx] += torqueBase*13.0f;
+				});*/
 
-#endif
+		}
 
 	}
 	else
