@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include "ToString.h"
+#include "SettingsData.h"
 
 bool write_file_binary (std::string const & filename, 
 						char const * data, size_t const bytes)
@@ -57,6 +58,7 @@ bool loadFloatArray(std::vector<float>* p_outData,
 	is.close();
 	return true;
 }
+
 
 
 void saveFloatArrayPrompt(std::vector<float>* p_inData, int p_fileTypeIdx)
@@ -122,7 +124,79 @@ void loadFloatArrayPrompt(std::vector<float>*& p_outData, int p_fileTypeIdx)
 	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
 }
 
-void loadSettings(SettingsData& p_settingsfile)
+bool loadSettings(SettingsData& p_settingsfile)
 {
-	loadFloatArray(p_outData, path);
+	string path = "../settings.txt";
+	std::ifstream is;
+	is.open(path.c_str(), std::ios::in);
+	if (!is.good() || !is.is_open())
+		return false;
+	//is>>length; // read size
+	std::string tmpStr;
+	int tmpInt = 0;
+	float tmpFlt = 0.0f;
+	auto readDiscardHeader = [](std::ifstream* p_is)->void // explicit return type "->void"
+	{
+		std::string stmp="x";
+		do { std::getline(*p_is, stmp); } while (stmp == "");
+	};
+	// Fullscreen
+	std::getline(is, tmpStr); // throwaway title
+	is >> tmpInt;
+	p_settingsfile.m_fullscreen = tmpInt == 0 ? false : true;
+	// window width
+	readDiscardHeader(&is);
+	is >> tmpInt;
+	p_settingsfile.m_wwidth = tmpInt;
+	// window height
+	readDiscardHeader(&is);
+	is >> tmpInt;
+	p_settingsfile.m_wheight = tmpInt;
+	// mode
+	readDiscardHeader(&is);
+	std::getline(is, tmpStr);
+	p_settingsfile.m_mode = tmpStr;
+	// pod
+	readDiscardHeader(&is);
+	std::getline(is, tmpStr);
+	p_settingsfile.m_pod = tmpStr;
+	// exec mode
+	readDiscardHeader(&is);
+	std::getline(is, tmpStr);
+	p_settingsfile.m_execMode = tmpStr;
+	// charcount serial
+	readDiscardHeader(&is);
+	is >> tmpInt;
+	p_settingsfile.m_charcount_serial = tmpInt;
+	// parallel invocs
+	readDiscardHeader(&is);
+	is >> tmpInt;
+	p_settingsfile.m_parallel_invocs = tmpInt;
+	// char offset X
+	readDiscardHeader(&is);
+	is >> tmpFlt;
+	p_settingsfile.m_charOffsetX = tmpFlt;
+	// start paused
+	readDiscardHeader(&is);
+	is >> tmpInt;
+	p_settingsfile.m_startPaused = tmpInt == 0 ? false : true;
+	// op steaps
+	readDiscardHeader(&is);
+	is >> tmpInt;
+	p_settingsfile.m_optimizationSteps = tmpInt;
+	// optimization weights
+	readDiscardHeader(&is);
+	std::getline(is, tmpStr); // extra header here
+	is >> tmpFlt; p_settingsfile.m_optW_fd = tmpFlt;
+	readDiscardHeader(&is);
+	is >> tmpFlt; p_settingsfile.m_optW_fv = tmpFlt;
+	readDiscardHeader(&is);
+	is >> tmpFlt; p_settingsfile.m_optW_fh = tmpFlt;
+	readDiscardHeader(&is);
+	is >> tmpFlt; p_settingsfile.m_optW_fr = tmpFlt;
+	readDiscardHeader(&is);
+	is >> tmpFlt; p_settingsfile.m_optW_fp = tmpFlt;
+
+	is.close();
+	return true;
 }

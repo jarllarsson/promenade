@@ -144,6 +144,8 @@ void App::run()
 		int filetype = m_characterCreateType == BIPED ? 2 : 3;
 		loadFloatArrayPrompt(m_bestParams,filetype);
 	}
+	SettingsData settingsData;
+	loadSettings(settingsData);
 	// Optimization init
 	int optimizationIterationCount = 0;
 	double bestOptimizationScore = FLT_MAX;

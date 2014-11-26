@@ -1,5 +1,5 @@
 FULLSCREEN					(0 for windowed, 1 for fullscreen)
-0
+1
 
 WND_WIDTH					(window width in pixels)
 800
