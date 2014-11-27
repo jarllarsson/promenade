@@ -95,8 +95,12 @@ private:
 	bool m_saveParams;
 	bool m_runOptimization;
 
-	int m_initWindowWidth, m_initWindowHeight;
-	bool m_initWindowMode;
+	int   m_initWindowWidth, m_initWindowHeight;
+	bool  m_initWindowMode;
+	int   m_initExecSetup;
+	int   m_initCharCountSerial;
+	int   m_initParallelInvocCount;
+	float m_initCharOffset;
 
 	std::vector<float>* m_bestParams;
 

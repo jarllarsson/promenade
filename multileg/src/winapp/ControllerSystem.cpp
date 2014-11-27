@@ -104,11 +104,11 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			writeFeetCollisionStatus(controller);
 		}
 
-		// Start with making the controllers parallel only.
-		// They still write to a global torque list, but without collisions.
 		if (m_executionSetup==SERIAL)
 		{
+			// =====================================
 			// Single threaded implementation
+			// =====================================
 			for (int n = 0; n < controllerCount; n++)
 			{
 				ControllerComponent* controller = m_controllers[(unsigned int)n];
@@ -118,21 +118,15 @@ void ControllerSystem::fixedUpdate(float p_dt)
 		}
 		else
 		{
+			// =====================================
 			// Multi threaded CPU implementation
-			//concurrency::combinable<glm::vec3> sumtorques;
+			// =====================================
 			dbgDrawer()->m_enabled = false;
 			concurrency::parallel_for(0, controllerCount, [&](int n) {
 				ControllerComponent* controller = m_controllers[n];
 				// Run controller code here
 				controllerUpdate(n, p_dt);
 			});
-			/*concurrency::parallel_for(0, (int)legChain->getSize(), [&](int i) {
-				unsigned int tIdx = legChain->jointIDXChain[i];
-				glm::vec3 torqueBase = legChain->DOFChain[i];
-				glm::quat rot = glm::quat(torqueBase)*glm::quat(m_jointWorldTransforms[tIdx]);
-				m_jointTorques[tIdx] += torqueBase*13.0f;
-				});*/
-
 		}
 
 	}

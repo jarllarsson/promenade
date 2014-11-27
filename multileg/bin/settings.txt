@@ -2,19 +2,19 @@ FULLSCREEN					(0 for windowed, 1 for fullscreen)
 0
 
 WND_WIDTH					(window width in pixels)
-800
+1280
 
 WND_HEIGHT					(window height in pixels)
-600
+800
 
-MODE							(optimization, run or measure)
+MODE							(optimization(short: o), run(short: r) or measure(short: m))
 run
 
-POD								(biped or quadruped)
-biped
+POD								(biped(short: b) or quadruped(short: q))
+q
 
-EXEC_MODE					(serial or parallel)
-serial
+EXEC_MODE					(serial(short: s) or parallel(short: p))
+s
 
 CHARCOUNT_SERIAL			(character count when executing serially)
 1
@@ -23,7 +23,7 @@ PARA_INVOC					(number of parallel invocations: when parallel, character count=P
 1
 
 CHAR_OFFSET_X				(position offset along x axis between characters)
-10.0
+2.0
 
 START_PAUSED				(0 start in play mode, 1 start paused)
 0

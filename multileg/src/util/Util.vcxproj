@@ -166,6 +166,7 @@
     <ClCompile Include="CMatrix.cpp" />
     <ClCompile Include="ColorPalettes.cpp" />
     <ClCompile Include="CurrentPathHelper.cpp" />
+    <ClCompile Include="FileHandler.cpp" />
     <ClCompile Include="MathHelp.cpp" />
     <ClCompile Include="MeasurementBin.cpp" />
     <ClCompile Include="OptimizableHelper.cpp" />

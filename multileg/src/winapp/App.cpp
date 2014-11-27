@@ -42,6 +42,7 @@
 #include "ControllerOptimizationSystem.h"
 #include "ReferenceLegMovementController.h"
 #include <FileHandler.h>
+#include <SettingsData.h>
 
 
 
@@ -62,6 +63,10 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_initWindowHeight = p_height;
 	m_runOptimization = false;
 	m_initWindowMode = true;
+	m_initExecSetup = 0;
+	m_initCharCountSerial = 1;
+	m_initParallelInvocCount = 1;
+	m_initCharOffset = 0.0f;
 
 	m_bestParams = NULL;
 
@@ -78,8 +83,6 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_saveParams = false;
 	//
 	m_triggerPause = false;
-	if (m_runOptimization)
-		m_triggerPause = false;
 
 	m_gravityStat = true;
 	m_oldGravityStat = true;
@@ -99,6 +102,8 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 		int filetype = m_characterCreateType == BIPED ? 2 : 3;
 		loadFloatArrayPrompt(m_bestParams, filetype);
 	}
+	if (m_runOptimization) // no matter load settings, we don't pause at optimization
+		m_triggerPause = false;
 	// ====================================
 
 
@@ -287,7 +292,17 @@ void App::run()
 		ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
 		//ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
 		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
-		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(ControllerSystem::SERIAL,
+		ControllerSystem::ExecutionLayout execMode = ControllerSystem::SERIAL;
+		if (m_initExecSetup == 1)
+		{
+			execMode = ControllerSystem::PARALLEL;
+			m_toolBar->addLabel(Toolbar::PERFORMANCE, "PARALLEL");
+		}
+		else
+		{
+			m_toolBar->addLabel(Toolbar::PERFORMANCE, "SERIAL");
+		}
+		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(execMode,
 																						   &controllerPerfRecorder));
 		PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
 		m_optimizationSystem = NULL;
@@ -338,7 +353,7 @@ void App::run()
 		float	lLegHeight	= scale*0.45f;
 		float	footHeight	= scale*0.05f;
 		float	footLen		= scale*0.3f;
-		int chars = 1;
+		int chars = m_initCharCountSerial;
 		bool lockPos = true;
 		bool drawAll = dbgDrawAllChars;
 		bool quadruped = false;
@@ -353,7 +368,7 @@ void App::run()
 		}
 		
 
-		float charOffsetX = 10.0f;
+		float charOffsetX = m_initCharOffset;
 		float charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
 
 		DEBUGPRINT((ToString(charPosY).c_str()));
@@ -568,6 +583,8 @@ void App::run()
 								//else// digitigrade back feet
 								{
 									glm::quat rot = glm::quat(glm::vec3(-HALFPI, 0.0f, 0.0f));
+									// feet fly up for quadrupeds, optimize this for more correct: glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, boxSize.y*0.5f - jointYOffsetInChild),
+
 									tc = new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
 										rot,
 										boxSize);					// note scale, so full lengths
@@ -1507,16 +1524,44 @@ void App::initFromSettings(SettingsData& p_settings)
 	m_initWindowMode = !p_settings.m_fullscreen;
 	m_initWindowWidth = p_settings.m_wwidth;
 	m_initWindowHeight = p_settings.m_wheight;
-	if (p_settings.m_mode == "optimization")
+	if (p_settings.m_mode == "o")
 	{
 		m_runOptimization = true;
+	}
+	else if (p_settings.m_mode == "m")
+	{
+		// TODO! NOT IMPLEMENTED
 	}
 	else
 	{
 		m_runOptimization = false;
 	}
-	if (p_settings.m_pod == "quadruped")
+	if (p_settings.m_pod == "q")
 		m_characterCreateType = CharCreateType::QUADRUPED;
 	else
 		m_characterCreateType = CharCreateType::BIPED;
+	
+	if (p_settings.m_execMode == "p")
+		m_initExecSetup = 1;
+	else
+		m_initExecSetup = 0;
+	m_initCharCountSerial=p_settings.m_charcount_serial;
+	m_initParallelInvocCount=p_settings.m_parallel_invocs;
+	m_initCharOffset=p_settings.m_charOffsetX;
+	m_triggerPause = p_settings.m_startPaused;
+	// TODO: 
+	// Optimization steps
+	// 
+	// Optimization weights
+	/*	fd
+		1000.0
+		fv
+		0.1
+		fh
+		0.0
+		fr
+		0.1
+		fp
+		0.0
+		*/
 }

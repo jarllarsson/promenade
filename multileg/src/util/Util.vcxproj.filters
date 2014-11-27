@@ -81,5 +81,6 @@
     <ClCompile Include="SettingsData.cpp" />
     <ClCompile Include="CurrentPathHelper.cpp" />
     <ClCompile Include="StrTools.cpp" />
+    <ClCompile Include="FileHandler.cpp" />
   </ItemGroup>
 </Project>
