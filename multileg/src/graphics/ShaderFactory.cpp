@@ -9,6 +9,7 @@
 #include <vector>
 #include <d3d11shader.h>
 #include <DebugPrint.h>
+#include <StrTools.h>
 
 
 ShaderFactory::ShaderFactory(ID3D11Device* p_device, ID3D11DeviceContext* p_deviceContext, 
@@ -53,7 +54,7 @@ ShaderFactory::~ShaderFactory()
 }
 
 
-ComposeShader* ShaderFactory::createComposeShader( const LPCWSTR& p_filePath )
+ComposeShader* ShaderFactory::createComposeShader( const string& p_filePath )
 {
 	ID3D11SamplerState*		samplerState = NULL;
 	ID3D11InputLayout*		inputLayout = NULL;
@@ -62,8 +63,8 @@ ComposeShader* ShaderFactory::createComposeShader( const LPCWSTR& p_filePath )
 	VSData* vertexData	= new VSData();
 	PSData* pixelData	= new PSData();
 	
-	vertexData->stageConfig = new ShaderStageConfig(p_filePath,"VS",m_shaderModelVersion);
-	pixelData->stageConfig = new ShaderStageConfig(p_filePath,"PS", m_shaderModelVersion);
+	vertexData->stageConfig = new ShaderStageConfig(p_filePath, "VS", m_shaderModelVersion);
+	pixelData->stageConfig = new ShaderStageConfig(p_filePath, "PS", m_shaderModelVersion);
 
 	createAllShaderStages(vertexData, pixelData);
 	createSamplerState(&samplerState);
@@ -73,7 +74,7 @@ ComposeShader* ShaderFactory::createComposeShader( const LPCWSTR& p_filePath )
 	return new ComposeShader(shaderVariables);
 }
 
-MeshShader* ShaderFactory::createMeshShader( const LPCWSTR& p_filePath )
+MeshShader* ShaderFactory::createMeshShader( const string& p_filePath )
 {
 	ID3D11SamplerState*		samplerState = NULL;
 	ID3D11InputLayout*		inputLayout = NULL;
@@ -93,7 +94,7 @@ MeshShader* ShaderFactory::createMeshShader( const LPCWSTR& p_filePath )
 	return new MeshShader(shaderVariables);
 }
 
-void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile, 
+void ShaderFactory::compileShaderStage( const string& p_sourceFile, 
 									    const string &p_entryPoint, 
 										const string &p_profile, ID3DBlob** p_blob )
 {
@@ -116,17 +117,20 @@ void ShaderFactory::compileShaderStage( const LPCWSTR &p_sourceFile,
 
 	// Compile the programs
 	// vertex
-	res = D3DCompileFromFile(p_sourceFile, 0, 
+	std::wstring stpath = stringToWstring(p_sourceFile);
+	LPCWSTR lpath = stpath.c_str();
+	res = D3DCompileFromFile(lpath, 0,
 		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		(LPCTSTR)p_entryPoint.c_str(), (LPCTSTR)p_profile.c_str(), 
 		compileFlags, 0, 
 		&shaderBlob, &blobError);
 	if ( FAILED(res) )
 	{
+		DEBUGWARNING(((string("Error in shader:\n") + p_sourceFile+"\n(OK to read error msg)").c_str()));
 		if (blobError!=NULL)
 			throw GraphicsException(blobError,__FILE__,__FUNCTION__,__LINE__);
 		else
-			throw GraphicsException(res,__FILE__,__FUNCTION__,__LINE__);		
+			throw GraphicsException(res,__FILE__,__FUNCTION__,__LINE__);	
 		return;
 	}
 

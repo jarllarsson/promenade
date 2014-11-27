@@ -145,6 +145,7 @@
     <ClInclude Include="BaseException.h" />
     <ClInclude Include="CMatrix.h" />
     <ClInclude Include="ColorPalettes.h" />
+    <ClInclude Include="CurrentPathHelper.h" />
     <ClInclude Include="DebugPrint.h" />
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="IOptimizable.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SettingsData.h" />
+    <ClInclude Include="StrTools.h" />
     <ClInclude Include="ToString.h" />
     <ClInclude Include="UniqueIndexList.h" />
     <ClInclude Include="Util.h" />
@@ -163,12 +165,14 @@
   <ItemGroup>
     <ClCompile Include="CMatrix.cpp" />
     <ClCompile Include="ColorPalettes.cpp" />
+    <ClCompile Include="CurrentPathHelper.cpp" />
     <ClCompile Include="MathHelp.cpp" />
     <ClCompile Include="MeasurementBin.cpp" />
     <ClCompile Include="OptimizableHelper.cpp" />
     <ClCompile Include="ParamChanger.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="SettingsData.cpp" />
+    <ClCompile Include="StrTools.cpp" />
     <ClCompile Include="ToString.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>

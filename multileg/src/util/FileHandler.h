@@ -3,6 +3,7 @@
 #include <string>
 #include "ToString.h"
 #include "SettingsData.h"
+#include <CurrentPathHelper.h>
 
 bool write_file_binary (std::string const & filename, 
 						char const * data, size_t const bytes)
@@ -126,7 +127,9 @@ void loadFloatArrayPrompt(std::vector<float>*& p_outData, int p_fileTypeIdx)
 
 bool loadSettings(SettingsData& p_settingsfile)
 {
-	string path = "../settings.txt";
+
+	string exePathPrefix = GetExecutablePathWithName();
+	string path = exePathPrefix+string("../settings.txt");
 	std::ifstream is;
 	is.open(path.c_str(), std::ios::in);
 	if (!is.good() || !is.is_open())

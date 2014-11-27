@@ -55,37 +55,13 @@ const double App::DTCAP=0.5;
 
 App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_height/*=1024*/)
 {
-	int width = p_width,
-		height = p_height;
+	// ====================================
+	// Simulation variable init
+	// ====================================
+	m_initWindowWidth = p_width;
+	m_initWindowHeight = p_height;
 	m_runOptimization = false;
-	bool windowMode = true;
-	// Context
-	try
-	{
-		m_context = new Context(p_hInstance, "multileg", width, height);
-	}
-	catch (ContextException& e)
-	{
-		DEBUGWARNING((e.what()));
-	}
-
-	// Graphics
-	try
-	{
-		m_graphicsDevice = new GraphicsDevice(m_context->getWindowHandle(), width, height, windowMode);
-	}
-	catch (GraphicsException& e)
-	{
-		DEBUGWARNING((e.what()));
-	}
-
-	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
-	m_toolBar->setWindowSize(p_width, p_height);
-	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
-	m_debugDrawBatch = new DebugDrawBatch();
-	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),
-		(void*)m_graphicsDevice->getDeviceContextPointer(), m_debugDrawBatch);
-	m_debugDrawer->setDrawArea((float)p_width, (float)p_height);
+	m_initWindowMode = true;
 
 	m_bestParams = NULL;
 
@@ -93,8 +69,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_fpsUpdateTick = 0.0f;
 	m_controller = new TempController(-8.0f, 2.5f, 0.0f, 0.0f);
 	m_controller->rotate(glm::vec3(0.0f, -HALFPI, 0.0f));
-	m_input = new Input();
-	m_input->doStartup(m_context->getWindowHandle());
+
 	m_timeScale = 1.0f;
 	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
@@ -106,18 +81,73 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	if (m_runOptimization)
 		m_triggerPause = false;
 
-	//
-	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 	m_gravityStat = true;
 	m_oldGravityStat = true;
+	// ====================================
+
+
+	// ====================================
+	// Load settings from file
+	// ====================================
+	SettingsData settingsData;
+	if (loadSettings(settingsData))
+	{
+		initFromSettings(settingsData);
+	}
+	if (m_bestParams == NULL)
+	{
+		int filetype = m_characterCreateType == BIPED ? 2 : 3;
+		loadFloatArrayPrompt(m_bestParams, filetype);
+	}
+	// ====================================
+
+
+	// ====================================
+	// Environment init
+	// ====================================
+	// Context
+	try
+	{
+		m_context = new Context(p_hInstance, "multileg",
+			m_initWindowWidth, m_initWindowHeight);
+	}
+	catch (ContextException& e)
+	{
+		DEBUGWARNING((e.what()));
+	}
+	// Graphics
+	try
+	{
+		m_graphicsDevice = new GraphicsDevice(m_context->getWindowHandle(),
+			m_initWindowWidth, m_initWindowHeight, m_initWindowMode);
+	}
+	catch (GraphicsException& e)
+	{
+		DEBUGWARNING((e.what()));
+	}
+	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
+	m_toolBar->setWindowSize(m_initWindowWidth, m_initWindowHeight);
+	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
+	m_debugDrawBatch = new DebugDrawBatch();
+	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),
+		(void*)m_graphicsDevice->getDeviceContextPointer(), m_debugDrawBatch);
+	m_debugDrawer->setDrawArea((float)m_initWindowWidth, (float)m_initWindowHeight);
+	// input
+	m_input = new Input();
+	m_input->doStartup(m_context->getWindowHandle());
+	// basic view orientation buffer
+	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
+	// ====================================
 
 	// Global toolbar vars
+	// ====================================
 	m_toolBar->addReadOnlyVariable(Toolbar::PLAYER, "Real time", Toolbar::DOUBLE, &m_time);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Physics time scale", Toolbar::FLOAT, &m_timeScale);
 	m_toolBar->addButton(Toolbar::PLAYER, "Play/Pause", boolButton,(void*)&m_triggerPause);
 	m_toolBar->addButton(Toolbar::PLAYER, "Restart", boolButton, (void*)&m_restart);
 	m_toolBar->addButton(Toolbar::PLAYER, "Save", boolButton, (void*)&m_saveParams);
 	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Gravity", Toolbar::BOOL, &m_gravityStat);
+	// ====================================
 }
 
 App::~App()
@@ -139,13 +169,6 @@ App::~App()
 
 void App::run()
 {
-	if (m_bestParams == NULL)
-	{
-		int filetype = m_characterCreateType == BIPED ? 2 : 3;
-		loadFloatArrayPrompt(m_bestParams,filetype);
-	}
-	SettingsData settingsData;
-	loadSettings(settingsData);
 	// Optimization init
 	int optimizationIterationCount = 0;
 	double bestOptimizationScore = FLT_MAX;
@@ -1477,4 +1500,23 @@ void App::processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_sy
 		artemis::EntityProcessingSystem* system = (*p_systemCollection)[i];
 		system->process();
 	}
+}
+
+void App::initFromSettings(SettingsData& p_settings)
+{
+	m_initWindowMode = !p_settings.m_fullscreen;
+	m_initWindowWidth = p_settings.m_wwidth;
+	m_initWindowHeight = p_settings.m_wheight;
+	if (p_settings.m_mode == "optimization")
+	{
+		m_runOptimization = true;
+	}
+	else
+	{
+		m_runOptimization = false;
+	}
+	if (p_settings.m_pod == "quadruped")
+		m_characterCreateType = CharCreateType::QUADRUPED;
+	else
+		m_characterCreateType = CharCreateType::BIPED;
 }

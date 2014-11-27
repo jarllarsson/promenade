@@ -8,18 +8,18 @@ WND_HEIGHT					(window height in pixels)
 600
 
 MODE							(optimization, run or measure)
-optimization
+run
 
 POD								(biped or quadruped)
-biped
+quadruped
 
-EXEC_MODE								(serial or parallel)
+EXEC_MODE					(serial or parallel)
 serial
 
 CHARCOUNT_SERIAL			(character count when executing serially)
 1
 
-PARA_INVOC				(number of parallel invocations: when parallel, character count=PARA_INVOC*CHARCOUNT_SERIAL)
+PARA_INVOC					(number of parallel invocations: when parallel, character count=PARA_INVOC*CHARCOUNT_SERIAL)
 1
 
 CHAR_OFFSET_X				(position offset along x axis between characters)

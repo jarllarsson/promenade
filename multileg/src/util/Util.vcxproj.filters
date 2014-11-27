@@ -53,6 +53,8 @@
     </ClInclude>
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="SettingsData.h" />
+    <ClInclude Include="CurrentPathHelper.h" />
+    <ClInclude Include="StrTools.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />
@@ -77,5 +79,7 @@
       <Filter>Optimization</Filter>
     </ClCompile>
     <ClCompile Include="SettingsData.cpp" />
+    <ClCompile Include="CurrentPathHelper.cpp" />
+    <ClCompile Include="StrTools.cpp" />
   </ItemGroup>
 </Project>

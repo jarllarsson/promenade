@@ -12,6 +12,7 @@
 
 #include "ComposeShader.h"
 #include "MeshShader.h"
+#include <CurrentPathHelper.h>
 
 
 GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_windowMode )
@@ -37,8 +38,9 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 	initGBufferAndDepthStencil();
 
 	// 4. init shaders
-	m_composeShader = m_shaderFactory->createComposeShader(L"../Shaders/ComposeShader.hlsl");
-	m_wireframeShader = m_shaderFactory->createMeshShader(L"../Shaders/WireframeShader.hlsl");
+	string exePathPrefix = GetExecutablePathDirectory();
+	m_composeShader = m_shaderFactory->createComposeShader(exePathPrefix+"../Shaders/ComposeShader.hlsl");
+	m_wireframeShader = m_shaderFactory->createMeshShader(exePathPrefix+"../Shaders/WireframeShader.hlsl");
 
 	// 5. build states
 	buildBlendStates();

@@ -31,8 +31,8 @@ public:
 	ShaderFactory(ID3D11Device* p_device,ID3D11DeviceContext* m_deviceContext,D3D_FEATURE_LEVEL p_featureLevel);
 	virtual ~ShaderFactory();
 
-	ComposeShader* createComposeShader( const LPCWSTR& p_filePath);
-	MeshShader* createMeshShader( const LPCWSTR& p_filePath);
+	ComposeShader* createComposeShader( const string& p_filePath);
+	MeshShader* createMeshShader( const string& p_filePath);
 protected:
 	///-----------------------------------------------------------------------------------
 	/// A helper function that takes arguments and then compiles the given shader file 
@@ -43,7 +43,7 @@ protected:
 	/// \param p_blob
 	/// \return void
 	///-----------------------------------------------------------------------------------
-	void compileShaderStage(const LPCWSTR &p_sourceFile, const string &p_entryPoint, 
+	void compileShaderStage(const string&p_sourceFile, const string &p_entryPoint, 
 		const string &p_profile, ID3DBlob** p_blob);
 
 	///-----------------------------------------------------------------------------------

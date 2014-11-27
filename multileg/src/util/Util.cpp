@@ -13,3 +13,5 @@
 #include "OptimizableHelper.h"
 #include "ColorPalettes.h"
 #include "CMatrix.h"
+#include "SettingsData.h"
+#include "CurrentPathHelper.h"
