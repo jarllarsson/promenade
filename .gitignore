@@ -56,6 +56,9 @@ bin/x64/*.txt
 *.csproj
 *.unityproj
 
+# But not for those created manually in final project
+!/multileg/src/*.csproj
+!/multileg/src/*/*.csproj
 
 /proto/pd-controller/pd-controller-csharp.sln
 /proto/pd-controller/pd-controller.sln
