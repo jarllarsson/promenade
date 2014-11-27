@@ -128,7 +128,7 @@ void loadFloatArrayPrompt(std::vector<float>*& p_outData, int p_fileTypeIdx)
 bool loadSettings(SettingsData& p_settingsfile)
 {
 
-	string exePathPrefix = GetExecutablePathWithName();
+	string exePathPrefix = GetExecutablePathDirectory();
 	string path = exePathPrefix+string("../settings.txt");
 	std::ifstream is;
 	is.open(path.c_str(), std::ios::in);

@@ -126,12 +126,12 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 		DEBUGWARNING((e.what()));
 	}
 	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
-	m_toolBar->setWindowSize(m_initWindowWidth, m_initWindowHeight);
+	m_toolBar->setWindowSize(m_graphicsDevice->getWidth(), m_graphicsDevice->getHeight());
 	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
 	m_debugDrawBatch = new DebugDrawBatch();
 	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),
 		(void*)m_graphicsDevice->getDeviceContextPointer(), m_debugDrawBatch);
-	m_debugDrawer->setDrawArea((float)m_initWindowWidth, (float)m_initWindowHeight);
+	m_debugDrawer->setDrawArea((float)m_graphicsDevice->getWidth(), (float)m_graphicsDevice->getHeight());
 	// input
 	m_input = new Input();
 	m_input->doStartup(m_context->getWindowHandle());
