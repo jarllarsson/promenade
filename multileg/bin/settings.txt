@@ -11,19 +11,19 @@ MODE							(optimization(short: o), run(short: r) or measure(short: m))
 run
 
 POD								(biped(short: b) or quadruped(short: q))
-biped
+q
 
 EXEC_MODE					(serial(short: s) or parallel(short: p))
 s
 
 CHARCOUNT_SERIAL			(character count when executing serially)
-1
+3
 
 PARA_INVOC					(number of parallel invocations: when parallel, character count=PARA_INVOC*CHARCOUNT_SERIAL)
 1
 
 CHAR_OFFSET_X				(position offset along x axis between characters)
-2.0
+4.0
 
 START_PAUSED				(0 start in play mode, 1 start paused)
 0

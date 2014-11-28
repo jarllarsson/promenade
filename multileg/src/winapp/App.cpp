@@ -1491,7 +1491,7 @@ void App::render()
 	// Run passes
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BASEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers(), NULL);
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
-	//m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
+	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
 	// Debug
 	m_debugDrawer->render(m_controller);
 	m_toolBar->draw();
