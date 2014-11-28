@@ -51,9 +51,11 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 	buildRasterizerStates();
 	m_currentRasterizerStateType = RasterizerState::DEFAULT;
 
-	// 6. Create draw-quad
+	// 6. Create draw-quad and other built in primitives
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 	m_aabbLineMesh = m_bufferFactory->createLineBox(0.5f);
+	m_fallbackBox = m_bufferFactory->createBoxMesh(1.0f);
+	m_meshFallbackBoxList.push_back(m_fallbackBox);
 
 	fitViewport();
 }
@@ -77,6 +79,8 @@ GraphicsDevice::~GraphicsDevice()
 	//
 	delete m_fullscreenQuad;
 	delete m_aabbLineMesh;
+	delete m_fallbackBox;
+	m_meshFallbackBoxList.clear();
 	//
 	for (unsigned int i = 0; i < m_blendStates.size(); i++){
 		SAFE_RELEASE(m_blendStates[i]);
@@ -177,7 +181,7 @@ void GraphicsDevice::executeRenderPass( RenderPass p_pass,
 	switch(p_pass)
 	{	
 	case RenderPass::P_BASEPASS:
-		if (p_instancesLists != NULL && p_cbuf != NULL && p_meshList != NULL)
+		if (p_instancesLists != NULL && p_cbuf != NULL)
 		{
 			m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			setBlendState(BlendState::NORMAL);
@@ -186,23 +190,30 @@ void GraphicsDevice::executeRenderPass( RenderPass p_pass,
 			p_cbuf->apply();
 			setShader(SI_MESHBASESHADER);
 			unsigned int instancesListSize = (unsigned int)p_instancesLists->size();
-			// for each mesh in meshRLList
-			for (unsigned int i = 0; i < p_meshList->size(); i++)
+			// fallback if no mesh list has been supplied
+			if (p_meshList == NULL)
+				p_meshList = &m_meshFallbackBoxList;
+			unsigned int meshListSize = (unsigned int)p_meshList->size();
+			// for each mesh as defined by the instance list
+			for (unsigned int i = 0; i < instancesListSize; i++)
 			{
-				// for each copy of that mesh
+				// Fetch the mesh, fall back to fallback meshes
+				// if not enough meshes have been defined
+				Mesh* mesh = NULL;
+				if (i < meshListSize)
+					mesh = (*p_meshList)[i];
+				else
+					mesh = m_meshFallbackBoxList[0];
+				//for each copy of a mesh
 				// issue a render using the instance buffer in the 
 				// instanceslist for that index
-				if (i < instancesListSize)
+				BufferBase* instances = (*p_instancesLists)[i];
+				if (instances != NULL && mesh!=NULL)
 				{
-					Mesh* mesh = (*p_meshList)[i];
-					BufferBase* instances = (*p_instancesLists)[i];
-					if (instances != NULL && mesh!=NULL)
-					{
-						drawInstancedIndexedMesh(mesh,
-							instances->getElementCount(),
-							instances->getElementSize(),
-							instances->getBufferPointer());
-					}
+					drawInstancedIndexedMesh(mesh,
+						instances->getElementCount(),
+						instances->getElementSize(),
+						instances->getBufferPointer());
 				}
 			}
 		}

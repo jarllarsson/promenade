@@ -1487,7 +1487,7 @@ void App::render()
 	// Clear render targets
 	m_graphicsDevice->clearRenderTargets();
 	// Run passes
-	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BASEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers(), TODO-MESHES);
+	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BASEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers(), NULL);
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
 	// Debug
