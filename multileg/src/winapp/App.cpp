@@ -47,7 +47,6 @@
 
 
 //#define MEASURE_RBODIES
-//#define OPTIMIZATION
 
 using namespace std;
 

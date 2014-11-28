@@ -155,6 +155,7 @@
     <ClInclude Include="ParamChanger.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="RunLengthList.h" />
     <ClInclude Include="SettingsData.h" />
     <ClInclude Include="StrTools.h" />
     <ClInclude Include="ToString.h" />

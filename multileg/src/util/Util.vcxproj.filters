@@ -55,6 +55,7 @@
     <ClInclude Include="SettingsData.h" />
     <ClInclude Include="CurrentPathHelper.h" />
     <ClInclude Include="StrTools.h" />
+    <ClInclude Include="RunLengthList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Util.cpp" />
