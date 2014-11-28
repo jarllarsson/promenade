@@ -29,8 +29,14 @@ private:
 	artemis::ComponentMapper<RenderComponent> renderMapper;
 	GraphicsDevice* m_graphicsDevice;
 
+	// ------------------------------------------------
 	// Real resource handler ref here later:
 	Buffer<InstanceDataTransformColor>* m_instances;
+
+	// No culling exists yet, but it is still named like this to make its purpose clear
+	vector<BufferBase*> m_culledInstancesLists;
+	// ------------------------------------------------
+
 
 	// render stats
 	bool m_instancesUpdated;
@@ -160,6 +166,13 @@ public:
 	Buffer<InstanceDataTransformColor>* getInstanceBuffer()
 	{
 		return m_instances;
+	}
+
+	vector<BufferBase*>* getCulledInstanceBuffers()
+	{
+		m_culledInstancesLists.clear();
+		m_culledInstancesLists.push_back(m_instances);
+		return &m_culledInstancesLists;
 	}
 
 };

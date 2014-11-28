@@ -171,24 +171,40 @@ void GraphicsDevice::setWireframeMode( bool p_wireframe )
 
 void GraphicsDevice::executeRenderPass( RenderPass p_pass, 
 									    BufferBase* p_cbuf/*=NULL*/, 
-										BufferBase* p_instances/*=NULL*/,
-										RunLengthList<Mesh>& p_meshRLList)
+										vector<BufferBase*>* p_instancesLists/*=NULL*/, 
+										vector<Mesh*>* p_meshList/*=NULL*/)
 {
 	switch(p_pass)
 	{	
 	case RenderPass::P_BASEPASS:
-		if (p_instances != NULL && p_cbuf != NULL)
+		if (p_instancesLists != NULL && p_cbuf != NULL && p_meshList != NULL)
 		{
 			m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			setBlendState(BlendState::NORMAL);
 			setRasterizerStateSettings(RasterizerState::DEFAULT, true);
-			setRenderTarget(RT_BACKBUFFER_NODEPTHSTENCIL);
+			setRenderTarget(RT_MRT);
 			p_cbuf->apply();
 			setShader(SI_MESHBASESHADER);
-			// foreach mesh in meshRLList
-			/*drawInstancedIndexedMesh(p_instances->getElementCount(),
-				p_instances->getElementSize(),
-				p_instances->getBufferPointer());*/
+			unsigned int instancesListSize = (unsigned int)p_instancesLists->size();
+			// for each mesh in meshRLList
+			for (unsigned int i = 0; i < p_meshList->size(); i++)
+			{
+				// for each copy of that mesh
+				// issue a render using the instance buffer in the 
+				// instanceslist for that index
+				if (i < instancesListSize)
+				{
+					Mesh* mesh = (*p_meshList)[i];
+					BufferBase* instances = (*p_instancesLists)[i];
+					if (instances != NULL && mesh!=NULL)
+					{
+						drawInstancedIndexedMesh(mesh,
+							instances->getElementCount(),
+							instances->getElementSize(),
+							instances->getBufferPointer());
+					}
+				}
+			}
 		}
 		break;
 	case RenderPass::P_COMPOSEPASS:
@@ -200,17 +216,27 @@ void GraphicsDevice::executeRenderPass( RenderPass p_pass,
 		drawFullscreen();
 		break;
 	case RenderPass::P_BOUNDINGBOX_WIREFRAMEPASS:
-		if (p_instances != NULL && p_cbuf != NULL)
+		if (p_instancesLists != NULL && p_cbuf != NULL)
 		{
 			m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
-			setBlendState(BlendState::NORMAL);
+			setBlendState(BlendState::ADDITIVE);
 			setRasterizerStateSettings(RasterizerState::WIREFRAME, false);
 			setRenderTarget(RT_BACKBUFFER_NODEPTHSTENCIL);
 			p_cbuf->apply();
 			setShader(SI_WIREFRAMESHADER);
-			drawInstancedLineOBB(p_instances->getElementCount(),
-				p_instances->getElementSize(),
-				p_instances->getBufferPointer());
+			// loop through all instance lists in the vector
+			// not really necessary as it will almost always be of size 1 here
+			// for simple bounding boxes
+			for (int i = 0; i < p_instancesLists->size(); i++)
+			{
+				BufferBase* instances = (*p_instancesLists)[i];
+				if (instances != NULL)
+				{
+					drawInstancedLineOBB(instances->getElementCount(),
+						instances->getElementSize(),
+						instances->getBufferPointer());
+				}
+			}
 		}
 
 		break;

@@ -3,6 +3,7 @@
 #include <d3d11.h>
 #include "Buffer.h"
 #include "RenderStateHelper.h"
+#include <RunLengthList.h>
 
 struct PVertex;
 class ViewFactory;
@@ -87,8 +88,8 @@ public:
 	// Stages
 	void executeRenderPass(RenderPass p_pass,
 						   BufferBase* p_cbuf=NULL, 
-						   BufferBase* p_instances=NULL,
-						   RunLengthList<Mesh>& p_meshRLList);
+						   vector<BufferBase*>* p_instancesLists=NULL,
+						   vector<Mesh*>* p_meshList=NULL);
 
 
 	// Getters
