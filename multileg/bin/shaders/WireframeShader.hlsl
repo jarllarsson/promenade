@@ -1,8 +1,4 @@
-//#pragma pack_matrix( row_major )
-cbuffer EveryFrame : register(b0)
-{
-	float4x4 gVP;
-};
+#include "MeshSceneDefines.hlsl"
 
 struct VertexIn
 {

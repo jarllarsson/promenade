@@ -53,6 +53,7 @@ public:
 
 	enum ShaderId {
 		SI_NONE,
+		SI_MESHBASESHADER,
 		SI_COMPOSESHADER,
 		SI_WIREFRAMESHADER,
 		SI_COUNT,
@@ -61,7 +62,7 @@ public:
 	enum RenderPass {
 		P_BASEPASS,
 		P_COMPOSEPASS,
-		P_WIREFRAMEPASS,
+		P_BOUNDINGBOX_WIREFRAMEPASS,
 		P_COUNT,
 	};
 
@@ -86,7 +87,8 @@ public:
 	// Stages
 	void executeRenderPass(RenderPass p_pass,
 						   BufferBase* p_cbuf=NULL, 
-						   BufferBase* p_instances=NULL );
+						   BufferBase* p_instances=NULL,
+						   RunLengthList<Mesh>& p_meshRLList);
 
 
 	// Getters
@@ -128,7 +130,8 @@ private:
 
 	// Draw
 	void drawFullscreen();
-	void drawInstancedAABB(UINT32 p_instanceElementCount, int p_instanceElemSz, void* p_instanceRef);
+	void drawInstancedLineOBB(UINT32 p_instanceElementCount, int p_instanceElemSz, void* p_instanceRef);
+	void drawInstancedIndexedMesh(Mesh* p_mesh, UINT32 p_instanceElementCount, int p_instanceElemSz, void* p_instanceRef);
 
 	// Initialisations
 	void initSwapChain(HWND p_hWnd);

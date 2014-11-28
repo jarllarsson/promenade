@@ -171,12 +171,25 @@ void GraphicsDevice::setWireframeMode( bool p_wireframe )
 
 void GraphicsDevice::executeRenderPass( RenderPass p_pass, 
 									    BufferBase* p_cbuf/*=NULL*/, 
-										BufferBase* p_instances/*=NULL*/ )
+										BufferBase* p_instances/*=NULL*/,
+										RunLengthList<Mesh>& p_meshRLList)
 {
 	switch(p_pass)
 	{	
 	case RenderPass::P_BASEPASS:
-		 // none yet
+		if (p_instances != NULL && p_cbuf != NULL)
+		{
+			m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			setBlendState(BlendState::NORMAL);
+			setRasterizerStateSettings(RasterizerState::DEFAULT, true);
+			setRenderTarget(RT_BACKBUFFER_NODEPTHSTENCIL);
+			p_cbuf->apply();
+			setShader(SI_MESHBASESHADER);
+			// foreach mesh in meshRLList
+			/*drawInstancedIndexedMesh(p_instances->getElementCount(),
+				p_instances->getElementSize(),
+				p_instances->getBufferPointer());*/
+		}
 		break;
 	case RenderPass::P_COMPOSEPASS:
 		m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
@@ -186,7 +199,7 @@ void GraphicsDevice::executeRenderPass( RenderPass p_pass,
 		setShader(SI_COMPOSESHADER);
 		drawFullscreen();
 		break;
-	case RenderPass::P_WIREFRAMEPASS:
+	case RenderPass::P_BOUNDINGBOX_WIREFRAMEPASS:
 		if (p_instances != NULL && p_cbuf != NULL)
 		{
 			m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -195,7 +208,7 @@ void GraphicsDevice::executeRenderPass( RenderPass p_pass,
 			setRenderTarget(RT_BACKBUFFER_NODEPTHSTENCIL);
 			p_cbuf->apply();
 			setShader(SI_WIREFRAMESHADER);
-			drawInstancedAABB(p_instances->getElementCount(),
+			drawInstancedLineOBB(p_instances->getElementCount(),
 				p_instances->getElementSize(),
 				p_instances->getBufferPointer());
 		}
@@ -389,8 +402,9 @@ void GraphicsDevice::drawFullscreen()
 }
 
 
-void GraphicsDevice::drawInstancedAABB( UINT32 p_instanceElementCount, int p_instanceElemSz, void* p_instanceRef )
+void GraphicsDevice::drawInstancedLineOBB( UINT32 p_instanceElementCount, int p_instanceElemSz, void* p_instanceRef )
 {
+	// AABB is transformed by instance buffer, thus OBB
 	UINT strides[2] = { sizeof(PVertex), p_instanceElemSz };
 	UINT offsets[2] = { 0, 0 };
 	// Set up an array of the buffers for the vertices
@@ -411,6 +425,29 @@ void GraphicsDevice::drawInstancedAABB( UINT32 p_instanceElementCount, int p_ins
 	//m_deviceContext->DrawIndexedInstanced( indexCount, p_instanceElementCount, 0,0,0);
 	m_deviceContext->DrawInstanced(m_aabbLineMesh->getElementCount(),p_instanceElementCount,0,0);
 }
+
+
+void GraphicsDevice::drawInstancedIndexedMesh(Mesh* p_mesh, UINT32 p_instanceElementCount, int p_instanceElemSz, void* p_instanceRef)
+{
+	UINT strides[2] = { sizeof(PVertex), p_instanceElemSz };
+	UINT offsets[2] = { 0, 0 };
+	// Set up an array of the buffers for the vertices
+	ID3D11Buffer* buffers[2] = {
+		p_mesh->getVertexBuffer()->getBufferPointer(),
+		static_cast<ID3D11Buffer*>(p_instanceRef)
+	};
+	// Set array of buffers to context 
+	m_deviceContext->IASetVertexBuffers(0, 2, buffers, strides, offsets);
+
+	// And the index buffer
+	m_deviceContext->IASetIndexBuffer(p_mesh->getIndexBuffer()->getBufferPointer(),
+		DXGI_FORMAT_R32_UINT, 0);
+
+	// Draw instanced indexed data
+	UINT32 indexCount = p_mesh->getIndexBuffer()->getElementCount();
+	m_deviceContext->DrawIndexedInstanced( indexCount, p_instanceElementCount, 0,0,0);
+}
+
 
 
 void GraphicsDevice::initSwapChain( HWND p_hWnd )
