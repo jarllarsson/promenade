@@ -37,7 +37,7 @@ public:
 	const static int DEPTH_IDX = 10;
 	enum GBufferChannel {
 		GBUF_INVALID	= -1,
-		GBUF_DIFFUSE	= RT0,				// R, G, B, LinDepth(Raytracer)
+		GBUF_DIFFUSE	= RT0,				// R, G, B,
 		GBUF_NORMAL		= RT1,				// X, Y, Z		
 		GBUF_COUNT,
 		GBUF_DEPTH		= DEPTH_IDX,		// Depth
@@ -161,13 +161,14 @@ private:
 
 	// Shaders
 	ComposeShader* m_composeShader;
-	MeshShader* m_wireframeShader;
+	MeshShader*	   m_wireframeShader;
+	MeshShader*    m_meshBaseShader;
 
 	// Fullscreen quad for drawing
 	Buffer<PVertex>* m_fullscreenQuad;
 	Buffer<PVertex>* m_aabbLineMesh;
 	Mesh*			 m_fallbackBox;
-	vector<Mesh*> m_meshFallbackBoxList;
+	vector<Mesh*>	 m_meshFallbackBoxList;
 
 	// Blend states
 	vector<ID3D11BlendState*> m_blendStates;

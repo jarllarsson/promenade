@@ -336,6 +336,8 @@ void App::run()
 		ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f,
 			CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT, CollisionLayer::COL_CHARACTER | CollisionLayer::COL_DEFAULT));
 		ground.addComponent(new RenderComponent());
+		MaterialComponent* mat = new MaterialComponent(dawnBringerPalRGB[COL_BEIGE]);
+		ground.addComponent(mat);
 		ground.addComponent(new TransformComponent(glm::vec3(0.0f, -10.0f, 0.0f),
 			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 			glm::vec3(800.0f, 20.0f, 800.0f)));
@@ -1489,7 +1491,7 @@ void App::render()
 	// Run passes
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BASEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers(), NULL);
 	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
-	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
+	//m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
 	// Debug
 	m_debugDrawer->render(m_controller);
 	m_toolBar->draw();

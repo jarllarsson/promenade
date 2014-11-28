@@ -70,6 +70,7 @@ Buffer<T>* BufferFactory::createVertexBuffer( T* p_vertices,
 
 	// Create description for buffer
 	BufferConfig::BUFFER_INIT_DESC vertexBufferDesc;
+	ZeroMemory((void*)&vertexBufferDesc, sizeof(vertexBufferDesc));
 	vertexBufferDesc.ElementSize = sizeof(T);
 	vertexBufferDesc.Usage = BufferConfig::BUFFER_DEFAULT;
 	vertexBufferDesc.NumElements = p_numberOfElements ;

@@ -1,5 +1,12 @@
 #include "MeshSceneDefines.hlsl"
 
+struct PixelOut
+{
+	float4 diffuse	: SV_TARGET0;		//diffuse
+	float4 normal	: SV_TARGET1;		//normal
+	//float4 specular : SV_TARGET2;		//specular
+};
+
 struct VertexIn
 {
 	// Per vertex
@@ -24,11 +31,15 @@ VertexOut VS(VertexIn p_input)
 	return vout;
 }
 
-float4 PS(VertexOut p_input) : SV_TARGET
+PixelOut PS(VertexOut p_input)
 {
+	PixelOut pixelOut;
 	//float4(1,0.6470588235294118,0,0.5f);
 	//return float4(0.7333,0.99,0.45f,1.0f);
-	return p_input.color;
+	pixelOut.diffuse = p_input.color;
+	pixelOut.normal = float4(1,0.6470588235294118,0,0.5f);
+	//pixelOut.specular = float4(0,1,0,1);
+	return pixelOut;
 }
 
 

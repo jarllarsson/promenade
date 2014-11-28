@@ -41,6 +41,7 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 	string exePathPrefix = GetExecutablePathDirectory();
 	m_composeShader = m_shaderFactory->createComposeShader(exePathPrefix+"../Shaders/ComposeShader.hlsl");
 	m_wireframeShader = m_shaderFactory->createMeshShader(exePathPrefix+"../Shaders/WireframeShader.hlsl");
+	m_meshBaseShader = m_shaderFactory->createMeshShader(exePathPrefix + "../Shaders/MeshShader.hlsl");
 
 	// 5. build states
 	buildBlendStates();
@@ -54,7 +55,7 @@ GraphicsDevice::GraphicsDevice( HWND p_hWnd, int p_width, int p_height, bool p_w
 	// 6. Create draw-quad and other built in primitives
 	m_fullscreenQuad = m_bufferFactory->createFullScreenQuadBuffer();
 	m_aabbLineMesh = m_bufferFactory->createLineBox(0.5f);
-	m_fallbackBox = m_bufferFactory->createBoxMesh(1.0f);
+	m_fallbackBox = m_bufferFactory->createBoxMesh(0.5f);
 	m_meshFallbackBoxList.push_back(m_fallbackBox);
 
 	fitViewport();
@@ -76,6 +77,7 @@ GraphicsDevice::~GraphicsDevice()
 	//
 	delete m_composeShader;
 	delete m_wireframeShader;
+	delete m_meshBaseShader;
 	//
 	delete m_fullscreenQuad;
 	delete m_aabbLineMesh;
@@ -363,6 +365,9 @@ void GraphicsDevice::setShader( ShaderId p_shaderId )
 		break;
 	case ShaderId::SI_WIREFRAMESHADER:	
 		m_wireframeShader->apply();
+		break;
+	case ShaderId::SI_MESHBASESHADER:
+		m_meshBaseShader->apply();
 		break;
 	}
 }
