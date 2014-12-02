@@ -9,7 +9,7 @@ set terminal pngcairo size out_w,out_h enhanced font "Verdana,45"
 set output "render/output_raster.png"
 
 # settings
-set yrange [-1:20]
+set yrange [0:20]
 
 set bars small
 
@@ -47,8 +47,11 @@ set label 'Worms' at first 4500, first 400
 # PLOT ALL
 #
 # =======================================================================================================
+#set autoscale
+set ytics 0.5 font "Verdana,12" 
+set xtics font "Verdana,12" 
 plot \
-"perf_serial.gnuplot.txt" ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial'
+"perf_serial.gnuplot.txt" every errstep ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial'
 #"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
 # "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
 # "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
