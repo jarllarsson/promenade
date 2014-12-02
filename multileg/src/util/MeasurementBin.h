@@ -26,7 +26,8 @@ public:
 	float calculateMean();
 	float calculateSTD();
 	void finishRound();
-	bool saveResults(const string& p_fileName);
+	bool saveResultsCSV(const string& p_fileName);
+	bool saveResultsGNUPLOT(const string& p_fileName);
 	void saveMeasurement(T p_measurement);
 	void saveMeasurement(T p_measurement, float p_timeStamp);
 	void saveMeasurement(T p_measurement, int p_timeStamp);
@@ -70,7 +71,7 @@ template<>
 float MeasurementBin<float>::calculateSTD();
 
 template<class T>
-bool MeasurementBin<T>::saveResults(const string& p_fileName)
+bool MeasurementBin<T>::saveResultsCSV(const string& p_fileName)
 {
 	if (m_active)
 	{
@@ -111,6 +112,65 @@ bool MeasurementBin<T>::saveResults(const string& p_fileName)
 				}
 			}
 
+		}
+		outFile.close();
+		return true;
+	}
+	return false;
+}
+
+template<class T>
+bool MeasurementBin<T>::saveResultsGNUPLOT(const string& p_fileName)
+{
+	if (m_active)
+	{
+		ofstream outFile;
+		string file = p_fileName + ".gnuplot.txt";
+		outFile.open(file);
+
+		if (!outFile.good())
+		{
+			return false;
+		}
+		else
+		{
+			outFile << "# " << p_fileName << "\n";
+			// if means and STD exist, print them
+			if (m_allMeans.size() > 0 && m_allSTDs.size() > 0 &&
+				m_allMeans.size() == m_allSTDs.size())
+			{			
+				outFile << "# step - mean - standard deviation" << "\n";
+				if (m_timestamps.size() == m_allMeans.size())
+				{
+					for (int i = 0; i < m_allMeans.size(); i++)
+					{
+						outFile << i << " " << m_allMeans[i] << " " << m_allSTDs[i] << " # " << m_timestamps[i] << "\n";
+					}
+				}
+				else
+				{
+					for (int i = 0; i < m_allMeans.size(); i++)
+					{
+						outFile << i << " " << m_allMeans[i] << " " << m_allSTDs[i] <<  "\n";
+					}
+				}
+			}
+			else if (m_timestamps.size() == m_measurements.size())// else print the raw measurements
+			{
+				outFile << "# step - measurement" << "\n";
+				for (int i = 0; i < m_allMeans.size(); i++)
+				{
+					outFile << i << " " << m_allMeans[i] << " " << m_allSTDs[i] << " # " << m_timestamps[i] << "\n";
+				}
+			}
+			else
+			{
+				outFile << "# step - measurement" << "\n";
+				for (int i = 0; i < m_allMeans.size(); i++)
+				{
+					outFile << i << " " << m_allMeans[i] << " " << m_allSTDs[i] << "\n";
+				}
+			}
 		}
 		outFile.close();
 		return true;

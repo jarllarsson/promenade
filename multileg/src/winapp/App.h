@@ -64,6 +64,11 @@ private:
 		BIPED = 0, QUADRUPED = 1
 	};
 
+	enum InitExecSetup
+	{
+		SERIAL = 0, PARALLEL = 1
+	};
+
 	bool pumpMessage(MSG& p_msg);
 	void processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_systemCollection);
 	void initFromSettings(SettingsData& p_settings);
@@ -97,10 +102,11 @@ private:
 
 	int   m_initWindowWidth, m_initWindowHeight;
 	bool  m_initWindowMode;
-	int   m_initExecSetup;
+	InitExecSetup   m_initExecSetup;
 	int   m_initCharCountSerial;
 	int   m_initParallelInvocCount;
 	float m_initCharOffset;
+	bool  m_measurePerf;
 
 	std::vector<float>* m_bestParams;
 

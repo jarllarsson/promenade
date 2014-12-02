@@ -8,7 +8,7 @@ WND_HEIGHT					(window height in pixels)
 800
 
 MODE							(optimization(short: o), run(short: r) or measure(short: m))
-run
+measure
 
 POD								(biped(short: b) or quadruped(short: q))
 b

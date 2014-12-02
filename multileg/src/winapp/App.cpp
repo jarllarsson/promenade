@@ -61,8 +61,9 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_initWindowWidth = p_width;
 	m_initWindowHeight = p_height;
 	m_runOptimization = false;
+	m_measurePerf = false;
 	m_initWindowMode = true;
-	m_initExecSetup = 0;
+	m_initExecSetup = InitExecSetup::SERIAL;
 	m_initCharCountSerial = 1;
 	m_initParallelInvocCount = 1;
 	m_initCharOffset = 0.0f;
@@ -101,7 +102,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 		int filetype = m_characterCreateType == BIPED ? 2 : 3;
 		loadFloatArrayPrompt(m_bestParams, filetype);
 	}
-	if (m_runOptimization) // no matter load settings, we don't pause at optimization
+	if (m_runOptimization || m_measurePerf) // no matter load settings, we don't pause at optimization
 		m_triggerPause = false;
 	// ====================================
 
@@ -265,8 +266,10 @@ void App::run()
 		// Measurements and debug
 		MeasurementBin<string> rigidBodyStateDbgRecorder;
 		MeasurementBin<float> controllerPerfRecorder;
-		//
-		//controllerPerfRecorder.activate();
+		// The controller measurement is activated
+		// if measurement is turned on in settings:
+		if (m_measurePerf)
+			controllerPerfRecorder.activate();
 
 
 
@@ -292,7 +295,7 @@ void App::run()
 		//ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
 		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 		ControllerSystem::ExecutionLayout execMode = ControllerSystem::SERIAL;
-		if (m_initExecSetup == 1)
+		if (m_initExecSetup == InitExecSetup::PARALLEL)
 		{
 			execMode = ControllerSystem::PARALLEL;
 			m_toolBar->addLabel(Toolbar::PERFORMANCE, "PARALLEL");
@@ -1229,38 +1232,42 @@ void App::run()
 		rigidBodyStateDbgRecorder.saveMeasurement("Steps: "+ToString(physicsWorldHandler.getNumberOfInternalSteps()));
 	#ifndef MULTI
 	#ifdef _DEBUG
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_STCPU");
+		rigidBodyStateDbgRecorder.saveResultsCSV("../output/determinismTest_Debug_STCPU");
 	#else
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_STCPU");
+		rigidBodyStateDbgRecorder.saveResultsCSV("../output/determinismTest_Release_STCPU");
 	#endif
 	#else
 	#ifdef _DEBUG
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Debug_MTCPU");
+		rigidBodyStateDbgRecorder.saveResultsCSV("../output/determinismTest_Debug_MTCPU");
 	#else
-		rigidBodyStateDbgRecorder.saveResults("../output/determinismTest_Release_MTCPU");
+		rigidBodyStateDbgRecorder.saveResultsCSV("../output/determinismTest_Release_MTCPU");
 	#endif
 	#endif
 	#endif
 		///////////////////////////////////
 
+		// Save measurements (only if any were taken)
 		controllerPerfRecorder.finishRound();
-	#ifndef MULTI
-	#ifdef _DEBUG
-		controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_STCPU");
-	#else
-		controllerPerfRecorder.saveResults("../output/controllerPerf_Release_STCPU");
-	#endif
-	#else
-	#ifdef _DEBUG
-		controllerPerfRecorder.saveResults("../output/controllerPerf_Debug_MTCPU");
-	#else
-		controllerPerfRecorder.saveResults("../output/controllerPerf_Release_MTCPU");
-	#endif
-	#endif
+		if (m_initExecSetup == InitExecSetup::SERIAL)
+		{
+#ifdef _DEBUG
+			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial_D");
+#else
+			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial");
+#endif
+		}
+		else
+		{
+#ifdef _DEBUG
+			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel_D);
+#else
+			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel");
+#endif
+		}
+
 
 
 		// Clean up
-
 		// artemis
 		constraintSystem->removeAllConstraints();
 		entityManager->removeAllEntities();
@@ -1532,11 +1539,12 @@ void App::initFromSettings(SettingsData& p_settings)
 	}
 	else if (p_settings.m_mode == "m")
 	{
-		// TODO! NOT IMPLEMENTED
+		m_measurePerf = true;
 	}
 	else
 	{
 		m_runOptimization = false;
+		m_measurePerf = false;
 	}
 	if (p_settings.m_pod == "q")
 		m_characterCreateType = CharCreateType::QUADRUPED;
@@ -1544,9 +1552,9 @@ void App::initFromSettings(SettingsData& p_settings)
 		m_characterCreateType = CharCreateType::BIPED;
 	
 	if (p_settings.m_execMode == "p")
-		m_initExecSetup = 1;
+		m_initExecSetup = InitExecSetup::PARALLEL;
 	else
-		m_initExecSetup = 0;
+		m_initExecSetup = InitExecSetup::SERIAL;
 	m_initCharCountSerial=p_settings.m_charcount_serial;
 	m_initParallelInvocCount=p_settings.m_parallel_invocs;
 	m_initCharOffset=p_settings.m_charOffsetX;

@@ -77,3 +77,6 @@ bin/x64/*.txt
 *.vspx
 *.lastcodeanalysissucceeded
 *.vsp
+/multileg/bin/output/graphs/render/*.png
+/multileg/bin/output/graphs/render/*.svg
+/multileg/bin/output/graphs/render/*.eps
