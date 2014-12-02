@@ -9,7 +9,7 @@ set terminal pngcairo size out_w,out_h enhanced font "Verdana,45"
 set output "render/output_raster.png"
 
 # settings
-set yrange [-10:8600]
+set yrange [-1:20]
 
 set bars small
 
@@ -36,7 +36,7 @@ set style line 33 lc rgb '#76a1c8' pt -1 ps 1 lt 1 lw 0.3 # --- blue
 set key top left
 
 set xlabel 'Step'
-set ylabel 'Population'
+set ylabel 'Milliseconds'
 
 set label 'Sponge' at first 4500, first 8000
 set label 'Ants' at first 4500, first 1600
@@ -48,9 +48,10 @@ set label 'Worms' at first 4500, first 400
 #
 # =======================================================================================================
 plot \
-"wormsdat.txt" every errstep with yerrorbars ls 11 t '', "wormsdat.txt" with lines ls 1 t 'Worms', \
-"antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
-"spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
+"perf_serial.gnuplot.txt" ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial'
+#"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
+# "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
+# "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
 
 # EPS
 set terminal postscript size out_w,out_h eps enhanced color

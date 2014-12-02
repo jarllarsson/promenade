@@ -167,7 +167,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	m_timing = Time::getTimeMs() - startTiming;
 	//m_timing = endTimingOmp - startTimingOmp;
 	if (m_perfRecorder != NULL)
-		m_perfRecorder->saveMeasurement(m_timing,m_steps);
+		m_perfRecorder->saveMeasurement((double)(m_timing*1000.0),m_steps);
 }
 
 void ControllerSystem::finish()

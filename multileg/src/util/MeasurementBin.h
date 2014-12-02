@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include "CurrentPathHelper.h"
 
 using namespace std;
 
@@ -76,7 +77,7 @@ bool MeasurementBin<T>::saveResultsCSV(const string& p_fileName)
 	if (m_active)
 	{
 		ofstream outFile;
-		string file = p_fileName + ".csv";
+		string file = GetExecutablePathDirectory() + p_fileName + ".csv";
 		outFile.open(file);
 
 		if (!outFile.good())
@@ -125,7 +126,7 @@ bool MeasurementBin<T>::saveResultsGNUPLOT(const string& p_fileName)
 	if (m_active)
 	{
 		ofstream outFile;
-		string file = p_fileName + ".gnuplot.txt";
+		string file = GetExecutablePathDirectory() + p_fileName + ".gnuplot.txt";
 		outFile.open(file);
 
 		if (!outFile.good())
@@ -157,18 +158,18 @@ bool MeasurementBin<T>::saveResultsGNUPLOT(const string& p_fileName)
 			}
 			else if (m_timestamps.size() == m_measurements.size())// else print the raw measurements
 			{
-				outFile << "# step - measurement" << "\n";
-				for (int i = 0; i < m_allMeans.size(); i++)
+				outFile << "# step - measurement - (timestamp)" << "\n";
+				for (int i = 0; i < m_measurements.size(); i++)
 				{
-					outFile << i << " " << m_allMeans[i] << " " << m_allSTDs[i] << " # " << m_timestamps[i] << "\n";
+					outFile << i << " " << m_measurements[i] << " # " << m_timestamps[i] << "\n";
 				}
 			}
 			else
 			{
 				outFile << "# step - measurement" << "\n";
-				for (int i = 0; i < m_allMeans.size(); i++)
+				for (int i = 0; i < m_measurements.size(); i++)
 				{
-					outFile << i << " " << m_allMeans[i] << " " << m_allSTDs[i] << "\n";
+					outFile << i << " " << m_measurements[i] << "\n";
 				}
 			}
 		}

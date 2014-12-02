@@ -1247,7 +1247,7 @@ void App::run()
 		///////////////////////////////////
 
 		// Save measurements (only if any were taken)
-		controllerPerfRecorder.finishRound();
+		//controllerPerfRecorder.finishRound(); for when we have means and standard deviation
 		if (m_initExecSetup == InitExecSetup::SERIAL)
 		{
 #ifdef _DEBUG
