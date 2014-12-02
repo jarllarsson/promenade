@@ -510,7 +510,7 @@ void ControllerSystem::addJointToPDChain(ControllerComponent::PDChain* p_pdChain
 	PDChain->m_jointIdxChain.push_back(p_idx);
 }
 
-
+/*
 void ControllerSystem::repeatAppendChainPart(ControllerComponent::VFChain* p_legVFChain, int p_localJointOffset, 
 	int p_jointCount, unsigned int p_originalChainSize)
 {
@@ -540,6 +540,7 @@ void ControllerSystem::repeatAppendChainPart(ControllerComponent::VFChain* p_leg
 	} while (jointAddedCounter <= p_jointCount && DOFidx < p_originalChainSize);
 	// stops adding when we have all specified joints AND have catched all its DOFs
 }
+*/
 
 unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, TransformComponent* p_jointTransform, ControllerComponent* p_controllerParent)
 {
@@ -560,7 +561,6 @@ unsigned int ControllerSystem::addJoint(RigidBodyComponent* p_jointRigidBody, Tr
 	// saveJointMatrix(idx);
 	return idx; // return idx of inserted
 }
-
 
 
 void ControllerSystem::saveJointMatrix(unsigned int p_rigidBodyIdx)
@@ -602,8 +602,11 @@ void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 {
 	float dt = p_dt;
 	ControllerComponent* controller = m_controllers[p_controllerId];
-	// m_currentVelocity = transform.position - m_oldPos;
-	//calcHeadAcceleration();
+	// get a copy of this controller's torques
+	unsigned int torqueIdxStart = controller->getTorqueListOffset();
+	unsigned int torqueIdxEnd = controller->getTorqueListChunkSize() + torqueIdxStart;
+	std::vector<glm::vec3> localJointTorques = std::vector<glm::vec3>(m_jointTorques.begin() + torqueIdxStart, 
+		m_jointTorques.begin() + torqueIdxEnd);
 
 	// Advance the player
 	controller->m_player.updatePhase(dt);
@@ -614,15 +617,17 @@ void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 	// update feet positions
 	updateFeet(p_controllerId, controller);
 
-	updateSpine(&m_jointTorques, p_controllerId, controller,p_dt);
+	updateSpine(&localJointTorques, p_controllerId, controller, p_dt);
 
 	// Recalculate all torques for this frame
-	updateTorques(p_controllerId, controller, dt);
+	updateTorques(&localJointTorques, p_controllerId, controller, dt);
 
-	// Debug color of legs when in stance
-	//debugColorLegs();
 
-	//m_oldPos = transform.position;
+	// Update torques in global torque list
+	for (int i = torqueIdxStart; i < torqueIdxEnd; i++)
+	{
+		m_jointTorques[i] = localJointTorques[i - torqueIdxStart];
+	}
 }
 void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
@@ -735,6 +740,7 @@ void ControllerSystem::updateSpine(std::vector<glm::vec3>* p_outTVF, int p_contr
 	ControllerComponent::Spine* spine = &p_controller->m_spine;
 	if (spine->getPDChain()->getSize()>0 && p_controller->getLegFrameCount()>1)
 	{
+		unsigned int torqueIdxStart = p_controller->getTorqueListOffset();
 		float phi = p_controller->m_player.getPhase();
 		glm::quat orientationDiff;
 		// First, calculate the orientation diff between leg frames
@@ -756,7 +762,7 @@ void ControllerSystem::updateSpine(std::vector<glm::vec3>* p_outTVF, int p_contr
 			// Drive PD using angle
 			glm::vec3 torque = pdChain->m_PDChain[x].drive(current, orientationDiff / (float)spineJoints, p_dt);
 			// Add to torque for joint
-			(*p_outTVF)[jointIdx] += torque;
+			(*p_outTVF)[jointIdx - torqueIdxStart] += torque;
 			glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
 			//dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x * 5], dawnBringerPalRGB[COL_LIGHTRED]);
 		}
@@ -867,7 +873,7 @@ float ControllerSystem::getFootTransitionPhase(ControllerComponent::LegFrame* p_
 
 
 
-void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComponent* p_controller, float p_dt)
+void ControllerSystem::updateTorques(std::vector<glm::vec3>* p_inoutLocalT, unsigned int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
 	float phi = p_controller->m_player.getPhase();
 	unsigned int torqueCount = p_controller->getTorqueListChunkSize();
@@ -875,8 +881,8 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 
 	//// Compute the variants of torque and write to torque array
 	//resetNonFeedbackJointTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	if (m_usePDTorque) computePDTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
-	computeAllVFTorques(&m_jointTorques, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	if (m_usePDTorque) computePDTorques(p_inoutLocalT, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
+	computeAllVFTorques(p_inoutLocalT, p_controller, p_controllerId, torqueIdxOffset, phi, p_dt);
 
 	
 	// Apply them to the leg frames, also
@@ -894,7 +900,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 			for (unsigned int i = 0; i < (unsigned int)spineCount; i++)
 			{
 				unsigned int spineIdx = spine->getPDChain()->m_jointIdxChain[i];
-				tspine += m_jointTorques[spineIdx];
+				tspine += (*p_inoutLocalT)[spineIdx - torqueIdxOffset];
 				tospine += m_oldJointTorques[spineIdx];
 			}
 		}
@@ -903,7 +909,8 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 		// loop backwards, so the last remaining torque (ie. the front LF) returned is the one applied to the spine
 		for (int i = ((int)p_controller->getLegFrameCount())-1; i>=0; i--)
 		{
-			tLFremainder=applyNetLegFrameTorque(p_controllerId, p_controller, i, tspine, tospine, phi, p_dt);
+			tLFremainder=applyNetLegFrameTorque(p_inoutLocalT, p_controllerId, p_controller, i, torqueIdxOffset, 
+												tspine, tospine, phi, p_dt);
 		}
 
 
@@ -913,7 +920,7 @@ void ControllerSystem::updateTorques(unsigned int p_controllerId, ControllerComp
 			for (unsigned int i = 0; i < spineCount; i++)
 			{
 				unsigned int spineIdx = (unsigned int)spine->getPDChain()->m_jointIdxChain[i];
-				m_jointTorques[spineIdx] += tLFremainder / (float)spineCount; // NOTE! Not sure if we should divide here? Or all joints assume the full torque?
+				(*p_inoutLocalT)[spineIdx - torqueIdxOffset] += tLFremainder / (float)spineCount; // NOTE! Not sure if we should divide here? Or all joints assume the full torque?
 			}
 		}
 	}
@@ -1010,6 +1017,7 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 		ControllerComponent::VFChain* chain = NULL;
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 		calculateLegFrameNetLegVF(p_controllerIdx, lf, p_phi, p_dt, m_controllerVelocityStats[p_controllerIdx]);
+
 		// Begin calculating Jacobian transpose for each leg in leg frame
 		unsigned int legCount = (unsigned int)lf->m_legs.size();	
 		for (unsigned int n = 0; n < legCount; n++)
@@ -1018,13 +1026,13 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 			if (m_useVFTorque)
 			{
 				chain = leg->getVFChain(ControllerComponent::STANDARD_CHAIN);
-				computeVFTorquesFromChain(p_outTVF,chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
-				
+
 			if (m_useGCVFTorque && !isInControlledStance(lf, n, p_phi))
 			{
 				chain = leg->getVFChain(ControllerComponent::GRAVITY_COMPENSATION_CHAIN);
-				computeVFTorquesFromChain(p_outTVF,chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 		}	
 		// also compute GCVF for spine joints
@@ -1041,7 +1049,7 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 	}
 }
 
-void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, ControllerComponent::VFChain* p_vfChain,
+void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inoutTVF, ControllerComponent::VFChain* p_vfChain,
 	ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
 	// Calculate torques using specified VF chain
@@ -1049,7 +1057,8 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 	unsigned int endJointIdx = chain->getEndJointIdx();
 	unsigned int dofsToProcess = chain->getSize();
 	unsigned int subChains = chain->m_jointIdxChainOffsets.size();
-	for (int i = 0; i < max(1, subChains); i++) // always run at least once
+	int iterations = max(1, subChains);
+	for (int i = 0; i < iterations; i++) // always run at least once
 	{		
 		// get next end joint, if we're using subchains
 		if (p_type == ControllerComponent::GRAVITY_COMPENSATION_CHAIN && subChains > 0)
@@ -1075,14 +1084,6 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 															dofsToProcess);					// Number of DOFs in list to work through
 		CMatrix Jt = CMatrix::transpose(J);
 
-		/*glm::mat4 sum(0.0f);
-		for (unsigned int g = 0; g < m_jointWorldInnerEndpoints.size(); g++)
-		{
-		sum += m_jointWorldTransforms[g];
-		}*/
-		//DEBUGPRINT(((std::string("\n") + std::string(" WTransforms: ") + ToString(sum)).c_str()));
-		//DEBUGPRINT(((std::string("\n") + std::string(" Pos: ") + ToString(end)).c_str()));
-		//DEBUGPRINT(((std::string("\n") + std::string(" VF: ") + ToString(vf)).c_str()));
 
 		// Use matrix to calculate and store torque
 		for (unsigned int m = 0; m < dofsToProcess; m++)
@@ -1093,30 +1094,21 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTV
 
 			// for visual force debug
 			// ========================================================================
-			if ((m_dbgShowGCVFVectors && p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
-				|| (m_dbgShowVFVectors && p_type == ControllerComponent::VFChainType::STANDARD_CHAIN))
-			{
-				glm::vec3 jpos = getJointPos(localJointIdx);
-				Color3f lineCol = dawnBringerPalRGB[COL_LIMEGREEN];
-				if (p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
-					lineCol = dawnBringerPalRGB[COL_PINK];
-				//dbgDrawer()->drawLine(jpos, jpos + vf, lineCol);
-			}
+			// if ((m_dbgShowGCVFVectors && p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
+			// 	|| (m_dbgShowVFVectors && p_type == ControllerComponent::VFChainType::STANDARD_CHAIN))
+			// {
+			// 		glm::vec3 jpos = getJointPos(localJointIdx);
+			// 		Color3f lineCol = dawnBringerPalRGB[COL_LIMEGREEN];
+			// 		if (p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
+			// 			lineCol = dawnBringerPalRGB[COL_PINK];
+			// 	//dbgDrawer()->drawLine(jpos, jpos + vf, lineCol);
+			// }
 			// ========================================================================
 
-			//glm::vec3 JjVec(J(0, m), J(1, m), J(2, m));
 			glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
 			glm::vec3 addT = (chain->m_DOFChain)[m] * glm::dot(JVec, vf);
 			//
-			//float ssum = JjVec.x + JjVec.y + JjVec.z;
-			//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" J sum: ") + ToString(ssum)).c_str()));
-			//ssum = JVec.x + JVec.y + JVec.z;
-			//DEBUGPRINT(((std::string("\n") + ToString(m) + std::string(" Jt sum: ") + ToString(ssum)).c_str()));
-			/*bool vecnanchk = glm::isnan(addT) == glm::bool3(true, true, true);
-			if (vecnanchk)
-				int bb = 0;*/
-			(*p_outTVF)[localJointIdx/* + p_torqueIdxOffset*/] += addT;
-			// Do it like this for now, for the sake of readability and debugging.
+			(*p_inoutTVF)[localJointIdx - p_torqueIdxOffset] += addT;
 		}
 
 	} // next subchain(only used for GCVF chains for now)
@@ -1269,7 +1261,7 @@ glm::vec3 ControllerSystem::calculateStanceLegVF(unsigned int p_stanceLegCount,
 }
 
 
-glm::vec3 ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, 
+glm::vec3 ControllerSystem::applyNetLegFrameTorque(std::vector<glm::vec3>* p_inoutTVF, unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, unsigned int p_torqueIdxOffset, 
 	glm::vec3& p_tspine, glm::vec3& p_tospine, float p_phi, float p_dt)
 {
 	// Preparations, get a hold of all legs in stance,
@@ -1285,7 +1277,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, 
 	for (unsigned int i = 0; i < legCount; i++)
 	{
 		unsigned int jointId = lf->m_hipJointId[i];
-		glm::vec3 jTorque=m_jointTorques[jointId], 
+		glm::vec3 jTorque = (*p_inoutTVF)[jointId-p_torqueIdxOffset],
 			joTorque = m_oldJointTorques[jointId];
 		if (isInControlledStance(lf, i, p_phi))
 		{
@@ -1311,7 +1303,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, 
 	// is the product of previous desired torque combined
 	// with current real-world scenarios.
 	glm::vec3 tLF = tostance + toswing + tospine; // ie. est. what we got now, base don last torque action
-	m_jointTorques[lfJointIdx] = tLF;
+	(*p_inoutTVF)[lfJointIdx - p_torqueIdxOffset] = tLF;
 	/*if (p_controllerId==0)
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tLF, dawnBringerPalRGB[COL_PURPLE], dawnBringerPalRGB[COL_YELLOW]);*/
 
@@ -1370,7 +1362,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, 
 	{
 		unsigned int idx = stanceLegBuf[i];
 		// here we use the wanted tLF and subtract the current swing and spine torques
-		m_jointTorques[idx] = work;
+		(*p_inoutTVF)[idx - p_torqueIdxOffset] = work;
 	}
 
 	delete[] stanceLegBuf;
@@ -1395,7 +1387,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(unsigned int p_controllerId, 
 /// \param p_dt
 /// \return void
 ///-----------------------------------------------------------------------------------
-void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, ControllerComponent* p_controller, 
+void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_inoutTVF, ControllerComponent* p_controller, 
 	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
 	glm::mat4 desiredOrientation = getDesiredWorldOrientation(p_controllerIdx);
@@ -1467,7 +1459,7 @@ void ControllerSystem::computePDTorques(std::vector<glm::vec3>* p_outTVF, Contro
 				glm::vec3 torque = pdChain->m_PDChain[x].drive(current, goal, p_dt);
 				//bool vecnanchk = glm::isnan(torque) == glm::bool3(true, true, true);
 				// Add to torque for joint
-				(*p_outTVF)[jointIdx] += torque;
+				(*p_inoutTVF)[jointIdx - p_torqueIdxOffset] += torque;
 				/*glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
 				if (p_controllerIdx == 0)
 					dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x*5], dawnBringerPalRGB[COL_CORNFLOWERBLUE]);*/

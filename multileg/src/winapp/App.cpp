@@ -1259,7 +1259,7 @@ void App::run()
 		else
 		{
 #ifdef _DEBUG
-			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel_D);
+			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel_D");
 #else
 			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel");
 #endif

@@ -29,7 +29,7 @@ CMatrix::~CMatrix()
 
 
 
-double& CMatrix::operator() (unsigned int p_row, unsigned int p_column) const
+float& CMatrix::operator() (unsigned int p_row, unsigned int p_column) const
 {
 	return m[p_row][p_column];
 }
@@ -47,7 +47,7 @@ CMatrix CMatrix::mul(const CMatrix& p_ma, const CMatrix& p_mb)
 	for (unsigned int i = 0; i < res.m_rows; i++)
 	for (unsigned int j = 0; j < res.m_cols; j++)
 	{
-		double s = 0.0f;
+		float s = 0.0f;
 		for (unsigned int x = 0; x < y; x++)
 		{
 			s += p_ma(i, x) * p_mb(x, j);
@@ -73,7 +73,7 @@ CMatrix CMatrix::operator *(const CMatrix& p_mb) const
 	return mul(*this, p_mb);
 }
 
-CMatrix CMatrix::operator *(double p_s) const
+CMatrix CMatrix::operator *(float p_s) const
 {
 	CMatrix res(m_rows, m_cols);
 	for (unsigned int i = 0; i < m_rows; i++)
@@ -98,7 +98,7 @@ bool CMatrix::operator==(const CMatrix& p_mb) const
 	return true;
 }
 
-double CMatrix::dot(const CMatrix& p_ma, const CMatrix& p_mb)
+float CMatrix::dot(const CMatrix& p_ma, const CMatrix& p_mb)
 {
 	if (p_ma.m_rows != p_mb.m_rows ||
 		p_ma.m_cols != p_mb.m_cols)
@@ -106,7 +106,7 @@ double CMatrix::dot(const CMatrix& p_ma, const CMatrix& p_mb)
 		throw std::exception("Input matrices not of same size in CMatrix::dot");
 		return -1.0;
 	};
-	double sum = 0.0;
+	float sum = 0.0;
 	for (unsigned int i = 0; i < p_ma.m_rows; i++)
 	for (unsigned int j = 0; j < p_mb.m_cols; j++)
 	{
@@ -117,21 +117,21 @@ double CMatrix::dot(const CMatrix& p_ma, const CMatrix& p_mb)
 
 void CMatrix::init()
 {
-	m = new double*[m_rows];
+	m = new float*[m_rows];
 	for (unsigned int i = 0; i < m_rows; i++)
 	{
-		m[i] = new double[m_cols];
+		m[i] = new float[m_cols];
 		for (unsigned int j = 0; j < m_cols; j++)
-			m[i][j] = 0.0;
+			m[i][j] = 0.0f;
 	}
 }
 
 void CMatrix::init(const CMatrix& p_copy)
 {
-	m = new double*[m_rows];
+	m = new float*[m_rows];
 	for (unsigned int i = 0; i < m_rows; i++)
 	{
-		m[i] = new double[m_cols];
+		m[i] = new float[m_cols];
 		for (unsigned int j = 0; j < m_cols; j++)
 			m[i][j] = p_copy(i,j);
 	}

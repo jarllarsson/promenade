@@ -13,6 +13,7 @@ CMatrix JacobianHelper::calculateVFChainJacobian(const ControllerComponent::VFCh
 	unsigned int dofCount = p_dofCount;
 	// Prepare Jacobian matrix
 	CMatrix J(3, dofCount); // 3 is position in xyz
+	
 	for (unsigned int i = 0; i < dofCount; i++) // this is then the "thread pool"
 	{
 		// Fetch the id for the joint from the list
@@ -31,5 +32,6 @@ CMatrix JacobianHelper::calculateVFChainJacobian(const ControllerComponent::VFCh
 		J(1, i) = dirTarget.y;
 		J(2, i) = dirTarget.z;
 	}
+	
 	return J;
 }

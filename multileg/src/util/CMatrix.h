@@ -16,7 +16,7 @@
 class CMatrix
 {
 public:
-	double** m;
+	float** m;
 	unsigned int m_cols;
 	unsigned int m_rows;
 
@@ -29,7 +29,7 @@ public:
 	~CMatrix();
 
 
-	double& operator() (unsigned int p_row, unsigned int p_column) const;
+	float& operator() (unsigned int p_row, unsigned int p_column) const;
 
 
 	static CMatrix mul(const CMatrix& p_ma, const CMatrix& p_mb);
@@ -38,13 +38,13 @@ public:
 
 	CMatrix operator *(const CMatrix& p_ma) const;
 
-	CMatrix operator *(double p_s) const;
+	CMatrix operator *(float p_s) const;
 
 	bool operator == (const CMatrix& p_mb) const;
 
 	CMatrix& operator = (const CMatrix& p_mb);
 
-	static double dot(const CMatrix& p_ma, const CMatrix& p_mb);
+	static float dot(const CMatrix& p_ma, const CMatrix& p_mb);
 private:
 	void clear();
 	void init();

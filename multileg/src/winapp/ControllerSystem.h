@@ -149,15 +149,15 @@ private:
 		unsigned int p_vfIdx, const glm::vec3* p_angularLims = NULL);
 	void addJointToPDChain(ControllerComponent::PDChain* p_legChain, unsigned int p_idx, float p_kp, float p_kd);
 	// Add chain DOFs to list again, from Joint-offset ( this functions skips the appropriate number of DOFs)
-	void repeatAppendChainPart(ControllerComponent::VFChain* p_legVFChain, 
-		int p_localJointOffset, int p_jointCount, unsigned int p_originalChainSize);
+	//void repeatAppendChainPart(ControllerComponent::VFChain* p_legVFChain, 
+	//	int p_localJointOffset, int p_jointCount, unsigned int p_originalChainSize);
 
 	// Control logic functions
 	void controllerUpdate(unsigned int p_controllerId, float p_dt);
 	void updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt);
 	void updateFeet(unsigned int p_controllerId, ControllerComponent* p_controller);
 	void updateSpine(std::vector<glm::vec3>* p_outTVF, int p_controllerId, ControllerComponent* p_controller, float p_dt);
-	void updateTorques(unsigned int p_controllerId, ControllerComponent* p_controller, float p_dt);
+	void updateTorques(std::vector<glm::vec3>* p_inoutLocalT, unsigned int p_controllerId, ControllerComponent* p_controller, float p_dt);
 
 	// Leg frame logic functions
 	void calculateLegFrameNetLegVF(unsigned int p_controllerIdx, ControllerComponent::LegFrame* p_lf, float p_phi, float p_dt, VelocityStat& p_velocityStats);
@@ -177,13 +177,13 @@ private:
 		ControllerComponent* p_controller, unsigned int p_controllerIdx, 
 		unsigned int p_torqueIdxOffset, 
 		float p_phi, float p_dt);
-	void computeVFTorquesFromChain(std::vector<glm::vec3>* p_outTVF, 
+	void computeVFTorquesFromChain(std::vector<glm::vec3>* p_inoutTVF, 
 		ControllerComponent::VFChain* p_vfChain,
 		ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, 
 		float p_phi, float p_dt);
-	glm::vec3 applyNetLegFrameTorque(unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, glm::vec3& p_tspine, glm::vec3& p_tospine, float p_phi, float p_dt);
+	glm::vec3 applyNetLegFrameTorque(std::vector<glm::vec3>* p_inoutTVF, unsigned int p_controllerId, ControllerComponent* p_controller, unsigned int p_legFrameIdx, unsigned int p_torqueIdxOffset, glm::vec3& p_tspine, glm::vec3& p_tospine, float p_phi, float p_dt);
 	// PD calculation for legs
-	void computePDTorques(std::vector<glm::vec3>* p_outTVF, 
+	void computePDTorques(std::vector<glm::vec3>* p_inoutTVF, 
 		ControllerComponent* p_controller, unsigned int p_controllerIdx, 
 		unsigned int p_torqueIdxOffset, 
 		float p_phi, float p_dt);
