@@ -51,7 +51,7 @@ set label 'Worms' at first 4500, first 400
 set ytics 0.5 font "Verdana,12" 
 set xtics font "Verdana,12" 
 plot \
-"perf_serial.gnuplot.txt" every errstep ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial'
+"perf_parallel.gnuplot.txt" every errstep ls 11 t '', "perf_parallel.gnuplot.txt" with lines ls 1 t 'Parallel'
 #"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
 # "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
 # "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
