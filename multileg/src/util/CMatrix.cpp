@@ -31,7 +31,7 @@ CMatrix::~CMatrix()
 
 float& CMatrix::operator() (unsigned int p_row, unsigned int p_column) const
 {
-	return m[p_row][p_column];
+	return m[p_column+p_row*m_cols];
 }
 
 
@@ -79,7 +79,7 @@ CMatrix CMatrix::operator *(float p_s) const
 	for (unsigned int i = 0; i < m_rows; i++)
 	for (unsigned int j = 0; j < m_cols; j++)
 	{
-		res(i, j) = p_s*m[i][j];
+		res(i, j) = p_s * (*this)(i,j);
 	}
 	return res;
 }
@@ -93,7 +93,7 @@ bool CMatrix::operator==(const CMatrix& p_mb) const
 	for (unsigned int i = 0; i < m_rows; i++)
 	for (unsigned int j = 0; j < m_cols; j++)
 	{
-		if (m[i][j] != p_mb(i, j)) return false;
+		if ((*this)(i, j) != p_mb(i, j)) return false;
 	}
 	return true;
 }
@@ -117,23 +117,23 @@ float CMatrix::dot(const CMatrix& p_ma, const CMatrix& p_mb)
 
 void CMatrix::init()
 {
-	m = new float*[m_rows];
-	for (unsigned int i = 0; i < m_rows; i++)
-	{
-		m[i] = new float[m_cols];
-		for (unsigned int j = 0; j < m_cols; j++)
-			m[i][j] = 0.0f;
-	}
+	m = new float[m_rows*m_cols];
+
+	//for (unsigned int i = 0; i < m_rows; i++)
+	//{
+	//	m[i] = new float[m_cols];
+	//	for (unsigned int j = 0; j < m_cols; j++)
+	//		m[i][j] = 0.0f;
+	//}
 }
 
 void CMatrix::init(const CMatrix& p_copy)
 {
-	m = new float*[m_rows];
+	m = new float[m_rows*m_cols];
 	for (unsigned int i = 0; i < m_rows; i++)
 	{
-		m[i] = new float[m_cols];
 		for (unsigned int j = 0; j < m_cols; j++)
-			m[i][j] = p_copy(i,j);
+			(*this)(i, j) = p_copy(i, j);
 	}
 }
 
@@ -150,9 +150,9 @@ CMatrix& CMatrix::operator=(const CMatrix& p_mb)
 
 void CMatrix::clear()
 {
-	for (unsigned int i = 0; i < m_rows; i++)
-	{
-		delete[] m[i];
-	}
+	//for (unsigned int i = 0; i < m_rows; i++)
+	//{
+	//	delete[] m[i];
+	//}
 	delete[] m;
 }

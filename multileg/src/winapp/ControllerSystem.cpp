@@ -1076,6 +1076,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 		glm::vec3 end = getJointPos(endJointIdx);
 		//getFootPos(p_lf, p_legIdx);
 		// Calculate the matrices
+
 		CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,// Chain of DOFs to solve for
 															end,							// Our end effector goal position
 															&m_VFs,							// All virtual forces
