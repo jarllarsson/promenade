@@ -1026,13 +1026,13 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 			if (m_useVFTorque)
 			{
 				chain = leg->getVFChain(ControllerComponent::STANDARD_CHAIN);
-				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				//computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 
 			if (m_useGCVFTorque && !isInControlledStance(lf, n, p_phi))
 			{
 				chain = leg->getVFChain(ControllerComponent::GRAVITY_COMPENSATION_CHAIN);
-				computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				//computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 		}	
 		// also compute GCVF for spine joints

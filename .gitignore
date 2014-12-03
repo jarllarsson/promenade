@@ -77,8 +77,5 @@ bin/x64/*.txt
 *.vspx
 *.lastcodeanalysissucceeded
 *.vsp
-/multileg/bin/output/graphs/render/*.png
 /multileg/bin/output/graphs/render/*.svg
 /multileg/bin/output/graphs/render/*.eps
-!/multileg/bin/output/graphs/render/output_raster_serial_old.png
-!/multileg/bin/output/graphs/render/output_raster_parallel_old.png
