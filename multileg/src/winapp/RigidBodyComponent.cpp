@@ -195,3 +195,8 @@ void RigidBodyComponent::setAngularFactor(glm::vec3& p_axis)
 	if (m_rigidBody != NULL)
 		m_rigidBody->setAngularFactor(btVector3(m_angularFactor.x, m_angularFactor.y, m_angularFactor.z));
 }
+
+void RigidBodyComponent::unsetIsCollidingFlag()
+{
+	m_colliding = false;
+}

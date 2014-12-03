@@ -1,5 +1,6 @@
 #include "RigidBodySystem.h"
 #include <ToString.h>
+#include <DebugPrint.h>
 
 
 void RigidBodySystem::removed(artemis::Entity &e)
@@ -232,6 +233,7 @@ void RigidBodySystem::lateUpdate()
 
 void RigidBodySystem::fixedUpdate(float p_dt)
 {
+	DEBUGPRINT(("\n "));
 	for (unsigned int i = 0; i < m_rigidBodyEntities.getSize(); i++)
 	{
 		artemis::Entity* e = m_rigidBodyEntities[i];
@@ -242,10 +244,15 @@ void RigidBodySystem::fixedUpdate(float p_dt)
 			if (rigidBody->isRegisteringCollisions())
 			{
 				btRigidBody* body = rigidBody->getRigidBody();
-				rigidBody->setCollidingStat(false);
+				DEBUGPRINT(((" RB" + ToString(rigidBody->getUID()) + " = " + ToString(rigidBody->isColliding())).c_str()));
+				rigidBody->unsetIsCollidingFlag();
 				m_dynamicsWorldPtr->contactTest(body, *rigidBody->getCollisionCallbackFunc());
+				DEBUGPRINT(((" nRB" + ToString(rigidBody->getUID()) + " = " + ToString(rigidBody->isColliding())).c_str()));
+
 			}
 		}
+		DEBUGPRINT(("\n"));
 	}
+	DEBUGPRINT(("\n"));
 }
 

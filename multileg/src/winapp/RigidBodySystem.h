@@ -105,7 +105,10 @@ public:
 					hit = true;
 				}
 			}
-			m_component->setCollidingStat(hit, glm::vec3(pt.x(),pt.y(),pt.z()));
+			if (hit)
+				m_component->setCollidingStat(hit, glm::vec3(pt.x(), pt.y(), pt.z()));
+			else
+				m_component->unsetIsCollidingFlag();
 			// do stuff with the collision point
 			return 0;
 		}
@@ -116,12 +119,12 @@ public:
 	private:
 		bool checkMaskedCollision(const btCollisionObjectWrapper* p_colObj0, const btCollisionObjectWrapper* p_colObj1)
 		{
-			CollisionLayer::CollisionLayerType obj0Grp = (CollisionLayer::CollisionLayerType)p_colObj1->m_collisionObject->getBroadphaseHandle()->m_collisionFilterGroup;
-			CollisionLayer::CollisionLayerType obj0Msk = (CollisionLayer::CollisionLayerType)p_colObj1->m_collisionObject->getBroadphaseHandle()->m_collisionFilterMask;
-			CollisionLayer::CollisionLayerType obj1Grp = (CollisionLayer::CollisionLayerType)p_colObj0->m_collisionObject->getBroadphaseHandle()->m_collisionFilterGroup;
-			CollisionLayer::CollisionLayerType obj1Msk = (CollisionLayer::CollisionLayerType)p_colObj0->m_collisionObject->getBroadphaseHandle()->m_collisionFilterMask;
-			bool collides = (obj1Grp & obj0Msk) != 0;
-			collides = collides && (obj0Grp & obj1Msk);
+			CollisionLayer::CollisionLayerType obj0Grp = (CollisionLayer::CollisionLayerType)p_colObj0->m_collisionObject->getBroadphaseHandle()->m_collisionFilterGroup;
+			CollisionLayer::CollisionLayerType obj0Msk = (CollisionLayer::CollisionLayerType)p_colObj0->m_collisionObject->getBroadphaseHandle()->m_collisionFilterMask;
+			CollisionLayer::CollisionLayerType obj1Grp = (CollisionLayer::CollisionLayerType)p_colObj1->m_collisionObject->getBroadphaseHandle()->m_collisionFilterGroup;
+			CollisionLayer::CollisionLayerType obj1Msk = (CollisionLayer::CollisionLayerType)p_colObj1->m_collisionObject->getBroadphaseHandle()->m_collisionFilterMask;
+			bool collides = (obj0Grp & obj1Msk) != 0;
+			collides = collides && (obj1Grp & obj0Msk);
 			return collides;
 		}
 	};

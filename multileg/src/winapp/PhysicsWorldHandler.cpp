@@ -2,6 +2,8 @@
 #include <btBulletDynamicsCommon.h>
 #include "AdvancedEntitySystem.h"
 #include "ControllerSystem.h"
+#include <DebugPrint.h>
+#include <ToString.h>
 
 
 void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeStep) {
@@ -19,6 +21,30 @@ PhysicsWorldHandler::PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSys
 
 void PhysicsWorldHandler::physProcessCallback(btScalar timeStep)
 {
+	int numManifolds = m_world->getDispatcher()->getNumManifolds();
+	DEBUGPRINT(( ("\ncollision! n:"+ToString(numManifolds)).c_str() ));
+
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
+		const btCollisionObject* obA = static_cast<const btCollisionObject*>(contactManifold->getBody0());
+		const btCollisionObject* obB = static_cast<const btCollisionObject*>(contactManifold->getBody1());
+
+		int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; j++)
+		{
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance() < 0.f)
+			{
+				// get user pointer/index
+				const btVector3& ptA = pt.getPositionWorldOnA();
+				const btVector3& ptB = pt.getPositionWorldOnB();
+				const btVector3& normalOnB = pt.m_normalWorldOnB;
+				DEBUGPRINT((("\nbd" + ToString(obA) + "+bd" + ToString(obB)).c_str()));
+			}
+		}
+	}
+
 	m_internalStepCounter++;
 	processPreprocessSystemCollection((float)timeStep);
 	//// Character controller

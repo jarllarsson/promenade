@@ -64,6 +64,7 @@ public:
 	const glm::vec3& getLinearFactor();
 	const glm::vec3& getAngularFactor();
 	bool isRegisteringCollisions();
+	void unsetIsCollidingFlag();
 	void setCollidingStat(bool p_stat, const glm::vec3& p_position=glm::vec3(0.0f));
 	void setVelocityStat(glm::vec3& p_velocity);
 	void setAccelerationStat(glm::vec3& p_acceleration);

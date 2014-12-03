@@ -49,6 +49,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 	// Perfect for debugging
 	// Non-optional
 	ControllerComponent* controller = controllerComponentMapper.get(e);
+	/*
 	if (controller != NULL && controller->isBuildComplete())
 	{
 		for (int x = 0; x < controller->getLegFrameCount();x++)
@@ -58,6 +59,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 			for (unsigned int i = 0; i < legCount; i++)
 			{
 				unsigned int jointId = lf->m_hipJointId[i];
+				DEBUGPRINT(("\nE"));
 				if (isInControlledStance(lf, i, controller->m_player.getPhase()))
 				{
 					for (int n = 0; n < 3; n++) // 3 segments
@@ -73,6 +75,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 			}
 		}
 	}
+	*/
 }
 
 void ControllerSystem::fixedUpdate(float p_dt)
@@ -95,13 +98,14 @@ void ControllerSystem::fixedUpdate(float p_dt)
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
 
+	DEBUGPRINT(("\n==========\n"));
 	int controllerCount = (int)m_controllers.size();
 	if (m_controllers.size()>0)
 	{
 		// First, we have to read collision status for all feet. SILLY
 		for (int n = 0; n < controllerCount; n++)
 		{
-			ControllerComponent* controller = m_controllers[(unsigned int)n];
+			ControllerComponent* controller = m_controllers[n];
 			writeFeetCollisionStatus(controller);
 		}
 
@@ -124,7 +128,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			// =====================================
 			dbgDrawer()->m_enabled = false;
 			int loopInvoc = 4;
-			int serialChars = 20;
+			int serialChars = 1;
 			/*concurrency::parallel_for(0, loopInvoc, [&](int n)
 			{
 			for (int i = 0; i < serialChars; i++)
@@ -634,6 +638,7 @@ void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 	{
 		m_jointTorques[i] = localJointTorques[i - torqueIdxStart];
 	}
+	DEBUGPRINT(("\n"));
 }
 void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
@@ -784,6 +789,7 @@ void ControllerSystem::updateFoot(unsigned int p_controllerId, ControllerCompone
 	// The position is updated as long as the leg
 	// is in stance. This means that the last calculated
 	// position when the foot leaves the ground is used.
+	//DEBUGPRINT(("\nD"));
 	if (isInControlledStance(p_lf, p_legIdx, p_phi))
 	{
 		updateFootStrikePosition(p_controllerId, p_lf, p_legIdx, p_phi, p_velocity, p_desiredVelocity, p_groundPos);
@@ -843,6 +849,7 @@ void ControllerSystem::updateFootSwingPosition(ControllerComponent::LegFrame* p_
 
 void ControllerSystem::offsetFootTargetDownOnLateStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
+	//DEBUGPRINT(("\nX "));
 	bool isTouchingGround = isFootStrike(p_lf,p_legIdx);
 	if (!isTouchingGround)
 	{
@@ -954,6 +961,7 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 	for (unsigned int i = 0; i < legCount; i++)
 	{
 		legInStance[i] = false;
+		//DEBUGPRINT(("\nC"));
 		if (isInControlledStance(p_lf,i, p_phi))
 		{
 			stanceLegs++; legInStance[i] = true;
@@ -1035,7 +1043,7 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 				chain = leg->getVFChain(ControllerComponent::STANDARD_CHAIN);
 				computeVFTorquesFromChain(p_outTVF, chain, J, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
-
+			//DEBUGPRINT(("\nB"));
 			if (m_useGCVFTorque && !isInControlledStance(lf, n, p_phi))
 			{
 				chain = leg->getVFChain(ControllerComponent::GRAVITY_COMPENSATION_CHAIN);
@@ -1133,8 +1141,8 @@ bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf,
 	{
 		// TODO!!!
 		// WTF, I HADN'T FIXED THIS???:
-		bool isTouchingGround = false;
-			//isFootStrike(p_lf,p_legIdx);
+		//DEBUGPRINT((string("Y " + ToString(p_lf) + " > " + ToString(stepCycle)).c_str()));
+		bool isTouchingGround = isFootStrike(p_lf,p_legIdx);
 		// ACTIVATING THIS STILL RESULTS IN DIFFERING RESULTS FOR CHARACTERS
 		// BUT THE ONES THAT DOES WALK RESPONDS BETTER TO WALKING IN THE BEGINNING
 		if (isTouchingGround)
@@ -1292,6 +1300,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(std::vector<glm::vec3>* p_ino
 		unsigned int jointId = lf->m_hipJointId[i];
 		glm::vec3 jTorque = (*p_inoutTVF)[jointId-p_torqueIdxOffset],
 			joTorque = m_oldJointTorques[jointId];
+
 		if (isInControlledStance(lf, i, p_phi))
 		{
 			tstance += jTorque;
@@ -1523,6 +1532,7 @@ glm::mat4 ControllerSystem::getDesiredWorldOrientation(unsigned int p_controller
 
 bool ControllerSystem::isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
+	DEBUGPRINT((((" "+ToString(p_legIdx) + " " + ToString(p_lf->m_footIsColliding[p_legIdx]))).c_str()));
 	return p_lf->m_footIsColliding[p_legIdx];
 }
 
@@ -1531,16 +1541,22 @@ bool ControllerSystem::isFootStrike(ControllerComponent::LegFrame* p_lf, unsigne
 // Coupling to artemis and rigidbody component :/
 void ControllerSystem::writeFeetCollisionStatus(ControllerComponent* p_controller)
 {
+	//DEBUGPRINT((("\n " + ToString(p_controller)).c_str()));
 	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
+		//DEBUGPRINT(((" LF"+ToString(i)).c_str()));
 		ControllerComponent::LegFrame* lf = p_controller->getLegFrame(i);
 		unsigned int legCount = (unsigned int)lf->m_legs.size();
 		for (unsigned int x = 0; x < legCount; x++)
 		{
+			//DEBUGPRINT(((" L" + ToString(x)).c_str()));
 			unsigned int footRBIdx = lf->m_footRigidBodyIdx[x];
-			lf->m_footIsColliding[x] = m_rigidBodyRefs[footRBIdx]->isColliding();
+			bool isColliding = m_rigidBodyRefs[footRBIdx]->isColliding();
+			//DEBUGPRINT(((" RB" + ToString(footRBIdx) + " = " + ToString(isColliding)).c_str()));
+			lf->m_footIsColliding[x] = isColliding;
 		}
 	}
+	//DEBUGPRINT(("\n"));
 	// phew
 }
 
