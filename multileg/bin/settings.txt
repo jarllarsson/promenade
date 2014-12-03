@@ -14,7 +14,7 @@ POD								(biped(short: b) or quadruped(short: q))
 b
 
 EXEC_MODE					(serial(short: s) or parallel(short: p))
-p
+s
 
 CHARCOUNT_SERIAL			(character count when executing serially)
 160
