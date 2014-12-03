@@ -5,8 +5,8 @@ out_w = 1280
 out_h = 800
 errstep = 5
 #default output
-set terminal pngcairo size out_w,out_h enhanced font "Verdana,45"
-set output "render/output_raster160.png"
+set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
+set output "render/output_raster160both.png"
 
 # settings
 set yrange [0:3]
