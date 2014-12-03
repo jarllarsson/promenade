@@ -2,6 +2,8 @@
 #include <OptimizableHelper.h>
 #include <DebugPrint.h>
 
+unsigned int ControllerComponent::VFChain::s_maxJacobiRowsAll=0;
+
 ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame, 
 	std::vector<artemis::Entity*>& p_hipJoints)
 {

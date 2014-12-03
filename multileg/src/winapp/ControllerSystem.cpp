@@ -303,6 +303,8 @@ void ControllerSystem::buildCheck()
 					}
 					jointsAddedForLeg++;
 				}
+				// set rows needed when constructing jacobi matrices for chain
+				standardDOFChain->trySetMaxJacobiRowSz(standardDOFChain->getSize());
 				// Copy all DOFs for ordinary VF-chain to the gravity compensation chain
 				legFrame->m_legs[x].m_DOFChainGravityComp = legFrame->m_legs[x].m_DOFChain;
 				unsigned int origGCDOFsz = legFrame->m_legs[x].m_DOFChainGravityComp.getSize();
@@ -318,7 +320,9 @@ void ControllerSystem::buildCheck()
 						float mass = m_jointMass[jointId];
 						m_VFs.push_back(-mass*glm::vec3(0.0f, WORLD_GRAVITY, 0.0f));
 						vfIdx = (unsigned int)((int)m_VFs.size() - 1);
-						legFrame->m_legs[x].m_DOFChainGravityComp.m_jointIdxChainOffsets.push_back(m);
+						ControllerComponent::VFChain* legchain = &(legFrame->m_legs[x].m_DOFChainGravityComp);
+						legchain->trySetMaxJacobiRowSz(m);
+						legchain->m_jointIdxChainOffsets.push_back(m);
 					}
 					legFrame->m_legs[x].m_DOFChainGravityComp.m_vfIdxList[m] = vfIdx;
 					oldJointGCIdx = jointId;
@@ -416,7 +420,9 @@ void ControllerSystem::buildCheck()
 				unsigned int jointId = controller->m_spine.getGCVFChainFwd()->m_jointIdxChain[m];
 				if (jointId != oldJointGCIdx)
 				{
-					controller->m_spine.getGCVFChainFwd()->m_jointIdxChainOffsets.push_back(m);
+					ControllerComponent::VFChain* spinechain = controller->m_spine.getGCVFChainFwd();
+					spinechain->trySetMaxJacobiRowSz(m);
+					spinechain->m_jointIdxChainOffsets.push_back(m);
 				}
 				oldJointGCIdx = jointId;
 			}
@@ -1012,6 +1018,7 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 	unsigned int p_controllerIdx, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
 	int spineCount = (int)p_controller->m_spine.m_joints;
+	CMatrix J(3, ControllerComponent::VFChain::getAbsoluteMaxJacobiRows());
 	for (unsigned int i = 0; i < p_controller->getLegFrameCount(); i++)
 	{
 		ControllerComponent::VFChain* chain = NULL;
@@ -1026,13 +1033,13 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 			if (m_useVFTorque)
 			{
 				chain = leg->getVFChain(ControllerComponent::STANDARD_CHAIN);
-				//computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				computeVFTorquesFromChain(p_outTVF, chain, J, ControllerComponent::STANDARD_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 
 			if (m_useGCVFTorque && !isInControlledStance(lf, n, p_phi))
 			{
 				chain = leg->getVFChain(ControllerComponent::GRAVITY_COMPENSATION_CHAIN);
-				//computeVFTorquesFromChain(p_outTVF, chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+				computeVFTorquesFromChain(p_outTVF, chain, J, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			}
 		}	
 		// also compute GCVF for spine joints
@@ -1042,14 +1049,14 @@ void ControllerSystem::computeAllVFTorques(std::vector<glm::vec3>* p_outTVF, Con
 		if (m_useGCVFTorque && spineCount > 0)
 		{
 			chain = p_controller->m_spine.getGCVFChainFwd(); // front
-			computeVFTorquesFromChain(p_outTVF,chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			computeVFTorquesFromChain(p_outTVF,chain, J, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 			chain = p_controller->m_spine.getGCVFChainBwd(); // back
-			computeVFTorquesFromChain(p_outTVF,chain, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
+			computeVFTorquesFromChain(p_outTVF,chain, J, ControllerComponent::GRAVITY_COMPENSATION_CHAIN, p_torqueIdxOffset, p_phi, p_dt);
 		}
 	}
 }
 
-void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inoutTVF, ControllerComponent::VFChain* p_vfChain,
+void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inoutTVF, ControllerComponent::VFChain* p_vfChain, CMatrix& p_J,
 	ControllerComponent::VFChainType p_type, unsigned int p_torqueIdxOffset, float p_phi, float p_dt)
 {
 	// Calculate torques using specified VF chain
@@ -1058,6 +1065,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 	unsigned int dofsToProcess = chain->getSize();
 	unsigned int subChains = chain->m_jointIdxChainOffsets.size();
 	int iterations = max(1, subChains);
+	// pre allocate matrix
 	for (int i = 0; i < iterations; i++) // always run at least once
 	{		
 		// get next end joint, if we're using subchains
@@ -1076,16 +1084,14 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 		glm::vec3 end = getJointPos(endJointIdx);
 		//getFootPos(p_lf, p_legIdx);
 		// Calculate the matrices
-		CMatrix J(3, dofsToProcess); // 3 is position in xyz
-		JacobianHelper::calculateVFChainJacobian(J,
+		//CMatrix J(3, dofsToProcess); // 3 is position in xyz
+		JacobianHelper::calculateVFChainJacobian(p_J,
 												*chain,// Chain of DOFs to solve for
 												end,							// Our end effector goal position
 												&m_VFs,							// All virtual forces
 												&m_jointWorldInnerEndpoints,	// All joint rotational axes
 												&m_jointWorldTransforms,		// All joint world transformations
 												dofsToProcess);					// Number of DOFs in list to work through
-		//CMatrix Jt = CMatrix::transpose(J);
-
 
 		// Use matrix to calculate and store torque
 		for (unsigned int m = 0; m < dofsToProcess; m++)
@@ -1107,7 +1113,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 			// }
 			// ========================================================================
 
-			glm::vec3 JVec(J(0, m), J(1, m), J(2, m));
+			glm::vec3 JVec(p_J(0, m), p_J(1, m), p_J(2, m)); // reading this way gets us the transpose
 			glm::vec3 addT = (chain->m_DOFChain)[m] * glm::dot(JVec, vf);
 			//
 			(*p_inoutTVF)[localJointIdx - p_torqueIdxOffset] += addT;

@@ -9,7 +9,7 @@ set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
 set output "render/output_raster160both.png"
 
 # settings
-set yrange [0:3]
+set yrange [0:2]
 
 set bars small
 

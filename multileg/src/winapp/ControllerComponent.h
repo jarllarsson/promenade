@@ -59,11 +59,13 @@ public:
 	struct VFChain
 	{
 	public:
+		VFChain() { m_jacobiRows = 0; }
 		std::vector<glm::vec3> m_DOFChain;
 		std::vector<unsigned int> m_jointIdxChain;
 		std::vector<unsigned int> m_jointIdxChainOffsets; // sub chains (offsets for each new chain)
 		// vector with indices to global virtual force list
 		std::vector<unsigned int> m_vfIdxList;
+		unsigned int m_jacobiRows;
 		//
 		unsigned int getSize() const
 		{
@@ -74,6 +76,22 @@ public:
 		{
 			return m_jointIdxChain[getSize() - 1];
 		}
+
+		void trySetMaxJacobiRowSz(unsigned int p_rows)
+		{
+			if (p_rows > m_jacobiRows) m_jacobiRows = p_rows;
+			if (m_jacobiRows > getAbsoluteMaxJacobiRows())
+			{
+				s_maxJacobiRowsAll = m_jacobiRows;
+			}
+		}
+
+		static unsigned int getAbsoluteMaxJacobiRows()
+		{
+			return s_maxJacobiRowsAll;
+		}
+	private:
+		static unsigned int s_maxJacobiRowsAll;
 	};
 	enum VFChainType
 	{
