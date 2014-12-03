@@ -22,4 +22,12 @@ namespace JacobianHelper
 		const std::vector<glm::vec4>* p_jointWorldAxes,
 		const std::vector<glm::mat4>* p_jointWorldTransforms,
 		unsigned int p_dofCount);
+
+	void calculateVFChainJacobian(const CMatrix& p_inOutJ, 
+		const ControllerComponent::VFChain& p_chain,
+		const glm::vec3& p_currentChainEndpointGoalPos,
+		const std::vector<glm::vec3>* p_vfList,
+		const std::vector<glm::vec4>* p_jointWorldAxes,
+		const std::vector<glm::mat4>* p_jointWorldTransforms,
+		unsigned int p_dofCount);
 };

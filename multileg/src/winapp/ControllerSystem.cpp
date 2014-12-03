@@ -124,7 +124,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			// =====================================
 			dbgDrawer()->m_enabled = false;
 			int loopInvoc = 4;
-			int serialChars = 20;
+			int serialChars = 5;
 			/*concurrency::parallel_for(0, loopInvoc, [&](int n)
 			{
 			for (int i = 0; i < serialChars; i++)
@@ -139,7 +139,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			}
 			}
 			});*/
-			#pragma omp parallel num_threads(8)
+			#pragma omp parallel num_threads(4)
 			{
 				int n = omp_get_thread_num();
 				int test = 0;
@@ -1076,14 +1076,15 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 		glm::vec3 end = getJointPos(endJointIdx);
 		//getFootPos(p_lf, p_legIdx);
 		// Calculate the matrices
-
-		CMatrix J = JacobianHelper::calculateVFChainJacobian(*chain,// Chain of DOFs to solve for
-															end,							// Our end effector goal position
-															&m_VFs,							// All virtual forces
-															&m_jointWorldInnerEndpoints,	// All joint rotational axes
-															&m_jointWorldTransforms,		// All joint world transformations
-															dofsToProcess);					// Number of DOFs in list to work through
-		CMatrix Jt = CMatrix::transpose(J);
+		CMatrix J(3, dofsToProcess); // 3 is position in xyz
+		JacobianHelper::calculateVFChainJacobian(J,
+												*chain,// Chain of DOFs to solve for
+												end,							// Our end effector goal position
+												&m_VFs,							// All virtual forces
+												&m_jointWorldInnerEndpoints,	// All joint rotational axes
+												&m_jointWorldTransforms,		// All joint world transformations
+												dofsToProcess);					// Number of DOFs in list to work through
+		//CMatrix Jt = CMatrix::transpose(J);
 
 
 		// Use matrix to calculate and store torque
@@ -1106,11 +1107,12 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 			// }
 			// ========================================================================
 
-			glm::vec3 JVec(Jt(m, 0), Jt(m, 1), Jt(m, 2));
+			glm::vec3 JVec(J(0, m), J(1, m), J(2, m));
 			glm::vec3 addT = (chain->m_DOFChain)[m] * glm::dot(JVec, vf);
 			//
 			(*p_inoutTVF)[localJointIdx - p_torqueIdxOffset] += addT;
 		}
+		
 
 	} // next subchain(only used for GCVF chains for now)
 }
@@ -1123,8 +1125,12 @@ bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf,
 	bool stance = stepCycle->isInStance(p_phi);
 	if (!stance)
 	{
+		// TODO!!!
+		// WTF, I HADN'T FIXED THIS???:
 		bool isTouchingGround = false;
 			//isFootStrike(p_lf,p_legIdx);
+		// ACTIVATING THIS STILL RESULTS IN DIFFERING RESULTS FOR CHARACTERS
+		// BUT THE ONES THAT DOES WALK RESPONDS BETTER TO WALKING IN THE BEGINNING
 		if (isTouchingGround)
 		{
 			float swing = stepCycle->getSwingPhase(p_phi);

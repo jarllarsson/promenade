@@ -114,7 +114,12 @@ glm::vec3 MathHelp::toVec3(const Color3f& p_col)
 
 glm::vec3 MathHelp::getMatrixTranslation(const glm::mat4& m)
 {
-	return MathHelp::toVec3(m * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	glm::vec3 translation;
+	translation.x = m[3][0];
+	translation.y = m[3][1];
+	translation.z = m[3][2];
+	return translation;
+	//return MathHelp::toVec3(m * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 
