@@ -124,7 +124,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			// =====================================
 			dbgDrawer()->m_enabled = false;
 			int loopInvoc = 4;
-			int serialChars = 40;
+			int serialChars = 20;
 			/*concurrency::parallel_for(0, loopInvoc, [&](int n)
 			{
 			for (int i = 0; i < serialChars; i++)
@@ -373,9 +373,8 @@ void ControllerSystem::buildCheck()
 			{
 				int start = 0, iter = 1, end = spineJoints;
 				if (si > 0) { start = spineJoints - 1; iter = -1; end = -1; } // reverse on second
-				for (int s = start; s != end; s+=iter) // read all joints TODO! right now this works, as we're constructing only one chain, 
-					// but when we're making two later on, we must iterate backwards the second time, to get the correct order
-				{
+				for (int s = start; s != end; s+=iter) // read all joints TODO! right now this works, as we're constructing only one chain, 											   
+				{									   // but when we're making two later on, we must iterate backwards the second time, to get the correct order
 					artemis::Entity* jointEntity = controller->getSpineJointEntitiesConstruct(s);
 					// Get joint data
 					TransformComponent* jointTransform = (TransformComponent*)jointEntity->getComponent<TransformComponent>();
@@ -412,15 +411,16 @@ void ControllerSystem::buildCheck()
 			}
 			controller->m_spine.m_lfJointsUsedPD = true;
 			// Fix the sub chains for our GCVF chain, count dof offsets
-			int origGCDOFsz = controller->m_spine.m_DOFChainGravityCompForward.getSize();
+			ControllerComponent::VFChain* spinechain = controller->m_spine.getGCVFChainFwd();
+			int origGCDOFsz = spinechain->getSize();
+			spinechain->trySetMaxJacobiRowSz(origGCDOFsz);
 			int oldJointGCIdx = -1;
 			unsigned int vfIdx = 0;
 			for (unsigned int m = 0; m < origGCDOFsz; m++)
 			{
-				unsigned int jointId = controller->m_spine.getGCVFChainFwd()->m_jointIdxChain[m];
+				unsigned int jointId = spinechain->m_jointIdxChain[m];
 				if (jointId != oldJointGCIdx)
 				{
-					ControllerComponent::VFChain* spinechain = controller->m_spine.getGCVFChainFwd();
 					spinechain->trySetMaxJacobiRowSz(m);
 					spinechain->m_jointIdxChainOffsets.push_back(m);
 				}
@@ -1065,7 +1065,6 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 	unsigned int dofsToProcess = chain->getSize();
 	unsigned int subChains = chain->m_jointIdxChainOffsets.size();
 	int iterations = max(1, subChains);
-	// pre allocate matrix
 	for (int i = 0; i < iterations; i++) // always run at least once
 	{		
 		// get next end joint, if we're using subchains
@@ -1078,6 +1077,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 			else
 				dofsToProcess = chain->getSize();
 		}
+
 		// Get the end effector position
 		// We're using the COM of the end joint in the chain
 		// for a standard chain, this is equivalent to the foot
