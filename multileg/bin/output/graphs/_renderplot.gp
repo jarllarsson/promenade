@@ -1,15 +1,15 @@
 # =======================================================================================================
 # SETUP
 # =======================================================================================================
-out_w = 3508
-out_h = 2000
+out_w = 1280
+out_h = 800
 errstep = 5
 #default output
 set terminal pngcairo size out_w,out_h enhanced font "Verdana,45"
 set output "render/output_raster160.png"
 
 # settings
-set yrange [0:20]
+set yrange [0:3]
 
 set bars small
 
@@ -51,7 +51,8 @@ set label 'Worms' at first 4500, first 400
 set ytics 0.5 font "Verdana,12" 
 set xtics font "Verdana,12" 
 plot \
-"perf_serial.gnuplot.txt" every errstep ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial3'
+"perf_serial.gnuplot.txt" every errstep ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial4', \
+"perf_parallel.gnuplot.txt" every errstep ls 22 t '', "perf_parallel.gnuplot.txt" with lines ls 2 t 'Parallel4'
 #"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
 # "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
 # "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
@@ -76,68 +77,68 @@ replot
 # SEPARATE PLOTS
 #
 # =======================================================================================================
-unset label
-set xlabel 'Step'
-set ylabel 'Population'
-# =======================================================================================================
-# WORMS
-# =======================================================================================================
-set terminal pngcairo size out_w,out_h/1.5 enhanced font "Verdana,45"
-set yrange [-10:300]
-set output "render/worms_output_raster.png"
-# fit a function to the data
-wormfit(x) = a + b*x + c*x**2 + d*x**3 + e*x**4 + f*x**5
-fit wormfit(x) "wormsdat.txt" via a,b,c,d,e,f
-# plot
-plot wormfit(x) with lines ls 4 t 'Trend', \
-"wormsdat.txt" every errstep with yerrorbars ls 11 t '', "wormsdat.txt" with lines ls 1 t 'Worms'
-# EPS
-set terminal postscript size out_w,out_h eps enhanced color
-set output "render/worms_output_vector.eps"
-replot
-# SVG
-set terminal svg size out_w,out_h fname "Verdana" fsize 45
-set output "render/worms_output_vector.svg"
-replot
-
-# =======================================================================================================
-# ANTS
-# =======================================================================================================
-set terminal pngcairo size out_w,out_h/1.5 enhanced font "Verdana,45"
-set yrange [-10:1800]
-set output "render/ants_output_raster.png"
-# fit a function to the data
-antfit(x) = a + b*x + c*x**2 + d*x**3 + e*x**4 + f*x**5
-fit antfit(x) "antsdat.txt" via a,b,c,d,e,f
-# plot
-plot antfit(x) with lines ls 4 t 'Trend', \
-"antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants'
-# EPS
-set terminal postscript size out_w,out_h eps enhanced color
-set output "render/ants_output_vector.eps"
-replot
-# SVG
-set terminal svg size out_w,out_h fname "Verdana" fsize 45
-set output "render/ants_output_vector.svg"
-replot
-
-# =======================================================================================================
-# SPONGE
-# =======================================================================================================
-set terminal pngcairo size out_w,out_h/1.5 enhanced font "Verdana,45"
-set yrange [-10:8600]
-set output "render/sponge_output_raster.png"
-# fit a function to the data
-spongefit(x) = a + b*x + c*x**2 + d*x**3 + e*x**4 + f*x**5
-fit spongefit(x) "spongedat.txt" via a,b,c,d,e,f
-# plot
-plot spongefit(x) with lines ls 4 t 'Trend', \
-"spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
-# EPS
-set terminal postscript size out_w,out_h eps enhanced color
-set output "render/sponge_output_vector.eps"
-replot
-# SVG
-set terminal svg size out_w,out_h fname "Verdana" fsize 45
-set output "render/sponge_output_vector.svg"
-replot
+#   unset label
+#   set xlabel 'Step'
+#   set ylabel 'Population'
+#   # =======================================================================================================
+#   # WORMS
+#   # =======================================================================================================
+#   set terminal pngcairo size out_w,out_h/1.5 enhanced font "Verdana,45"
+#   set yrange [-10:300]
+#   set output "render/worms_output_raster.png"
+#   # fit a function to the data
+#   wormfit(x) = a + b*x + c*x**2 + d*x**3 + e*x**4 + f*x**5
+#   fit wormfit(x) "wormsdat.txt" via a,b,c,d,e,f
+#   # plot
+#   plot wormfit(x) with lines ls 4 t 'Trend', \
+#   "wormsdat.txt" every errstep with yerrorbars ls 11 t '', "wormsdat.txt" with lines ls 1 t 'Worms'
+#   # EPS
+#   set terminal postscript size out_w,out_h eps enhanced color
+#   set output "render/worms_output_vector.eps"
+#   replot
+#   # SVG
+#   set terminal svg size out_w,out_h fname "Verdana" fsize 45
+#   set output "render/worms_output_vector.svg"
+#   replot
+#   
+#   # =======================================================================================================
+#   # ANTS
+#   # =======================================================================================================
+#   set terminal pngcairo size out_w,out_h/1.5 enhanced font "Verdana,45"
+#   set yrange [-10:1800]
+#   set output "render/ants_output_raster.png"
+#   # fit a function to the data
+#   antfit(x) = a + b*x + c*x**2 + d*x**3 + e*x**4 + f*x**5
+#   fit antfit(x) "antsdat.txt" via a,b,c,d,e,f
+#   # plot
+#   plot antfit(x) with lines ls 4 t 'Trend', \
+#   "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants'
+#   # EPS
+#   set terminal postscript size out_w,out_h eps enhanced color
+#   set output "render/ants_output_vector.eps"
+#   replot
+#   # SVG
+#   set terminal svg size out_w,out_h fname "Verdana" fsize 45
+#   set output "render/ants_output_vector.svg"
+#   replot
+#   
+#   # =======================================================================================================
+#   # SPONGE
+#   # =======================================================================================================
+#   set terminal pngcairo size out_w,out_h/1.5 enhanced font "Verdana,45"
+#   set yrange [-10:8600]
+#   set output "render/sponge_output_raster.png"
+#   # fit a function to the data
+#   spongefit(x) = a + b*x + c*x**2 + d*x**3 + e*x**4 + f*x**5
+#   fit spongefit(x) "spongedat.txt" via a,b,c,d,e,f
+#   # plot
+#   plot spongefit(x) with lines ls 4 t 'Trend', \
+#   "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
+#   # EPS
+#   set terminal postscript size out_w,out_h eps enhanced color
+#   set output "render/sponge_output_vector.eps"
+#   replot
+#   # SVG
+#   set terminal svg size out_w,out_h fname "Verdana" fsize 45
+#   set output "render/sponge_output_vector.svg"
+#   replot

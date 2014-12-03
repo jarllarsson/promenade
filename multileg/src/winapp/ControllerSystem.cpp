@@ -124,7 +124,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			// =====================================
 			dbgDrawer()->m_enabled = false;
 			int loopInvoc = 4;
-			int serialChars = 5;
+			int serialChars = 40;
 			/*concurrency::parallel_for(0, loopInvoc, [&](int n)
 			{
 			for (int i = 0; i < serialChars; i++)
