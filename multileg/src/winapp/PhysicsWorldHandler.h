@@ -3,6 +3,7 @@
 #include <vector>
 
 class btDynamicsWorld;
+class btCollisionObject;
 class AdvancedEntitySystem;
 class ControllerSystem;
 
@@ -46,6 +47,7 @@ protected:
 	btDynamicsWorld* m_world;
 	unsigned int m_internalStepCounter;
 	void handleCollisions();
+	bool checkMaskedCollision(const btCollisionObject* p_colObj0, const btCollisionObject* p_colObj1);
 };
 
 void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeStep);

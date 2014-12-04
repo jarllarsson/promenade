@@ -49,7 +49,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 	// Perfect for debugging
 	// Non-optional
 	ControllerComponent* controller = controllerComponentMapper.get(e);
-	/*
+	
 	if (controller != NULL && controller->isBuildComplete())
 	{
 		for (int x = 0; x < controller->getLegFrameCount();x++)
@@ -59,7 +59,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 			for (unsigned int i = 0; i < legCount; i++)
 			{
 				unsigned int jointId = lf->m_hipJointId[i];
-				DEBUGPRINT(("\nE"));
+				//DEBUGPRINT(("\nE"));
 				if (isInControlledStance(lf, i, controller->m_player.getPhase()))
 				{
 					for (int n = 0; n < 3; n++) // 3 segments
@@ -75,7 +75,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 			}
 		}
 	}
-	*/
+	
 }
 
 void ControllerSystem::fixedUpdate(float p_dt)

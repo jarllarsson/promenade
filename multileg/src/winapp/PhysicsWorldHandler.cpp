@@ -77,31 +77,47 @@ void PhysicsWorldHandler::handleCollisions()
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
-		const btCollisionObject* obA = static_cast<const btCollisionObject*>(contactManifold->getBody0());
-		const btCollisionObject* obB = static_cast<const btCollisionObject*>(contactManifold->getBody1());
+		const btCollisionObject* obA = contactManifold->getBody0();
+		const btCollisionObject* obB = contactManifold->getBody1();
 
 		RigidBodyComponent* rigidBodyA = (RigidBodyComponent*)obA->getUserPointer();
 		RigidBodyComponent* rigidBodyB = (RigidBodyComponent*)obB->getUserPointer();
 		
-		bool rbACollision = rigidBodyA->isRegisteringCollisions(),
-			rbBCollision = rigidBodyA->isRegisteringCollisions();
+		// Get user pointers to rigid bodies if they exist
+		// and see if collision check is activated
+		bool rbACollision = false;
+		if (rigidBodyA!=NULL) rbACollision=rigidBodyA->isRegisteringCollisions();
+		bool rbBCollision = false;
+		if (rigidBodyB != NULL) rbBCollision=rigidBodyB->isRegisteringCollisions();
 
+		// If one has writeback enabled..
 		if (rbACollision || rbBCollision)
 		{
 			int numContacts = contactManifold->getNumContacts();
 			for (int j = 0; j < numContacts; j++)
 			{
 				btManifoldPoint& pt = contactManifold->getContactPoint(j);
-				if (pt.getDistance() < 0.f)
+				if (pt.getDistance() < 0.0f/* && checkMaskedCollision(obA, obB)*/)
 				{
 					const btVector3& ptA = pt.getPositionWorldOnA();
 					const btVector3& ptB = pt.getPositionWorldOnB();
 					const btVector3& normalOnB = pt.m_normalWorldOnB;
-					if (rbACollision) rigidBodyA->setCollidingStat(true, glm::vec3((float)ptA.x, (float)ptA.y, (float)ptA.z));
-					if (rbBCollision) rigidBodyB->setCollidingStat(true, glm::vec3((float)ptB.x, (float)ptB.y, (float)ptB.z));
-					DEBUGPRINT((("\nbd" + ToString(obA) + "+bd" + ToString(obB)).c_str()));
+					if (rbACollision && rigidBodyA != NULL) rigidBodyA->setCollidingStat(true, glm::vec3(ptA.x(), ptA.y(), ptA.z()));
+					if (rbBCollision && rigidBodyB != NULL) rigidBodyB->setCollidingStat(true, glm::vec3(ptB.x(), ptB.y(), ptB.z()));
+					DEBUGPRINT((("\nbd" + ToString(rigidBodyA->getUID()) + "+bd" + ToString(rigidBodyB->getUID())).c_str()));
 				}
 			}
 		}
 	}
+}
+
+bool PhysicsWorldHandler::checkMaskedCollision(const btCollisionObject* p_colObj0, const btCollisionObject* p_colObj1)
+{
+	CollisionLayer::CollisionLayerType obj0Grp = (CollisionLayer::CollisionLayerType)p_colObj0->getBroadphaseHandle()->m_collisionFilterGroup;
+	CollisionLayer::CollisionLayerType obj0Msk = (CollisionLayer::CollisionLayerType)p_colObj0->getBroadphaseHandle()->m_collisionFilterMask;
+	CollisionLayer::CollisionLayerType obj1Grp = (CollisionLayer::CollisionLayerType)p_colObj1->getBroadphaseHandle()->m_collisionFilterGroup;
+	CollisionLayer::CollisionLayerType obj1Msk = (CollisionLayer::CollisionLayerType)p_colObj1->getBroadphaseHandle()->m_collisionFilterMask;
+	bool collides = (obj0Grp & obj1Msk) != 0;
+	collides = collides && (obj1Grp & obj0Msk);
+	return collides;
 }

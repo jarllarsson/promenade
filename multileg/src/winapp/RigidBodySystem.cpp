@@ -51,16 +51,18 @@ void RigidBodySystem::added(artemis::Entity &e)
 		btVector3 c; float r;
 		collisionShape->getBoundingSphere(c, r);
 		rigidBodyInstance->setCcdSweptSphereRadius(r*0.2f);
+		// set pointer back to the component, so we can handle collisions and similar events
+		rigidBodyInstance->setUserPointer((void*)rigidBody); 
 		// If collision registration is activated,
 		// we need to prepare a callback
-		if (rigidBody->isRegisteringCollisions())
-		{
-			// Callback method disabled for now
-			//OnCollisionCallback* callback = new OnCollisionCallback(rigidBodyInstance, rigidBody);
-			//rigidBody->addCollisionCallback(callback); // the component handles dealloc upon destruction
-			// add rigidbody to collision shape user pointer
-			collisionShape->setUserPointer((void*)rigidBody);
-		}
+		//if (rigidBody->isRegisteringCollisions())
+		//{
+		//	// Callback method disabled for now
+		//	//OnCollisionCallback* callback = new OnCollisionCallback(rigidBodyInstance, rigidBody);
+		//	//rigidBody->addCollisionCallback(callback); // the component handles dealloc upon destruction
+		//	// add rigidbody to collision shape user pointer
+		//	collisionShape->setUserPointer((void*)rigidBody);
+		//}
 		
 		// Add rigidbody to list
 		unsigned int uid = m_rigidBodyEntities.add(&e);
@@ -236,7 +238,7 @@ void RigidBodySystem::lateUpdate()
 
 void RigidBodySystem::fixedUpdate(float p_dt)
 {
-	DEBUGPRINT(("\n "));
+	//DEBUGPRINT(("\n "));
 	for (unsigned int i = 0; i < m_rigidBodyEntities.getSize(); i++)
 	{
 		artemis::Entity* e = m_rigidBodyEntities[i];
@@ -247,15 +249,15 @@ void RigidBodySystem::fixedUpdate(float p_dt)
 			if (rigidBody->isRegisteringCollisions())
 			{
 				btRigidBody* body = rigidBody->getRigidBody();
-				DEBUGPRINT(((" RB" + ToString(rigidBody->getUID()) + " = " + ToString(rigidBody->isColliding())).c_str()));
+				//DEBUGPRINT(((" RB" + ToString(rigidBody->getUID()) + " = " + ToString(rigidBody->isColliding())).c_str()));
 				rigidBody->unsetIsCollidingFlag();
-				m_dynamicsWorldPtr->contactTest(body, *rigidBody->getCollisionCallbackFunc());
-				DEBUGPRINT(((" nRB" + ToString(rigidBody->getUID()) + " = " + ToString(rigidBody->isColliding())).c_str()));
+				//m_dynamicsWorldPtr->contactTest(body, *rigidBody->getCollisionCallbackFunc());
+				//DEBUGPRINT(((" nRB" + ToString(rigidBody->getUID()) + " = " + ToString(rigidBody->isColliding())).c_str()));
 
 			}
 		}
-		DEBUGPRINT(("\n"));
+		//DEBUGPRINT(("\n"));
 	}
-	DEBUGPRINT(("\n"));
+	//DEBUGPRINT(("\n"));
 }
 
