@@ -59,6 +59,7 @@ RigidBodyComponent::~RigidBodyComponent()
 	if (m_inited)
 	{
 		m_childConstraints.clear();
+		m_collisionShape->setUserPointer(NULL);
 		SAFE_DELETE(m_collisionShape);
 		if (m_rigidBody != NULL && m_rigidBody->getMotionState()) delete m_rigidBody->getMotionState();
 		SAFE_DELETE(m_callback);

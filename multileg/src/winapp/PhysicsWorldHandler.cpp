@@ -21,32 +21,10 @@ PhysicsWorldHandler::PhysicsWorldHandler(btDynamicsWorld* p_world, ControllerSys
 
 void PhysicsWorldHandler::physProcessCallback(btScalar timeStep)
 {
-	int numManifolds = m_world->getDispatcher()->getNumManifolds();
-	DEBUGPRINT(( ("\ncollision! n:"+ToString(numManifolds)).c_str() ));
-
-	for (int i = 0; i < numManifolds; i++)
-	{
-		btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
-		const btCollisionObject* obA = static_cast<const btCollisionObject*>(contactManifold->getBody0());
-		const btCollisionObject* obB = static_cast<const btCollisionObject*>(contactManifold->getBody1());
-
-		int numContacts = contactManifold->getNumContacts();
-		for (int j = 0; j < numContacts; j++)
-		{
-			btManifoldPoint& pt = contactManifold->getContactPoint(j);
-			if (pt.getDistance() < 0.f)
-			{
-				// get user pointer/index
-				const btVector3& ptA = pt.getPositionWorldOnA();
-				const btVector3& ptB = pt.getPositionWorldOnB();
-				const btVector3& normalOnB = pt.m_normalWorldOnB;
-				DEBUGPRINT((("\nbd" + ToString(obA) + "+bd" + ToString(obB)).c_str()));
-			}
-		}
-	}
-
 	m_internalStepCounter++;
 	processPreprocessSystemCollection((float)timeStep);
+	// Collisions readback for rigidbodies that has it enabled
+	handleCollisions();
 	//// Character controller
 	m_controllerSystem->fixedUpdate((float)timeStep); // might want this in post tick instead? Have it here for now
 	//// Controller
@@ -88,5 +66,42 @@ void PhysicsWorldHandler::processPreprocessSystemCollection(float p_dt)
 	{
 		AdvancedEntitySystem* system = m_preprocessSystems[i];
 		system->fixedUpdate(p_dt);
+	}
+}
+
+void PhysicsWorldHandler::handleCollisions()
+{
+	int numManifolds = m_world->getDispatcher()->getNumManifolds();
+	DEBUGPRINT((("\ncollision! n:" + ToString(numManifolds)).c_str()));
+
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = m_world->getDispatcher()->getManifoldByIndexInternal(i);
+		const btCollisionObject* obA = static_cast<const btCollisionObject*>(contactManifold->getBody0());
+		const btCollisionObject* obB = static_cast<const btCollisionObject*>(contactManifold->getBody1());
+
+		RigidBodyComponent* rigidBodyA = (RigidBodyComponent*)obA->getUserPointer();
+		RigidBodyComponent* rigidBodyB = (RigidBodyComponent*)obB->getUserPointer();
+		
+		bool rbACollision = rigidBodyA->isRegisteringCollisions(),
+			rbBCollision = rigidBodyA->isRegisteringCollisions();
+
+		if (rbACollision || rbBCollision)
+		{
+			int numContacts = contactManifold->getNumContacts();
+			for (int j = 0; j < numContacts; j++)
+			{
+				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+				if (pt.getDistance() < 0.f)
+				{
+					const btVector3& ptA = pt.getPositionWorldOnA();
+					const btVector3& ptB = pt.getPositionWorldOnB();
+					const btVector3& normalOnB = pt.m_normalWorldOnB;
+					if (rbACollision) rigidBodyA->setCollidingStat(true, glm::vec3((float)ptA.x, (float)ptA.y, (float)ptA.z));
+					if (rbBCollision) rigidBodyB->setCollidingStat(true, glm::vec3((float)ptB.x, (float)ptB.y, (float)ptB.z));
+					DEBUGPRINT((("\nbd" + ToString(obA) + "+bd" + ToString(obB)).c_str()));
+				}
+			}
+		}
 	}
 }

@@ -55,8 +55,11 @@ void RigidBodySystem::added(artemis::Entity &e)
 		// we need to prepare a callback
 		if (rigidBody->isRegisteringCollisions())
 		{
-			OnCollisionCallback* callback = new OnCollisionCallback(rigidBodyInstance, rigidBody);
-			rigidBody->addCollisionCallback(callback); // the component handles dealloc upon destruction
+			// Callback method disabled for now
+			//OnCollisionCallback* callback = new OnCollisionCallback(rigidBodyInstance, rigidBody);
+			//rigidBody->addCollisionCallback(callback); // the component handles dealloc upon destruction
+			// add rigidbody to collision shape user pointer
+			collisionShape->setUserPointer((void*)rigidBody);
 		}
 		
 		// Add rigidbody to list

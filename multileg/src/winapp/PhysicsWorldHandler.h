@@ -45,6 +45,7 @@ protected:
 	// Physics world
 	btDynamicsWorld* m_world;
 	unsigned int m_internalStepCounter;
+	void handleCollisions();
 };
 
 void physicsSimulationTickCallback(btDynamicsWorld *world, btScalar timeStep);
