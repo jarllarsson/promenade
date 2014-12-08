@@ -5,12 +5,12 @@
 
 int ControllerOptimizationSystem::m_testCount = 0;
 
-ControllerOptimizationSystem::ControllerOptimizationSystem()
+ControllerOptimizationSystem::ControllerOptimizationSystem( int p_maxTicks )
 {
 	addComponentType<ControllerComponent>();
 	addComponentType<ControllerMovementRecorderComponent>();
 	// settings
-	m_simTicks = 800;			
+	m_simTicks = p_maxTicks;			
 	m_warmupTicks = 1;	
 	m_instantEval = false;
 	m_time = 0.0;

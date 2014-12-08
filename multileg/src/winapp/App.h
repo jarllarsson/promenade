@@ -111,6 +111,7 @@ private:
 	int   m_initParallelInvocCount;
 	float m_initCharOffset;
 	bool  m_measurePerf;
+	int m_optmesSteps;
 
 	std::vector<float>* m_bestParams;
 

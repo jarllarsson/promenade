@@ -2,7 +2,7 @@ FULLSCREEN					(0 for windowed, 1 for fullscreen)
 0
 
 APP_MODE						(graphics(short: g) or console(short: c))
-c
+g
 
 WND_WIDTH					(window width in pixels)
 1280
@@ -11,7 +11,7 @@ WND_HEIGHT					(window height in pixels)
 800
 
 SIMUL_MODE					(optimization(short: o), run(short: r) or measure(short: m))
-r
+m
 
 POD								(biped(short: b) or quadruped(short: q))
 b
@@ -20,10 +20,10 @@ EXEC_MODE					(serial(short: s) or parallel(short: p))
 s
 
 CHARCOUNT_SERIAL			(character count when executing serially)
-20
+80
 
 PARA_INVOC					(number of parallel invocations: when parallel, character count=PARA_INVOC*CHARCOUNT_SERIAL)
-1
+4
 
 CHAR_OFFSET_X				(position offset along x axis between characters)
 4.0
@@ -31,7 +31,7 @@ CHAR_OFFSET_X				(position offset along x axis between characters)
 START_PAUSED				(0 start in play mode, 1 start paused)
 0
 
-OPT_STEPS					(optimization, number of steps)
+OPT_MES_STEPS				(optimization and measurement, number of steps before break)
 800
 
 OPT_WEIGHTS					(optimization, weights: fd fv fh fr fp)

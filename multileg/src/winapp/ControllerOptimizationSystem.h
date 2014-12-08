@@ -50,7 +50,7 @@ private:
 	ControllerSystem* m_controllerSystemRef;
 public:
 
-	ControllerOptimizationSystem();
+	ControllerOptimizationSystem(int p_maxTicks);
 
 	virtual void initialize()
 	{

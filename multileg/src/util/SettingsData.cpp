@@ -24,7 +24,7 @@ SettingsData::SettingsData()
 
 	m_startPaused = false;
 
-	m_optimizationSteps = 800;
+	m_optmesSteps = 800;
 
 	m_optW_fd=0.0f;
 	m_optW_fv=0.0f;

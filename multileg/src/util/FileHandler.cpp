@@ -190,7 +190,7 @@ bool loadSettings(SettingsData& p_settingsfile)
 	// op steaps
 	readDiscardHeader(&is);
 	is >> tmpInt;
-	p_settingsfile.m_optimizationSteps = tmpInt;
+	p_settingsfile.m_optmesSteps = tmpInt;
 	// optimization weights
 	readDiscardHeader(&is);
 	std::getline(is, tmpStr); // extra header here

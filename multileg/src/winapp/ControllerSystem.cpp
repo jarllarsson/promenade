@@ -1,7 +1,7 @@
 #include "ControllerSystem.h"
 
-//#include <ppl.h>
-#include <omp.h>
+#include <ppl.h>
+//#include <omp.h>
 #include <ToString.h>
 #include <DebugPrint.h>
 #include <MathHelp.h>
@@ -84,7 +84,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	m_steps++;
 
 	double startTiming = Time::getTimeMs();
-	double startTimingOmp = omp_get_wtime();
+	//double startTimingOmp = omp_get_wtime();
 	// Clear debug draw batch 
 	// (not optimal to only do it here if drawing from game systems,
 	// batch calls should be put in a map or equivalent)
@@ -127,23 +127,23 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			// Multi threaded CPU implementation
 			// =====================================
 			if (dbgDrawer()) dbgDrawer()->m_enabled = false;
+			int serialChars = 20;
 			int loopInvoc = 4;
-			int serialChars = 1;
-			/*concurrency::parallel_for(0, loopInvoc, [&](int n)
+			concurrency::parallel_for(0, loopInvoc, [&](int n)
 			{
-			for (int i = 0; i < serialChars; i++)
-			{
-			// character id is indexed from serial- and parallel invoc
-			int id = i + (n*serialChars);
-			if (id<controllerCount)
-			{
-			ControllerComponent* controller = m_controllers[id];
-			// Run controller code here
-			controllerUpdate(id, p_dt);
-			}
-			}
-			});*/
-			#pragma omp parallel num_threads(4)
+				for (int i = 0; i < serialChars; i++)
+				{
+					// character id is indexed from serial- and parallel invoc
+					int id = i + (n*serialChars);
+					if (id<controllerCount)
+					{
+						ControllerComponent* controller = m_controllers[id];
+						// Run controller code here
+						controllerUpdate(id, p_dt);
+					}
+				}
+			});
+			/*#pragma omp parallel num_threads(4)
 			{
 				int n = omp_get_thread_num();
 				int test = 0;
@@ -159,7 +159,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 						controllerUpdate(id, p_dt);
 					}
 				}
-			}
+			}*/
 		}
 
 	}
@@ -167,7 +167,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	{
 		DEBUGPRINT(("\nNO CONTROLLERS YET\n"));
 	}
-	double endTimingOmp = omp_get_wtime();
+	//double endTimingOmp = omp_get_wtime();
 	m_timing = Time::getTimeMs() - startTiming;
 	//m_timing = endTimingOmp - startTimingOmp;
 	if (m_perfRecorder != NULL)

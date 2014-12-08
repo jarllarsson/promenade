@@ -46,7 +46,6 @@
 #include <ConsoleContext.h>
 
 
-
 //#define MEASURE_RBODIES
 
 using namespace std;
@@ -75,6 +74,8 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_fpsUpdateTick = 0.0f;
 	m_controller = new TempController(-8.0f, 2.5f, 0.0f, 0.0f);
 	m_controller->rotate(glm::vec3(0.0f, -HALFPI, 0.0f));
+	m_context = NULL;
+	m_graphicsDevice = NULL;
 	m_input = NULL;
 	m_toolBar = NULL;
 	m_debugDrawBatch = NULL;
@@ -205,11 +206,11 @@ void App::run()
 	double bestOptimizationScore = FLT_MAX;
 	double oldFirstOptimizationScore = FLT_MAX;
 	std::vector<double> allOptimizationResults;
-	int debugTicker = 0;
+	int fixedStepCounter = 0;
 	std::vector<ReferenceLegMovementController> baseOptimizationReferenceMovementControllers;
 	if (m_runOptimization && m_toolBar)
 	{
-		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Tick", Toolbar::INT, &debugTicker);
+		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Tick", Toolbar::INT, &fixedStepCounter);
 		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestOptimizationScore);
 		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Iter", Toolbar::INT, &optimizationIterationCount);
 	}
@@ -337,7 +338,7 @@ void App::run()
 		m_optimizationSystem = NULL;
 		if (m_runOptimization)
 		{
-			m_optimizationSystem = (ControllerOptimizationSystem*)sysManager->setSystem(new ControllerOptimizationSystem());
+			m_optimizationSystem = (ControllerOptimizationSystem*)sysManager->setSystem(new ControllerOptimizationSystem(m_optmesSteps));
 		}
 
 		ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
@@ -1012,7 +1013,7 @@ void App::run()
 				// update timing debug var
 				controllerSystemTimingMs = m_controllerSystem->getLatestTiming() * 1000.0f;
 				if (m_consoleMode)
-					DEBUGPRINT((("\nCTiming: "+ToString(controllerSystemTimingMs)).c_str()));
+					DEBUGPRINT((("\nController System(ms): "+ToString(controllerSystemTimingMs)).c_str()));
 
 				drawDebugAxes();
 				drawDebugOptimizationGraphs(&allOptimizationResults, optimizationDbgMaxscoreelem, 
@@ -1051,7 +1052,7 @@ void App::run()
 				else
 					dynamicsWorld->stepSimulation((btScalar)phys_dt/*, 10*/, 10, (btScalar)physicsStep);
 	#else
-				if (m_runOptimization)
+				if (m_runOptimization || m_measurePerf)
 				{
 					if (!optRealTimeMode)
 						dynamicsWorld->stepSimulation((btScalar)(double)m_timeScale*fixedStep, 1 + (physicsStep / (m_timeScale*fixedStep)), (btScalar)physicsStep/*(btScalar)(double)m_timeScale*(1.0f / 1000.0f)*/);
@@ -1085,8 +1086,8 @@ void App::run()
 						{
 							m_optimizationSystem->incSimTick();
 							m_optimizationSystem->stepTime((double)m_timeScale*fixedStep);
-						}
-						debugTicker = m_optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
+						}					
+						fixedStepCounter = m_optimizationSystem->getCurrentSimTicks(); // ticker only for debug print
 						if (m_optimizationSystem->isSimCompleted(m_timeScale))
 						{
 							DEBUGPRINT((" NO: "));
@@ -1094,6 +1095,15 @@ void App::run()
 							run = false;
 							m_restart = true;
 						}
+					}
+				}
+				if (m_measurePerf)
+				{
+					fixedStepCounter++;
+					DEBUGPRINT((("\n" + ToString(fixedStepCounter)).c_str()));
+					if (fixedStepCounter >= m_optmesSteps)
+					{
+						run = false;
 					}
 				}
 				//DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
@@ -1107,7 +1117,7 @@ void App::run()
 				else
 					dt = ((double)Time::getTimeStamp().QuadPart*secondsPerTick - gameClockTimeOffset);
 	#else
-				if (m_runOptimization)
+				if (m_runOptimization || m_measurePerf)
 				{
 					if (!optRealTimeMode)
 						dt = fixedStep;
@@ -1202,7 +1212,7 @@ void App::run()
 				}
 				DEBUGPRINT((("\nbestscore: " + ToString(bestOptimizationScore)).c_str()));
 				optimizationIterationCount++;
-				debugTicker = 0;
+				fixedStepCounter = 0;
 				SAFE_DELETE(m_bestParams);
 				m_bestParams = new std::vector<float>(m_optimizationSystem->getWinnerParams());
 				allOptimizationResults.push_back(bestOptimizationScore);
@@ -1574,7 +1584,8 @@ void App::initFromSettings(SettingsData& p_settings)
 	m_initCharOffset=p_settings.m_charOffsetX;
 	m_triggerPause = p_settings.m_startPaused;
 	// TODO: 
-	// Optimization steps
+	// Optimization and measurement steps
+	m_optmesSteps = p_settings.m_optmesSteps;
 	// 
 	// Optimization weights
 	/*	fd

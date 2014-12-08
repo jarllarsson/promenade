@@ -41,7 +41,7 @@ public:
 
 	bool m_startPaused;
 
-	int m_optimizationSteps;
+	int m_optmesSteps;
 
 	float m_optW_fd, m_optW_fv, m_optW_fh, m_optW_fr, m_optW_fp;
 
