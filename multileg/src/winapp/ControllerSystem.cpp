@@ -1,7 +1,7 @@
 #include "ControllerSystem.h"
 
-#include <ppl.h>
-//#include <omp.h>
+//#include <ppl.h>
+#include <omp.h>
 #include <ToString.h>
 #include <DebugPrint.h>
 #include <MathHelp.h>
@@ -100,7 +100,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 
 	//DEBUGPRINT(("\n==========\n"));
 	int controllerCount = (int)m_controllers.size();
-	if (m_controllers.size()>0)
+	if (controllerCount>0)
 	{
 		// First, we have to read collision status for all feet. SILLY
 		for (int n = 0; n < controllerCount; n++)
@@ -127,9 +127,9 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			// Multi threaded CPU implementation
 			// =====================================
 			if (dbgDrawer()) dbgDrawer()->m_enabled = false;
-			int serialChars = 20;
-			int loopInvoc = 4;
-			concurrency::parallel_for(0, loopInvoc, [&](int n)
+			int loopInvoc = m_loopInvocs;
+			int serialChars = controllerCount/loopInvoc;
+			/*concurrency::parallel_for(0, loopInvoc, [&](int n)
 			{
 				for (int i = 0; i < serialChars; i++)
 				{
@@ -142,8 +142,8 @@ void ControllerSystem::fixedUpdate(float p_dt)
 						controllerUpdate(id, p_dt);
 					}
 				}
-			});
-			/*#pragma omp parallel num_threads(4)
+			});*/
+			#pragma omp parallel num_threads(loopInvoc)
 			{
 				int n = omp_get_thread_num();
 				int test = 0;
@@ -159,7 +159,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 						controllerUpdate(id, p_dt);
 					}
 				}
-			}*/
+			}
 		}
 
 	}

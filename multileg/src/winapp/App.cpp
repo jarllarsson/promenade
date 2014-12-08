@@ -326,13 +326,14 @@ void App::run()
 		if (m_initExecSetup == InitExecSetup::PARALLEL)
 		{
 			execMode = ControllerSystem::PARALLEL;
-			if (m_toolBar) m_toolBar->addLabel(Toolbar::PERFORMANCE, "PARALLEL");
+			if (m_toolBar) m_toolBar->addLabel(Toolbar::PERFORMANCE, ("PARALLEL ( " + ToString(m_initParallelInvocCount) + " t)x( " + ToString(m_initCharCountSerial / m_initParallelInvocCount) + " c)").c_str());
 		}
 		else
 		{
-			if (m_toolBar) m_toolBar->addLabel(Toolbar::PERFORMANCE, "SERIAL");
+			if (m_toolBar) m_toolBar->addLabel(Toolbar::PERFORMANCE, ("SERIAL ( "+ToString(m_initCharCountSerial)+" c)").c_str() );
 		}
 		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(execMode,
+																							m_initParallelInvocCount,
 																						   &controllerPerfRecorder));
 		PositionRefSystem* posRefSystem = (PositionRefSystem*)sysManager->setSystem(new PositionRefSystem());
 		m_optimizationSystem = NULL;

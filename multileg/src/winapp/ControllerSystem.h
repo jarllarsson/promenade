@@ -93,7 +93,7 @@ public:
 		SERIAL, PARALLEL
 	};
 	ControllerSystem(ExecutionLayout p_execLayout,
-					MeasurementBin<float>* p_perfMeasurer=NULL)
+		int p_loopInvocs,MeasurementBin<float>* p_perfMeasurer=NULL)
 	{
 		addComponentType<ControllerComponent>();
 		m_executionSetup = p_execLayout;
@@ -103,6 +103,7 @@ public:
 		//m_dynamicsWorldPtr = p_dynamicsWorld;
 		m_perfRecorder = p_perfMeasurer;
 		m_timing = 0;
+		m_loopInvocs = p_loopInvocs;
 	}
 
 	virtual ~ControllerSystem();
@@ -212,6 +213,7 @@ private:
 	float m_runTime;
 	int m_steps;
 	ExecutionLayout m_executionSetup;
+	int m_loopInvocs;
 
 	// Dbg
 	MeasurementBin<float>* m_perfRecorder;
