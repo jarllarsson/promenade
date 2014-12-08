@@ -32,6 +32,7 @@ public:
 	void saveMeasurement(T p_measurement);
 	void saveMeasurement(T p_measurement, float p_timeStamp);
 	void saveMeasurement(T p_measurement, int p_timeStamp);
+	void accumulateMeasurementAt(float p_measurement, int p_idx); // for doing several runs and storing multiple values on same spot
 	void saveMeasurementRelTStamp(T p_measurement, float p_deltaTimeStamp);
 	bool isActive();
 private:
@@ -42,6 +43,7 @@ private:
 	vector<double> m_allMeans;
 	vector<double> m_allSTDs;
 	bool m_active;
+	int m_internalRuns;
 };
 
 template<class T>
@@ -50,6 +52,7 @@ MeasurementBin<T>::MeasurementBin()
 	m_active = false;
 	m_mean = 0.0;
 	m_std = 0.0f;
+	m_internalRuns = 0; // only used if T is vector
 }
 
 template<class T>
@@ -71,113 +74,27 @@ float MeasurementBin<float>::calculateMean();
 template<>
 float MeasurementBin<float>::calculateSTD();
 
-template<class T>
-bool MeasurementBin<T>::saveResultsCSV(const string& p_fileName)
-{
-	if (m_active)
-	{
-		ofstream outFile;
-		string file = GetExecutablePathDirectory() + p_fileName + ".csv";
-		outFile.open(file);
+template<>
+float MeasurementBin<std::vector<float>>::calculateMean();
 
-		if (!outFile.good())
-		{
-			return false;
-		}
-		else
-		{
-			// Gfx settings
-			if (m_allMeans.size() > 0 && m_allSTDs.size() > 0 &&
-				m_allMeans.size() == m_allSTDs.size())
-			{
-				outFile << "Mean time,Standard deviation" << "\n";
-				for (int i = 0; i < m_allMeans.size(); i++)
-				{
-					outFile << m_allMeans[i] << "," << m_allSTDs[i] << "\n";
-				}
-			}
-			outFile << "\nRaw measurements\n";
-			if (m_timestamps.size() == m_measurements.size())
-			{
-				outFile << "\nTimestamp,Measurement\n";
-				for (int i = 0; i < m_measurements.size(); i++)
-				{
-					outFile << m_timestamps[i] << "," << m_measurements[i] << "\n";
-				}
-			}
-			else
-			{
-				for (int i = 0; i < m_measurements.size(); i++)
-				{
-					outFile << m_measurements[i] << "\n";
-				}
-			}
+template<>
+float MeasurementBin<std::vector<float>>::calculateSTD();
 
-		}
-		outFile.close();
-		return true;
-	}
-	return false;
-}
 
-template<class T>
-bool MeasurementBin<T>::saveResultsGNUPLOT(const string& p_fileName)
-{
-	if (m_active)
-	{
-		ofstream outFile;
-		string file = GetExecutablePathDirectory() + p_fileName + ".gnuplot.txt";
-		outFile.open(file);
 
-		if (!outFile.good())
-		{
-			return false;
-		}
-		else
-		{
-			outFile << "# " << p_fileName << "\n";
-			// if means and STD exist, print them
-			if (m_allMeans.size() > 0 && m_allSTDs.size() > 0 &&
-				m_allMeans.size() == m_allSTDs.size())
-			{			
-				outFile << "# step - mean - standard deviation" << "\n";
-				if (m_timestamps.size() == m_allMeans.size())
-				{
-					for (int i = 0; i < m_allMeans.size(); i++)
-					{
-						outFile << i << " " << m_allMeans[i] << " " << m_allSTDs[i] << " # " << m_timestamps[i] << "\n";
-					}
-				}
-				else
-				{
-					for (int i = 0; i < m_allMeans.size(); i++)
-					{
-						outFile << i << " " << m_allMeans[i] << " " << m_allSTDs[i] <<  "\n";
-					}
-				}
-			}
-			else if (m_timestamps.size() == m_measurements.size())// else print the raw measurements
-			{
-				outFile << "# step - measurement - (timestamp)" << "\n";
-				for (int i = 0; i < m_measurements.size(); i++)
-				{
-					outFile << i << " " << m_measurements[i] << " # " << m_timestamps[i] << "\n";
-				}
-			}
-			else
-			{
-				outFile << "# step - measurement" << "\n";
-				for (int i = 0; i < m_measurements.size(); i++)
-				{
-					outFile << i << " " << m_measurements[i] << "\n";
-				}
-			}
-		}
-		outFile.close();
-		return true;
-	}
-	return false;
-}
+template<>
+bool MeasurementBin<float>::saveResultsCSV(const string& p_fileName);
+
+template<>
+bool MeasurementBin<float>::saveResultsGNUPLOT(const string& p_fileName);
+
+template<>
+bool MeasurementBin<std::vector<float>>::saveResultsCSV(const string& p_fileName);
+
+template<>
+bool MeasurementBin<std::vector<float>>::saveResultsGNUPLOT(const string& p_fileName);
+
+
 
 template<class T>
 void MeasurementBin<T>::finishRound()
@@ -190,6 +107,11 @@ void MeasurementBin<T>::finishRound()
 		m_allSTDs.push_back(m_std);
 	}
 }
+
+template<>
+void MeasurementBin<std::vector<float>>::finishRound();
+
+
 
 template<class T>
 void MeasurementBin<T>::activate()
@@ -226,8 +148,13 @@ void MeasurementBin<T>::saveMeasurement(T p_measurement)
 	{
 		m_measurements.push_back(p_measurement);
 	}
-
 }
+
+
+
+template<>
+void MeasurementBin<std::vector<float>>::accumulateMeasurementAt(float p_measurement, int p_idx);
+
 
 template<class T>
 bool MeasurementBin<T>::isActive()

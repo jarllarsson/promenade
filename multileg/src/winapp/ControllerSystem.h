@@ -93,7 +93,7 @@ public:
 		SERIAL, PARALLEL
 	};
 	ControllerSystem(ExecutionLayout p_execLayout,
-		int p_loopInvocs,MeasurementBin<float>* p_perfMeasurer=NULL)
+		int p_loopInvocs,MeasurementBin<std::vector<float>>* p_perfMeasurer=NULL)
 	{
 		addComponentType<ControllerComponent>();
 		m_executionSetup = p_execLayout;
@@ -216,6 +216,6 @@ private:
 	int m_loopInvocs;
 
 	// Dbg
-	MeasurementBin<float>* m_perfRecorder;
+	MeasurementBin<std::vector<float>>* m_perfRecorder;
 	double m_timing;
 };

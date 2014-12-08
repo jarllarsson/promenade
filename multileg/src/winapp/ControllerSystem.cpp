@@ -81,9 +81,8 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 void ControllerSystem::fixedUpdate(float p_dt)
 {
 	m_runTime += p_dt;
-	m_steps++;
 
-	double startTiming = Time::getTimeMs();
+
 	//double startTimingOmp = omp_get_wtime();
 	// Clear debug draw batch 
 	// (not optimal to only do it here if drawing from game systems,
@@ -99,6 +98,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	}
 
 	//DEBUGPRINT(("\n==========\n"));
+	double startTiming = 0.0;
 	int controllerCount = (int)m_controllers.size();
 	if (controllerCount>0)
 	{
@@ -108,7 +108,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			ControllerComponent* controller = m_controllers[n];
 			writeFeetCollisionStatus(controller);
 		}
-
+		startTiming = Time::getTimeMs();
 		if (m_executionSetup==SERIAL)
 		{
 			// =====================================
@@ -171,7 +171,8 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	m_timing = Time::getTimeMs() - startTiming;
 	//m_timing = endTimingOmp - startTimingOmp;
 	if (m_perfRecorder != NULL)
-		m_perfRecorder->saveMeasurement((double)(m_timing*1000.0),m_steps);
+		m_perfRecorder->accumulateMeasurementAt((double)(m_timing*1000.0), m_steps);
+	m_steps++;
 }
 
 void ControllerSystem::finish()

@@ -1,0 +1,21 @@
+\documentclass[a4paper]{article}
+\usepackage[miktex]{gnuplottex}
+\usepackage{pgfplots}
+
+\begin{document}
+\section{GnuplotTeX}
+\begin{gnuplot}[terminal=pdf]
+load "minirenderplot.gp"
+\end{gnuplot}
+
+\section{PGFPLOTS}
+Note how the tick labels match the document font.
+
+\begin{tikzpicture}
+\begin{axis}[domain=-10:10, samples=50, smooth, no markers, enlargelimits=false]
+\addplot gnuplot[raw gnuplot,mark=none,color=cyan] {
+plot [-10:10] real(sin(x)**besj0(x))
+};
+\end{axis}
+\end{tikzpicture}
+\end{document}

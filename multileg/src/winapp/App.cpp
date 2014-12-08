@@ -221,6 +221,7 @@ void App::run()
 	if (m_toolBar)
 	{
 		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
+		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "Tick", Toolbar::INT, &fixedStepCounter);
 		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);
 		m_toolBar->addSeparator(Toolbar::PLAYER, "Torques");
 		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "t Limit", Toolbar::FLOAT, &ControllerSystem::m_torqueLim);
@@ -250,6 +251,16 @@ void App::run()
 		ControllerSystem::m_dbgShowTAxes = false;
 		optRealTimeMode = false;
 	}
+
+	MeasurementBin<std::vector<float>> controllerPerfRecorder;
+	// The controller measurement is activated
+	// if measurement is turned on in settings:
+	if (m_measurePerf)
+	{
+		controllerPerfRecorder.activate();
+		m_restart = true;
+	}
+	int perfRuns = 10;
 
 	// ===========================================================
 	// 
@@ -294,11 +305,6 @@ void App::run()
 
 		// Measurements and debug
 		MeasurementBin<string> rigidBodyStateDbgRecorder;
-		MeasurementBin<float> controllerPerfRecorder;
-		// The controller measurement is activated
-		// if measurement is turned on in settings:
-		if (m_measurePerf)
-			controllerPerfRecorder.activate();
 
 		// Artemis
 		// Create and initialize systems
@@ -1105,6 +1111,11 @@ void App::run()
 					if (fixedStepCounter >= m_optmesSteps)
 					{
 						run = false;
+						perfRuns--;
+						if (perfRuns > 0)
+							m_restart = true;
+						else
+							m_restart = false;
 					}
 				}
 				//DEBUGPRINT(((string("\n\nstep: ") + ToString(steps)).c_str()));
@@ -1221,6 +1232,11 @@ void App::run()
 			}
 		}
 
+		if (m_measurePerf)
+		{
+			fixedStepCounter = 0;
+		}
+
 
 	#ifdef MEASURE_RBODIES
 		rigidBodyStateDbgRecorder.saveMeasurement("Time: "+ToString(time));
@@ -1242,22 +1258,26 @@ void App::run()
 		///////////////////////////////////
 
 		// Save measurements (only if any were taken)
-		//controllerPerfRecorder.finishRound(); for when we have means and standard deviation
-		if (m_initExecSetup == InitExecSetup::SERIAL)
+		// for when we have means and standard deviation
+		if (!m_restart)
 		{
+			controllerPerfRecorder.finishRound();
+			if (m_initExecSetup == InitExecSetup::SERIAL)
+			{
 #ifdef _DEBUG
-			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial_D");
+				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial_D");
 #else
-			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial");
+				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial");
 #endif
-		}
-		else
-		{
+			}
+			else
+			{
 #ifdef _DEBUG
-			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel_D");
+				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel_D");
 #else
-			controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel");
+				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel");
 #endif
+			}
 		}
 
 
