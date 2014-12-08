@@ -146,6 +146,7 @@
     <ClInclude Include="CMatrix.h" />
     <ClInclude Include="ColorPalettes.h" />
     <ClInclude Include="CurrentPathHelper.h" />
+    <ClInclude Include="ConsoleContext.h" />
     <ClInclude Include="DebugPrint.h" />
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="IOptimizable.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="CMatrix.cpp" />
     <ClCompile Include="ColorPalettes.cpp" />
     <ClCompile Include="CurrentPathHelper.cpp" />
+    <ClCompile Include="ConsoleContext.cpp" />
     <ClCompile Include="FileHandler.cpp" />
     <ClCompile Include="MathHelp.cpp" />
     <ClCompile Include="MeasurementBin.cpp" />

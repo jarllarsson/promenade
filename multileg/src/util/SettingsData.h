@@ -21,11 +21,13 @@ public:
 
 	bool m_fullscreen;
 
+	std::string m_appMode;
+
 	int m_wwidth;
 
 	int m_wheight;
 
-	std::string m_mode;
+	std::string m_simMode;
 
 	std::string m_pod;
 

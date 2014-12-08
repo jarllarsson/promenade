@@ -72,6 +72,8 @@ private:
 	bool pumpMessage(MSG& p_msg);
 	void processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_systemCollection);
 	void initFromSettings(SettingsData& p_settings);
+	void drawDebugAxes();
+	void drawDebugOptimizationGraphs(std::vector<double>* p_optimizationResults, float p_maxScore, float p_pmax, float p_pmin);
 	static const double DTCAP;
 	float m_fpsUpdateTick;
 
@@ -99,6 +101,8 @@ private:
 	bool m_restart;
 	bool m_saveParams;
 	bool m_runOptimization;
+	bool m_consoleMode;
+	bool m_useToolbar;
 
 	int   m_initWindowWidth, m_initWindowHeight;
 	bool  m_initWindowMode;

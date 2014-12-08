@@ -4,11 +4,13 @@ SettingsData::SettingsData()
 {
 	m_fullscreen = false;
 
+	m_appMode = "graphics";
+
 	m_wwidth = 600;
 
 	m_wheight = 800;
 
-	m_mode = "run";
+	m_simMode = "run";
 
 	m_pod = "biped";
 

@@ -43,6 +43,7 @@
 #include "ReferenceLegMovementController.h"
 #include <FileHandler.h>
 #include <SettingsData.h>
+#include <ConsoleContext.h>
 
 
 
@@ -74,20 +75,31 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_fpsUpdateTick = 0.0f;
 	m_controller = new TempController(-8.0f, 2.5f, 0.0f, 0.0f);
 	m_controller->rotate(glm::vec3(0.0f, -HALFPI, 0.0f));
+	m_input = NULL;
+	m_toolBar = NULL;
+	m_debugDrawBatch = NULL;
+	m_debugDrawer = NULL;
 
+	m_vp = NULL;
 	m_timeScale = 1.0f;
 	m_timeScaleToggle = false;
 	m_timePauseStepToggle = false;
 	m_time = 0.0;
 	m_restart = false;
 	m_saveParams = false;
+	m_consoleMode = false;
 	//
 	m_triggerPause = false;
 
 	m_gravityStat = true;
 	m_oldGravityStat = true;
 	// ====================================
-
+	// Member systems
+	// ====================================
+	m_renderSystem = NULL;
+	m_rigidBodySystem = NULL;
+	m_controllerSystem = NULL;
+	m_optimizationSystem = NULL;
 
 	// ====================================
 	// Load settings from file
@@ -111,54 +123,64 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	// Environment init
 	// ====================================
 	// Context
-	try
+	if (!m_consoleMode)
 	{
-		m_context = new Context(p_hInstance, "multileg",
-			m_initWindowWidth, m_initWindowHeight);
+		try
+		{
+			m_context = new Context(p_hInstance, "multileg",
+				m_initWindowWidth, m_initWindowHeight);
+		}
+		catch (ContextException& e)
+		{
+			DEBUGWARNING((e.what()));
+		}
+		// Graphics
+		try
+		{
+			m_graphicsDevice = new GraphicsDevice(m_context->getWindowHandle(),
+				m_initWindowWidth, m_initWindowHeight, m_initWindowMode);
+		}
+		catch (GraphicsException& e)
+		{
+			DEBUGWARNING((e.what()));
+		}
+		m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
+		m_toolBar->setWindowSize(m_graphicsDevice->getWidth(), m_graphicsDevice->getHeight());
+		m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
+		m_debugDrawBatch = new DebugDrawBatch();
+		m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),
+			(void*)m_graphicsDevice->getDeviceContextPointer(), m_debugDrawBatch);
+		m_debugDrawer->setDrawArea((float)m_graphicsDevice->getWidth(), (float)m_graphicsDevice->getHeight());
+		// input
+		m_input = new Input();
+		m_input->doStartup(m_context->getWindowHandle());
+		// basic view orientation buffer
+		m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 	}
-	catch (ContextException& e)
+	else if (m_consoleMode)	// Console mode
 	{
-		DEBUGWARNING((e.what()));
+		ConsoleContext::init();
 	}
-	// Graphics
-	try
-	{
-		m_graphicsDevice = new GraphicsDevice(m_context->getWindowHandle(),
-			m_initWindowWidth, m_initWindowHeight, m_initWindowMode);
-	}
-	catch (GraphicsException& e)
-	{
-		DEBUGWARNING((e.what()));
-	}
-	m_toolBar = new Toolbar((void*)m_graphicsDevice->getDevicePointer());
-	m_toolBar->setWindowSize(m_graphicsDevice->getWidth(), m_graphicsDevice->getHeight());
-	m_context->addSubProcess(m_toolBar); // add toolbar to context (for catching input)
-	m_debugDrawBatch = new DebugDrawBatch();
-	m_debugDrawer = new DebugDrawer((void*)m_graphicsDevice->getDevicePointer(),
-		(void*)m_graphicsDevice->getDeviceContextPointer(), m_debugDrawBatch);
-	m_debugDrawer->setDrawArea((float)m_graphicsDevice->getWidth(), (float)m_graphicsDevice->getHeight());
-	// input
-	m_input = new Input();
-	m_input->doStartup(m_context->getWindowHandle());
-	// basic view orientation buffer
-	m_vp = m_graphicsDevice->getBufferFactoryRef()->createMat4CBuffer();
 	// ====================================
 
 	// Global toolbar vars
 	// ====================================
-	m_toolBar->addReadOnlyVariable(Toolbar::PLAYER, "Real time", Toolbar::DOUBLE, &m_time);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Physics time scale", Toolbar::FLOAT, &m_timeScale);
-	m_toolBar->addButton(Toolbar::PLAYER, "Play/Pause", boolButton,(void*)&m_triggerPause);
-	m_toolBar->addButton(Toolbar::PLAYER, "Restart", boolButton, (void*)&m_restart);
-	m_toolBar->addButton(Toolbar::PLAYER, "Save", boolButton, (void*)&m_saveParams);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Gravity", Toolbar::BOOL, &m_gravityStat);
+	if (m_toolBar)
+	{
+		m_toolBar->addReadOnlyVariable(Toolbar::PLAYER, "Real time", Toolbar::DOUBLE, &m_time);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Physics time scale", Toolbar::FLOAT, &m_timeScale);
+		m_toolBar->addButton(Toolbar::PLAYER, "Play/Pause", boolButton, (void*)&m_triggerPause);
+		m_toolBar->addButton(Toolbar::PLAYER, "Restart", boolButton, (void*)&m_restart);
+		m_toolBar->addButton(Toolbar::PLAYER, "Save", boolButton, (void*)&m_saveParams);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Gravity", Toolbar::BOOL, &m_gravityStat);
+	}
 	// ====================================
 }
 
 App::~App()
 {	
 	// UNSUBSCRIPTIONS
-	m_context->removeSubProcessEntry(m_toolBar);
+	if (m_toolBar) m_context->removeSubProcessEntry(m_toolBar);
 	// DELETES
 	SAFE_DELETE(m_toolBar);
 	SAFE_DELETE(m_debugDrawer);
@@ -167,9 +189,13 @@ App::~App()
 	SAFE_DELETE(m_context);
 	SAFE_DELETE(m_input);
 	SAFE_DELETE(m_controller);
+	if (m_consoleMode)
+	{
+		ConsoleContext::end();
+	}
 	//
 	//delete m_instances;
-	delete m_vp;
+	SAFE_DELETE(m_vp);
 }
 
 void App::run()
@@ -181,7 +207,7 @@ void App::run()
 	std::vector<double> allOptimizationResults;
 	int debugTicker = 0;
 	std::vector<ReferenceLegMovementController> baseOptimizationReferenceMovementControllers;
-	if (m_runOptimization)
+	if (m_runOptimization && m_toolBar)
 	{
 		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Tick", Toolbar::INT, &debugTicker);
 		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "O-Score", Toolbar::DOUBLE, &bestOptimizationScore);
@@ -191,21 +217,23 @@ void App::run()
 	bool dbgDrawAllChars = true;
 	double controllerSystemTimingMs = 0.0;
 	bool lockLFY_onRestart = false;
-	m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);	
-
-	m_toolBar->addSeparator(Toolbar::PLAYER, "Torques");
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "t Limit", Toolbar::FLOAT, &ControllerSystem::m_torqueLim);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use LF feedbk", Toolbar::BOOL, &ControllerSystem::m_useLFFeedbackTorque);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use VF t", Toolbar::BOOL, &ControllerSystem::m_useVFTorque);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use GCVF t", Toolbar::BOOL, &ControllerSystem::m_useGCVFTorque);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use PD t", Toolbar::BOOL, &ControllerSystem::m_usePDTorque);
-	m_toolBar->addSeparator(Toolbar::PLAYER, "Visual Debug");
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Enable DbgDraw", Toolbar::BOOL, &m_debugDrawBatch->m_enabled);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowVFVectors);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show GCVF vectors (pnk)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowGCVFVectors);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show torque axes (blu)", Toolbar::BOOL,	&ControllerSystem::m_dbgShowTAxes);
-	m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Draw All Chars", Toolbar::BOOL, &dbgDrawAllChars);
+	if (m_toolBar)
+	{
+		m_toolBar->addReadOnlyVariable(Toolbar::PERFORMANCE, "CSystem Timing(ms)", Toolbar::DOUBLE, &controllerSystemTimingMs);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Lock LF Y (onRestart)", Toolbar::BOOL, &lockLFY_onRestart);
+		m_toolBar->addSeparator(Toolbar::PLAYER, "Torques");
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "t Limit", Toolbar::FLOAT, &ControllerSystem::m_torqueLim);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use LF feedbk", Toolbar::BOOL, &ControllerSystem::m_useLFFeedbackTorque);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use VF t", Toolbar::BOOL, &ControllerSystem::m_useVFTorque);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use GCVF t", Toolbar::BOOL, &ControllerSystem::m_useGCVFTorque);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Use PD t", Toolbar::BOOL, &ControllerSystem::m_usePDTorque);
+		m_toolBar->addSeparator(Toolbar::PLAYER, "Visual Debug");
+		if (m_debugDrawBatch) m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Enable DbgDraw", Toolbar::BOOL, &m_debugDrawBatch->m_enabled);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show VF vectors (grn)", Toolbar::BOOL, &ControllerSystem::m_dbgShowVFVectors);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show GCVF vectors (pnk)", Toolbar::BOOL, &ControllerSystem::m_dbgShowGCVFVectors);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Show torque axes (blu)", Toolbar::BOOL, &ControllerSystem::m_dbgShowTAxes);
+		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Draw All Chars", Toolbar::BOOL, &dbgDrawAllChars);
+	}
 
 
 	ControllerSystem::m_useLFFeedbackTorque = true;
@@ -271,13 +299,11 @@ void App::run()
 		if (m_measurePerf)
 			controllerPerfRecorder.activate();
 
-
-
 		// Artemis
 		// Create and initialize systems
 		artemis::SystemManager * sysManager = m_world.getSystemManager();
-		AdvancedEntitySystem::registerDebugToolbar(m_toolBar);
-		AdvancedEntitySystem::registerDebugDrawBatch(m_debugDrawBatch);
+		if (m_toolBar) AdvancedEntitySystem::registerDebugToolbar(m_toolBar);
+		if (m_debugDrawBatch) AdvancedEntitySystem::registerDebugDrawBatch(m_debugDrawBatch);
 		//MovementSystem * movementsys = (MovementSystem*)sm->setSystem(new MovementSystem());
 		//addGameLogic(movementsys);
 #ifdef MEASURE_RBODIES
@@ -293,16 +319,17 @@ void App::run()
 #endif
 		ConstantForceSystem* cforceSystem = (ConstantForceSystem*)sysManager->setSystem(new ConstantForceSystem());
 		//ConstraintSystem* constraintSystem = (ConstraintSystem*)sysManager->setSystem(new ConstraintSystem(dynamicsWorld));
-		m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
+		if (!m_consoleMode)
+			m_renderSystem = (RenderSystem*)sysManager->setSystem(new RenderSystem(m_graphicsDevice));
 		ControllerSystem::ExecutionLayout execMode = ControllerSystem::SERIAL;
 		if (m_initExecSetup == InitExecSetup::PARALLEL)
 		{
 			execMode = ControllerSystem::PARALLEL;
-			m_toolBar->addLabel(Toolbar::PERFORMANCE, "PARALLEL");
+			if (m_toolBar) m_toolBar->addLabel(Toolbar::PERFORMANCE, "PARALLEL");
 		}
 		else
 		{
-			m_toolBar->addLabel(Toolbar::PERFORMANCE, "SERIAL");
+			if (m_toolBar) m_toolBar->addLabel(Toolbar::PERFORMANCE, "SERIAL");
 		}
 		m_controllerSystem = (ControllerSystem*)sysManager->setSystem(new ControllerSystem(execMode,
 																						   &controllerPerfRecorder));
@@ -435,13 +462,13 @@ void App::run()
 					legFrame.refresh();
 					string legFrameName = "LegFrame";
 					/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
-					if (x == 0) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
+					if (x == 0 && m_toolBar) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
 					//
 					// Number of leg frames per character
 					for (int n = 0; n < 2; n++) // number of legs per frame
 					{
 						string sideName = ToString(y) + (string(n == 0 ? "Left" : "Right") + "Leg");
-						if (x == 0)
+						if (x == 0 && m_toolBar)
 						{
 							m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
 							m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
@@ -550,7 +577,7 @@ void App::run()
 								boxSize = glm::vec3(scale*0.2f, thisFootLen, thisFootHeight);
 							}
 							string dbgGrp = (" group='" + sideName + "'");
-							if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName.substr(0, 2) + partName).c_str(), dbgGrp.c_str());
+							if (x == 0 && m_toolBar) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName.substr(0, 2) + partName).c_str(), dbgGrp.c_str());
 							legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, 0.0f/*jointZOffsetInChild*/));
 							if (foot == true)
 							{
@@ -598,7 +625,7 @@ void App::run()
 							}
 							MaterialComponent* mat = new MaterialComponent(colarr[(y + n) * 3 + i]);
 							childJoint.addComponent(mat);
-							if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (sideName.substr(0, 2) + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
+							if (x == 0 && m_toolBar) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (sideName.substr(0, 2) + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
 							ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, -jointZOffsetInChild),	  // child (this)
 								glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
 								{ lowerAngleLim, upperAngleLim },
@@ -770,13 +797,13 @@ void App::run()
 					legFrame.refresh();
 					string legFrameName = "LegFrame";
 					/*m_toolBar->addLabel(Toolbar::CHARACTER, legFrameName.c_str(), (" label='" + legFrameName + "'").c_str());*/
-					if (x == 0) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
+					if (x == 0 && m_toolBar) m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + legFrameName + "'").c_str());
 					//
 					// Number of leg frames per character
 					for (int n = 0; n < 2; n++) // number of legs per frame
 					{
 						string sideName = (string(n == 0 ? "Left" : "Right") + "Leg");
-						if (x == 0)
+						if (x == 0 && m_toolBar)
 						{
 							m_toolBar->addSeparator(Toolbar::CHARACTER, NULL, (" group='" + sideName + "' ").c_str());
 							m_toolBar->defineBarParams(Toolbar::CHARACTER, ("/" + sideName + " opened=false").c_str());
@@ -850,7 +877,7 @@ void App::run()
 								foot = true;
 							}
 							string dbgGrp = (" group='" + sideName + "'");
-							if (x == 0) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
+							if (x == 0 && m_toolBar) m_toolBar->addLabel(Toolbar::CHARACTER, (ToString(x) + sideName[0] + partName).c_str(), dbgGrp.c_str());
 							legpos += glm::vec3(glm::vec3(0.0f, -parentSz.y*0.5f - boxSize.y*0.5f, 0.0f/*jointZOffsetInChild*/));
 							if (foot == true)
 							{
@@ -885,7 +912,7 @@ void App::run()
 							}
 							MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
 							childJoint.addComponent(mat);
-							if (x == 0) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
+							if (x == 0 && m_toolBar) m_toolBar->addReadWriteVariable(Toolbar::CHARACTER, (ToString(x) + sideName[1] + ToString(partName[1]) + " Color").c_str(), Toolbar::COL_RGBA, (void*)&mat->getColorRGBA(), dbgGrp.c_str());
 							ConstraintComponent::ConstraintDesc constraintDesc{ glm::vec3(0.0f, boxSize.y*0.5f - jointYOffsetInChild, -jointZOffsetInChild),	  // child (this)
 								glm::vec3(jointXOffsetFromParent, -parentSz.y*0.5f, 0.0f),													  // parent
 								{ lowerAngleLim, upperAngleLim },
@@ -978,64 +1005,18 @@ void App::run()
 		//
 		// ===========================================================
 #pragma region mainloop
-		while (!m_context->closeRequested() && run && !m_restart)
+		while ((m_consoleMode || !m_context->closeRequested()) && run && !m_restart)
 		{
 			if (!pumpMessage(msg))
-			{
-				// draw axes
-				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(10.0f, 0.0f, 0.0f), colarr[0], colarr[1]);
-				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 10.0f, 0.0f), colarr[3], colarr[4]);
-				m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
-				
+			{				
 				// update timing debug var
 				controllerSystemTimingMs = m_controllerSystem->getLatestTiming() * 1000.0f;
+				if (m_consoleMode)
+					DEBUGPRINT((("\nCTiming: "+ToString(controllerSystemTimingMs)).c_str()));
 
-				// ====================================
-				//    Draw test graph if optimizing
-				// ====================================
-				if (m_runOptimization)
-				{
-					int vals = allOptimizationResults.size();
-					float grphScale = 20.0f;
-					if (vals > 1)
-					{
-						m_debugDrawBatch->drawLine(glm::vec3(-10.0f, 20.0f, 0.0f), glm::vec3(10.0f, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
-
-						for (int i = 0; i < vals - 1; i++)
-						{
-							m_debugDrawBatch->drawLine(
-								glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, grphScale * 2 + (allOptimizationResults[i] / (0.0001f + optimizationDbgMaxscoreelem))*grphScale, 0.0f),
-								glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, grphScale * 2 + (allOptimizationResults[i + 1] / (0.0001f + optimizationDbgMaxscoreelem))*grphScale, 0.0f),
-								colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
-						}
-					}
-					// params	
-					for (int i = 0; i < m_optimizationSystem->getEntityCount(); i++)
-					{
-						std::vector<float>* p = m_optimizationSystem->getCurrentParamsOf(i);
-						vals = p->size();
-						for (int i = 0; i < vals - 1; i++)
-						{
-							m_debugDrawBatch->drawLine(
-								glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*p)[i] / (0.0001f + optimizationDbgBparamsmaxelem - optimizationDbgBparamsminelem))*grphScale, 0.0f),
-								glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*p)[i + 1] / (0.0001f + optimizationDbgBparamsmaxelem - optimizationDbgBparamsminelem))*grphScale, 0.0f),
-								Color3f((float)i / (float)vals, 0.0f, 1.0f - (float)i / (float)vals));
-						}
-					}
-					if (m_bestParams != NULL)
-					{
-						vals = m_bestParams->size();
-						for (int i = 0; i < vals - 1; i++)
-						{
-							m_debugDrawBatch->drawLine(
-								glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i] / (0.0001f + optimizationDbgBparamsmaxelem - optimizationDbgBparamsminelem))*grphScale, 0.0f),
-								glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i + 1] / (0.0001f + optimizationDbgBparamsmaxelem - optimizationDbgBparamsminelem))*grphScale, 0.0f),
-								Color3f(0.0f, 0.0f, 0.0f));
-						}
-					}
-				}
-
-
+				drawDebugAxes();
+				drawDebugOptimizationGraphs(&allOptimizationResults, optimizationDbgMaxscoreelem, 
+					optimizationDbgBparamsmaxelem, optimizationDbgBparamsminelem);
 				
 				// ====================================
 				//			   Render 3D
@@ -1150,31 +1131,34 @@ void App::run()
 
 
 					// shoot (temp code)
-					if (m_input->g_kb->isKeyDown(KC_X))
+					if (m_input)
 					{
-						if (!shooting)
+						if (m_input->g_kb->isKeyDown(KC_X))
 						{
-							shooting = true;
-							artemis::Entity & proj = entityManager->create();
-							glm::vec3 pos = MathHelp::toVec3(m_controller->getPos());
-							glm::vec3 bfSize = glm::vec3(1.0f, 1.0f, 1.0f);
-							RigidBodyComponent* btrb = new RigidBodyComponent(new btBoxShape(btVector3(bfSize.x, bfSize.y, bfSize.z)*0.5f), 10.0f,
-								CollisionLayer::COL_DEFAULT, CollisionLayer::COL_DEFAULT | CollisionLayer::COL_CHARACTER);
-							proj.addComponent(btrb);
-							proj.addComponent(new RenderComponent());
-							proj.addComponent(new TransformComponent(pos,
-								glm::inverse(glm::quat(m_controller->getRotationMatrix())),
-								bfSize));
-							proj.addComponent(new ConstantForceComponent(MathHelp::transformDirection(glm::inverse(m_controller->getRotationMatrix()), glm::vec3(0, 0, 300.0f)), 1.0f));
-							proj.refresh();
+							if (!shooting)
+							{
+								shooting = true;
+								artemis::Entity & proj = entityManager->create();
+								glm::vec3 pos = MathHelp::toVec3(m_controller->getPos());
+								glm::vec3 bfSize = glm::vec3(1.0f, 1.0f, 1.0f);
+								RigidBodyComponent* btrb = new RigidBodyComponent(new btBoxShape(btVector3(bfSize.x, bfSize.y, bfSize.z)*0.5f), 10.0f,
+									CollisionLayer::COL_DEFAULT, CollisionLayer::COL_DEFAULT | CollisionLayer::COL_CHARACTER);
+								proj.addComponent(btrb);
+								proj.addComponent(new RenderComponent());
+								proj.addComponent(new TransformComponent(pos,
+									glm::inverse(glm::quat(m_controller->getRotationMatrix())),
+									bfSize));
+								proj.addComponent(new ConstantForceComponent(MathHelp::transformDirection(glm::inverse(m_controller->getRotationMatrix()), glm::vec3(0, 0, 300.0f)), 1.0f));
+								proj.refresh();
+							}
 						}
-					}
-					else
-						shooting = false;
+						else
+							shooting = false;
 
-					if (m_runOptimization)
-					{
-						optRealTimeMode = m_input->g_kb->isKeyDown(KC_P);
+						if (m_runOptimization)
+						{
+							optRealTimeMode = m_input->g_kb->isKeyDown(KC_P);
+						}
 					}
 
 					handleContext(interval, phys_dt, steps - oldSteps);
@@ -1301,7 +1285,7 @@ void App::run()
 
 
 		// debug
-		m_toolBar->clearBar(Toolbar::CHARACTER);
+		if (m_toolBar) m_toolBar->clearBar(Toolbar::CHARACTER);
 	} while (m_restart);
 #pragma endregion mainrestartloop
 
@@ -1389,28 +1373,38 @@ bool App::pumpMessage( MSG& p_msg )
 
 void App::processInput()
 {
-	m_input->run();
+	if (m_input) m_input->run();
 }
 
 void App::handleContext(double p_dt, double p_physDt, unsigned int p_physSteps)
 {
 	// apply resizing on graphics device if it has been triggered by the context
-	if (m_context->isSizeDirty())
+	if (!m_consoleMode && m_context->isSizeDirty())
 	{
-		m_toolBar->setWindowSize(0, 0);
+		if (m_toolBar) m_toolBar->setWindowSize(0, 0);
 		pair<int, int> sz = m_context->getSize();
 		int width = sz.first, height = sz.second;
 		m_graphicsDevice->updateResolution(width,height);
-		m_toolBar->setWindowSize(width, height);
-		m_debugDrawer->setDrawArea((float)width, (float)height);
+		if (m_toolBar) m_toolBar->setWindowSize(width, height);
+		if (m_debugDrawer) m_debugDrawer->setDrawArea((float)width, (float)height);
 	}
+	// special console tick
+	if (m_consoleMode) ConsoleContext::refreshConsole(p_dt);
 	// Print fps in window head border
 	m_fpsUpdateTick -= (float)p_dt;
 	if (m_fpsUpdateTick <= 0.0f)
 	{
 		float fps = (1.0f / (float)(p_dt*1000.0f))*1000.0f;
 		float pfps = 1.0f / (float)p_physDt;
-		m_context->updateTitle((" | Game FPS: " + ToString(fps) + " | Phys steps/frame: " + ToString(p_physSteps) + " | Phys FPS: " + ToString(pfps)).c_str());
+		std::string title = " | Game FPS: " + ToString(fps) + " | Phys steps/frame: " + ToString(p_physSteps) + " | Phys FPS: " + ToString(pfps);
+		if (!m_consoleMode)
+		{
+			m_context->updateTitle(title.c_str());
+		}
+		else
+		{
+			ConsoleContext::setTitle("DBGCON" + title);
+		}
 		m_fpsUpdateTick = 0.3f;
 	}
 }
@@ -1430,43 +1424,52 @@ void App::gameUpdate( double p_dt )
 	}
 
 	// temp controller update code
-	updateController(dt);
-	m_controller->setFovFromAngle(52.0f, m_graphicsDevice->getAspectRatio());
-	m_controller->update(dt);
+	if (m_input)
+	{
+		updateController(dt);
+		m_controller->setFovFromAngle(52.0f, m_graphicsDevice->getAspectRatio());
+		m_controller->update(dt);
+	}
 
 	// Get camera info to buffer
-	std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float)* 4 * 4);
-	m_vp->update();
+	if (m_vp)
+	{
+		std::memcpy(&m_vp->accessBuffer, &m_controller->getViewProjMatrix(), sizeof(float) * 4 * 4);
+		m_vp->update();
+	}
 
 	if (m_timePauseStepToggle && m_timeScale > 0.0f)
 		m_timeScale = 0.0f;
-	if (m_input->g_kb->isKeyDown(KC_RETURN) || m_triggerPause)
+	if (m_input)
 	{
-		if (!m_timeScaleToggle)
+		if (m_input->g_kb->isKeyDown(KC_RETURN) || m_triggerPause)
 		{
-			if (m_timeScale < 1.0f)
+			if (!m_timeScaleToggle)
+			{
+				if (m_timeScale < 1.0f)
+					m_timeScale = 1.0f;
+				else
+					m_timeScale = 0.0f;
+				m_timeScaleToggle = true;
+				m_triggerPause = false;
+			}
+		}
+		else
+		{
+			m_timeScaleToggle = false;
+		}
+		if (m_input->g_kb->isKeyDown(KC_NUMPAD6))
+		{
+			if (m_timeScale == 0.0f && !m_timePauseStepToggle)
+			{
+				m_timePauseStepToggle = true;
 				m_timeScale = 1.0f;
-			else
-				m_timeScale = 0.0f;
-			m_timeScaleToggle = true;
-			m_triggerPause = false;
+			}
 		}
-	}
-	else
-	{
-		m_timeScaleToggle = false;
-	}
-	if (m_input->g_kb->isKeyDown(KC_NUMPAD6))
-	{
-		if (m_timeScale == 0.0f && !m_timePauseStepToggle)
+		else
 		{
-			m_timePauseStepToggle = true;
-			m_timeScale = 1.0f;
+			m_timePauseStepToggle = false;
 		}
-	}
-	else
-	{
-		m_timePauseStepToggle = false;
 	}
 	// If triggered from elsewhere
 	/*if (m_timeScaleToggle && m_timeScale != 0.0f)
@@ -1487,28 +1490,31 @@ void App::gameUpdate( double p_dt )
 	// // Run all other systems, for which order doesn't matter
 	processSystemCollection(&m_orderIndependentSystems);
 	// // Render system is processed last
-	m_renderSystem->process();
+	if (m_renderSystem!=NULL) m_renderSystem->process();
 }
 
 
 void App::render()
 {
-	// Clear render targets
-	m_graphicsDevice->clearRenderTargets();
-	// Run passes
-	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BASEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers(), NULL);
-	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
-	m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
-	// Debug
-	m_debugDrawer->render(m_controller);
-	m_toolBar->draw();
-	// Flip!
-	m_graphicsDevice->flipBackBuffer();	
-	//
-	// Clear debug draw batch 
-	// (not optimal to only do it here if drawing from game systems,
-	// batch calls should be put in a map or equivalent)
-	//m_debugDrawBatch->clearDrawCalls();
+	if (m_renderSystem!=NULL)
+	{
+		// Clear render targets
+		m_graphicsDevice->clearRenderTargets();
+		// Run passes
+		if (m_vp) m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BASEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers(), NULL);
+		m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
+		if (m_vp) m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
+		// Debug
+		if (m_debugDrawer) m_debugDrawer->render(m_controller);
+		if (m_toolBar) m_toolBar->draw();
+		// Flip!
+		m_graphicsDevice->flipBackBuffer();
+		//
+		// Clear debug draw batch 
+		// (not optimal to only do it here if drawing from game systems,
+		// batch calls should be put in a map or equivalent)
+		//m_debugDrawBatch->clearDrawCalls();
+	}
 }
 
 // Add a system for game logic processing
@@ -1531,13 +1537,21 @@ void App::processSystemCollection(vector<artemis::EntityProcessingSystem*>* p_sy
 void App::initFromSettings(SettingsData& p_settings)
 {
 	m_initWindowMode = !p_settings.m_fullscreen;
+	if (p_settings.m_appMode == "c")
+	{
+		m_consoleMode = true;
+	}
+	else
+	{
+		m_consoleMode = false;
+	}
 	m_initWindowWidth = p_settings.m_wwidth;
 	m_initWindowHeight = p_settings.m_wheight;
-	if (p_settings.m_mode == "o")
+	if (p_settings.m_simMode == "o")
 	{
 		m_runOptimization = true;
 	}
-	else if (p_settings.m_mode == "m")
+	else if (p_settings.m_simMode == "m")
 	{
 		m_measurePerf = true;
 	}
@@ -1574,4 +1588,64 @@ void App::initFromSettings(SettingsData& p_settings)
 		fp
 		0.0
 		*/
+}
+
+void App::drawDebugAxes()
+{
+	// draw axes
+	if (m_debugDrawBatch)
+	{
+		m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(10.0f, 0.0f, 0.0f), colarr[0], colarr[1]);
+		m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 10.0f, 0.0f), colarr[3], colarr[4]);
+		m_debugDrawBatch->drawLine(glm::vec3(0.0f), glm::vec3(0.0f, 0.0f, 10.0f), dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
+	}
+}
+
+void App::drawDebugOptimizationGraphs( std::vector<double>* p_optimizationResults, 
+	float p_maxScore, float p_pmax, float p_pmin )
+{
+	// ====================================
+	//    Draw test graph if optimizing
+	// ====================================
+	if (m_debugDrawBatch && m_runOptimization)
+	{
+		int vals = p_optimizationResults->size();
+		float grphScale = 20.0f;
+		if (vals > 1)
+		{
+			m_debugDrawBatch->drawLine(glm::vec3(-10.0f, 20.0f, 0.0f), glm::vec3(10.0f, 20.0f, 0.0f), Color3f(0.0f, 0.0f, 0.0f), Color3f(1.0f, 1.0f, 1.0f));
+
+			for (int i = 0; i < vals - 1; i++)
+			{
+				m_debugDrawBatch->drawLine(
+					glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, grphScale * 2 + ((*p_optimizationResults)[i] / (0.0001f + p_maxScore))*grphScale, 0.0f),
+					glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, grphScale * 2 + ((*p_optimizationResults)[i + 1] / (0.0001f + p_maxScore))*grphScale, 0.0f),
+					colarr[i% colarrSz], colarr[(i + 1) % colarrSz]);
+			}
+		}
+		// params	
+		for (int i = 0; i < m_optimizationSystem->getEntityCount(); i++)
+		{
+			std::vector<float>* p = m_optimizationSystem->getCurrentParamsOf(i);
+			vals = p->size();
+			for (int i = 0; i < vals - 1; i++)
+			{
+				m_debugDrawBatch->drawLine(
+					glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*p)[i] / (0.0001f + p_pmax - p_pmin))*grphScale, 0.0f),
+					glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*p)[i + 1] / (0.0001f + p_pmax - p_pmin))*grphScale, 0.0f),
+					Color3f((float)i / (float)vals, 0.0f, 1.0f - (float)i / (float)vals));
+			}
+		}
+		if (m_bestParams != NULL)
+		{
+			vals = m_bestParams->size();
+			for (int i = 0; i < vals - 1; i++)
+			{
+				m_debugDrawBatch->drawLine(
+					glm::vec3(((float)i / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i] / (0.0001f + p_pmax - p_pmin))*grphScale, 0.0f),
+					glm::vec3((((float)i + 1.0f) / (float)vals)*20.0f - 10.0f, -2 * grphScale + ((*m_bestParams)[i + 1] / (0.0001f + p_pmax - p_pmin))*grphScale, 0.0f),
+					Color3f(0.0f, 0.0f, 0.0f));
+			}
+		}
+	}
 }

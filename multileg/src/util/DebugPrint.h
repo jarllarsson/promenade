@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Windows.h>
+#include "ConsoleContext.h"
 // =======================================================================================
 //                                      DebugPrint
 // =======================================================================================
@@ -31,6 +32,7 @@ static void debugPrint(const char* msg);
 void debugPrint(const char* msg)
 {
 	OutputDebugStringA(msg);
+	ConsoleContext::addMsg(string(msg), false);
 }
 
 

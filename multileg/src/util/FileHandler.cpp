@@ -147,6 +147,10 @@ bool loadSettings(SettingsData& p_settingsfile)
 	std::getline(is, tmpStr); // throwaway title
 	is >> tmpInt;
 	p_settingsfile.m_fullscreen = tmpInt == 0 ? false : true;
+	// sim mode
+	readDiscardHeader(&is);
+	std::getline(is, tmpStr);
+	p_settingsfile.m_appMode = tmpStr[0];
 	// window width
 	readDiscardHeader(&is);
 	is >> tmpInt;
@@ -155,10 +159,10 @@ bool loadSettings(SettingsData& p_settingsfile)
 	readDiscardHeader(&is);
 	is >> tmpInt;
 	p_settingsfile.m_wheight = tmpInt;
-	// mode
+	// sim mode
 	readDiscardHeader(&is);
 	std::getline(is, tmpStr);
-	p_settingsfile.m_mode = tmpStr[0];
+	p_settingsfile.m_simMode = tmpStr[0];
 	// pod
 	readDiscardHeader(&is);
 	std::getline(is, tmpStr);

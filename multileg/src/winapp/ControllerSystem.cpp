@@ -88,7 +88,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 	// Clear debug draw batch 
 	// (not optimal to only do it here if drawing from game systems,
 	// batch calls should be put in a map or equivalent)
-	dbgDrawer()->clearDrawCalls();
+	if (dbgDrawer()) dbgDrawer()->clearDrawCalls();
 
 	// Update all transforms
 	for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
@@ -126,7 +126,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			// =====================================
 			// Multi threaded CPU implementation
 			// =====================================
-			dbgDrawer()->m_enabled = false;
+			if (dbgDrawer()) dbgDrawer()->m_enabled = false;
 			int loopInvoc = 4;
 			int serialChars = 1;
 			/*concurrency::parallel_for(0, loopInvoc, [&](int n)
@@ -184,12 +184,13 @@ void ControllerSystem::applyTorques( float p_dt )
 	if (m_jointRigidBodies.size() == m_jointTorques.size())
 	{
 		float tLim = m_torqueLim;
+		bool drawDbgExist = dbgDrawer() != NULL;
 		for (unsigned int i = 0; i < m_jointRigidBodies.size(); i++)
 		{
 			glm::vec3 t = m_jointTorques[i];
 			if (glm::length(t)>tLim) 
 				t = glm::normalize(t)*tLim;
-			if (m_dbgShowTAxes && glm::length(t) > 0)
+			if (drawDbgExist && m_dbgShowTAxes && glm::length(t) > 0)
 			{
 				glm::vec3 pos = getJointPos(i);
 				dbgDrawer()->drawLine(pos, pos + t, dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_LIGHTBLUE]);
@@ -445,7 +446,7 @@ void ControllerSystem::buildCheck()
 		// Finally, when all vars and lists have been built, add debug data
 		// Add debug tracking for leg frame
 #pragma region debugsetup
-		if (i == 0)
+		if (i == 0 && dbgToolbar()!=NULL)
 		{
 			dbgToolbar()->addReadOnlyVariable(Toolbar::CHARACTER, "Gait phase", Toolbar::FLOAT, (const void*)(controller->m_player.getPhasePointer()), " group='LegFrame'");
 			// Velocity debug
@@ -638,7 +639,6 @@ void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 	{
 		m_jointTorques[i] = localJointTorques[i - torqueIdxStart];
 	}
-	DEBUGPRINT(("\n"));
 }
 void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
@@ -775,7 +775,7 @@ void ControllerSystem::updateSpine(std::vector<glm::vec3>* p_outTVF, int p_contr
 			// Add to torque for joint
 			(*p_outTVF)[jointIdx - torqueIdxStart] += torque;
 			glm::vec3 jointAxle = MathHelp::toVec3(m_jointWorldInnerEndpoints[jointIdx]);
-			//dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x * 5], dawnBringerPalRGB[COL_LIGHTRED]);
+			//if (dbgDrawer()) dbgDrawer()->drawLine(jointAxle, jointAxle + torque*0.01f, dawnBringerPalRGB[x * 5], dawnBringerPalRGB[COL_LIGHTRED]);
 		}
 	}
 	////////////////////
@@ -855,7 +855,7 @@ void ControllerSystem::offsetFootTargetDownOnLateStrike(ControllerComponent::Leg
 	{
 		glm::vec3 old = p_lf->m_footStrikePlacement[p_legIdx];
 		p_lf->m_footStrikePlacement[p_legIdx] += glm::vec3(0.0f, -1.0f, 0.0f) * p_lf->m_lateStrikeOffsetDeltaH;
-		//dbgDrawer()->drawLine(old, p_lf->m_footStrikePlacement[p_legIdx], dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_ORANGE]);
+		//if (dbgDrawer()) dbgDrawer()->drawLine(old, p_lf->m_footStrikePlacement[p_legIdx], dawnBringerPalRGB[COL_NAVALBLUE], dawnBringerPalRGB[COL_ORANGE]);
 	}
 }
 
@@ -995,15 +995,15 @@ void ControllerSystem::calculateLegFrameNetLegVF(unsigned int p_controllerIdx, C
 			//if (!stanceForcesCalculated)
 			{
 				fv = calculateFv(p_lf, m_controllerVelocityStats[p_controllerIdx]);
-				//dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fv, dawnBringerPalRGB[COL_GREY]);
+				//if (dbgDrawer()) dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fv, dawnBringerPalRGB[COL_GREY]);
 				fh = calculateFh(p_lf, m_controllerLocationStats[p_controllerIdx], p_phi, p_dt, glm::vec3(0.0f, 1.0f, 0.0));
-				//dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fh, dawnBringerPalRGB[COL_BEIGE]);
+				//if (dbgDrawer()) dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + fh, dawnBringerPalRGB[COL_BEIGE]);
 				stanceForcesCalculated=true;
 			}	
 			glm::vec3 fd(calculateFd(p_controllerIdx,p_lf, i));
 			glm::vec3 stanceForce = calculateStanceLegVF(stanceLegs, fv, fh, fd);
 			m_VFs[vfIdx] = stanceForce;// Store force
-			//if (p_controllerIdx == 0)
+			//if (p_controllerIdx == 0 && dbgDrawer())
 			//	dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + m_VFs[vfIdx], dawnBringerPalRGB[COL_LIGHTBLUE], dawnBringerPalRGB[COL_NAVALBLUE]);
 		}
 	}
@@ -1117,7 +1117,7 @@ void ControllerSystem::computeVFTorquesFromChain(std::vector<glm::vec3>* p_inout
 			// 		Color3f lineCol = dawnBringerPalRGB[COL_LIMEGREEN];
 			// 		if (p_type == ControllerComponent::VFChainType::GRAVITY_COMPENSATION_CHAIN)
 			// 			lineCol = dawnBringerPalRGB[COL_PINK];
-			// 	//dbgDrawer()->drawLine(jpos, jpos + vf, lineCol);
+			// 	//if (dbgDrawer()) dbgDrawer()->drawLine(jpos, jpos + vf, lineCol);
 			// }
 			// ========================================================================
 
@@ -1178,7 +1178,7 @@ glm::vec3 ControllerSystem::calculateFsw(ControllerComponent::LegFrame* p_lf, un
 			int i = 0;
 		}
 		glm::vec3 dbgFootPos = getFootPos(p_lf, p_legIdx);
-		//dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + res, dawnBringerPalRGB[COL_YELLOW]);
+		//if (dbgDrawer()) dbgDrawer()->drawLine(dbgFootPos, dbgFootPos + res, dawnBringerPalRGB[COL_YELLOW]);
 	}
 	return res;
 }
@@ -1252,7 +1252,7 @@ glm::vec3 ControllerSystem::calculateFd(unsigned int p_controllerId, ControllerC
 	//FD = MathHelp::transformDirection(getLegFrameTransform(p_lf), glm::vec3(0.0f, FDvert, FDhoriz));
 
 	FD = MathHelp::transformDirection(getDesiredWorldOrientation(p_controllerId), glm::vec3(0.0f, FDvert, FDhoriz)); // try using wanted orientation, instead of the actual
-	/*if (p_controllerId==0)
+	/*if (p_controllerId==0 && dbgDrawer())
 		dbgDrawer()->drawLine(getFootPos(p_lf, p_legIdx), getFootPos(p_lf, p_legIdx) + FD*2.0f, dawnBringerPalRGB[COL_YELLOW], dawnBringerPalRGB[COL_ORANGE]);*/
 	//FD = glm::vec3(0.0f);
 	return FD;
@@ -1326,7 +1326,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(std::vector<glm::vec3>* p_ino
 	// with current real-world scenarios.
 	glm::vec3 tLF = tostance + toswing + tospine; // ie. est. what we got now, base don last torque action
 	(*p_inoutTVF)[lfJointIdx - p_torqueIdxOffset] = tLF;
-	/*if (p_controllerId==0)
+	/*if (p_controllerId==0 && dbgDrawer())
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tLF, dawnBringerPalRGB[COL_PURPLE], dawnBringerPalRGB[COL_YELLOW]);*/
 
 	// 2. Calculate a desired torque, tdLF, using the previous current
@@ -1349,7 +1349,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(std::vector<glm::vec3>* p_ino
 	// Draw ORIENTATION distance
 	//glm::vec3 wanted = MathHelp::transformDirection(glm::mat4_cast(omegaLF), glm::vec3(0.0f, 10.0f, 0.0f));
 	//glm::vec3 current = MathHelp::transformDirection(glm::mat4_cast(currentOrientation), glm::vec3(0.0f, 10.0f, 0.0f));
-	/*if (p_controllerId == 0)
+	/*if (p_controllerId == 0 && dbgDrawer())
 	{
 		// torque
 		dbgDrawer()->drawLine(getLegFramePosition(lf), getLegFramePosition(lf) + tdLF, dawnBringerPalRGB[COL_ORANGE], dawnBringerPalRGB[COL_YELLOW]);

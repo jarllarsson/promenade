@@ -124,9 +124,12 @@ void RigidBodySystem::processEntity(artemis::Entity &e)
 			if (rigidBody->isColliding())
 			{
 				glm::vec3 hitPos = /*MathHelp::transformPosition(transform->getMatrixPosRot(),*/rigidBody->getCollisionPoint()/*)*/;
-				dbgDrawer()->drawLine(hitPos - glm::vec3(0.0f, 0.5f, 0.0f), hitPos + glm::vec3(0.0f, 0.5f, 0.0f), dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
-				dbgDrawer()->drawLine(hitPos - glm::vec3(0.5f, 0.0f, 0.0f), hitPos + glm::vec3(0.5f, 0.0f, 0.0f), dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
-				dbgDrawer()->drawLine(hitPos - glm::vec3(0.0f, 0.0f, 0.5f), hitPos + glm::vec3(0.0f, 0.0f, 0.5f), dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
+				if (dbgDrawer())
+				{
+					dbgDrawer()->drawLine(hitPos - glm::vec3(0.0f, 0.5f, 0.0f), hitPos + glm::vec3(0.0f, 0.5f, 0.0f), dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
+					dbgDrawer()->drawLine(hitPos - glm::vec3(0.5f, 0.0f, 0.0f), hitPos + glm::vec3(0.5f, 0.0f, 0.0f), dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
+					dbgDrawer()->drawLine(hitPos - glm::vec3(0.0f, 0.0f, 0.5f), hitPos + glm::vec3(0.0f, 0.0f, 0.5f), dawnBringerPalRGB[COL_RED], dawnBringerPalRGB[COL_RED]);
+				}
 			}
 			//
 			if (m_stateDbgRecorder != NULL && m_stateDbgRecorder->isActive())
