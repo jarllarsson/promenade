@@ -72,7 +72,7 @@ void PhysicsWorldHandler::processPreprocessSystemCollection(float p_dt)
 void PhysicsWorldHandler::handleCollisions()
 {
 	int numManifolds = m_world->getDispatcher()->getNumManifolds();
-	DEBUGPRINT((("\ncollision! n:" + ToString(numManifolds)).c_str()));
+	//DEBUGPRINT((("\ncollision! n:" + ToString(numManifolds)).c_str()));
 
 	for (int i = 0; i < numManifolds; i++)
 	{
@@ -104,7 +104,7 @@ void PhysicsWorldHandler::handleCollisions()
 					const btVector3& normalOnB = pt.m_normalWorldOnB;
 					if (rbACollision && rigidBodyA != NULL) rigidBodyA->setCollidingStat(true, glm::vec3(ptA.x(), ptA.y(), ptA.z()));
 					if (rbBCollision && rigidBodyB != NULL) rigidBodyB->setCollidingStat(true, glm::vec3(ptB.x(), ptB.y(), ptB.z()));
-					DEBUGPRINT((("\nbd" + ToString(rigidBodyA->getUID()) + "+bd" + ToString(rigidBodyB->getUID())).c_str()));
+					//DEBUGPRINT((("\nbd" + ToString(rigidBodyA->getUID()) + "+bd" + ToString(rigidBodyB->getUID())).c_str()));
 				}
 			}
 		}

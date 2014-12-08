@@ -98,7 +98,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 		m_jointTorques[i] = glm::vec3(0.0f);
 	}
 
-	DEBUGPRINT(("\n==========\n"));
+	//DEBUGPRINT(("\n==========\n"));
 	int controllerCount = (int)m_controllers.size();
 	if (m_controllers.size()>0)
 	{
@@ -1532,7 +1532,8 @@ glm::mat4 ControllerSystem::getDesiredWorldOrientation(unsigned int p_controller
 
 bool ControllerSystem::isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
-	DEBUGPRINT((((" "+ToString(p_legIdx) + " " + ToString(p_lf->m_footIsColliding[p_legIdx]))).c_str()));
+	//DEBUGPRINT((((" "+ToString(p_legIdx) + " " + ToString(p_lf->m_footIsColliding[p_legIdx]))).c_str()));
+	return false;
 	return p_lf->m_footIsColliding[p_legIdx];
 }
 
