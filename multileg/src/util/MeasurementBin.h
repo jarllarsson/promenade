@@ -35,6 +35,8 @@ public:
 	void accumulateMeasurementAt(float p_measurement, int p_idx); // for doing several runs and storing multiple values on same spot
 	void saveMeasurementRelTStamp(T p_measurement, float p_deltaTimeStamp);
 	bool isActive();
+	double getMean();
+	double getSTD();
 private:
 	vector<T> m_measurements;
 	vector<float> m_timestamps;
@@ -45,6 +47,18 @@ private:
 	bool m_active;
 	int m_internalRuns;
 };
+
+template<class T>
+double MeasurementBin<T>::getSTD()
+{
+	return m_std;
+}
+
+template<class T>
+double MeasurementBin<T>::getMean()
+{
+	return m_mean;
+}
 
 template<class T>
 MeasurementBin<T>::MeasurementBin()

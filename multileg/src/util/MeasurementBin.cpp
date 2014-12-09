@@ -268,7 +268,7 @@ bool MeasurementBin<std::vector<float>>::saveResultsGNUPLOT(const string& p_file
 			if (m_allMeans.size() > 0 && m_allSTDs.size() > 0 &&
 				m_allMeans.size() == m_allSTDs.size())
 			{
-				outFile << "# step - mean (" << m_mean << ") - standard deviation (" << m_std << ") r=" << m_internalRuns << "ylow - yhigh\n";
+				outFile << "# step - mean (" << m_mean << ") - standard deviation (" << m_std << ") r=" << m_internalRuns << " - ylow - yhigh\n";
 				if (m_timestamps.size() == m_allMeans.size())
 				{
 					for (int i = 0; i < m_allMeans.size(); i++)

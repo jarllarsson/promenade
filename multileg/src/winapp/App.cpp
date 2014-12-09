@@ -89,6 +89,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_restart = false;
 	m_saveParams = false;
 	m_consoleMode = false;
+	m_measurementRuns = 1;
 	//
 	m_triggerPause = false;
 
@@ -260,12 +261,9 @@ void App::run()
 		controllerPerfRecorder.activate();
 		m_restart = true;
 	}
-	int perfRuns = 10;
+	int perfRuns = m_measurementRuns;
 
-	std::string collectionfile = "../output/graphs/CollectedRunsResultSerial.gnuplot.txt";
-	if (m_initExecSetup==InitExecSetup::PARALLEL)
-		collectionfile="../output/graphs/CollectedRunsResultParallel.gnuplot.txt";
-	saveMeasurementToCollectionFileAtRow(collectionfile, 1.01f, 0.2f, 4);
+
 	
 
 	// ===========================================================
@@ -1265,7 +1263,7 @@ void App::run()
 
 		// Save measurements (only if any were taken)
 		// for when we have means and standard deviation
-		if (!m_restart)
+		if (controllerPerfRecorder.isActive() && !m_restart)
 		{
 			controllerPerfRecorder.finishRound();
 			if (m_initExecSetup == InitExecSetup::SERIAL)
@@ -1284,9 +1282,25 @@ void App::run()
 				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel");
 #endif
 			}
+		
+
+			// Save total avg and std to collection
+			std::string collectionfile;
+			int testUID = 0;
+			if (m_initExecSetup == InitExecSetup::SERIAL)
+			{
+				collectionfile = "../output/graphs/CollectedRunsResultSerial.gnuplot.txt";
+				testUID = m_initCharCountSerial-1; // 1 char=idx 0
+			}
+			if (m_initExecSetup == InitExecSetup::PARALLEL)
+			{
+				collectionfile = "../output/graphs/CollectedRunsResultParallel.gnuplot.txt";
+				testUID = m_initCharCountSerial-1; // 1 char=idx 0
+			}
+			saveMeasurementToCollectionFileAtRow(collectionfile, 
+				controllerPerfRecorder.getMean(), controllerPerfRecorder.getSTD(), testUID);
+
 		}
-
-
 
 		// Clean up
 		// artemis
@@ -1597,6 +1611,7 @@ void App::initFromSettings(SettingsData& p_settings)
 		m_runOptimization = false;
 		m_measurePerf = false;
 	}
+	m_measurementRuns = max(1,p_settings.m_measurementRuns);
 	if (p_settings.m_pod == "q")
 		m_characterCreateType = CharCreateType::QUADRUPED;
 	else

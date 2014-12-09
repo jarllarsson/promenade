@@ -29,6 +29,8 @@ public:
 
 	std::string m_simMode;
 
+	int m_measurementRuns;
+
 	std::string m_pod;
 
 	std::string m_execMode;

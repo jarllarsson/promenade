@@ -147,7 +147,7 @@ bool loadSettings(SettingsData& p_settingsfile)
 	std::getline(is, tmpStr); // throwaway title
 	is >> tmpInt;
 	p_settingsfile.m_fullscreen = tmpInt == 0 ? false : true;
-	// sim mode
+	// app mode
 	readDiscardHeader(&is);
 	std::getline(is, tmpStr);
 	p_settingsfile.m_appMode = tmpStr[0];
@@ -163,6 +163,10 @@ bool loadSettings(SettingsData& p_settingsfile)
 	readDiscardHeader(&is);
 	std::getline(is, tmpStr);
 	p_settingsfile.m_simMode = tmpStr[0];
+	// measurement runs
+	readDiscardHeader(&is);
+	is >> tmpInt;
+	p_settingsfile.m_measurementRuns = tmpInt;
 	// pod
 	readDiscardHeader(&is);
 	std::getline(is, tmpStr);

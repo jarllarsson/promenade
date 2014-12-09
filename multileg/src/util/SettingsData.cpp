@@ -12,6 +12,8 @@ SettingsData::SettingsData()
 
 	m_simMode = "run";
 
+	m_measurementRuns = 1;
+
 	m_pod = "biped";
 
 	m_execMode = "serial";

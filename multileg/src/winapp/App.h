@@ -103,6 +103,7 @@ private:
 	bool m_runOptimization;
 	bool m_consoleMode;
 	bool m_useToolbar;
+	int m_measurementRuns;
 
 	int   m_initWindowWidth, m_initWindowHeight;
 	bool  m_initWindowMode;
