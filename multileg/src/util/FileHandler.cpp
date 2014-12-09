@@ -4,6 +4,7 @@
 #include "SettingsData.h"
 #include "CurrentPathHelper.h"
 #include <windows.h>
+#include "StrTools.h"
 
 bool write_file_binary(std::string const & filename,
 	char const * data, size_t const bytes)
@@ -127,7 +128,6 @@ void loadFloatArrayPrompt(std::vector<float>*& p_outData, int p_fileTypeIdx)
 
 bool loadSettings(SettingsData& p_settingsfile)
 {
-
 	std::string exePathPrefix = GetExecutablePathDirectory();
 	std::string path = exePathPrefix + std::string("../settings.txt");
 	std::ifstream is;
@@ -206,4 +206,76 @@ bool loadSettings(SettingsData& p_settingsfile)
 
 	is.close();
 	return true;
+}
+
+bool saveMeasurementToCollectionFileAtRow(std::string& p_filePath, float p_average, float p_std, int p_rowIdx)
+{
+	std::string exePathPrefix = GetExecutablePathDirectory();
+	std::string path = exePathPrefix + p_filePath;
+	std::vector<std::string> rows;
+	// existing file
+	std::ifstream is;
+	is.open(path.c_str(), std::ios::in);
+	if (!is.good() || !is.is_open())
+		return false;
+	//is>>length; // read size
+	std::string tmpStr;
+	// Fullscreen
+	while (!is.eof())
+	{
+		std::getline(is, tmpStr); // throwaway title
+		rows.push_back(tmpStr);
+	}
+	is.close();
+
+	// Find the row with the right index (the first character denotes the index)
+	int vectorIdx = -1;
+	int lastIdx = 0;
+	for (int i = 0; i < rows.size(); i++)
+	{
+		std::string firstChar = rows[i].substr(0, 1);
+		if (firstChar != "#")
+		{
+			int idx = stringToInt(firstChar);
+			lastIdx = idx;
+			if (p_rowIdx == idx)
+			{
+				vectorIdx = i;
+				break;
+			}
+		}
+	}
+	if (vectorIdx == -1) // not found
+	{
+		vectorIdx=rows.size()-1;
+		while (lastIdx<p_rowIdx)
+		{
+			lastIdx++;
+			vectorIdx++;
+			rows.push_back(ToString(lastIdx) + " 0 0 0 0");
+		}
+	}
+
+	float ylow = p_average - p_std, yhigh = p_average + p_std;
+	std::string newRow = ToString(p_rowIdx) + " " + ToString(p_average) + " " + ToString(p_std) + " " + ToString(ylow) + " " + ToString(yhigh);
+	// replace
+	rows[vectorIdx] = newRow;
+
+
+	// now write
+	std::ofstream os;
+	os.open(path, std::ios::out);
+	if (!os.good() || !os.is_open())
+		return false;
+
+	for (int i = 0; i < rows.size(); i++)
+	{
+		os << rows[i]<<"\n";
+	}
+
+	//os<<length; // write size
+	//size_t length = p_inData->size();
+	//os.write(reinterpret_cast<char*>(&(*p_inData)[0]),
+	//	std::streamsize(length*sizeof(float))); // write data
+	os.close();
 }

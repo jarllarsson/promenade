@@ -18,3 +18,8 @@ LPCWSTR stringToLPCWSTR(const std::string& s)
 	LPCWSTR result = stemp.c_str();
 	return result;
 }
+
+int stringToInt(const std::string& s)
+{
+	return std::stoi(s);
+}

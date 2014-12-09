@@ -17,3 +17,5 @@
 std::wstring stringToWstring(const std::string& s);
 
 LPCWSTR stringToLPCWSTR(const std::string& s);
+
+int stringToInt(const std::string& s);

@@ -262,6 +262,12 @@ void App::run()
 	}
 	int perfRuns = 10;
 
+	std::string collectionfile = "../output/graphs/CollectedRunsResultSerial.gnuplot.txt";
+	if (m_initExecSetup==InitExecSetup::PARALLEL)
+		collectionfile="../output/graphs/CollectedRunsResultParallel.gnuplot.txt";
+	saveMeasurementToCollectionFileAtRow(collectionfile, 1.01f, 0.2f, 4);
+	
+
 	// ===========================================================
 	// 
 	//					  MAIN APP RESTART LOOP
