@@ -9,7 +9,7 @@ using System.Windows.Forms;
 namespace LauncherApp
 {
     // I was to lazy to make dll and wrappers and such.... ;(
-    class sharpSettingsDat
+    struct sharpSettingsDat
     {
         public bool m_fullscreen;
 
@@ -47,13 +47,13 @@ namespace LauncherApp
         public void writeSettings(sharpSettingsDat p_settingsfile)
         {
             string exePathPrefix = Application.StartupPath;
-            string path = exePathPrefix + "../settings.txt";
+            string path = exePathPrefix + "\\..\\settings.txt";
             List<string> rows = new List<string>(File.ReadAllLines(path));
             // go through each row, assume they are in order
             int optCounter = 0;
             for (int i = 0; i < rows.Count; i++)
             {
-                if (!(rows[i][0] == '#' || rows[i] == ""))
+                if (rows[i] != "" && rows[i][0] != '#')
                 {
                     // a writeable
                     switch (optCounter)
@@ -124,7 +124,7 @@ namespace LauncherApp
         }
 
 
-        public bool loadSettings(sharpSettingsDat p_settingsfile)
+        public bool loadSettings(ref sharpSettingsDat p_settingsfile)
         {
             string exePathPrefix = Application.StartupPath;
             string path = exePathPrefix + "\\..\\settings.txt";

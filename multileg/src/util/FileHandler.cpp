@@ -332,7 +332,7 @@ bool saveMeasurementToCollectionFileAtRow(std::string& p_filePath, float p_avera
 	while (!is.eof())
 	{
 		std::getline(is, tmpStr);
-		rows.push_back(tmpStr);
+		if (tmpStr!="") rows.push_back(tmpStr);
 	}
 	is.close();
 
@@ -341,10 +341,10 @@ bool saveMeasurementToCollectionFileAtRow(std::string& p_filePath, float p_avera
 	int lastIdx = 0;
 	for (int i = 0; i < rows.size(); i++)
 	{
-		std::string firstChar = rows[i].substr(0, 1);
-		if (firstChar != "#")
+		std::string firstChars = rows[i].substr(0, rows[i].find(" "));
+		if (firstChars != "#" && firstChars != "")
 		{
-			int idx = stringToInt(firstChar);
+			int idx = stringToInt(firstChars);
 			lastIdx = idx;
 			if (p_rowIdx == idx)
 			{

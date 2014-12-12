@@ -14,7 +14,7 @@ c
 m
 
 # MEASURE_RUNS				(number of runs during measurement to get average and standard deviation)
-10
+5
 
 # POD								(biped(short: b) or quadruped(short: q))
 b
@@ -23,7 +23,7 @@ b
 s
 
 # CHARCOUNT_TOTAL			(character count)
-3
+13
 
 # PARA_INVOC					(number of parallel invocations: character count per thread=CHARCOUNT_TOTAL/PARA_INVOC)
 4
@@ -32,7 +32,7 @@ s
 4
 
 # START_PAUSED				(0 start in play mode, 1 start paused)
-1
+0
 
 # OPT_MES_STEPS				(optimization and measurement, number of steps before break)
 800
