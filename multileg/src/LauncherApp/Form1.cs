@@ -13,6 +13,9 @@ namespace LauncherApp
 {
     public partial class Form1 : Form
     {
+        sharpSettingsReaderWriter settingsFileHandler=new sharpSettingsReaderWriter();
+        sharpSettingsDat settings = new sharpSettingsDat();
+
         public Form1()
         {
             InitializeComponent();
@@ -20,7 +23,7 @@ namespace LauncherApp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            settingsFileHandler.loadSettings(settings);
         }
 
         private void button1_Click(object sender, EventArgs e)
