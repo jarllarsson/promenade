@@ -120,7 +120,6 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 		m_triggerPause = false;
 	// ====================================
 
-
 	// ====================================
 	// Environment init
 	// ====================================

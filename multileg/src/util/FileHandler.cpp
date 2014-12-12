@@ -126,6 +126,110 @@ void loadFloatArrayPrompt(std::vector<float>*& p_outData, int p_fileTypeIdx)
 	//MessageBox(NULL, ofn.lpstrFile, "File Name", MB_OK);
 }
 
+bool writeSettings(SettingsData& p_settingsfile)
+{
+	std::string exePathPrefix = GetExecutablePathDirectory();
+	std::string path = exePathPrefix + std::string("../settings.txt");
+	std::vector<std::string> rows;
+	// existing file
+	std::ifstream is;
+	is.open(path.c_str(), std::ios::in);
+	if (!is.good() || !is.is_open())
+		return false;
+	//is>>length; // read size
+	std::string tmpStr;
+	// read all
+	while (!is.eof())
+	{
+		std::getline(is, tmpStr);
+		rows.push_back(tmpStr);
+	}
+	is.close();
+
+	// go through each row, assume they are in order
+	int optCounter = 0;
+	for (int i = 0; i < rows.size(); i++)
+	{
+		if (!(rows[i][0] == '#' || rows[i] == ""))
+		{
+			// a writeable
+			switch (optCounter)
+			{
+			case 0:
+				rows[i] = p_settingsfile.m_fullscreen ? "1" : "0";
+				break;
+			case 1:
+				rows[i] = p_settingsfile.m_appMode;
+				break;
+			case 2:
+				rows[i] = ToString(p_settingsfile.m_wwidth);
+				break;
+			case 3:
+				rows[i] = ToString(p_settingsfile.m_wheight);
+				break;
+			case 4:
+				rows[i] = p_settingsfile.m_simMode;
+				break;
+			case 5:
+				rows[i] = ToString(p_settingsfile.m_measurementRuns);
+				break;
+			case 6:
+				rows[i] = p_settingsfile.m_pod;
+				break;
+			case 7:
+				rows[i] = p_settingsfile.m_execMode;
+				break;
+			case 8:
+				rows[i] = ToString(p_settingsfile.m_charcount_serial);
+				break;
+			case 9:
+				rows[i] = ToString(p_settingsfile.m_parallel_invocs);
+				break;
+			case 10:
+				rows[i] = ToString(p_settingsfile.m_charOffsetX);
+				break;
+			case 11:
+				rows[i] = p_settingsfile.m_startPaused ? "1" : "0";
+				break;
+			case 12:
+				rows[i] = ToString(p_settingsfile.m_optmesSteps);
+				break;
+			case 13:
+				rows[i] = ToString(p_settingsfile.m_optW_fd);
+				break;
+			case 14:
+				rows[i] = ToString(p_settingsfile.m_optW_fv);
+				break;
+			case 15:
+				rows[i] = ToString(p_settingsfile.m_optW_fh);
+				break;
+			case 16:
+				rows[i] = ToString(p_settingsfile.m_optW_fr);
+				break;
+			case 17:
+				rows[i] = ToString(p_settingsfile.m_optW_fp);
+				break;
+			default:
+				// do nothing
+				break;
+			}
+			optCounter++;
+		}
+	}
+
+	// resave, using altered rows structure
+	std::ofstream os;
+	os.open(path, std::ios::out);
+	if (!os.good() || !os.is_open())
+		return false;
+
+	for (int i = 0; i < rows.size(); i++)
+	{
+		os << rows[i] << "\n";
+	}
+	os.close();
+}
+
 bool loadSettings(SettingsData& p_settingsfile)
 {
 	std::string exePathPrefix = GetExecutablePathDirectory();
@@ -224,10 +328,10 @@ bool saveMeasurementToCollectionFileAtRow(std::string& p_filePath, float p_avera
 		return false;
 	//is>>length; // read size
 	std::string tmpStr;
-	// Fullscreen
+	// read all
 	while (!is.eof())
 	{
-		std::getline(is, tmpStr); // throwaway title
+		std::getline(is, tmpStr);
 		rows.push_back(tmpStr);
 	}
 	is.close();

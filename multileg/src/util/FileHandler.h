@@ -16,6 +16,8 @@ void saveFloatArrayPrompt(std::vector<float>* p_inData, int p_fileTypeIdx);
 
 void loadFloatArrayPrompt(std::vector<float>*& p_outData, int p_fileTypeIdx);
 
+bool writeSettings(SettingsData& p_settingsfile);
+
 bool loadSettings(SettingsData& p_settingsfile);
 
 bool saveMeasurementToCollectionFileAtRow(std::string& p_filePath, float p_average, float p_std, int p_rowIdx);

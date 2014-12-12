@@ -1,50 +1,50 @@
-FULLSCREEN					(0 for windowed, 1 for fullscreen)
+# FULLSCREEN						(0 for windowed, 1 for fullscreen)
 0
 
-APP_MODE						(graphics(short: g) or console(short: c))
+# APP_MODE						(graphics(short: g) or console(short: c))
 c
 
-WND_WIDTH					(window width in pixels)
+# WND_WIDTH					(window width in pixels)
 1280
 
-WND_HEIGHT					(window height in pixels)
+# WND_HEIGHT					(window height in pixels)
 800
 
-SIMUL_MODE					(optimization(short: o), run(short: r) or measure(short: m))
+# SIMUL_MODE					(optimization(short: o), run(short: r) or measure(short: m))
 m
 
-MEASURE_RUNS				(number of runs during measurement to get average and standard deviation)
+# MEASURE_RUNS				(number of runs during measurement to get average and standard deviation)
 10
 
-POD								(biped(short: b) or quadruped(short: q))
+# POD								(biped(short: b) or quadruped(short: q))
 b
 
-EXEC_MODE					(serial(short: s) or parallel(short: p))
+# EXEC_MODE						(serial(short: s) or parallel(short: p))
 s
 
-CHARCOUNT_TOTAL			(character count)
+# CHARCOUNT_TOTAL			(character count)
 3
 
-PARA_INVOC					(number of parallel invocations: character count per thread=CHARCOUNT_TOTAL/PARA_INVOC)
+# PARA_INVOC					(number of parallel invocations: character count per thread=CHARCOUNT_TOTAL/PARA_INVOC)
 4
 
-CHAR_OFFSET_X				(position offset along x axis between characters)
-4.0
+# CHAR_OFFSET_X				(position offset along x axis between characters)
+4
 
-START_PAUSED				(0 start in play mode, 1 start paused)
-0
+# START_PAUSED				(0 start in play mode, 1 start paused)
+1
 
-OPT_MES_STEPS				(optimization and measurement, number of steps before break)
+# OPT_MES_STEPS				(optimization and measurement, number of steps before break)
 800
 
-OPT_WEIGHTS					(optimization, weights: fd fv fh fr fp)
-fd
-1000.0
-fv
+# OPT_WEIGHTS					(optimization, weights: fd fv fh fr fp)
+# fd
+1000
+# fv
 0.1
-fh
-0.0
-fr
+# fh
+0
+# fr
 0.1
-fp
-0.0
+# fp
+0
