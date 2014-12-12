@@ -77,7 +77,7 @@ namespace LauncherApp
                 settingsFileHandler.writeSettings(settings);
                 //
                 Process winapp = new Process();
-                winapp.StartInfo.FileName = "WinApp_Debug.exe";
+                winapp.StartInfo.FileName = "WinApp_Release.exe";
                 //winapp.StartInfo.Arguments = "/r:System.dll /out:sample.exe stdstr.cs";
                 winapp.StartInfo.UseShellExecute = false;
                 //winapp.StartInfo.RedirectStandardOutput = true;
