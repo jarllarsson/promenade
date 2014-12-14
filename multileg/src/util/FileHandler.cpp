@@ -387,3 +387,19 @@ bool saveMeasurementToCollectionFileAtRow(std::string& p_filePath, float p_avera
 	//	std::streamsize(length*sizeof(float))); // write data
 	os.close();
 }
+
+std::string getAutoLoadFilenameSetting(const std::string& p_autoloadFilePath)
+{
+	std::string exePathPrefix = GetExecutablePathDirectory();
+	std::string path = exePathPrefix + p_autoloadFilePath;
+	std::string reval = "";
+	// existing file
+	std::ifstream is;
+	is.open(path.c_str(), std::ios::in);
+	if (!is.good() || !is.is_open())
+		return "";
+	// read line
+	std::getline(is, reval);
+	is.close();
+	return reval;
+}

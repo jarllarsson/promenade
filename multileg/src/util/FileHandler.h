@@ -21,3 +21,5 @@ bool writeSettings(SettingsData& p_settingsfile);
 bool loadSettings(SettingsData& p_settingsfile);
 
 bool saveMeasurementToCollectionFileAtRow(std::string& p_filePath, float p_average, float p_std, int p_rowIdx);
+
+std::string getAutoLoadFilenameSetting(const std::string& p_autoloadFilePath);

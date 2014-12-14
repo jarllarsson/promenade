@@ -113,8 +113,27 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	}
 	if (m_bestParams == NULL)
 	{
-		int filetype = m_characterCreateType == BIPED ? 2 : 3;
-		loadFloatArrayPrompt(m_bestParams, filetype);
+		bool autoLoad = false;
+		std::string autoLoadPath;
+		if (m_measurePerf)
+		{
+			if (m_characterCreateType == BIPED)
+				autoLoadPath=getAutoLoadFilenameSetting("../autoloadBiped.txt");
+			else
+				autoLoadPath = getAutoLoadFilenameSetting("../autoloadQuadruped.txt");
+			if (autoLoadPath != "") autoLoad = true;
+		}
+		if (!autoLoad)
+		{
+			int filetype = m_characterCreateType == BIPED ? 2 : 3;
+			loadFloatArrayPrompt(m_bestParams, filetype);
+		}
+		else
+		{
+			if (m_bestParams == NULL)
+				m_bestParams = new std::vector<float>();
+			loadFloatArray(m_bestParams, "../output/sav/"+autoLoadPath);
+		}
 	}
 	if (m_runOptimization || m_measurePerf) // no matter load settings, we don't pause at optimization
 		m_triggerPause = false;
