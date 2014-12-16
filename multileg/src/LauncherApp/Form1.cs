@@ -21,6 +21,9 @@ namespace LauncherApp
         int parallelInvocs=4;
         int measurementRuns=1;
         bool isParallel = false;
+        bool isQuadruped = false;
+        bool isConsole = true;
+        int characterAmount = 1;
 
         public Form1()
         {
@@ -47,15 +50,18 @@ namespace LauncherApp
             // RunInstallerAttribute experiment
             settings.m_parallel_invocs = parallelInvocs;
             settings.m_simMode = "m";
-            settings.m_appMode = "c";
+            settings.m_appMode = isConsole?"c":"g";
             string exetextversion = isParallel ? "parallel" : "serial";
             settings.m_execMode = isParallel?"p":"s";
+            string exetextpod = isQuadruped ? "quadruped" : "biped";
+            settings.m_pod = isQuadruped ? "q" : "b";
+
             settings.m_measurementRuns = measurementRuns;
 
             if (measurementMaxCharsTarget>1)
-                measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment is " + exetextversion + ", with " + measurementRuns + " runs for each measurement.");
+                measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment for "+exetextpod+" is " + exetextversion + ", with " + measurementRuns + " runs for each measurement.");
             else
-                measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment has 1 " + exetextversion + " scenario, with " + measurementRuns + " runs.");
+                measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment for " + exetextpod + " has 1 " + exetextversion + " scenario, with " + measurementRuns + " runs.");
             if (isParallel) measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Parallel loop invocations will be" + parallelInvocs + ".");
             int mcount = 0;
             for (int i=0;i<=measurementMaxCharsTarget;i+=stepsz)
@@ -191,6 +197,76 @@ namespace LauncherApp
             }
         }
 
+        private void biped_radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (biped_radioButton.Checked) isQuadruped = false;
+        }
 
+        private void quadruped_radioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (quadruped_radioButton.Checked) isQuadruped = true;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            isConsole = checkBox1.Checked;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            sharpSettingsDat origsettings = settings;
+
+            // RunInstallerAttribute experiment
+            settings.m_parallel_invocs = parallelInvocs;
+            settings.m_simMode = "r";
+            settings.m_appMode = isConsole ? "c" : "g";
+            settings.m_execMode = isParallel ? "p" : "s";
+            settings.m_pod = isQuadruped ? "q" : "b";
+            settings.m_charcount_serial = characterAmount;
+            //
+            settingsFileHandler.writeSettings(settings);
+
+            Process winapp = new Process();
+            winapp.StartInfo.FileName = "WinApp_Release.exe";
+            //winapp.StartInfo.Arguments = "/r:System.dll /out:sample.exe stdstr.cs";
+            winapp.StartInfo.UseShellExecute = false;
+            //winapp.StartInfo.RedirectStandardOutput = true;
+            winapp.Start();
+            winapp.WaitForExit();
+            settings = origsettings;
+            settingsFileHandler.writeSettings(settings);
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                // Convert the text to a Double and determine if it is a negative number. 
+                int amount = int.Parse(textBox3.Text);
+                if (amount < 1) { amount = 1; textBox3.Text = "1"; }
+                characterAmount = amount;
+            }
+            catch
+            {
+                // If there is an error, display the text using the system colors.
+                MaxChars.ForeColor = SystemColors.ControlText;
+            }
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                // Convert the text to a Double and determine if it is a negative number. 
+                int amount = int.Parse(textBox2.Text);
+                if (amount < 1) { amount = 1; textBox2.Text = "1"; }
+                parallelInvocs = amount;
+            }
+            catch
+            {
+                // If there is an error, display the text using the system colors.
+                parInvocSz.ForeColor = SystemColors.ControlText;
+            }
+        }
     }
 }

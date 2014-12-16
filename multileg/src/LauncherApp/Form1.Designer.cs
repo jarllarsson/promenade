@@ -47,9 +47,24 @@
             this.parInvocSz = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.biped_radioButton = new System.Windows.Forms.RadioButton();
+            this.quadruped_radioButton = new System.Windows.Forms.RadioButton();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -76,7 +91,8 @@
             // serialRadioBtn
             // 
             this.serialRadioBtn.AutoSize = true;
-            this.serialRadioBtn.Location = new System.Drawing.Point(15, 215);
+            this.serialRadioBtn.Checked = true;
+            this.serialRadioBtn.Location = new System.Drawing.Point(3, 3);
             this.serialRadioBtn.Name = "serialRadioBtn";
             this.serialRadioBtn.Size = new System.Drawing.Size(51, 17);
             this.serialRadioBtn.TabIndex = 2;
@@ -88,7 +104,7 @@
             // parallelRadioBtn
             // 
             this.parallelRadioBtn.AutoSize = true;
-            this.parallelRadioBtn.Location = new System.Drawing.Point(73, 215);
+            this.parallelRadioBtn.Location = new System.Drawing.Point(60, 3);
             this.parallelRadioBtn.Name = "parallelRadioBtn";
             this.parallelRadioBtn.Size = new System.Drawing.Size(59, 17);
             this.parallelRadioBtn.TabIndex = 3;
@@ -139,6 +155,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Location = new System.Drawing.Point(12, 238);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -236,21 +253,147 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.label7);
+            this.tabPage2.Controls.Add(this.textBox2);
+            this.tabPage2.Controls.Add(this.label8);
+            this.tabPage2.Controls.Add(this.textBox3);
+            this.tabPage2.Controls.Add(this.label9);
+            this.tabPage2.Controls.Add(this.button1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(309, 318);
+            this.tabPage2.Size = new System.Drawing.Size(309, 348);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.Text = "Run";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // biped_radioButton
+            // 
+            this.biped_radioButton.AutoSize = true;
+            this.biped_radioButton.Checked = true;
+            this.biped_radioButton.Location = new System.Drawing.Point(4, 3);
+            this.biped_radioButton.Name = "biped_radioButton";
+            this.biped_radioButton.Size = new System.Drawing.Size(52, 17);
+            this.biped_radioButton.TabIndex = 9;
+            this.biped_radioButton.TabStop = true;
+            this.biped_radioButton.Text = "Biped";
+            this.biped_radioButton.UseVisualStyleBackColor = true;
+            this.biped_radioButton.CheckedChanged += new System.EventHandler(this.biped_radioButton_CheckedChanged);
+            // 
+            // quadruped_radioButton
+            // 
+            this.quadruped_radioButton.AutoSize = true;
+            this.quadruped_radioButton.Location = new System.Drawing.Point(61, 3);
+            this.quadruped_radioButton.Name = "quadruped_radioButton";
+            this.quadruped_radioButton.Size = new System.Drawing.Size(78, 17);
+            this.quadruped_radioButton.TabIndex = 10;
+            this.quadruped_radioButton.TabStop = true;
+            this.quadruped_radioButton.Text = "Quadruped";
+            this.quadruped_radioButton.UseVisualStyleBackColor = true;
+            this.quadruped_radioButton.CheckedChanged += new System.EventHandler(this.quadruped_radioButton_CheckedChanged);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.biped_radioButton);
+            this.panel1.Controls.Add(this.quadruped_radioButton);
+            this.panel1.Location = new System.Drawing.Point(12, 166);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(147, 27);
+            this.panel1.TabIndex = 11;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.serialRadioBtn);
+            this.panel2.Controls.Add(this.parallelRadioBtn);
+            this.panel2.Location = new System.Drawing.Point(12, 204);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(126, 28);
+            this.panel2.TabIndex = 12;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(185, 166);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(93, 17);
+            this.checkBox1.TabIndex = 15;
+            this.checkBox1.Text = "Console mode";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(309, 348);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Optimize";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(20, 163);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(268, 23);
+            this.button1.TabIndex = 2;
+            this.button1.Text = "Run Simulation";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(106, 26);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(57, 13);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "characters";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(6, 68);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.TabIndex = 14;
+            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(3, 52);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(133, 13);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Parallel Invocations (if any)";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(6, 19);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(100, 20);
+            this.textBox3.TabIndex = 12;
+            this.textBox3.Text = "1";
+            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(3, 3);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(87, 13);
+            this.label9.TabIndex = 13;
+            this.label9.Text = "Amount of chars:";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(341, 624);
-            this.Controls.Add(this.parallelRadioBtn);
-            this.Controls.Add(this.serialRadioBtn);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pictureBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -261,6 +404,12 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -286,6 +435,18 @@
         private System.Windows.Forms.ListBox measurementStatusListBox;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.RadioButton biped_radioButton;
+        private System.Windows.Forms.RadioButton quadruped_radioButton;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label9;
     }
 }
 

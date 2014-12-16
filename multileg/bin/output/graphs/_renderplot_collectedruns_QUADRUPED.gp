@@ -6,7 +6,7 @@ out_h = 800
 errstep = 1
 #default output
 set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
-set output "render/collectedRuns_raster.png"
+set output "render/collectedRuns_QUADRUPED_raster.png"
 
 # settings
 set yrange [0:1]
@@ -37,7 +37,7 @@ set style fill transparent solid 0.2 noborder
 
 set key top left
 
-set xlabel 'Biped Characters'
+set xlabel 'Quadruped Characters'
 set ylabel 'Milliseconds'
 
 #set label 'Sponge' at first 4500, first 8000
@@ -53,29 +53,29 @@ set ylabel 'Milliseconds'
 set ytics 0.05 font "Verdana,12" 
 set xtics 1 font "Verdana,12" 
 plot \
-"CollectedRunsResultSerial.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Serial', \
-"CollectedRunsResultParallel.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel error', "" using 1:2 with lines ls 2 t 'Parallel'
-#"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
-# "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
-# "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
+"CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Serial', \
+"CollectedRunsResultParallelQUADRUPED2.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel2 error', "" using 1:2 with lines ls 2 t 'Parallel2', \
+"CollectedRunsResultParallelQUADRUPED3.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel3 error', "" using 1:2 with lines ls 3 t 'Parallel3', \
+"CollectedRunsResultParallelQUADRUPED4.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel4 error', "" using 1:2 with lines ls 4 t 'Parallel4'
+
 
 # EPS
 #set terminal postscript size out_w,out_h eps enhanced color
-#set output "render/collectedRuns_vector.eps"
+#set output "render/collectedRuns_QUADRUPED_vector.eps"
 #replot
 
 #set terminal epslatex
-#set output "render/collectedRuns_vector.tex"
+#set output "render/collectedRuns_QUADRUPED_vector.tex"
 #replot
 
 # PDF
 set terminal pdf
-set output "render/collectedRuns_vector.pdf"
+set output "render/collectedRuns_QUADRUPED_vector.pdf"
 replot
 
 # SVG
 #set terminal svg size out_w,out_h fname "Verdana" fsize 45
-#set output "render/collectedRuns_vector.svg"
+#set output "render/collectedRuns_QUADRUPED_vector.svg"
 #replot
 
 # Live (wxWidgets)

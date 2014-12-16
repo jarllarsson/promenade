@@ -128,7 +128,13 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			// =====================================
 			if (dbgDrawer()) dbgDrawer()->m_enabled = false;
 			int loopInvoc = m_loopInvocs;
-			int serialChars = controllerCount/loopInvoc;
+			int serialChars = controllerCount;
+			int rest = 0;
+			if (serialChars >= m_loopInvocs)
+			{
+				serialChars = controllerCount / loopInvoc;
+				rest = controllerCount - (serialChars*loopInvoc);
+			}
 			/*concurrency::parallel_for(0, loopInvoc, [&](int n)
 			{
 				for (int i = 0; i < serialChars; i++)
@@ -147,7 +153,11 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			{
 				int n = omp_get_thread_num();
 				int test = 0;
-				for (int i = 0; i < serialChars; i++)
+				int maxCount = serialChars;
+				// The last thread must take on the rest as well
+				// on uneven distribution
+				if (n == loopInvoc - 1) maxCount += rest;
+				for (int i = 0; i < maxCount; i++)
 				{
 					//test++;
 					// character id is indexed from serial- and parallel invoc

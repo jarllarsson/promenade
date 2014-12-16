@@ -1305,14 +1305,19 @@ void App::run()
 			// Save total avg and std to collection
 			std::string collectionfile;
 			int testUID = 0;
+			std::string podFileSuffix = "";
+			if (m_characterCreateType == CharCreateType::BIPED)
+				podFileSuffix = "BIPED";
+			else
+				podFileSuffix = "QUADRUPED";
 			if (m_initExecSetup == InitExecSetup::SERIAL)
 			{
-				collectionfile = "../output/graphs/CollectedRunsResultSerial.gnuplot.txt";
+				collectionfile = "../output/graphs/CollectedRunsResultSerial"+podFileSuffix+".gnuplot.txt";
 				testUID = m_initCharCountSerial-1; // 1 char=idx 0
 			}
 			if (m_initExecSetup == InitExecSetup::PARALLEL)
 			{
-				collectionfile = "../output/graphs/CollectedRunsResultParallel.gnuplot.txt";
+				collectionfile = "../output/graphs/CollectedRunsResultParallel"+podFileSuffix+ToString(m_initParallelInvocCount)+".gnuplot.txt";
 				testUID = m_initCharCountSerial-1; // 1 char=idx 0
 			}
 			saveMeasurementToCollectionFileAtRow(collectionfile, 
