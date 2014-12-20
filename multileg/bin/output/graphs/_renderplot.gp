@@ -6,10 +6,11 @@ out_h = 800
 errstep = 1
 #default output
 set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
-set output "render/output_raster_80both.png"
+set output "render/output_raster_frames_both.png"
 
 # settings
 set yrange [0:2]
+set autoscale ymax
 
 set bars small
 
@@ -50,11 +51,11 @@ set label 'Worms' at first 4500, first 400
 #
 # =======================================================================================================
 #set autoscale
-set ytics 0.5 font "Verdana,12" 
-set xtics font "Verdana,12" 
+set ytics 0.05 font "Verdana,12" 
+set xtics 100 font "Verdana,12" 
 plot \
-"perf_serial.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Serial5', \
-"perf_parallel.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel error', "" using 1:2 with lines ls 2 t 'Parallel5'
+"perf_serial.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Serial', \
+"perf_parallel.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel error', "" using 1:2 with lines ls 2 t 'Parallel'
 #"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
 # "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
 # "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
