@@ -5,6 +5,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -92,6 +93,10 @@ namespace LauncherApp
                 winapp.WaitForExit();
             }
             measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment finished!");
+
+            string exePathPrefix = Application.StartupPath;
+            SoundPlayer simpleSound = new SoundPlayer(exePathPrefix+"/../Music_Box.wav");
+            simpleSound.Play();
 
             settings = origsettings;
             settingsFileHandler.writeSettings(settings);

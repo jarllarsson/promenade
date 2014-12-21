@@ -1283,43 +1283,40 @@ void App::run()
 		// for when we have means and standard deviation
 		if (controllerPerfRecorder.isActive() && !m_restart)
 		{
-			controllerPerfRecorder.finishRound();
-			if (m_initExecSetup == InitExecSetup::SERIAL)
-			{
-#ifdef _DEBUG
-				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial_D");
-#else
-				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial");
-#endif
-			}
-			else
-			{
-#ifdef _DEBUG
-				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel_D");
-#else
-				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel");
-#endif
-			}
-		
-
-			// Save total avg and std to collection
-			std::string collectionfile;
 			int testUID = 0;
 			std::string podFileSuffix = "";
 			if (m_characterCreateType == CharCreateType::BIPED)
 				podFileSuffix = "BIPED";
 			else
 				podFileSuffix = "QUADRUPED";
+
+			std::string collectionfile;
+
+			controllerPerfRecorder.finishRound();
 			if (m_initExecSetup == InitExecSetup::SERIAL)
 			{
-				collectionfile = "../output/graphs/CollectedRunsResultSerial"+podFileSuffix+".gnuplot.txt";
-				testUID = m_initCharCountSerial-1; // 1 char=idx 0
+#ifdef _DEBUG
+				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial_D");
+#else
+				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_serial" + ToString(m_initCharCountSerial) + podFileSuffix);
+#endif
+				// get file name for collection file
+				collectionfile = "../output/graphs/CollectedRunsResultSerial" + podFileSuffix + ".gnuplot.txt";
 			}
-			if (m_initExecSetup == InitExecSetup::PARALLEL)
+			else
 			{
-				collectionfile = "../output/graphs/CollectedRunsResultParallel"+podFileSuffix+ToString(m_initParallelInvocCount)+".gnuplot.txt";
-				testUID = m_initCharCountSerial-1; // 1 char=idx 0
+#ifdef _DEBUG
+				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel_D");
+#else
+				controllerPerfRecorder.saveResultsGNUPLOT("../output/graphs/perf_parallel" + ToString(m_initCharCountSerial) + podFileSuffix + "_thread" + ToString(m_initParallelInvocCount));
+#endif
+				// get file name for collection file
+				collectionfile = "../output/graphs/CollectedRunsResultParallel" + podFileSuffix + ToString(m_initParallelInvocCount) + ".gnuplot.txt";
 			}
+			testUID = m_initCharCountSerial - 1; // 1 char=idx 0
+		
+
+			// Save total avg and std to collection
 			saveMeasurementToCollectionFileAtRow(collectionfile, 
 				controllerPerfRecorder.getMean(), controllerPerfRecorder.getSTD(), testUID);
 
