@@ -51,7 +51,7 @@ set ylabel 'Milliseconds'
 # =======================================================================================================
 #set autoscale
 set ytics 0.05 font "Verdana,12" 
-set xtics 1 font "Verdana,12" 
+set xtics 5 font "Verdana,12" 
 plot \
 "CollectedRunsResultSerialBIPED.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Serial', \
 "CollectedRunsResultParallelBIPED2.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel2 error', "" using 1:2 with lines ls 2 t 'Parallel2', \
