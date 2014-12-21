@@ -9,7 +9,7 @@ set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
 set output "render/collectedRuns_QUADRUPED_raster.png"
 
 # settings
-set yrange [0:0.4]
+set yrange [0:1.2]
 
 set bars small
 
