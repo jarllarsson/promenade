@@ -199,7 +199,7 @@ public:
 	public:
 		Spine()
 		{
-			m_PDsK = glm::vec2(30.0f, 3.0f);
+			m_PDsK = glm::vec2(200.0f, 20.0f);
 		}
 		unsigned int m_joints;
 		bool m_lfJointsUsedPD; // if true, then we have two joints in back of pd chain that are LFs

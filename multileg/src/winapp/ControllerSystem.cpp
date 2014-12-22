@@ -1383,8 +1383,11 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(std::vector<glm::vec3>* p_ino
 	// The remainder will be assumed by the spine.
 	bool spineWork = p_legFrameIdx == 0 && (p_controller->getLegFrameCount()>1);
 	float percentage = 1.0f;
-	if (spineWork) percentage = 0.5f;
+	//if (spineWork) percentage = 0.5f;
 	// For the front LF we want only 50% (as per the document)
+	// The current implementation was wrong, as it only lowered the front LF torque
+	// it never corrected the spine torque to actually try to achieve the remaining 50%....
+	// This is still TODO
 
 
 	// 3. Now loop through all legs in stance (N) and

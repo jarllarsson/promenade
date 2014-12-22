@@ -11,7 +11,7 @@ g
 800
 
 # SIMUL_MODE					(optimization(short: o), run(short: r) or measure(short: m))
-r
+o
 
 # MEASURE_RUNS				(number of runs during measurement to get average and standard deviation)
 5
