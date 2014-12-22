@@ -9,8 +9,8 @@ ControllerMovementRecorderComponent::ControllerMovementRecorderComponent()
 {
 	m_fdWeight = 1000.0f; // deviation from reference motion
 	m_fvWeight = 0.1f;   // deviation from desired speed
-	m_fhWeight = 0.0f;	 // acceleration of head
-	m_frWeight = 0.1f;	 // whole body rotation
+	m_fhWeight = 0.5f;	 // acceleration of head
+	m_frWeight = 5.0f;	 // whole body rotation
 	m_fpWeight = 0.0f;	 // movement distance
 }
 
@@ -38,7 +38,7 @@ void ControllerMovementRecorderComponent::fv_calcStrideMeanVelocity(ControllerCo
 	ControllerSystem::VelocityStat& velocities = p_system->getControllerVelocityStat(p_controller);
 	if (!restarted && !p_forceStore)
 	{
-		m_temp_currentStrideVelocities.push_back(velocities.m_currentVelocity);
+		m_temp_currentStrideVelocities.push_back(-velocities.m_currentVelocity);
 		// DESIRED 
 		m_temp_currentStrideDesiredVelocities.push_back(velocities.m_desiredVelocity);
 		// GOAL 
@@ -108,7 +108,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 	glm::vec3 ghostDistVec(0.0f, 0.0f, ghostDist);
 	double controllerDist = (double)(p_system->getControllerPosition(p_controller).z - controllerstart.z);
 	movDistDeviation = ghostDist - controllerDist;
-	if (controllerDist < 0.0) movDistDeviation *= 2.0; // penalty for falling or walking backwards
+	//if (controllerDist < 0.0) movDistDeviation *= 10.0; // penalty for falling or walking backwards
 	movDistDeviation *= movDistDeviation; // sqr
 
 	// IK
@@ -129,6 +129,7 @@ void ControllerMovementRecorderComponent::fd_calcReferenceMotion( ControllerComp
 		glm::vec3 lfOffset = lf->m_startPosOffset - controllerstart;
 		glm::vec3 lfPos = p_system->getLegFramePosition(lf);
 		double tlenBod = (double)lfPos.y - (double)lf->m_height; // assuming ground is 0!!
+		//if (tlenBod < lf->m_height*0.5f) tlenBod *= 10.0; // penalty for falling down
 		tlenBod *= tlenBod; // sqr
 		lenBod += tlenBod; 
 		// head height

@@ -17,10 +17,10 @@ r
 5
 
 # POD								(biped(short: b) or quadruped(short: q))
-q
+b
 
 # EXEC_MODE						(serial(short: s) or parallel(short: p))
-p
+s
 
 # CHARCOUNT_TOTAL			(character count)
 7

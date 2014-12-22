@@ -149,19 +149,30 @@ void ControllerSystem::fixedUpdate(float p_dt)
 					}
 				}
 			});*/
+
+			int remainingRest = rest;
 			#pragma omp parallel num_threads(loopInvoc)
 			{
 				int n = omp_get_thread_num();
-				int test = 0;
+				int start = 0;
 				int maxCount = serialChars;
 				// The last thread must take on the rest as well
 				// on uneven distribution
-				if (n == loopInvoc - 1) maxCount += rest;
+				//if (n == loopInvoc - 1) maxCount += rest;
+				if (n < rest)
+				{
+					maxCount += 1;
+					start += n;
+				}
+				else
+				{
+					start += rest;
+				}
 				for (int i = 0; i < maxCount; i++)
 				{
 					//test++;
 					// character id is indexed from serial- and parallel invoc
-					int id = i + (n*serialChars);
+					int id = i + (n*serialChars) + start;
 					if (id < controllerCount)
 					{
 						ControllerComponent* controller = m_controllers[id];
@@ -1151,7 +1162,6 @@ bool ControllerSystem::isInControlledStance(ControllerComponent::LegFrame* p_lf,
 	if (!stance)
 	{
 		// TODO!!!
-		// WTF, I HADN'T FIXED THIS???:
 		//DEBUGPRINT((string("Y " + ToString(p_lf) + " > " + ToString(stepCycle)).c_str()));
 		bool isTouchingGround = isFootStrike(p_lf,p_legIdx);
 		// ACTIVATING THIS STILL RESULTS IN DIFFERING RESULTS FOR CHARACTERS
@@ -1371,7 +1381,7 @@ glm::vec3 ControllerSystem::applyNetLegFrameTorque(std::vector<glm::vec3>* p_ino
 
 	// How much torque should be assumed by the LF?
 	// The remainder will be assumed by the spine.
-	bool spineWork = p_legFrameIdx == 0 /*&& (p_controller->getLegFrameCount()>1)*/;
+	bool spineWork = p_legFrameIdx == 0 && (p_controller->getLegFrameCount()>1);
 	float percentage = 1.0f;
 	if (spineWork) percentage = 0.5f;
 	// For the front LF we want only 50% (as per the document)
@@ -1544,7 +1554,7 @@ glm::mat4 ControllerSystem::getDesiredWorldOrientation(unsigned int p_controller
 bool ControllerSystem::isFootStrike(ControllerComponent::LegFrame* p_lf, unsigned int p_legIdx)
 {
 	//DEBUGPRINT((((" "+ToString(p_legIdx) + " " + ToString(p_lf->m_footIsColliding[p_legIdx]))).c_str()));
-	return false;
+	//return false;
 	return p_lf->m_footIsColliding[p_legIdx];
 }
 
