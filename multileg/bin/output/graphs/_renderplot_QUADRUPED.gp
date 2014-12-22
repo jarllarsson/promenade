@@ -6,7 +6,7 @@ out_h = 800
 errstep = 1
 #default output
 set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
-set output "render/output_raster_frames_BIPED.png"
+set output "render/output_raster_frames_QUADRUPED.png"
 
 # settings
 set yrange [0:2]
@@ -54,8 +54,8 @@ set label 'Worms' at first 4500, first 400
 set ytics 0.05 font "Verdana,12" 
 set xtics 100 font "Verdana,12" 
 plot \
-"perf_serial20BIPED.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Biped Serial', \
-"perf_parallel20BIPED_thread2.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel error', "" using 1:2 with lines ls 2 t 'Biped Parallel (2)'
+"perf_serial20QUADRUPED.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Quadruped Serial', \
+"perf_parallel20QUADRUPED_thread2.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel error', "" using 1:2 with lines ls 2 t 'Quadruped Parallel (2)'
 #"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
 # "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
 # "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
@@ -66,17 +66,17 @@ plot \
 #replot
 
 set terminal epslatex
-set output "render/output_vector_frames_BIPED.tex"
+set output "render/output_vector_frames_QUADRUPED.tex"
 replot
 
 # PDF
 set terminal pdf
-set output "render/output_vector_frames_BIPED.pdf"
+set output "render/output_vector_frames_QUADRUPED.pdf"
 replot
 
 # SVG
 set terminal svg size out_w,out_h fname "Verdana" fsize 45
-set output "render/output_vector_frames_BIPED.svg"
+set output "render/output_vector_frames_QUADRUPED.svg"
 replot
 
 # Live (wxWidgets)
