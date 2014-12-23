@@ -1,1 +1,1 @@
-doggwalker.qgait
+doggwalker_collision3.qgait
