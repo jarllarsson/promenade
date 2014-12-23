@@ -9,8 +9,9 @@ set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
 set output "render/output_raster_frames_QUADRUPED.png"
 
 # settings
-set yrange [0:2]
-set autoscale ymax
+set yrange [0:0.3]
+set xrange [0:799]
+# set autoscale ymax
 
 set bars small
 
@@ -53,6 +54,7 @@ set label 'Worms' at first 4500, first 400
 #set autoscale
 set ytics 0.05 font "Verdana,12" 
 set xtics 100 font "Verdana,12" 
+set xtics add ("799" 798)
 plot \
 "perf_serial20QUADRUPED.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Quadruped Serial', \
 "perf_parallel20QUADRUPED_thread2.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel error', "" using 1:2 with lines ls 2 t 'Quadruped Parallel (2)'

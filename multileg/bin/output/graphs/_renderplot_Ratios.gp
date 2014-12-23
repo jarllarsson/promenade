@@ -4,14 +4,25 @@
 out_w = 1280
 out_h = 800
 errstep = 1
+
+set terminal unknown
+plot 'CollectedRunsResultSerialBIPED.gnuplot.txt' using 1:2 # gather basic statistics
+min_biped=GPVAL_DATA_Y_MIN
+max_biped=GPVAL_DATA_Y_MAX
+
+set terminal unknown
+plot 'CollectedRunsResultSerialQUADRUPED.gnuplot.txt' using 1:2 # gather basic statistics
+min_quadruped=GPVAL_DATA_Y_MIN
+max_quadruped=GPVAL_DATA_Y_MAX
+
 #default output
 set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
-set output "render/output_raster_frames_BIPED.png"
+set output "render/output_raster_ratios_serial.png"
 
 # settings
-set yrange [0:0.3]
-set xrange [0:799]
-# set autoscale ymax
+set yrange [1:100]
+set xrange [1:]
+# set autoscale
 
 set bars small
 
@@ -39,12 +50,9 @@ set style fill transparent solid 0.2 noborder
 
 set key top left
 
-set xlabel 'Step'
-set ylabel 'Milliseconds'
+set xlabel 'Character count'
+set ylabel 'Ratio'
 
-set label 'Sponge' at first 4500, first 8000
-set label 'Ants' at first 4500, first 1600
-set label 'Worms' at first 4500, first 400
 
 # =======================================================================================================
 #
@@ -52,33 +60,30 @@ set label 'Worms' at first 4500, first 400
 #
 # =======================================================================================================
 #set autoscale
-set ytics 0.05 font "Verdana,12" 
-set xtics 100 font "Verdana,12" 
-set xtics add ("799" 798)
+set ytics 5 font "Verdana,12" 
+set xtics add ("1" 1)
+set xtics 5 font "Verdana,12" 
+set ytics add ("1" 1)
 plot \
-"perf_serial20BIPED.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Biped Serial', \
-"perf_parallel20BIPED_thread2.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel error', "" using 1:2 with lines ls 2 t 'Biped Parallel (2)'
+"CollectedRunsResultSerialBIPED.gnuplot.txt" using ($1+1):($2/min_biped) with lines ls 1 t 'Biped execution time ratio', \
+"CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):($2/min_quadruped) with lines ls 2 t 'Quadruped execution time ratio'
 #"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
 # "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
 # "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'
 
 # EPS
 #set terminal postscript size out_w,out_h eps enhanced color
-#set output "render/output_vector.eps"
+#set output "render/output_vector_ratios_serial.eps"
 #replot
-
-set terminal epslatex
-set output "render/output_vector_frames_BIPED.tex"
-replot
 
 # PDF
 set terminal pdf
-set output "render/output_vector_frames_BIPED.pdf"
+set output "render/output_vector_ratios_serial.pdf"
 replot
 
 # SVG
 set terminal svg size out_w,out_h fname "Verdana" fsize 45
-set output "render/output_vector_frames_BIPED.svg"
+set output "render/output_vector_ratios_serial.svg"
 replot
 
 # Live (wxWidgets)

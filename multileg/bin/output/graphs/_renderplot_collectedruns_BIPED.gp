@@ -9,7 +9,8 @@ set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
 set output "render/collectedRuns_BIPED_raster.png"
 
 # settings
-set yrange [0:0.4]
+set yrange [0:1.2]
+set xrange [1:]
 
 set bars small
 
@@ -52,11 +53,12 @@ set ylabel 'Milliseconds'
 #set autoscale
 set ytics 0.05 font "Verdana,12" 
 set xtics 5 font "Verdana,12" 
+set xtics add ("1" 1)
 plot \
-"CollectedRunsResultSerialBIPED.gnuplot.txt" using 1:4:5 with filledcurves title 'serial error', "" using 1:2 with lines ls 1 t 'Serial', \
-"CollectedRunsResultParallelBIPED2.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel2 error', "" using 1:2 with lines ls 2 t 'Parallel2', \
-"CollectedRunsResultParallelBIPED3.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel3 error', "" using 1:2 with lines ls 3 t 'Parallel3', \
-"CollectedRunsResultParallelBIPED4.gnuplot.txt" using 1:4:5 with filledcurves title 'parallel4 error', "" using 1:2 with lines ls 4 t 'Parallel4'
+"CollectedRunsResultSerialBIPED.gnuplot.txt" using ($1+1):4:5 with filledcurves title 'serial error', "" using ($1+1):2 with lines ls 1 t 'Serial', \
+"CollectedRunsResultParallelBIPED2.gnuplot.txt" using ($1+1):4:5 with filledcurves title 'parallel2 error', "" using ($1+1):2 with lines ls 2 t 'Parallel2', \
+"CollectedRunsResultParallelBIPED3.gnuplot.txt" using ($1+1):4:5 with filledcurves title 'parallel3 error', "" using ($1+1):2 with lines ls 3 t 'Parallel3', \
+"CollectedRunsResultParallelBIPED4.gnuplot.txt" using ($1+1):4:5 with filledcurves title 'parallel4 error', "" using ($1+1):2 with lines ls 4 t 'Parallel4'
 
 
 # EPS
