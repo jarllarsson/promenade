@@ -65,8 +65,8 @@ set xtics add ("1" 1)
 set xtics 5 font "Verdana,12" 
 set ytics add ("1" 1)
 plot \
-"CollectedRunsResultSerialBIPED.gnuplot.txt" using ($1+1):($2/min_biped) with lines ls 1 t 'Biped execution time ratio', \
-"CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):($2/min_quadruped) with lines ls 2 t 'Quadruped execution time ratio'
+"CollectedRunsResultSerialBIPED.gnuplot.txt" using ($1+1):($2/min_biped) with lines ls 1 t 'Biped execution slowdown rate', \
+"CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):($2/min_quadruped) with lines ls 2 t 'Quadruped execution slowdown rate'
 #"perf_serial.gnuplot.txt" every errstep with yerrorbars ls 11 t '', "perf_serial.gnuplot.txt" with lines ls 1 t 'Serial', \
 # "antsdat.txt" every errstep with yerrorbars ls 22 t '', "antsdat.txt" with lines ls 2 t 'Ants', \
 # "spongedat.txt" every errstep with yerrorbars ls 33 t '', "spongedat.txt" with lines ls 3 t 'Sponge'

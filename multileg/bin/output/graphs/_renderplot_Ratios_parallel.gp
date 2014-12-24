@@ -55,7 +55,11 @@ set grid back ls 12
 set style line 1 lc rgb '#8b9946' pt -1 ps 1 lt 1 lw 3 # --- green
 set style line 2 lc rgb '#5c1720' pt -1 ps 1 lt 1 lw 3 # --- red
 set style line 3 lc rgb '#76a1c8' pt -1 ps 1 lt 1 lw 3 # --- blue
-set style line 4 lc rgb '#FF5B00' pt -1 ps 1 lt 1 lw 3 # --- orange (for fit)
+set style line 4 lc rgb '#FF5B00' pt -1 ps 1 lt 1 lw 3 # --- orange
+set style line 5 lc rgb '#996633' pt -1 ps 1 lt 1 lw 3 # --- brown
+set style line 6 lc rgb '#800080' pt -1 ps 1 lt 1 lw 3 # --- purple
+set style line 7 lc rgb '#ADDFAD' pt -1 ps 1 lt 1 lw 3 # --- moss
+set style line 8 lc rgb '#000000' pt -1 ps 1 lt 1 lw 3 # --- black
 # error bars
 set style line 11 lc rgb '#8b9946' pt -1 ps 1 lt 1 lw 0.3 # --- red
 set style line 22 lc rgb '#5c1720' pt -1 ps 1 lt 1 lw 0.3 # --- green
@@ -80,12 +84,12 @@ set xtics add ("1" 1)
 set xtics 5 font "Verdana,12" 
 set ytics add ("1" 1)
 plot \
-"CollectedRunsResultParallelBIPED2.gnuplot.txt" using ($1+1):($2/min_biped2) with lines ls 1 t 'Biped2 execution time ratio', \
-"CollectedRunsResultParallelQUADRUPED2.gnuplot.txt" using ($1+1):($2/min_quadruped2) with lines ls 2 t 'Quadruped2 execution time ratio', \
-"CollectedRunsResultParallelBIPED3.gnuplot.txt" using ($1+1):($2/min_biped3) with lines ls 3 t 'Biped3 execution time ratio', \
-"CollectedRunsResultParallelQUADRUPED3.gnuplot.txt" using ($1+1):($2/min_quadruped3) with lines ls 4 t 'Quadruped3 execution time ratio', \
-"CollectedRunsResultParallelBIPED4.gnuplot.txt" using ($1+1):($2/min_biped4) with lines ls 5 t 'Biped4 execution time ratio', \
-"CollectedRunsResultParallelQUADRUPED4.gnuplot.txt" using ($1+1):($2/min_quadruped4) with lines ls 6 t 'Quadruped4 execution time ratio', \
+"CollectedRunsResultParallelBIPED2.gnuplot.txt" using ($1+1):($2/min_biped2) with lines ls 1 t 'Biped2 execution slowdown rate', \
+"CollectedRunsResultParallelQUADRUPED2.gnuplot.txt" using ($1+1):($2/min_quadruped2) with lines ls 2 t 'Quadruped2 execution slowdown rate', \
+"CollectedRunsResultParallelBIPED3.gnuplot.txt" using ($1+1):($2/min_biped3) with lines ls 3 t 'Biped3 execution slowdown rate', \
+"CollectedRunsResultParallelQUADRUPED3.gnuplot.txt" using ($1+1):($2/min_quadruped3) with lines ls 4 t 'Quadruped3 execution slowdown rate', \
+"CollectedRunsResultParallelBIPED4.gnuplot.txt" using ($1+1):($2/min_biped4) with lines ls 5 t 'Biped4 execution slowdown rate', \
+"CollectedRunsResultParallelQUADRUPED4.gnuplot.txt" using ($1+1):($2/min_quadruped4) with lines ls 6 t 'Quadruped4 execution slowdown rate', \
 
 # EPS
 #set terminal postscript size out_w,out_h eps enhanced color
