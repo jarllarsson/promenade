@@ -27,7 +27,7 @@ double Time::initSecPerTick()
 	return 1.0 / (double)m_ticksPerSec.QuadPart;
 }
 
-double Time::getTimeMs()
+double Time::getTimeSeconds()
 {
 	LARGE_INTEGER stamp = getTimeStamp();
 	double time = (double)stamp.QuadPart * getSecondsPerTick();

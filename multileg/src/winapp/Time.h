@@ -15,13 +15,13 @@
 class Time
 {
 public:
-	Time();
-	virtual ~Time();
+	Time() {}
+	virtual ~Time() {}
 
 	static LARGE_INTEGER getTimeStamp();
 	static LARGE_INTEGER getTicksPerSecond();
 	static double		 getSecondsPerTick();
-	static double		 getTimeMs();
+	static double		 getTimeSeconds();
 protected:
 
 private:

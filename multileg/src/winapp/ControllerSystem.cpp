@@ -108,7 +108,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 			ControllerComponent* controller = m_controllers[n];
 			writeFeetCollisionStatus(controller);
 		}
-		startTiming = Time::getTimeMs();
+		startTiming = Time::getTimeSeconds();
 		if (m_executionSetup==SERIAL)
 		{
 			// =====================================
@@ -189,7 +189,7 @@ void ControllerSystem::fixedUpdate(float p_dt)
 		DEBUGPRINT(("\nNO CONTROLLERS YET\n"));
 	}
 	//double endTimingOmp = omp_get_wtime();
-	m_timing = Time::getTimeMs() - startTiming;
+	m_timing = Time::getTimeSeconds() - startTiming;
 	//m_timing = endTimingOmp - startTimingOmp;
 	if (m_perfRecorder != NULL)
 		m_perfRecorder->accumulateMeasurementAt((double)(m_timing*1000.0), m_steps);
