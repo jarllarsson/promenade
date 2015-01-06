@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,13 +18,14 @@ namespace LauncherApp
         sharpSettingsReaderWriter settingsFileHandler=new sharpSettingsReaderWriter();
         sharpSettingsDat settings;
 
-        int measurementMaxCharsTarget=1;
+        int measurementMaxCharsTarget=100;
         int measurementIncChars=1;
         int parallelInvocs=4;
         int measurementRuns=1;
         bool isParallel = false;
         bool isQuadruped = false;
         bool isConsole = true;
+        bool runAllConfigs = false;
         int characterAmount = 1;
 
         public Form1()
@@ -40,32 +42,89 @@ namespace LauncherApp
 
         private void runMeasurement_Click(object sender, EventArgs e)
         {
+            progressBar_configPrcnt.Value = 0;
+            if (!runAllConfigs)
+            {
+                runCurrentConfig();
+                progressBar_configPrcnt.Value = 4;
+            }
+            else
+            {
+                bool oldIsQuadruped = isQuadruped;
+                bool oldIsParallel = isParallel;
+                int oldParInvoc = parallelInvocs;
+                int paraMax = parallelInvocs;
+                // biped serial
+                isQuadruped = false;
+                isParallel = false; 
+                progressBar_configPrcnt.Value = 25;
+                progressBar_configPrcnt.Update();
+                runCurrentConfig();
+                // quadruped serial
+                isQuadruped = true;
+                isParallel = false;
+                progressBar_configPrcnt.Value = 50;
+                progressBar_configPrcnt.Update();
+                runCurrentConfig();
+
+                // biped parallel
+                isQuadruped = false;
+                isParallel = true;
+                for (int i = 2; i <= paraMax; i++)
+                {
+                    parallelInvocs = i;
+                    progressBar_configPrcnt.Value = 50 + (int)(((float)i / (float)paraMax) * 25.0f);
+                    progressBar_configPrcnt.Update();
+                    runCurrentConfig();
+                }
+
+                // quadruped parallel
+                isQuadruped = true;
+                isParallel = true;
+                for (int i = 2; i <= paraMax; i++)
+                {
+                    parallelInvocs = i;                
+                    progressBar_configPrcnt.Value = 75 + (int)(((float)i/(float)paraMax)*25.0f);
+                    progressBar_configPrcnt.Update();
+                    runCurrentConfig();
+                }
+                // done, reset
+                isQuadruped = oldIsQuadruped;
+                isParallel = oldIsParallel;
+                parallelInvocs = oldParInvoc;
+            }
+        }
+
+
+        void runCurrentConfig()
+        {
             measurementStatusListBox.Items.Clear();
+            progressBar_characterPrcnt.Value = 0;
 
             measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Running Experiment...");
 
-            int stepsz=measurementIncChars;
+            int stepsz = measurementIncChars;
 
             sharpSettingsDat origsettings = settings;
 
             // RunInstallerAttribute experiment
             settings.m_parallel_invocs = parallelInvocs;
             settings.m_simMode = "m";
-            settings.m_appMode = isConsole?"c":"g";
+            settings.m_appMode = isConsole ? "c" : "g";
             string exetextversion = isParallel ? "parallel" : "serial";
-            settings.m_execMode = isParallel?"p":"s";
+            settings.m_execMode = isParallel ? "p" : "s";
             string exetextpod = isQuadruped ? "quadruped" : "biped";
             settings.m_pod = isQuadruped ? "q" : "b";
 
             settings.m_measurementRuns = measurementRuns;
 
-            if (measurementMaxCharsTarget>1)
-                measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment for "+exetextpod+" is " + exetextversion + ", with " + measurementRuns + " runs for each measurement.");
+            if (measurementMaxCharsTarget > 1)
+                measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment for " + exetextpod + " is " + exetextversion + ", with " + measurementRuns + " runs for each measurement.");
             else
                 measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment for " + exetextpod + " has 1 " + exetextversion + " scenario, with " + measurementRuns + " runs.");
             if (isParallel) measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Parallel loop invocations will be" + parallelInvocs + ".");
             int mcount = 0;
-            for (int i=0;i<=measurementMaxCharsTarget;i+=stepsz)
+            for (int i = 0; i <= measurementMaxCharsTarget; i += stepsz)
             {
                 mcount++;
                 int charCount = i;
@@ -91,12 +150,17 @@ namespace LauncherApp
                 winapp.Start();
                 //Console.WriteLine(winapp.StandardOutput.ReadToEnd());
                 winapp.WaitForExit();
+                progressBar_characterPrcnt.Value = (int)(100.0f * ((float)i) / ((float)measurementMaxCharsTarget));
+                progressBar_characterPrcnt.Update();
+                progressBar_configPrcnt.Update();
+                Application.DoEvents();
             }
             measurementStatusListBox.TopIndex = measurementStatusListBox.Items.Add("Experiment finished!");
 
             string exePathPrefix = Application.StartupPath;
-            SoundPlayer simpleSound = new SoundPlayer(exePathPrefix+"/../Music_Box.wav");
+            SoundPlayer simpleSound = new SoundPlayer(exePathPrefix + "/../Music_Box.wav");
             simpleSound.Play();
+            progressBar_characterPrcnt.Value = 100;
 
             settings = origsettings;
             settingsFileHandler.writeSettings(settings);
@@ -273,5 +337,26 @@ namespace LauncherApp
                 parInvocSz.ForeColor = SystemColors.ControlText;
             }
         }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            runAllConfigs = checkBox2.Checked;
+        }
+
+        private void progressBar_characterPrcnt_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void progressBar_configPrcnt_Click(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

@@ -89,7 +89,7 @@ namespace LauncherApp
                             rows[i] = p_settingsfile.m_parallel_invocs.ToString();
                             break;
                         case 10:
-                            rows[i] = p_settingsfile.m_charOffsetX.ToString();
+                            rows[i] = p_settingsfile.m_charOffsetX.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 11:
                             rows[i] = p_settingsfile.m_startPaused ? "1" : "0";
@@ -98,19 +98,19 @@ namespace LauncherApp
                             rows[i] = p_settingsfile.m_optmesSteps.ToString();
                             break;
                         case 13:
-                            rows[i] = p_settingsfile.m_optW_fd.ToString();
+                            rows[i] = p_settingsfile.m_optW_fd.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 14:
-                            rows[i] = p_settingsfile.m_optW_fv.ToString();
+                            rows[i] = p_settingsfile.m_optW_fv.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 15:
-                            rows[i] = p_settingsfile.m_optW_fh.ToString();
+                            rows[i] = p_settingsfile.m_optW_fh.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 16:
-                            rows[i] = p_settingsfile.m_optW_fr.ToString();
+                            rows[i] = p_settingsfile.m_optW_fr.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 17:
-                            rows[i] = p_settingsfile.m_optW_fp.ToString();
+                            rows[i] = p_settingsfile.m_optW_fp.ToString(System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         default:
                             // do nothing
@@ -168,7 +168,7 @@ namespace LauncherApp
                             p_settingsfile.m_parallel_invocs = Convert.ToInt32(rows[i]);
                             break;
                         case 10:
-                            p_settingsfile.m_charOffsetX = Convert.ToSingle(rows[i]);
+                            p_settingsfile.m_charOffsetX = Convert.ToSingle(rows[i], System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 11:
                             p_settingsfile.m_startPaused = rows[i] == "1" ? true : false;
@@ -177,19 +177,19 @@ namespace LauncherApp
                             p_settingsfile.m_optmesSteps = Convert.ToInt32(rows[i]);
                             break;
                         case 13:
-                            p_settingsfile.m_optW_fd = Convert.ToSingle(rows[i]);
+                            p_settingsfile.m_optW_fd = Convert.ToSingle(rows[i], System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 14:
-                            p_settingsfile.m_optW_fv = Convert.ToSingle(rows[i]);
+                            p_settingsfile.m_optW_fv = Convert.ToSingle(rows[i], System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 15:
-                            p_settingsfile.m_optW_fh = Convert.ToSingle(rows[i]);
+                            p_settingsfile.m_optW_fh = Convert.ToSingle(rows[i], System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 16:
-                            p_settingsfile.m_optW_fr = Convert.ToSingle(rows[i]);
+                            p_settingsfile.m_optW_fr = Convert.ToSingle(rows[i], System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         case 17:
-                            p_settingsfile.m_optW_fp = Convert.ToSingle(rows[i]);
+                            p_settingsfile.m_optW_fp = Convert.ToSingle(rows[i], System.Globalization.CultureInfo.InvariantCulture);
                             break;
                         default:
                             // do nothing
