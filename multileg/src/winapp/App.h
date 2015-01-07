@@ -74,6 +74,7 @@ private:
 	void initFromSettings(SettingsData& p_settings);
 	void drawDebugAxes();
 	void drawDebugOptimizationGraphs(std::vector<double>* p_optimizationResults, float p_maxScore, float p_pmax, float p_pmin);
+	void loadData();
 	static const double DTCAP;
 	float m_fpsUpdateTick;
 
