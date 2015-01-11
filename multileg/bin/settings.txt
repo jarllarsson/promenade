@@ -2,7 +2,7 @@
 0
 
 # APP_MODE						(graphics(short: g) or console(short: c))
-c
+g
 
 # WND_WIDTH					(window width in pixels)
 1280
@@ -11,16 +11,16 @@ c
 800
 
 # SIMUL_MODE					(optimization(short: o), run(short: r) or measure(short: m))
-m
+o
 
 # MEASURE_RUNS				(number of runs during measurement to get average and standard deviation)
 10
 
 # POD								(biped(short: b) or quadruped(short: q))
-q
+b
 
 # EXEC_MODE						(serial(short: s) or parallel(short: p))
-p
+s
 
 # CHARCOUNT_TOTAL			(character count)
 5
@@ -35,7 +35,7 @@ p
 0
 
 # OPT_MES_STEPS				(optimization and measurement, number of steps before break)
-800
+1000
 
 # OPT_WEIGHTS					(optimization, weights: fd fv fh fr fp)
 # fd
