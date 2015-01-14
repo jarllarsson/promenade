@@ -21,7 +21,7 @@ set border 3 back ls 11
 set tics nomirror
 # define grid
 set style line 12 lc rgb '#808080' lt 0 lw 1
-set grid back ls 12
+#set grid back ls 12
 
 # color definitions
 # lines
@@ -35,8 +35,8 @@ set style line 7 lc rgb '#ADDFAD' pt -1 ps 1 lt 1 lw 3 # --- moss
 set style line 8 lc rgb '#000000' pt -1 ps 1 lt 1 lw 3 # --- black
 # trend lines
 set style line 9 lc rgb '#000000' pt -1 ps 1 lt 1 lw 3 # --- black
-set style line 10 lc rgb '#0000FF' pt -1 ps 1 lt 1 lw 1.5 # --- blue
-set style line 11 lc rgb '#FF0000' pt -1 ps 1 lt 1 lw 1.5 # --- red
+set style line 10 lc rgb '#94CCA7' pt -1 ps 1 lt 1 lw 1.5 # --- light green
+set style line 11 lc rgb '#911D4D' pt -1 ps 1 lt 0 lw 4 # --- red
 # error bars
 set style line 22 lc rgb '#8b9946' pt -1 ps 1 lt 1 lw 0.3 # --- red
 set style line 33 lc rgb '#5c1720' pt -1 ps 1 lt 1 lw 0.3 # --- green
@@ -64,13 +64,13 @@ fit polyfit(x) "CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):2 v
 #
 # =======================================================================================================
 #set autoscale
-set ytics 0.5 font "Verdana,12" 
-set xtics 100 font "Verdana,12"
+set ytics 0.5 font "Calibri,15"
+set xtics 100 font "Calibri,15"
 set xtics add ("1" 1)
 plot \
-linearfit(x) with lines ls 10 t 'Linear Trend', \
+"CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):2 with lines ls 1 t 'Quadruped Serial', \
 polyfit(x) with lines ls 11 t 'Polynomial Trend', \
-"CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):2 with lines ls 1 t 'Quadruped Serial'
+linearfit(x) with lines ls 10 t 'Linear Trend'
 #"CollectedRunsResultParallelQUADRUPED2.gnuplot.txt" using ($1+1):2 with lines ls 2 t 'Quadruped Parallel2', \
 #"CollectedRunsResultParallelQUADRUPED3.gnuplot.txt" using ($1+1):2 with lines ls 3 t 'Quadruped Parallel3', \
 #"CollectedRunsResultParallelQUADRUPED4.gnuplot.txt" using ($1+1):2 with lines ls 4 t 'Quadruped Parallel4', \
@@ -81,17 +81,9 @@ polyfit(x) with lines ls 11 t 'Polynomial Trend', \
 
 
 
-# EPS
-#set terminal postscript size out_w,out_h eps enhanced color
-#set output "render/collectedRuns_ALL_vector_trends_zoomout.eps"
-#replot
-
-#set terminal epslatex
-#set output "render/collectedRuns_ALL_vector_trends_zoomout.tex"
-#replot
 
 # PDF
-set terminal pdf
+set terminal pdf enhanced font 'Calibri,20'
 set output "render/collectedRuns_ALL_vector_trends_zoomout.pdf"
 replot
 
@@ -99,7 +91,9 @@ replot
 set yrange [0:4]
 set xrange [1:250]
 
-set terminal pdf
+set arrow from 145,3.25 to 200,2.4 head filled lc rgb "#C69BAD"
+
+set terminal pdf enhanced font 'Calibri,20'
 set output "render/collectedRuns_ALL_vector_trends_zoomin.pdf"
 replot
 
@@ -109,14 +103,10 @@ set yrange [0:]
 set xrange [1:]
 
 
-set terminal pdf
+set terminal pdf enhanced font 'Calibri,20'
 set output "render/collectedRuns_ALL_vector_trends_nozoom.pdf"
 replot
 
-# SVG
-#set terminal svg size out_w,out_h fname "Verdana" fsize 45
-#set output "render/collectedRuns_ALL_vector_trends.svg"
-#replot
 
 # Live (wxWidgets)
 set terminal wxt size out_w,out_h enhanced font 'Verdana,25' persist

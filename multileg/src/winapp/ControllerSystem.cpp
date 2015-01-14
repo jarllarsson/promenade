@@ -68,7 +68,7 @@ void ControllerSystem::processEntity(artemis::Entity &e)
 						MaterialComponent* mat = (MaterialComponent*)segEntity->getComponent<MaterialComponent>();
 						if (mat)
 						{
-							mat->highLight();
+							//mat->highLight();
 						}
 					}
 				}

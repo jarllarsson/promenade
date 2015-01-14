@@ -11,6 +11,7 @@ set output "render/collectedRuns_ALL_raster.png"
 # settings
 set yrange [0:1.2]
 set xrange [1:]
+set size .83, 1
 
 set bars small
 
@@ -20,7 +21,7 @@ set style line 11 lc rgb '#808080' lt 1
 set border 3 back ls 11
 set tics nomirror
 # define grid
-set style line 12 lc rgb '#808080' lt 0 lw 1
+set style line 12 lc rgb '#AFAFAF' lt 0 lw 1
 set grid back ls 12
 
 # color definitions
@@ -40,23 +41,27 @@ set style line 33 lc rgb '#76a1c8' pt -1 ps 1 lt 1 lw 0.3 # --- blue
 
 set style fill transparent solid 0.2 noborder
 
-set key top left
+set key off
 
 set xlabel 'Character Count'
 set ylabel 'Milliseconds'
 
-#set label 'Sponge' at first 4500, first 8000
-#set label 'Ants' at first 4500, first 1600
-#set label 'Worms' at first 4500, first 400
-
+set label 2 'Quadruped Serial' at 101,0.99 left tc 		rgb "#4B632D"
+set label 3 'Quadruped Parallel 2' at 101,0.57 left tc 	ls 2
+set label 4 'Quadruped Parallel 3' at 101,0.47 left tc 	rgb "#4088C4"
+set label 5 'Quadruped Parallel 4' at 101,0.4 left tc 	rgb "#C65325"
+set label 6 'Biped Serial' at 101,0.34 left tc 				ls 5
+set label 7 'Biped Parallel 2' at 101,0.2 left tc 			ls 6
+set label 8 'Biped Parallel 3' at 101,0.16 left tc 			rgb "#658979"
+set label 9 'Biped Parallel 4' at 101,0.12 left tc 			ls 8
 # =======================================================================================================
 #
 # PLOT ALL
 #
 # =======================================================================================================
 #set autoscale
-set ytics 0.05 font "Verdana,12" 
-set xtics 5 font "Verdana,12"
+set ytics 0.05 font "Calibri,10"
+set xtics 5 font "Calibri,10"
 set xtics add ("1" 1)
 plot \
 "CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):2 with lines ls 1 t 'Quadruped Serial', \
@@ -68,24 +73,15 @@ plot \
 "CollectedRunsResultParallelBIPED3.gnuplot.txt" using ($1+1):2 with lines ls 7 t 'Biped Parallel3', \
 "CollectedRunsResultParallelBIPED4.gnuplot.txt" using ($1+1):2 with lines ls 8 t 'Biped Parallel4'
 
-# EPS
-#set terminal postscript size out_w,out_h eps enhanced color
-#set output "render/collectedRuns_ALL_vector.eps"
-#replot
 
-#set terminal epslatex
-#set output "render/collectedRuns_ALL_vector.tex"
-#replot
+
 
 # PDF
-set terminal pdf
+set terminal pdf enhanced font 'Calibri,10'
 set output "render/collectedRuns_ALL_vector.pdf"
 replot
 
-# SVG
-#set terminal svg size out_w,out_h fname "Verdana" fsize 45
-#set output "render/collectedRuns_ALL_vector.svg"
-#replot
+
 
 # Live (wxWidgets)
 set terminal wxt size out_w,out_h enhanced font 'Verdana,25' persist
