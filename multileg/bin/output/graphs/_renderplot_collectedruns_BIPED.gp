@@ -11,6 +11,7 @@ set output "render/collectedRuns_BIPED_raster.png"
 # settings
 set yrange [0:1.2]
 set xrange [1:]
+set size .94, 1
 
 set bars small
 
@@ -25,10 +26,10 @@ set grid back ls 12
 
 # color definitions
 # lines
-set style line 1 lc rgb '#8b9946' pt -1 ps 1 lt 1 lw 3 # --- green
-set style line 2 lc rgb '#5c1720' pt -1 ps 1 lt 1 lw 3 # --- red
-set style line 3 lc rgb '#76a1c8' pt -1 ps 1 lt 1 lw 3 # --- blue
-set style line 4 lc rgb '#FF5B00' pt -1 ps 1 lt 1 lw 3 # --- orange (for fit)
+set style line 1 lc rgb '#8b9946' pt -1 ps 1 lt 1 lw 2 # --- green
+set style line 2 lc rgb '#48D6B0' pt -1 ps 1 lt 1 lw 2 # --- turqoise
+set style line 3 lc rgb '#8C55B0' pt -1 ps 1 lt 1 lw 2 # --- purple
+set style line 4 lc rgb '#FF5B00' pt -1 ps 1 lt 1 lw 2 # --- orange
 # error bars
 set style line 11 lc rgb '#8b9946' pt -1 ps 1 lt 1 lw 0.3 # --- red
 set style line 22 lc rgb '#5c1720' pt -1 ps 1 lt 1 lw 0.3 # --- green
@@ -36,14 +37,15 @@ set style line 33 lc rgb '#76a1c8' pt -1 ps 1 lt 1 lw 0.3 # --- blue
 
 set style fill transparent solid 0.2 noborder
 
-set key top left
+set key off
 
 set xlabel 'Biped Characters'
 set ylabel 'Milliseconds'
 
-#set label 'Sponge' at first 4500, first 8000
-#set label 'Ants' at first 4500, first 1600
-#set label 'Worms' at first 4500, first 400
+set label 2 'Serial' at 101,0.34 left tc rgb "#196D33"
+set label 3 'Parallel 2' at 101,0.2 left tc rgb "#306A70"
+set label 4 'Parallel 3' at 101,0.16 left tc rgb "#38196B"
+set label 5 'Parallel 4' at 101,0.12 left tc rgb "#CD4C18"
 
 # =======================================================================================================
 #
@@ -51,36 +53,34 @@ set ylabel 'Milliseconds'
 #
 # =======================================================================================================
 #set autoscale
-set ytics 0.05 font "Verdana,12" 
-set xtics 5 font "Verdana,12" 
+set ytics 0.05 font "Calibri,10"
+set xtics 5 font "Calibri,10"
 set xtics add ("1" 1)
 plot \
-"CollectedRunsResultSerialBIPED.gnuplot.txt" using ($1+1):4:5 with filledcurves title 'serial error', "" using ($1+1):2 with lines ls 1 t 'Serial', \
-"CollectedRunsResultParallelBIPED2.gnuplot.txt" using ($1+1):4:5 with filledcurves title 'parallel2 error', "" using ($1+1):2 with lines ls 2 t 'Parallel2', \
-"CollectedRunsResultParallelBIPED3.gnuplot.txt" using ($1+1):4:5 with filledcurves title 'parallel3 error', "" using ($1+1):2 with lines ls 3 t 'Parallel3', \
-"CollectedRunsResultParallelBIPED4.gnuplot.txt" using ($1+1):4:5 with filledcurves title 'parallel4 error', "" using ($1+1):2 with lines ls 4 t 'Parallel4'
+"CollectedRunsResultSerialBIPED.gnuplot.txt" using ($1+1):4:5 with filledcurves lc rgb "#88A61B" title 'serial error', \
+														 "" using ($1+1):2 with lines ls 1 t 'Serial', \
+"CollectedRunsResultParallelBIPED2.gnuplot.txt" using ($1+1):4:5 with filledcurves lc rgb "#61D891" title 'parallel2 error', \
+															"" using ($1+1):2 with lines ls 2 t 'Parallel2', \
+"CollectedRunsResultParallelBIPED3.gnuplot.txt" using ($1+1):4:5 with filledcurves lc rgb "#D555B0" title 'parallel3 error', \
+															"" using ($1+1):2 with lines ls 3 t 'Parallel3', \
+"CollectedRunsResultParallelBIPED4.gnuplot.txt" using ($1+1):4:5 with filledcurves lc rgb "#FF4D26" title 'parallel4 error', \
+															"" using ($1+1):2 with lines ls 4 t 'Parallel4'
 
 
-# EPS
-#set terminal postscript size out_w,out_h eps enhanced color
-#set output "render/collectedRuns_BIPED_vector.eps"
-#replot
-
-#set terminal epslatex
-#set output "render/collectedRuns_BIPED_vector.tex"
-#replot
 
 # PDF
-set terminal pdf
+set terminal pdf enhanced font 'Calibri,10'
 set output "render/collectedRuns_BIPED_vector.pdf"
 replot
 
-# SVG
-#set terminal svg size out_w,out_h fname "Verdana" fsize 45
-#set output "render/collectedRuns_BIPED_vector.svg"
-#replot
 
 # Live (wxWidgets)
 set terminal wxt size out_w,out_h enhanced font 'Verdana,25' persist
 replot
 
+
+set yrange [0:0.35]
+set xrange [80:100]
+set terminal pdf enhanced font 'Calibri,10'
+set output "render/collectedRuns_BIPED_vector_zoom.pdf"
+replot
