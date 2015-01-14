@@ -11,19 +11,19 @@ g
 800
 
 # SIMUL_MODE					(optimization(short: o), run(short: r) or measure(short: m))
-r
+o
 
 # MEASURE_RUNS				(number of runs during measurement to get average and standard deviation)
 10
 
 # POD								(biped(short: b) or quadruped(short: q))
-q
+b
 
 # EXEC_MODE						(serial(short: s) or parallel(short: p))
 s
 
 # CHARCOUNT_TOTAL			(character count)
-1
+5
 
 # PARA_INVOC					(number of parallel invocations: character count per thread=CHARCOUNT_TOTAL/PARA_INVOC)
 2
@@ -35,7 +35,7 @@ s
 0
 
 # OPT_MES_STEPS				(optimization and measurement, number of steps before break)
-800
+1000
 
 # OPT_WEIGHTS					(optimization, weights: fd fv fh fr fp)
 # fd
