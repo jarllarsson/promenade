@@ -79,8 +79,8 @@ set terminal wxt size out_w,out_h enhanced font 'Verdana,25' persist
 replot
 
 
-set yrange [0:0.35]
-set xrange [80:100]
-set terminal pdf enhanced font 'Calibri,10'
-set output "render/collectedRuns_BIPED_vector_zoom.pdf"
-replot
+#set yrange [0:0.35]
+#set xrange [80:100]
+#set terminal pdf enhanced font 'Calibri,10'
+#set output "render/collectedRuns_BIPED_vector_zoom.pdf"
+#replot
