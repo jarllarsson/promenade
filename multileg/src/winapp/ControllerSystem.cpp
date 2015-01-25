@@ -492,26 +492,26 @@ void ControllerSystem::buildCheck()
 					dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (sideName.substr(0,2) + " Duty factor").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneDutyFactor, (" group='" + sideName + "'").c_str());
 					dbgToolbar()->addReadWriteVariable(Toolbar::CHARACTER, (sideName.substr(0,2) + " Step trigger").c_str(), Toolbar::FLOAT, (void*)&legFrame->m_stepCycles[x].m_tuneStepTrigger, (" group='" + sideName + "'").c_str());
 					// Foot strike placement visualization
-					artemis::Entity & footPlcmtDbg = world->createEntity();
-					footPlcmtDbg.addComponent(new RenderComponent());
-					footPlcmtDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.2f)));
-					footPlcmtDbg.addComponent(new PositionRefComponent(&legFrame->m_footStrikePlacement[x]));
-					footPlcmtDbg.addComponent(new MaterialComponent(col));
-					footPlcmtDbg.refresh();
-					// Foot lift placement visualization
-					artemis::Entity & footLiftDbg = world->createEntity();
-					footLiftDbg.addComponent(new RenderComponent());
-					footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f, 0.3f, 0.1f)));
-					footLiftDbg.addComponent(new PositionRefComponent(&legFrame->m_footLiftPlacement[x]));
-					footLiftDbg.addComponent(new MaterialComponent(col*0.7f));
-					footLiftDbg.refresh();
-					// Foot target placement visualization
-					artemis::Entity & footTargetDbg = world->createEntity();
-					footTargetDbg.addComponent(new RenderComponent());
-					footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f), glm::quat(glm::vec3((float)HALFPI, 0.0f, 0.0f))));
-					footTargetDbg.addComponent(new PositionRefComponent(&legFrame->m_footTarget[x]));
-					footTargetDbg.addComponent(new MaterialComponent(col*0.25f));
-					footTargetDbg.refresh();
+					//artemis::Entity & footPlcmtDbg = world->createEntity();
+					//footPlcmtDbg.addComponent(new RenderComponent());
+					//footPlcmtDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.2f)));
+					//footPlcmtDbg.addComponent(new PositionRefComponent(&legFrame->m_footStrikePlacement[x]));
+					//footPlcmtDbg.addComponent(new MaterialComponent(col));
+					//footPlcmtDbg.refresh();
+					//// Foot lift placement visualization
+					//artemis::Entity & footLiftDbg = world->createEntity();
+					//footLiftDbg.addComponent(new RenderComponent());
+					//footLiftDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f, 0.3f, 0.1f)));
+					//footLiftDbg.addComponent(new PositionRefComponent(&legFrame->m_footLiftPlacement[x]));
+					//footLiftDbg.addComponent(new MaterialComponent(col*0.7f));
+					//footLiftDbg.refresh();
+					//// Foot target placement visualization
+					//artemis::Entity & footTargetDbg = world->createEntity();
+					//footTargetDbg.addComponent(new RenderComponent());
+					//footTargetDbg.addComponent(new TransformComponent(glm::vec3(0.0f), glm::vec3(0.1f), glm::quat(glm::vec3((float)HALFPI, 0.0f, 0.0f))));
+					//footTargetDbg.addComponent(new PositionRefComponent(&legFrame->m_footTarget[x]));
+					//footTargetDbg.addComponent(new MaterialComponent(col*0.25f));
+					//footTargetDbg.refresh();
 				}
 			}
 		}
