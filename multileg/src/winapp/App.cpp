@@ -104,39 +104,9 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	m_optimizationSystem = NULL;
 
 	// ====================================
-	// Load settings from file
-	// ====================================
-	SettingsData settingsData;
-	if (loadSettings(settingsData))
-	{
-		initFromSettings(settingsData);
-	}
-	if (m_bestParams == NULL)
-	{
-		bool autoLoad = false;
-		std::string autoLoadPath;
-		if (m_measurePerf)
-		{
-			if (m_characterCreateType == BIPED)
-				autoLoadPath=getAutoLoadFilenameSetting("../autoloadBiped.txt");
-			else
-				autoLoadPath = getAutoLoadFilenameSetting("../autoloadQuadruped.txt");
-			if (autoLoadPath != "") autoLoad = true;
-		}
-		if (!autoLoad)
-		{
-			int filetype = m_characterCreateType == BIPED ? 2 : 3;
-			loadFloatArrayPrompt(m_bestParams, filetype);
-		}
-		else
-		{
-			if (m_bestParams == NULL)
-				m_bestParams = new std::vector<float>();
-			loadFloatArray(m_bestParams, "../output/sav/"+autoLoadPath);
-		}
-	}
-	if (m_runOptimization || m_measurePerf) // no matter load settings, we don't pause at optimization
-		m_triggerPause = false;
+	// Load data
+	// ====================================	
+	loadData();
 	// ====================================
 
 	// ====================================
@@ -442,14 +412,16 @@ void App::run()
 			/*if (quadruped) chars = 5; else */chars = 10;
 		}
 
-		if (quadruped)
+		//if (quadruped)
 		{
+			loadFloatArrayPrompt(m_bestParams, 3);
+
 			lLegHeight = scale*0.4f;
 			footHeight = scale*0.05f;
 			footLen = scale*0.2f;
 			charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
 #pragma region quadrupedtype
-			for (int x = 0; x < chars; x++) // number of characters
+			for (int x = 0; x < chars; x+=2) // number of characters
 			{
 				vector<artemis::Entity*> charLFs;
 				vector<artemis::Entity*> hipJoints;
@@ -462,7 +434,7 @@ void App::run()
 				for (int y = 0; y < legFrames; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(/*x*charOffsetX*/0.0f, charPosY, (float)-y*lfDist);
+					glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, (float)-y*lfDist);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
@@ -479,7 +451,7 @@ void App::run()
 					TransformComponent* tc = new TransformComponent(pos,
 						glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 						lfSize);
-					tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+					//tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
 					legFrame.addComponent(tc);
 
 					if (lockPos)
@@ -630,7 +602,7 @@ void App::run()
 								tc = new TransformComponent(legpos,
 									glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 									boxSize);// note scale, so full lengths
-								tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+								//tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
 								childJoint.addComponent(tc);
 							}
 							else // foot
@@ -651,7 +623,7 @@ void App::run()
 									tc = new TransformComponent(legpos + glm::vec3(0.0f, thisFootLen*0.5f + jointZOffsetInChild, thisFootLen*0.5f - jointYOffsetInChild),
 										rot,
 										boxSize);					// note scale, so full lengths
-									tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+									//tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
 									childJoint.addComponent(tc);
 								}
 							}
@@ -672,7 +644,7 @@ void App::run()
 					prevlegFrame = &legFrame;
 				} // leg frames
 				//
-				glm::vec3 pos = bodOffset + glm::vec3(/*x*charOffsetX*/0.0f, charPosY, -hipCoronalOffset*0.5f);
+				glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, -hipCoronalOffset*0.5f);
 				artemis::Entity* prev = charLFs[0]; // the first parent is the first leg frame
 				// The length of a spine (the height of its rotated segment) is the same as=
 				// The distance between the LFs minus the h-length of a LFs, times two; divided 
@@ -721,7 +693,7 @@ void App::run()
 					TransformComponent* tc = new TransformComponent(spinepos,
 						glm::quat(glm::vec3(HALFPI, 0.0f, 0.0f)),
 						boxSize);
-					tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+					//tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
 					spineJoint.addComponent(tc);
 
 					MaterialComponent* mat = new MaterialComponent(colarr[s + 3]);
@@ -785,10 +757,17 @@ void App::run()
 			}
 #pragma endregion quadrupedtype
 		}
-		else
+		//else
 		{
 #pragma region biped
-			for (int x = 0; x < chars; x++) // number of characters
+			lfHeight = scale*0.48f;
+			uLegHeight = scale*0.45f;
+			lLegHeight = scale*0.45f;
+			footHeight = scale*0.05f;
+			footLen = scale*0.3f;
+			charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
+			loadFloatArrayPrompt(m_bestParams, 2);
+			for (int x = 1; x < chars; x+=2) // number of characters
 			{
 				vector<artemis::Entity*> charLFs;
 				vector<artemis::Entity*> hipJoints;
@@ -798,7 +777,7 @@ void App::run()
 				for (int y = 0; y < 1; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(/*x*charOffsetX*/0.0f, charPosY, (float)-y);
+					glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, (float)-y);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
@@ -815,7 +794,7 @@ void App::run()
 					TransformComponent* tc = new TransformComponent(pos,
 						glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 						lfSize);
-					tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+					//tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
 					legFrame.addComponent(tc);
 
 					if (lockPos)
@@ -931,7 +910,7 @@ void App::run()
 								tc = new TransformComponent(legpos,
 									glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 									boxSize);// note scale, so full lengths
-								tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+								//tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
 								childJoint.addComponent(tc);
 							}
 							else // foot
@@ -940,7 +919,7 @@ void App::run()
 								tc = new TransformComponent(legpos + glm::vec3(0.0f, footLen*0.5f + jointZOffsetInChild, footLen*0.5f - jointYOffsetInChild),
 									rot,
 									boxSize);					// note scale, so full lengths
-								tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
+								//tc->setPositionOffset(glm::vec3(x*charOffsetX, 0.0f, 0.0f));
 								childJoint.addComponent(tc);
 							}
 							MaterialComponent* mat = new MaterialComponent(colarr[n * 3 + i]);
@@ -1726,4 +1705,42 @@ void App::drawDebugOptimizationGraphs( std::vector<double>* p_optimizationResult
 			}
 		}
 	}
+}
+
+void App::loadData()
+{
+	// ====================================
+	// Load settings from file
+	// ====================================
+	SettingsData settingsData;
+	if (loadSettings(settingsData))
+	{
+		initFromSettings(settingsData);
+	}
+	if (m_bestParams == NULL)
+	{
+		bool autoLoad = false;
+		std::string autoLoadPath;
+		if (m_measurePerf)
+		{
+			if (m_characterCreateType == BIPED)
+				autoLoadPath=getAutoLoadFilenameSetting("../autoloadBiped.txt");
+			else
+				autoLoadPath = getAutoLoadFilenameSetting("../autoloadQuadruped.txt");
+			if (autoLoadPath != "") autoLoad = true;
+		}
+		if (!autoLoad)
+		{
+			int filetype = m_characterCreateType == BIPED ? 2 : 3;
+			loadFloatArrayPrompt(m_bestParams, filetype);
+		}
+		else
+		{
+			if (m_bestParams == NULL)
+				m_bestParams = new std::vector<float>();
+			loadFloatArray(m_bestParams, "../output/sav/"+autoLoadPath);
+		}
+	}
+	if (m_runOptimization || m_measurePerf) // no matter load settings, we don't pause at optimization
+		m_triggerPause = false;
 }
