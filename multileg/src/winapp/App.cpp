@@ -420,8 +420,9 @@ void App::run()
 			footHeight = scale*0.05f;
 			footLen = scale*0.2f;
 			charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
+			int xoffset=0, zoffset = 0;
 #pragma region quadrupedtype
-			for (int x = 0; x < chars; x+=2) // number of characters
+			for (int x = 0; x < chars; x++) // number of characters
 			{
 				vector<artemis::Entity*> charLFs;
 				vector<artemis::Entity*> hipJoints;
@@ -431,10 +432,11 @@ void App::run()
 
 				int legFrames = 2;
 				artemis::Entity* prevlegFrame = NULL;
+				if (x != 0 && x % 10 == 0) { zoffset++; xoffset = 0; }
 				for (int y = 0; y < legFrames; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, (float)-y*lfDist);
+					glm::vec3 pos = bodOffset + glm::vec3(xoffset*charOffsetX, charPosY, zoffset*charOffsetX + (float)-y*lfDist);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
@@ -644,7 +646,7 @@ void App::run()
 					prevlegFrame = &legFrame;
 				} // leg frames
 				//
-				glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, -hipCoronalOffset*0.5f);
+				glm::vec3 pos = bodOffset + glm::vec3(xoffset*charOffsetX, charPosY, zoffset*charOffsetX - hipCoronalOffset*0.5f);
 				artemis::Entity* prev = charLFs[0]; // the first parent is the first leg frame
 				// The length of a spine (the height of its rotated segment) is the same as=
 				// The distance between the LFs minus the h-length of a LFs, times two; divided 
@@ -754,6 +756,7 @@ void App::run()
 					controllerComp->setInitParams(*m_bestParams);
 				}
 				controller.refresh();
+				xoffset++;
 			}
 #pragma endregion quadrupedtype
 		}
@@ -767,17 +770,18 @@ void App::run()
 			footLen = scale*0.3f;
 			charPosY = lfHeight*0.5f + uLegHeight + lLegHeight + footHeight;
 			loadFloatArrayPrompt(m_bestParams, 2);
-			for (int x = 1; x < chars; x+=2) // number of characters
+			int xoffset=0, zoffset = 0;
+			for (int x = 0; x < chars; x++) // number of characters
 			{
 				vector<artemis::Entity*> charLFs;
 				vector<artemis::Entity*> hipJoints;
 
 				std::vector<float> uLegLens; std::vector<float> lLegLens;
-
+				if (x != 0 && x % 10 == 0) { zoffset++; xoffset = 0; }
 				for (int y = 0; y < 1; y++) // number of leg frames
 				{
 					artemis::Entity& legFrame = entityManager->create();
-					glm::vec3 pos = bodOffset + glm::vec3(x*charOffsetX, charPosY, (float)-y);
+					glm::vec3 pos = bodOffset + glm::vec3(xoffset*charOffsetX, charPosY, zoffset*charOffsetX + (float)-y);
 
 					// if locked, we move down a tiny bit to get traction
 					//if (lockLFY_onRestart) pos.y -= 0.5f*footHeight;
@@ -966,6 +970,7 @@ void App::run()
 					controllerComp->setInitParams(*m_bestParams);
 				}
 				controller.refresh();
+				xoffset++;
 			}
 
 #pragma endregion biped

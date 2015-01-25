@@ -668,7 +668,7 @@ void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
 	glm::vec3 pos = getControllerPosition(p_controller);
-	if (pos.y < getControllerStartPos(p_controller).y*0.5f) p_controller->m_enabled = false;
+	if (pos.y < getControllerStartPos(p_controller).y*0.4f) p_controller->m_enabled = false;
 	// Update the current velocity
 	glm::vec3 currentV = pos - m_controllerVelocityStats[p_controllerId].m_oldPos;
 	m_controllerVelocityStats[p_controllerId].m_currentVelocity = currentV;
