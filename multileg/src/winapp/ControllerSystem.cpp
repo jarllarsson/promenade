@@ -635,36 +635,40 @@ void ControllerSystem::controllerUpdate(unsigned int p_controllerId, float p_dt)
 {
 	float dt = p_dt;
 	ControllerComponent* controller = m_controllers[p_controllerId];
-	// get a copy of this controller's torques
-	unsigned int torqueIdxStart = controller->getTorqueListOffset();
-	unsigned int torqueIdxEnd = controller->getTorqueListChunkSize() + torqueIdxStart;
-	std::vector<glm::vec3> localJointTorques = std::vector<glm::vec3>(m_jointTorques.begin() + torqueIdxStart, 
-		m_jointTorques.begin() + torqueIdxEnd);
-
-	// Advance the player
-	controller->m_player.updatePhase(dt);
-
-	// Update desired velocity
-	updateLocationAndVelocityStats(p_controllerId, controller, p_dt);
-
-	// update feet positions
-	updateFeet(p_controllerId, controller);
-
-	updateSpine(&localJointTorques, p_controllerId, controller, p_dt);
-
-	// Recalculate all torques for this frame
-	updateTorques(&localJointTorques, p_controllerId, controller, dt);
-
-
-	// Update torques in global torque list
-	for (int i = torqueIdxStart; i < torqueIdxEnd; i++)
+	if (controller->m_enabled)
 	{
-		m_jointTorques[i] = localJointTorques[i - torqueIdxStart];
+		// get a copy of this controller's torques
+		unsigned int torqueIdxStart = controller->getTorqueListOffset();
+		unsigned int torqueIdxEnd = controller->getTorqueListChunkSize() + torqueIdxStart;
+		std::vector<glm::vec3> localJointTorques = std::vector<glm::vec3>(m_jointTorques.begin() + torqueIdxStart,
+			m_jointTorques.begin() + torqueIdxEnd);
+
+		// Advance the player
+		controller->m_player.updatePhase(dt);
+
+		// Update desired velocity
+		updateLocationAndVelocityStats(p_controllerId, controller, p_dt);
+
+		// update feet positions
+		updateFeet(p_controllerId, controller);
+
+		updateSpine(&localJointTorques, p_controllerId, controller, p_dt);
+
+		// Recalculate all torques for this frame
+		updateTorques(&localJointTorques, p_controllerId, controller, dt);
+
+
+		// Update torques in global torque list
+		for (int i = torqueIdxStart; i < torqueIdxEnd; i++)
+		{
+			m_jointTorques[i] = localJointTorques[i - torqueIdxStart];
+		}
 	}
 }
 void ControllerSystem::updateLocationAndVelocityStats(int p_controllerId, ControllerComponent* p_controller, float p_dt)
 {
 	glm::vec3 pos = getControllerPosition(p_controller);
+	if (pos.y < getControllerStartPos(p_controller).y*0.5f) p_controller->m_enabled = false;
 	// Update the current velocity
 	glm::vec3 currentV = pos - m_controllerVelocityStats[p_controllerId].m_oldPos;
 	m_controllerVelocityStats[p_controllerId].m_currentVelocity = currentV;

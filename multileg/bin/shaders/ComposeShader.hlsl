@@ -29,13 +29,24 @@ float4 PS(VertexOut input) : SV_TARGET
 	uint3 index;
 	index.xy = input.position.xy;
 	index.z = 0;
-
-	float4 finalCol = g_diffuse.Load(index);
+	float3 normal = g_normal.Load(index).xyz;
+	float4 diffuse = g_diffuse.Load(index);
+	
+	// the light
+	float3 lightdir = -normalize(float3(0.5f,-1.0f,0.5f));
+	float3 lightcol = float3(1,1,1);
+	
+	// wrap lambert
+	float3 NdotL = dot(normal, lightdir);
+	float3 diff = NdotL * 0.5f + 0.5f;
+	float atten = 1.0f;
+	float3 c = diffuse.rgb;
+	if (diffuse.a>=0.0f)
+		c *= lightcol * (diff*atten*2.0f);
+	
+	float3 finalCol = c;
 	//finalCol.r *= input.color.r;
 	//finalCol.b *= input.color.g;
-	
-	// test
-	// finalCol.rgb = float3(0.0f,0.0f,1.0f);
 	
 	return float4( finalCol.rgb, 1.0f );
 }

@@ -177,6 +177,7 @@
     <ClInclude Include="ShaderVariableContainer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureFactory.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="ViewFactory.h" />
   </ItemGroup>
   <ItemGroup>

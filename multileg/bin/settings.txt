@@ -16,13 +16,13 @@ r
 10
 
 # POD								(biped(short: b) or quadruped(short: q))
-b
+q
 
 # EXEC_MODE						(serial(short: s) or parallel(short: p))
 s
 
 # CHARCOUNT_TOTAL			(character count)
-1
+10
 
 # PARA_INVOC					(number of parallel invocations: character count per thread=CHARCOUNT_TOTAL/PARA_INVOC)
 2

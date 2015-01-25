@@ -11,6 +11,7 @@ struct VertexIn
 {
 	// Per vertex
 	float3 position : POSITION;
+	float3 normal : NORMAL;
 	// Per instance
 	float4x4 instanceTransform : INSTANCETRANSFORM;
 	float4 instanceColor	: INSTANCECOLOR;
@@ -19,14 +20,17 @@ struct VertexIn
 struct VertexOut
 {
     float4 position	: SV_POSITION;
+	float3 normal : NORMAL;
 	float4 color	: COLOR;
 };
 
 VertexOut VS(VertexIn p_input)
 {
 	VertexOut vout;
-	float4x4 WVP = mul(p_input.instanceTransform,gVP);
+	float4x4 W = p_input.instanceTransform;
+	float4x4 WVP = mul(W,gVP);
 	vout.position = mul(float4(p_input.position, 1),WVP);
+	vout.normal = normalize(mul(float4(p_input.normal, 0), W).xyz);
     vout.color = p_input.instanceColor;
 	return vout;
 }
@@ -37,7 +41,7 @@ PixelOut PS(VertexOut p_input)
 	//float4(1,0.6470588235294118,0,0.5f);
 	//return float4(0.7333,0.99,0.45f,1.0f);
 	pixelOut.diffuse = p_input.color;
-	pixelOut.normal = float4(1,0.6470588235294118,0,0.5f);
+	pixelOut.normal = float4(p_input.normal,0);
 	//pixelOut.specular = float4(0,1,0,1);
 	return pixelOut;
 }

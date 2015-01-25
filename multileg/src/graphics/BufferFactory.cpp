@@ -1,5 +1,6 @@
 #include "BufferFactory.h"
 #include "PVertex.h"
+#include "Vertex.h"
 #include "Mesh.h"
 #include "D3DUtil.h"
 
@@ -123,36 +124,36 @@ Mesh* BufferFactory::createBoxMesh( float p_halfSizeLength/*=1.0f*/ )
 {
 	float r = p_halfSizeLength;
 #pragma region static data
-	PVertex mesh[]= {
-		{-r,-r,-r},	
-		{-r,r,-r},	
-		{r,r,-r},	
-		{r,-r,-r},	
-
-		{-r,-r,r},	
-		{r,-r,r},	
-		{r,r,r},	
-		{-r,r,r},	
-
-		{-r,r,-r},	
-		{-r,r,r},	
-		{r,r,r},	
-		{r,r,-r},	
-
-		{-r,-r,-r},	
-		{r,-r,-r},	
-		{r,-r,r},	
-		{-r,-r,r},	
-
-		{-r,-r,r},	
-		{-r,r,r},	
-		{-r,r,-r},	
-		{-r,-r,-r},	
-
-		{r,-r,-r},	
-		{r,r,-r},	
-		{r,r,r},	
-		{r,-r,r},	
+	Vertex mesh[]= {
+		{	{-r,-r,-r},	{0,0,-1} },
+		{	{-r,r,-r},	{0,0,-1} },
+		{	{r,r,-r},	{0,0,-1} },
+		{	{r,-r,-r},	{0,0,-1} },
+								 
+		{	{-r,-r,r},	{0,0,1}	 },
+		{	{r,-r,r},	{0,0,1}	 },
+		{	{r,r,r},	{0,0,1}	 },
+		{	{-r,r,r},	{0,0,1}	 },
+								 
+		{	{-r,r,-r},	{0,1,0}	 },
+		{	{-r,r,r},	{0,1,0}	 },
+		{	{r,r,r},	{0,1,0}	 },
+		{	{r,r,-r},	{0,1,0}	 },
+								 
+		{	{-r,-r,-r},	{0,-1,0} },
+		{	{r,-r,-r},	{0,-1,0} },
+		{	{r,-r,r},	{0,-1,0} },
+		{	{-r,-r,r},	{0,-1,0} },
+								 
+		{	{-r,-r,r},	{-1,0,0} },
+		{	{-r,r,r},	{-1,0,0} },
+		{	{-r,r,-r},	{-1,0,0} },
+		{	{-r,-r,-r},	{-1,0,0} },
+								 
+		{	{r,-r,-r},	{1,0,0}	 },
+		{	{r,r,-r},	{1,0,0}	 },
+		{	{r,r,r},	{1,0,0}	 },
+		{	{r,-r,r},	{1,0,0}	 }
 	};
 
 	unsigned int indices[] = {
@@ -178,7 +179,7 @@ Mesh* BufferFactory::createBoxMesh( float p_halfSizeLength/*=1.0f*/ )
 #pragma endregion
 
 	Mesh* newBox = new Mesh(createVertexBuffer(&mesh[0],
-		sizeof(mesh)/sizeof(PVertex)),
+		sizeof(mesh)/sizeof(Vertex)),
 		createIndexBuffer(&indices[0],
 		sizeof(indices)/sizeof(unsigned int)));
 

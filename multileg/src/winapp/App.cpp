@@ -396,7 +396,7 @@ void App::run()
 		ground.addComponent(new RigidBodyComponent(new btBoxShape(btVector3(400.0f, 10.0f, 400.0f)), 0.0f,
 			CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT, CollisionLayer::COL_CHARACTER | CollisionLayer::COL_DEFAULT));
 		ground.addComponent(new RenderComponent());
-		MaterialComponent* mat = new MaterialComponent(dawnBringerPalRGB[COL_BEIGE]);
+		MaterialComponent* mat = new MaterialComponent(dawnBringerPalRGB[COL_ASPHALT]);
 		ground.addComponent(mat);
 		ground.addComponent(new TransformComponent(glm::vec3(0.0f, -10.0f, 0.0f),
 			glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
@@ -474,6 +474,8 @@ void App::run()
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 					legFrame.addComponent(lfRB);
 					if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
+					MaterialComponent* matlf = new MaterialComponent(dawnBringerPalRGB[(x * 2) % 31]);
+					legFrame.addComponent(matlf);
 					TransformComponent* tc = new TransformComponent(pos,
 						glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 						lfSize);
@@ -808,7 +810,8 @@ void App::run()
 						CollisionLayer::COL_CHARACTER, CollisionLayer::COL_GROUND | CollisionLayer::COL_DEFAULT);
 					legFrame.addComponent(lfRB);
 					if (drawAll || x == 0) legFrame.addComponent(new RenderComponent());
-
+					MaterialComponent* matlf = new MaterialComponent(dawnBringerPalRGB[(x * 2) % 31]);
+					legFrame.addComponent(matlf);
 					TransformComponent* tc = new TransformComponent(pos,
 						glm::quat(glm::vec3(0.0f, 0.0f, 0.0f)),
 						lfSize);
@@ -1189,6 +1192,8 @@ void App::run()
 									CollisionLayer::COL_DEFAULT, CollisionLayer::COL_DEFAULT | CollisionLayer::COL_CHARACTER);
 								proj.addComponent(btrb);
 								proj.addComponent(new RenderComponent());
+								MaterialComponent* matbx = new MaterialComponent(colarr[((int)m_time)%colarrSz]);
+								proj.addComponent(matbx);
 								proj.addComponent(new TransformComponent(pos,
 									glm::inverse(glm::quat(m_controller->getRotationMatrix())),
 									bfSize));
@@ -1574,7 +1579,7 @@ void App::render()
 		// Run passes
 		if (m_vp) m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BASEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers(), NULL);
 		m_graphicsDevice->executeRenderPass(GraphicsDevice::P_COMPOSEPASS);
-		if (m_vp) m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
+		//if (m_vp) m_graphicsDevice->executeRenderPass(GraphicsDevice::P_BOUNDINGBOX_WIREFRAMEPASS, m_vp, m_renderSystem->getCulledInstanceBuffers());
 		// Debug
 		if (m_debugDrawer) m_debugDrawer->render(m_controller);
 		if (m_toolBar) m_toolBar->draw();

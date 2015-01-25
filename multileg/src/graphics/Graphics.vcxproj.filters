@@ -112,6 +112,9 @@
     <ClInclude Include="InstanceData.h">
       <Filter>Buffers</Filter>
     </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Vertices</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BufferBase.cpp">

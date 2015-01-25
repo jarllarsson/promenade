@@ -2,7 +2,7 @@
 
 #include "Buffer.h"
 
-struct PVertex;
+struct Vertex;
 
 // =======================================================================================
 //                                      Mesh
@@ -19,7 +19,7 @@ struct PVertex;
 class Mesh
 {
 public:
-	Mesh( Buffer<PVertex>* p_vertexBuffer, 
+	Mesh( Buffer<Vertex>* p_vertexBuffer, 
 		  Buffer<unsigned int>* p_indexBuffer);
 
 	///-----------------------------------------------------------------------------------
@@ -32,15 +32,15 @@ public:
 	/// Get a pointer to the vertex buffer.
 	/// \return Buffer<PNTVertex>*
 	///-----------------------------------------------------------------------------------
-	Buffer<PVertex>*		getVertexBuffer();
+	Buffer<Vertex>*		getVertexBuffer();
 
 	///-----------------------------------------------------------------------------------
 	/// Get a pointer to the index buffer.
 	/// \return Buffer<DIndex>*
 	///-----------------------------------------------------------------------------------
 	Buffer<unsigned int>*	getIndexBuffer();
-
+	unsigned int getVertexSize();
 private:
-	Buffer<PVertex>* m_vertexBuffer;
+	Buffer<Vertex>* m_vertexBuffer;
 	Buffer<unsigned int>* m_indexBuffer;	
 };

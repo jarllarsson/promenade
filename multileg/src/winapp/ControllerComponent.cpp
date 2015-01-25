@@ -7,6 +7,7 @@ unsigned int ControllerComponent::VFChain::s_maxJacobiRowsAll=0;
 ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame, 
 	std::vector<artemis::Entity*>& p_hipJoints)
 {
+	m_enabled = true;
 	m_player = GaitPlayer(2.0f);
 	//
 	m_buildComplete = false;
@@ -37,6 +38,7 @@ ControllerComponent::ControllerComponent(artemis::Entity* p_legFrame,
 ControllerComponent::ControllerComponent(std::vector<artemis::Entity*>& p_legFrames, 
 	std::vector<artemis::Entity*>& p_hipJoints, std::vector<artemis::Entity*>* p_spineJoints/*=NULL*/)
 {
+	m_enabled = true;
 	m_player = GaitPlayer(2.0f);
 	//
 	m_buildComplete = false;

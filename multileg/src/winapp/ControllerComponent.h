@@ -37,6 +37,7 @@ public:
 	// ==============================================================================
 	GaitPlayer m_player;
 	glm::vec3 m_goalVelocity;
+	bool m_enabled;
 
 
 	enum Orientation{ YAW = 0, PITCH = 1, ROLL = 2 };

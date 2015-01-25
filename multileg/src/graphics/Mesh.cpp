@@ -1,7 +1,7 @@
 #include "Mesh.h"
-#include "PVertex.h"
+#include "Vertex.h"
 
-Mesh::Mesh( Buffer<PVertex>* p_vertexBuffer, 
+Mesh::Mesh( Buffer<Vertex>* p_vertexBuffer, 
 		    Buffer<unsigned int>* p_indexBuffer )
 {
 	m_vertexBuffer	= p_vertexBuffer;
@@ -14,7 +14,7 @@ Mesh::~Mesh()
 	delete m_indexBuffer;
 }
 
-Buffer<PVertex>* Mesh::getVertexBuffer()
+Buffer<Vertex>* Mesh::getVertexBuffer()
 {
 	return m_vertexBuffer;
 }
@@ -22,4 +22,9 @@ Buffer<PVertex>* Mesh::getVertexBuffer()
 Buffer<unsigned int>* Mesh::getIndexBuffer()
 {
 	return m_indexBuffer;
+}
+
+unsigned int Mesh::getVertexSize()
+{
+	return (unsigned int)sizeof(Vertex);
 }

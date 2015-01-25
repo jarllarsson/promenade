@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "D3DUtil.h"
 #include "PVertex.h"
+#include "Vertex.h"
 #include "Mesh.h"
 
 
@@ -101,8 +102,9 @@ void GraphicsDevice::clearRenderTargets()
 {
 	float wfac = m_width / 5000.0f;
 	float hfac = m_height / 2000.0f;
-	float clearColorRTV[4] = { wfac*(185.0f / 256.0f), wfac*(187.0f / 256.0f), hfac*(191.0f / 256.0f), 1.0f };
-	float clearColorBackBuffer[4] = { m_width/5000.0f, 1.0f,  m_height/1200.0f, 1.0f };
+	//float clearColorRTV[4] = { wfac*(185.0f / 256.0f), wfac*(187.0f / 256.0f), hfac*(191.0f / 256.0f), -1.0f }; // -1 in alpha means no lighting
+	float clearColorBackBuffer[4] = { m_width/5000.0f, 1.0f,  m_height/1200.0f, -1.0f };
+	float clearColorRTV[4] = { 1.0f, 1.0f, 1.0f, -1.0f };
 
 	// clear gbuffer
 	unmapAllBuffers();
@@ -471,7 +473,7 @@ void GraphicsDevice::drawInstancedLineOBB( UINT32 p_instanceElementCount, int p_
 
 void GraphicsDevice::drawInstancedIndexedMesh(Mesh* p_mesh, UINT32 p_instanceElementCount, int p_instanceElemSz, void* p_instanceRef)
 {
-	UINT strides[2] = { sizeof(PVertex), p_instanceElemSz };
+	UINT strides[2] = { (UINT)p_mesh->getVertexSize(), p_instanceElemSz };
 	UINT offsets[2] = { 0, 0 };
 	// Set up an array of the buffers for the vertices
 	ID3D11Buffer* buffers[2] = {
