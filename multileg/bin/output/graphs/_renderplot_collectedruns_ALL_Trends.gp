@@ -50,35 +50,51 @@ set xlabel 'Character Count'
 set ylabel 'Milliseconds'
 
 
-
+file = "CollectedRunsResultSerialQUADRUPED.gnuplot.txt"
 
 linearfit(x) = m + k*x
 m=0.0
-fit linearfit(x) "CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):2 via k
+fit linearfit(x) file using ($1+1):2 via k
+lr = system(sprintf("python correlation.py %s",file))+0
+lrSqr = lr**2
 polyfit(x) = a + b*x + c*x**2
-fit polyfit(x) "CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):2 via a,b,c
+fit polyfit(x) file using ($1+1):2 via a,b,c
+pr = system(sprintf("python correlation.py %s",file)) 
+
+stats file using ($1+1):2 name "A"
+
+
+tiP = sprintf("y = %.3f + %.3fx + %.3fx^2 (r = %s)", a, b, c, pr)
+set label 1000 tiP at graph 0.1, graph 0.65
+
+tiL = sprintf("y = %.3f + %.3fx (r = %.3f) (r^2 = %.3f)", m, k, lr, lrSqr)
+tiLB = sprintf("y = %.5f + %.5fx (r = %.5f) (r^2 = %.5f)", A_intercept, A_slope, A_correlation, A_correlation**2)
+set label 1001 tiL at graph 0.1, graph 0.45
+set label 1002 tiLB at graph 0.1, graph 0.35
+
+linearRegression(x) = A_intercept + A_slope*x
+
 
 # =======================================================================================================
 #
 # PLOT ALL
-#
+# http://stackoverflow.com/questions/13957456/correlation-coefficient-on-gnuplot
+# uses a python file to generate r^2:
+#   "Here, the first row is assumed to be a header row. Furthermore, the columns to calculate the 
+#   correlation for are now hardcoded to nr. 1 and 2. Of course, both settings can be changed and turned 
+#   into arguments as well."
 # =======================================================================================================
 #set autoscale
 set ytics 0.5 font "Calibri,15"
 set xtics 100 font "Calibri,15"
 set xtics add ("1" 1)
-plot \
-"CollectedRunsResultSerialQUADRUPED.gnuplot.txt" using ($1+1):2 with lines ls 1 t 'Quadruped Serial', \
-polyfit(x) with lines ls 11 t 'Polynomial Trend', \
-linearfit(x) with lines ls 10 t 'Linear Trend'
-#"CollectedRunsResultParallelQUADRUPED2.gnuplot.txt" using ($1+1):2 with lines ls 2 t 'Quadruped Parallel2', \
-#"CollectedRunsResultParallelQUADRUPED3.gnuplot.txt" using ($1+1):2 with lines ls 3 t 'Quadruped Parallel3', \
-#"CollectedRunsResultParallelQUADRUPED4.gnuplot.txt" using ($1+1):2 with lines ls 4 t 'Quadruped Parallel4', \
-#"CollectedRunsResultSerialBIPED.gnuplot.txt" using ($1+1):2 with lines ls 5 t 'Biped Serial', \
-#"CollectedRunsResultParallelBIPED2.gnuplot.txt" using ($1+1):2 with lines ls 6 t 'Biped Parallel2', \
-#"CollectedRunsResultParallelBIPED3.gnuplot.txt" using ($1+1):2 with lines ls 7 t 'Biped Parallel3', \
-#"CollectedRunsResultParallelBIPED4.gnuplot.txt" using ($1+1):2 with lines ls 8 t 'Biped Parallel4'
 
+
+plot \
+file using ($1+1):2 with lines ls 1 t 'Quadruped Serial', \
+polyfit(x) with lines ls 11 t 'Polynomial Trend', \
+linearfit(x) with lines ls 10 t 'Linear Trend', \
+linearRegression(x) with lines ls 9 t 'Linear Trend2'
 
 
 

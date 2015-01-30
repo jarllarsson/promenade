@@ -10,13 +10,13 @@ g
 1080
 
 # SIMUL_MODE					(optimization(short: o), run(short: r) or measure(short: m))
-r
+o
 
 # MEASURE_RUNS				(number of runs during measurement to get average and standard deviation)
 10
 
 # POD								(biped(short: b) or quadruped(short: q))
-q
+b
 
 # EXEC_MODE						(serial(short: s) or parallel(short: p))
 s
@@ -34,7 +34,7 @@ s
 1
 
 # OPT_MES_STEPS				(optimization and measurement, number of steps before break)
-1000
+800
 
 # OPT_WEIGHTS					(optimization, weights: fd fv fh fr fp)
 # fd
