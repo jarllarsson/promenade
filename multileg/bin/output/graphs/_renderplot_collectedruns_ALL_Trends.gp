@@ -5,7 +5,7 @@ out_w = 1280
 out_h = 800
 errstep = 1
 #default output
-set terminal pngcairo size out_w,out_h enhanced font "Verdana,20"
+set terminal pngcairo size out_w,out_h enhanced font "Verdana,15"
 set output "render/collectedRuns_ALL_raster_trends.png"
 
 # settings
@@ -34,7 +34,7 @@ set style line 6 lc rgb '#800080' pt -1 ps 1 lt 1 lw 3 # --- purple
 set style line 7 lc rgb '#ADDFAD' pt -1 ps 1 lt 1 lw 3 # --- moss
 set style line 8 lc rgb '#000000' pt -1 ps 1 lt 1 lw 3 # --- black
 # trend lines
-set style line 9 lc rgb '#000000' pt -1 ps 1 lt 1 lw 3 # --- black
+set style line 9 lc rgb '#000000' pt -1 ps 1 lt 0 lw 5 # --- black
 set style line 10 lc rgb '#94CCA7' pt -1 ps 1 lt 1 lw 1.5 # --- light green
 set style line 11 lc rgb '#911D4D' pt -1 ps 1 lt 0 lw 4 # --- red
 # error bars
@@ -65,12 +65,12 @@ stats file using ($1+1):2 name "A"
 
 
 tiP = sprintf("y = %.3f + %.3fx + %.3fx^2 (r = %s)", a, b, c, pr)
-set label 1000 tiP at graph 0.1, graph 0.65
+#set label 1000 tiP at graph 0.1, graph 0.65
 
 tiL = sprintf("y = %.3f + %.3fx (r = %.3f) (r^2 = %.3f)", m, k, lr, lrSqr)
-tiLB = sprintf("y = %.5f + %.5fx (r = %.5f) (r^2 = %.5f)", A_intercept, A_slope, A_correlation, A_correlation**2)
-set label 1001 tiL at graph 0.1, graph 0.45
-set label 1002 tiLB at graph 0.1, graph 0.35
+tiLB = sprintf("Linear Trend y = %.5f + %.5fx \n (r^2 = %.5f)", A_intercept, A_slope, A_correlation**2)
+#set label 1001 tiL at graph 0.1, graph 0.45
+
 
 linearRegression(x) = A_intercept + A_slope*x
 
@@ -92,9 +92,9 @@ set xtics add ("1" 1)
 
 plot \
 file using ($1+1):2 with lines ls 1 t 'Quadruped Serial', \
-polyfit(x) with lines ls 11 t 'Polynomial Trend', \
-linearfit(x) with lines ls 10 t 'Linear Trend', \
-linearRegression(x) with lines ls 9 t 'Linear Trend2'
+linearRegression(x) with lines ls 9 t 'Linear Trend'
+#polyfit(x) with lines ls 11 t 'Polynomial Trend', \
+#linearfit(x) with lines ls 10 t 'Linear Trend', \
 
 
 
@@ -107,7 +107,7 @@ replot
 set yrange [0:4]
 set xrange [1:250]
 
-set arrow from 145,3.25 to 200,2.4 head filled lc rgb "#C69BAD"
+set arrow from 145,3.25 to 200,2.4 head filled lw 3 lc rgb "#0000"
 
 set terminal pdf enhanced font 'Calibri,20'
 set output "render/collectedRuns_ALL_vector_trends_zoomin.pdf"
@@ -118,7 +118,7 @@ set autoscale
 set yrange [0:]
 set xrange [1:]
 
-
+set label 1002 tiLB at graph 0.25, graph 0.2 font "Calibri,20"
 set terminal pdf enhanced font 'Calibri,20'
 set output "render/collectedRuns_ALL_vector_trends_nozoom.pdf"
 replot
