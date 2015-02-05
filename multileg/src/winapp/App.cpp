@@ -439,7 +439,7 @@ void App::run()
 		if (m_runOptimization)
 		{
 			charOffsetX = 0.0f;
-			/*if (quadruped) chars = 5; else */chars = 10;
+			/*if (quadruped) chars = 5; else */chars = 20;
 		}
 
 		if (quadruped)
@@ -869,8 +869,8 @@ void App::run()
 								jointXOffsetFromParent = currentHipJointCoronalOffset;
 								//lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.0f);
 								//upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.0f);
-								lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f*0.0f, -HALFPI*0.1f*0.0f);
-								upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f*0.0f, HALFPI*0.1f*0.0f);
+								lowerAngleLim = glm::vec3(-HALFPI, -HALFPI*0.5f, -HALFPI*0.5f);
+								upperAngleLim = glm::vec3(HALFPI, HALFPI*0.5f, HALFPI*0.5f);
 								segmentMass = /*scale**/5.0f;
 								boxSize = glm::vec3(scale*0.1f, uLegHeight, scale*0.1f);
 								if (m_runOptimization)
@@ -900,8 +900,8 @@ void App::run()
 								jointYOffsetInChild = footLen*0.2f;
 								jointZOffsetInChild = 0.0f*-footHeight*0.5f;
 								//jointZOffsetInChild = (boxSize.z - parentSz.z)*0.5f;
-								lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f*0.0f, -HALFPI*0.1f);
-								upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f*0.0f, HALFPI*0.1f);
+								lowerAngleLim = glm::vec3(HALFPI*0.8f, -HALFPI*0.1f, -HALFPI*0.1f);
+								upperAngleLim = glm::vec3(HALFPI*1.2f, HALFPI*0.1f, HALFPI*0.1f);
 								//lowerAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								//upperAngleLim = glm::vec3(0.0f, 0.0f, 0.0f);
 								//lowerAngleLim = glm::vec3(HALFPI*0.6f, -HALFPI*0.1f, -HALFPI*0.1f);
@@ -1009,7 +1009,7 @@ void App::run()
 		bool run = true;
 
 		double fixedStep = 1.0 / 60.0;
-		double physicsStep = 1.0 / 120.0;
+		double physicsStep = 1.0 / 200.0;
 
 		// Dry run, so artemis have run before physics first step
 		gameUpdate(0.0f);
