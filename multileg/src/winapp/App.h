@@ -113,6 +113,7 @@ private:
 	float m_initCharOffset;
 	bool  m_measurePerf;
 	int m_optmesSteps;
+	double m_frameTime;
 
 	std::vector<float>* m_bestParams;
 

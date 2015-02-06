@@ -188,6 +188,7 @@ App::App(HINSTANCE p_hInstance, unsigned int p_width/*=1280*/, unsigned int p_he
 	if (m_toolBar)
 	{
 		m_toolBar->addReadOnlyVariable(Toolbar::PLAYER, "Real time", Toolbar::DOUBLE, &m_time);
+		m_toolBar->addReadOnlyVariable(Toolbar::PLAYER, "Frame time", Toolbar::DOUBLE, &m_frameTime);
 		m_toolBar->addReadWriteVariable(Toolbar::PLAYER, "Physics time scale", Toolbar::FLOAT, &m_timeScale);
 		m_toolBar->addButton(Toolbar::PLAYER, "Play/Pause", boolButton, (void*)&m_triggerPause);
 		m_toolBar->addButton(Toolbar::PLAYER, "Restart", boolButton, (void*)&m_restart);
@@ -1040,6 +1041,7 @@ void App::run()
 #pragma region mainloop
 		while ((m_consoleMode || !m_context->closeRequested()) && run && !m_restart)
 		{
+			double startFrameTimeMs = Time::getTimeSeconds()*1000.0;
 			if (!pumpMessage(msg))
 			{				
 				// update timing debug var
@@ -1219,6 +1221,10 @@ void App::run()
 				m_oldGravityStat = m_gravityStat;
 				//
 			}
+
+
+			m_frameTime = Time::getTimeSeconds()*1000.0 - startFrameTimeMs;
+
 		} // endwhile mainloop
 #pragma endregion mainloop
 
