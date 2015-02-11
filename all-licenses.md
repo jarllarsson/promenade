@@ -1,7 +1,8 @@
 
 The project in this repo uses the following license:
 
-The MIT License (MIT)
+
+#The MIT License (MIT)
 
 Copyright (c) 2015 Jarl Larsson
 
@@ -23,6 +24,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+
+---
 
 
 Some parts of the libraries: graphics, util, and context are adapted from the Amalgamation engine (of which I'm a co-author) which uses the BSD 3-Clause License, see below:
